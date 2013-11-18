@@ -1,0 +1,308 @@
+<?php
+namespace CollinsAPI;
+
+require_once('Config.php');
+require_once('classes/Constants.php');
+require_once('classes/CollinsException.php');
+require_once('vendor/autoload.php');
+
+/**
+ * Provides access to the Collins Frontend Platform.
+ * This class is abstract because it's not meant to be instanciated.
+ * All the public methods cover a single API query.
+ *
+ * @author Antevorte GmbH
+ */
+abstract class Collins
+{
+	/**
+	 * Returns the result of an autocompletion API request.
+	 * Autocompletion searches for products and categories by
+	 * a given prefix ($searchword).
+	 * @param string $searchword The prefix search word to search for
+	 * @param int $limit Maximum number of results
+	 * @param array $types array of types to search for
+	 * (Constants::TYPE_PRODUCTS and/or CONSTANTS::TYPE_CATEGORIES)
+	 * @return \CollinsAPI\Results\AutocompleteResult
+	 */
+	public static function getAutocomplete($searchword, $limit = 50, $types = array(
+			\CollinsAPI\Constants::TYPE_PRODUCTS,
+			\CollinsAPI\Constants::TYPE_CATEGORIES
+		)
+	)
+	{
+		$data = array(
+			'autocompletion' => array(
+				'searchword' => $searchword,
+				'types' => $types,
+				'limit' => $limit
+			)
+		);
+		
+		return new Results\AutocompleteResult(self::getResponse($data));
+	}
+	
+	/**
+	 * Returns the result of a category search API request.
+	 * By passing one or several category ids it will return
+	 * a result of the categories data.
+	 * 
+	 * @param mixed $ids either a single category ID as integer or an array of IDs
+	 * @return \CollinsAPI\Results\CategoryResult
+	 */
+	public static function getCategories($ids)
+	{
+		// we allow to pass a single ID instead of an array
+		if(!is_array($ids))
+		{
+			$ids = array($ids);
+		}
+		
+		
+		$data = array(
+			'category' => array(
+				'ids' => $ids
+			)
+		);
+		
+		return new Results\CategoryResult(self::getResponse($data));
+	}
+	
+	
+	/**
+	 * Returns the result a category tree API request.
+	 * It simply returns the whole category tree of your app.
+	 * 
+	 * @return \CollinsAPI\Results\CategoryTreeResult
+	 */
+	public static function getCategoryTree()
+	{
+		$data = array(
+			'category_tree' => (object) null
+		);
+		
+		return new Results\CategoryTreeResult(self::getResponse($data));
+	}
+	
+	/**
+	 * Returns the result of a facet API request.
+	 * It simply returns all the facets that are relevant for your app.
+	 * 
+	 * @return \CollinsAPI\Results\FacetResult
+	 */
+	public static function getFacets()
+	{
+		$data = array(
+			'facets' => (object) null
+		);
+		
+		return new Results\FacetResult(self::getResponse($data));
+	}
+	
+	/**
+	 * Returns the result of a facet type API request.
+	 * It simply returns all the ids of facet groups tat are relevant for your app.
+	 * 
+	 * @return \CollinsAPI\Results\FacetTypeResult
+	 */
+	public static function getFacetTypes()
+	{
+		$data = array(
+			'facet_types' => (object) null
+		);
+		
+		return new Results\FacetTypeResult(self::getResponse($data));
+	}
+	
+	/**
+	 * Returns the result of a live query API request.
+	 * Use this to check if a product variant is really in stock.
+	 * This call skips the internal cache and could return a different
+	 * result than the product request because of this. Don't use
+	 * this for a lot of products, e.g. on category pages but for
+	 * single products e.g. before a product is added to the basket.
+	 * 
+	 * @param mixed $ids either a single product ID as integer or an array of IDs
+	 * @return \CollinsAPI\Results\LiveVariantResult
+	 */
+	public static function getLiveVariant($ids)
+	{
+		// we allow to pass a single ID instead of an array
+		if(!is_array($ids))
+		{
+			$ids = array($ids);
+		}
+		
+		$data = array(
+			'live_variant' => array(
+				'ids' => $ids
+			)
+		);
+		return new Results\LiveVariantResult(self::getResponse($data));
+	}
+	
+	/**
+	 * Returns the result of a product search API request.
+	 * Use this method to search for products you don't know the ID of.
+	 * If you already know the ID, e.g. on a product detail page, use
+	 * Collins::getProducts() instead.
+	 * 
+	 * @param int $user_session_id free to choose ID of the current website visitor.
+	 * This field is required for tracking reasons.
+	 * @param array $filter contains data to filter products for
+	 * @param array $result contains data for reducing the result
+	 * @param array $fields fields of product data to be returned
+	 * @return \CollinsAPI\Results\ProductSearchResult
+	 */
+	public static function getProductSearch(
+			$user_session_id,
+			array $filter = array(),
+			array $result = array(),
+			array $fields = array(
+				'id',
+				'name',
+				'active',
+				'brand_id',
+				'description_long',
+				'description_short',
+				'default_variant',
+				'variants',
+				'min_price',
+				'max_price',
+				'sale',
+				'default_image',
+				'attributes_merged',
+				'categories'
+			)
+	)
+	{
+		$data = array(
+			'product_search' => array(
+				'session_id' => (string) $user_session_id
+			)
+		);
+		
+		if(count($filter) > 0)
+		{
+			$data['product_search']['filter'] = $filter;
+		}
+		
+		if(count($result) > 0)
+		{
+			$data['product_search']['result'] = $result;
+		}
+		
+		if(count($fields) > 0)
+		{
+			$data['result']['fields'] = $fields;
+		}
+		
+		print_r($data);
+		die;
+		
+		return new Results\ProductSearchResult(self::getResponse($data));
+	}
+	
+	/**
+	 * Returns the result of a product get API request.
+	 * Use this method to get product data of products you already know
+	 * the ID of. E.g. on a product detail page.
+	 * 
+	 * @param mixed $ids either a single category ID as integer or an array of IDs
+	 * @param array $fields fields of product data to be returned
+	 * @return \CollinsAPI\Results\ProductResult
+	 */
+	public static function getProducts($ids, array $fields = array(
+		'id',
+		'name',
+		'active',
+		'brand_id',
+		'description_long',
+		'description_short',
+		'default_variant',
+		'variants',
+		'min_price',
+		'max_price',
+		'sale',
+		'default_image',
+		'attributes_merged',
+		'categories'
+	))
+	{
+		// we allow to pass a single ID instead of an array
+		if(!is_array($ids))
+		{
+			$ids = array($ids);
+		}
+		
+		$data = array(
+			'products' => array(
+				'ids' => $ids,
+				'fields' => $fields
+			)
+		);
+		
+		return new Results\ProductResult(self::getResponse($data));
+	}
+	
+	/**
+	 * Builds a JSON string representing the request data via Guzzle.
+	 * Executes the API request.
+	 * 
+	 * @param array $data array representing the API request data
+	 * @return \Guzzle\Http\Message\Response response object
+	 * @throws CollinsException will be thrown if response was invalid
+	 */
+	protected static function getResponse($data)
+	{
+		$response = \Guzzle\Http\StaticClient::post(
+				Config::ENTRY_POINT_URL,
+				array(
+					'body' => json_encode(array($data)),
+					'auth' => array(
+						Config::APP_ID,
+						Config::APP_PASSWORD
+					)
+				)
+		);
+		
+		if(!$response->isSuccessful() || !is_array($response->json()))
+		{
+			throw new CollinsException(
+					$response->getReasonPhrase(),
+					$response->getStatusCode()
+			);
+		}
+		return $response;
+	}
+	
+	/**
+	 * Returns the result of a suggest API request.
+	 * Suggestions are words that are often searched together
+	 * with the searchword you pass (e.g. "stretch" for "jeans").
+	 * 
+	 * @param string $searchword the search string to search for
+	 * @return \CollinsAPI\Results\SuggestResult
+	 */
+	public static function getSuggest($searchword)
+	{
+		$data = array(
+			'suggest' => array(
+				'searchword' => $searchword
+			)
+		);
+		
+		return new Results\SuggestResult(self::getResponse($data));
+	}
+}
+
+spl_autoload_register(function($class) {
+	$class = str_replace(array(
+		'CollinsAPI',
+		'\CollinsAPI'
+	), '', $class);
+	
+	$class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
+	
+	require_once('classes'.DIRECTORY_SEPARATOR.$class.'.php');
+});
