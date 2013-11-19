@@ -157,22 +157,23 @@ abstract class Collins
 	public static function getProductSearch(
 			$user_session_id,
 			array $filter = array(),
-			array $result = array(),
-			array $fields = array(
-				'id',
-				'name',
-				'active',
-				'brand_id',
-				'description_long',
-				'description_short',
-				'default_variant',
-				'variants',
-				'min_price',
-				'max_price',
-				'sale',
-				'default_image',
-				'attributes_merged',
-				'categories'
+			array $result = array(
+				'fields' => array(
+					'id',
+					'name',
+					'active',
+					'brand_id',
+					'description_long',
+					'description_short',
+					'default_variant',
+					'variants',
+					'min_price',
+					'max_price',
+					'sale',
+					'default_image',
+					'attributes_merged',
+					'categories'
+				)
 			)
 	)
 	{
@@ -190,11 +191,6 @@ abstract class Collins
 		if(count($result) > 0)
 		{
 			$data['product_search']['result'] = $result;
-		}
-		
-		if(count($fields) > 0)
-		{
-			$data['result']['fields'] = $fields;
 		}
 		
 		return new Results\ProductSearchResult(self::getResponse($data));
