@@ -197,9 +197,6 @@ abstract class Collins
 			$data['result']['fields'] = $fields;
 		}
 		
-		print_r($data);
-		die;
-		
 		return new Results\ProductSearchResult(self::getResponse($data));
 	}
 	
@@ -302,7 +299,19 @@ spl_autoload_register(function($class) {
 		'\CollinsAPI'
 	), '', $class);
 	
-	$class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
 	
-	require_once('classes'.DIRECTORY_SEPARATOR.$class.'.php');
+	$pathElements = explode('\\', $class);
+	
+	$path = '';
+	foreach($pathElements as $i => $pathElement)
+	{
+		if($i < count($pathElements)-1)
+		{
+			$pathElement = strtolower($pathElement);
+		}
+		
+		$path .= DIRECTORY_SEPARATOR.$pathElement;
+	}
+	
+	require_once('classes'.$path.'.php');
 });
