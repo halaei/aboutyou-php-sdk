@@ -293,25 +293,31 @@ abstract class Collins
 	}
 }
 
-spl_autoload_register(function($class) {
-	$class = str_replace(array(
-		'CollinsAPI',
-		'\CollinsAPI'
-	), '', $class);
-	
-	
-	$pathElements = explode('\\', $class);
-	
-	$path = '';
-	foreach($pathElements as $i => $pathElement)
+spl_autoload_register(function($class)
+{
+	//use this autoload function only for classes of the
+	// the CollinsAPI namespace
+	if(preg_match('/^(\\\|)CollinsAPI.+/i', $class) > 0)
 	{
-		if($i < count($pathElements)-1)
+		$class = str_replace(array(
+			'CollinsAPI',
+			'\CollinsAPI'
+		), '', $class);
+
+
+		$pathElements = explode('\\', $class);
+
+		$path = '';
+		foreach($pathElements as $i => $pathElement)
 		{
-			$pathElement = strtolower($pathElement);
+			if($i < count($pathElements)-1)
+			{
+				$pathElement = strtolower($pathElement);
+			}
+
+			$path .= DIRECTORY_SEPARATOR.$pathElement;
 		}
-		
-		$path .= DIRECTORY_SEPARATOR.$pathElement;
+
+		require_once('classes'.$path.'.php');
 	}
-	
-	require_once('classes'.$path.'.php');
 });
