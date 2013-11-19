@@ -1,10 +1,10 @@
 <?php
 namespace CollinsAPI;
 
-require_once('Config.php');
-require_once('classes/Constants.php');
-require_once('classes/CollinsException.php');
-require_once('vendor/autoload.php');
+require_once(__DIR__.DIRECTORY_SEPARATOR.'Config.php');
+require_once(__DIR__.DIRECTORY_SEPARATOR.'classes/Constants.php');
+require_once(__DIR__.DIRECTORY_SEPARATOR.'classes/CollinsException.php');
+require_once(__DIR__.DIRECTORY_SEPARATOR.'vendor/autoload.php');
 
 /**
  * Provides access to the Collins Frontend Platform.
