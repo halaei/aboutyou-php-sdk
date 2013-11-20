@@ -42,9 +42,21 @@ abstract class Collins
 		return new Results\BasketAddResult(self::getResponse($data));
 	}
 	
-	/**
-	 * Returns all 
-	 */
+	public static function addProductVariantToBasket(
+			$user_session_id,
+			$product_variant_id,
+			$amount)
+	{
+		$product_variants = array(
+			array(
+				'id' => $product_variant_id,
+				'command' => 'add',
+				'amount' => $amount
+			)
+		);
+		
+		return self::addToBasket($user_session_id, $product_variants);
+	}
 	
 	/**
 	 * Returns the result of an autocompletion API request.
