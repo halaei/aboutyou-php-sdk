@@ -151,13 +151,30 @@ abstract class Collins
 	 * Returns the result of a facet API request.
 	 * It simply returns all the facets that are relevant for your app.
 	 * 
+	 * @param array $group_ids array of group ids
 	 * @return \CollinsAPI\Results\FacetResult
 	 */
-	public static function getFacets()
+	public static function getFacets($group_ids = array(), $limit = null, $offset = null)
 	{
+		
 		$data = array(
 			'facets' => (object) null
 		);
+		
+		if(count($group_ids))
+		{
+			$data['facets']['group_ids'] = $group_ids;
+		}
+		
+		if($limit)
+		{
+			$data['facets']['limit'] = $limit;
+		}
+		
+		if($offset)
+		{
+			$data['facets']['offset'] = $offset;
+		}
 		
 		return new Results\FacetResult(self::getResponse($data));
 	}
@@ -175,6 +192,32 @@ abstract class Collins
 		);
 		
 		return new Results\FacetTypeResult(self::getResponse($data));
+	}
+	
+	/**
+	 * Initiates an order.
+	 * 
+	 * @param int $user_session_id free to choose ID of the current website visitor.
+	 * This is needed here to get the basket of the user.
+	 * @param string $success_url URL Collins will redirect to after the order
+	 * is finished.
+	 * @param string $cancel_url URL Collins will redirect to if the user cancels the order
+	 * on purpose.
+	 * @param string $error_url URL Collins will redirect to if the order couldn't be finished.
+	 * * @return \CollinsAPI\Results\InitiateOrderResult
+	 */
+	public static function initiateOrder($user_session_id, $success_url, $cancel_url, $error_url)
+	{
+		$data = array(
+			'initiate_order' => array(
+				'session_id' => (string) $user_session_id,
+				'success_url' => $success_url,
+				'cancel_url' => $cancel_url,
+				'error_url' => $error_url
+			)
+		);
+		
+		return new Results\InitiateOrderResult(self::getResponse($data));
 	}
 	
 	/**
@@ -352,7 +395,7 @@ abstract class Collins
 				$content
 			);
 		}
-		
+
 		if(!$response->isSuccessful() || !is_array($response->json()))
 		{
 			throw new CollinsException(
