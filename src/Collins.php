@@ -42,6 +42,14 @@ abstract class Collins
 		return new Results\BasketAddResult(self::getResponse($data));
 	}
 	
+	/**
+	 * Adds a product variant to the basket and returns the result of a basket
+	 * API request.
+	 * @param type $user_session_id
+	 * @param type $product_variant_id
+	 * @param type $amount
+	 * @return type
+	 */
 	public static function addProductVariantToBasket(
 			$user_session_id,
 			$product_variant_id,
