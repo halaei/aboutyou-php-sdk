@@ -37,7 +37,7 @@ abstract class BaseResult
 		}
 		
 		$data = $response->json();
-		
+
 		if(isset($data[0]) && isset($data[0][$this->resultKey]))
 		{
 			$result = $data[0][$this->resultKey];

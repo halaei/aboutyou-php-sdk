@@ -16,6 +16,37 @@ require_once(__DIR__.DIRECTORY_SEPARATOR.'vendor/autoload.php');
 abstract class Collins
 {
 	/**
+	 * Guzzle client that is needed to execute API requests.
+	 * Will be initialized before the first request is done.
+	 * @var \Guzzle\Http\Client 
+	 */
+	protected static $client = null;
+	
+	/**
+	 * Adds a set of product variants to the basket and returns
+	 * the result of a basket API request.
+	 * @param int $user_session_id free to choose ID of the current website visitor.
+	 * The website visitor is the person the basket belongs to.
+	 * @param array $product_variants set of product variants
+	 * @return \CollinsAPI\Results\BasketResult
+	 */
+	public static function addToBasket($user_session_id, $product_variants)
+	{
+		$data = array(
+			'basket_add' => array(
+				'session_id' => (string) $user_session_id,
+				'product_variant' => $product_variants
+			)
+		);
+		
+		return new Results\BasketAddResult(self::getResponse($data));
+	}
+	
+	/**
+	 * Returns all 
+	 */
+	
+	/**
 	 * Returns the result of an autocompletion API request.
 	 * Autocompletion searches for products and categories by
 	 * a given prefix ($searchword).
@@ -40,6 +71,26 @@ abstract class Collins
 		);
 		
 		return new Results\AutocompleteResult(self::getResponse($data));
+	}
+	
+	/**
+	 * Returns the result of a basket API request.
+	 * This includes all the necessary information of a basket of the user
+	 * provided.
+	 * @param int $user_session_id free to choose ID of the current website visitor.
+	 * The website visitor is the person the basket belongs to.
+	 * @param array $product_variants set of product variants
+	 * @return \CollinsAPI\Results\BasketResult
+	 */
+	public static function getBasket($user_session_id)
+	{
+		$data = array(
+			'basket_get' => array(
+				'session_id' => (string) $user_session_id
+			)
+		);
+		
+		return new Results\BasketGetResult(self::getResponse($data));
 	}
 	
 	/**
@@ -248,16 +299,47 @@ abstract class Collins
 	 */
 	protected static function getResponse($data)
 	{
-		$response = \Guzzle\Http\StaticClient::post(
-				Config::ENTRY_POINT_URL,
-				array(
-					'body' => json_encode(array($data)),
-					'auth' => array(
-						Config::APP_ID,
-						Config::APP_PASSWORD
-					)
-				)
-		);
+		if(!self::$client)
+		{
+			self::$client = new \Guzzle\Http\Client(Config::ENTRY_POINT_URL);
+		}
+		
+
+		$request = self::$client->post();
+		$request->setBody(json_encode(array($data)));
+		$request->setAuth(Config::APP_ID,Config::APP_PASSWORD);
+		
+		if(Config::ENABLE_LOGGING)
+		{
+			$adapter = new \Guzzle\Log\ArrayLogAdapter();
+			$logPlugin = new \Guzzle\Plugin\Log\LogPlugin($adapter);
+			
+			$request->addSubscriber($logPlugin);
+		}
+		
+		$response = $request->send();
+		
+		if(Config::ENABLE_LOGGING)
+		{
+			$content = '';
+			foreach($adapter->getLogs() as $log)
+			{
+				$message = new \Guzzle\Log\MessageFormatter(Config::LOGGING_TEMPLATE);
+				$content .= $message->format($log['extras']['request'], $log['extras']['response']).PHP_EOL;
+				
+			}
+			$path = Config::LOGGING_PATH
+						? Config::LOGGING_PATH
+						: __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'logs';
+			
+			$operation = array_keys($data)[0];
+			$fileName = date('Y-m-d_H_i_s_').$operation.'_'.  uniqid().'.txt';
+			
+			file_put_contents(
+				$path.DIRECTORY_SEPARATOR.$fileName,
+				$content
+			);
+		}
 		
 		if(!$response->isSuccessful() || !is_array($response->json()))
 		{
