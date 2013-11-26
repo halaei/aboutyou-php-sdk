@@ -3,7 +3,7 @@ require_once(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTOR
 use CollinsAPI\Collins;
 
 
-// Finde alle Produkte, die weiß sind
+// Finde alle Produkte, die eine weiße Produktvariante haben
 $productSearchResult = Collins::getProductSearch(12345, array(
 	'facets' => array(
 		1 => array(570) // 1 = Facet Group ID für die Farbe und 570 = weiß
