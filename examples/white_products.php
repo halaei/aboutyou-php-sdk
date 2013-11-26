@@ -1,4 +1,9 @@
 <?php
+/**
+ * Folgendes Beispiel demonstriert, wie man nur Produkte mit der Farbe weiß ausliest und
+ * darauf folgend für jedes Produkt das Produktbild der jeweiligen Variante, die eine weiße Farbe hat,
+ * auflistet.
+ */
 require_once(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'Collins.php');
 use CollinsAPI\Collins;
 
@@ -6,7 +11,7 @@ use CollinsAPI\Collins;
 // Finde alle Produkte, die eine weiße Produktvariante haben
 $productSearchResult = Collins::getProductSearch(12345, array(
 	'facets' => array(
-		1 => array(570) // 1 = Facet Group ID für die Farbe und 570 = weiß
+		CollinsAPI\Constants::FACET_COLOR => array(570) // 1 = CollinsAPI\Constants::FACET_COLOR = Facet Group ID für die Farbe und 570 = weiß
 	)),
 	array(
 		'fields' => array('name', 'variants'), // wir benötigen nicht alle Felder und reduzieren hiermit das Abfrageergebnis,
