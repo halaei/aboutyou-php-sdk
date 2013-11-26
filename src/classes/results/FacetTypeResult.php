@@ -25,7 +25,7 @@ class FacetTypeResult extends BaseResult
 	 * 
 	 * @param array $result API result array
 	 */
-	protected function init($result)
+	protected function init(array $result)
 	{
 		$this->ids = $result;
 	}

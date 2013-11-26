@@ -169,6 +169,11 @@ abstract class Collins
 			'facets' => (object) null
 		);
 		
+		if(count($group_ids) || $limit || $offset)
+		{
+			$data['facets'] = array();
+		}
+		
 		if(count($group_ids))
 		{
 			$data['facets']['group_ids'] = $group_ids;
@@ -366,7 +371,6 @@ abstract class Collins
 		{
 			self::$client = new \Guzzle\Http\Client(Config::ENTRY_POINT_URL);
 		}
-		
 
 		$request = self::$client->post();
 		$request->setBody(json_encode(array($data)));
