@@ -174,6 +174,11 @@ abstract class Collins
 			$data['facets'] = array();
 		}
 		
+		if(!is_array($group_ids))
+		{
+			$group_ids = array($group_ids);
+		}
+		
 		if(count($group_ids))
 		{
 			$data['facets']['group_ids'] = $group_ids;
@@ -270,7 +275,6 @@ abstract class Collins
 	 * This field is required for tracking reasons.
 	 * @param array $filter contains data to filter products for
 	 * @param array $result contains data for reducing the result
-	 * @param array $fields fields of product data to be returned
 	 * @return \CollinsAPI\Results\ProductSearchResult
 	 */
 	public static function getProductSearch(
@@ -355,6 +359,57 @@ abstract class Collins
 		);
 		
 		return new Results\ProductResult(self::getResponse($data));
+	}
+	
+	/**
+	 * Returns the result of a product get API request.
+	 * Use this method to search for products with a given facet
+	 *
+	 * @param int $user_session_id free to choose ID of the current website visitor.
+	 * This field is required for tracking reasons.
+	 * @param int $facet_group_id ID of the facet group. You can use the Constants::FACET_* constants for this.
+	 * @params mixed $facets facet ID or array of facet IDs you want to filter for
+	 * @param array $result contains data for reducing the result
+	 */
+	public static function getProductSearchByFacet(
+			$user_session_id,
+			$facet_group_id,
+			$facets,
+			array $filter = array(),
+			array $result = array(
+				'fields' => array(
+					'id',
+					'name',
+					'active',
+					'brand_id',
+					'description_long',
+					'description_short',
+					'default_variant',
+					'variants',
+					'min_price',
+					'max_price',
+					'sale',
+					'default_image',
+					'attributes_merged',
+					'categories'
+				)
+			))
+	{
+		if(!is_array($facets))
+		{
+			$facets = array($facets);
+		}
+		
+		$filter = array(
+			'facets' => array(
+				$facet_group_id => $facets
+			)
+		);
+		
+		return self::getProductSearch($user_session_id,
+			$filter,
+			$result
+		);
 	}
 	
 	/**
