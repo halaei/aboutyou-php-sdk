@@ -56,7 +56,7 @@ class ProductSearchResult extends BaseResult
 	 * @param int $width width of the images
 	 * @param int $height height of the images
 	 * @see CollinsAPI\\Config::IMAGE_URL
-	 * @return array product urls for each product and variant
+	 * @return array product urls for default image of each product
 	 */
 	public function getDefaultImageURLs($width = 200, $height = 280)
 	{
@@ -82,10 +82,28 @@ class ProductSearchResult extends BaseResult
 					$urls[$product['id']] = array();
 				}
 
-				$urls[$product['id']][$id] = $url;
+				$urls[$product['id']] = $url;
 			}
 		}
 		
 		return $urls;
+	}
+	
+	/**
+	 * Returns the default image URL for a single product
+	 * @param integer $productId ID of the product
+	 * @return string URL of the default image or null if no default image exists
+	 */
+	public function getDefaultImageURL($productId, $width = 200, $height = 280)
+	{
+		$url = null;
+		
+		$urls = $this->getDefaultImageURLs($width, $height);
+		if(isset($urls[$productId]))
+		{
+			$url = $urls[$productId];
+		}
+		
+		return $url;
 	}
 }
