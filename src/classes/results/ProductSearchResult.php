@@ -48,4 +48,44 @@ class ProductSearchResult extends BaseResult
 			return $product['id'];
 		}, $this->products);
 	}
+	
+	/**
+	 * Returns the URLs for images of the default variant of 
+	 * passed products. If no products are passed, URLs for
+	 * all products will be returneed
+	 * @param int $width width of the images
+	 * @param int $height height of the images
+	 * @see CollinsAPI\\Config::IMAGE_URL
+	 * @return array product urls for each product and variant
+	 */
+	public function getDefaultImageURLs($width = 200, $height = 280)
+	{
+		$urls = array();
+		
+		foreach($this->products as $product)
+		{
+			if(isset($product['default_image']))
+			{
+				$image = $product['default_image'];
+				$id = $image['id'];
+				$path = substr($id, 0, 3);
+				$extension = $image['extension'];
+
+				$url = str_replace(array(
+					'{{path}}', '{{id}}', '{{extension}}', '{{width}}', '{{height}}'
+				), array(
+					$path, $id, $extension, $width, $height
+				), \CollinsAPI\Config::IMAGE_URL);
+
+				if(!isset($urls[$product['id']]))
+				{
+					$urls[$product['id']] = array();
+				}
+
+				$urls[$product['id']][$id] = $url;
+			}
+		}
+		
+		return $urls;
+	}
 }

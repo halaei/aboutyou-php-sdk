@@ -22,6 +22,29 @@ abstract class Collins
 	 */
 	protected static $client = null;
 	
+	
+	protected static $appId = Config::APP_ID;
+	protected static $appPassword = Config::APP_PASSWORD;
+	
+	/**
+	 * Sets the app id for client authentification.
+	 * @param integer $id
+	 */
+	public static function setAppId($id)
+	{
+		self::$appId = $id;
+	}
+	
+	/**
+	 * Sets the app password for client authentification.
+	 * @param string $password
+	 */
+	public static function setAppPassword($password)
+	{
+		self::$appPassword = $password;
+	}
+	
+	
 	/**
 	 * Adds a set of product variants to the basket and returns
 	 * the result of a basket API request.
@@ -429,7 +452,7 @@ abstract class Collins
 
 		$request = self::$client->post();
 		$request->setBody(json_encode(array($data)));
-		$request->setAuth(Config::APP_ID,Config::APP_PASSWORD);
+		$request->setAuth(self::$appId, self::$appPassword);
 		
 		if(Config::ENABLE_LOGGING)
 		{
