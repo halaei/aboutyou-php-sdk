@@ -9,8 +9,8 @@ namespace CollinsAPI;
 abstract class Config
 {
 	const ENTRY_POINT_URL = 'http://ant-shop-api1.wavecloud.de/api';
-	const APP_ID = '95';
-	const APP_PASSWORD = 'f7f8d79e075ca86da08b1a4ecc061977';
+	const APP_ID = '59';
+	const APP_PASSWORD = '46df504885a015333333ff89c7a20458';
 	
 	const ENABLE_LOGGING = true;
 	const LOGGING_PATH = null;

@@ -1,4 +1,4 @@
-<?php
+<?php //
 namespace CollinsAPI;
 
 require_once(__DIR__.DIRECTORY_SEPARATOR.'Config.php');
@@ -477,7 +477,9 @@ abstract class Collins
 						? Config::LOGGING_PATH
 						: __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'logs';
 			
-			$operation = array_keys($data)[0];
+			$operation = array_keys($data);
+			$operation = $operation[0];
+			
 			$fileName = date('Y-m-d_H_i_s_').$operation.'_'.  uniqid().'.txt';
 			
 			file_put_contents(

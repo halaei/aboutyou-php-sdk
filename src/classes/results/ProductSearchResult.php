@@ -106,4 +106,87 @@ class ProductSearchResult extends BaseResult
 		
 		return $url;
 	}
+	
+	/**
+	 * Returns the image URL for a product variant that has the passed facet
+	 * @param integer $productId ID of the product
+	 * @param integer $facetGroup ID of the facet group
+	 * @param mixed $facetIds single ID of a facet or array of facet IDs
+	 * @return array variants with passed faces
+	 */
+	public function getVariantsByFacet($productId, $facetGroupId, $facetIds)
+	{
+		$arr = array();
+		
+		if(!is_array($facetIds))
+		{
+			$facetIds = array($facetIds);
+		}
+		
+		foreach($this->products as $product)
+		{
+			if($product['id'] == $productId &&isset($product['variants']))
+			{
+				foreach($product['variants'] as $variant)
+				{
+					$attributeKey = 'attributes_'.$facetGroupId;
+					
+					if(isset($variant['attributes']) &&
+						isset($variant['attributes'][$attributeKey]))
+					{
+						foreach($facetIds as $facetId)
+						{
+							if(in_array($facetId, $variant['attributes'][$attributeKey]))
+							{
+								$arr[] = $variant; 
+								break 2;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return $arr;
+	}
+	
+	/**
+	 * Returns all the image URLs for a passed variant
+	 */
+	public function getImageURLsByVariant($productId, $productVariantId, $width = 200, $height = 280)
+	{
+		$urls = array();
+
+		foreach($this->products as $product)
+		{
+			if($product['id'] == $productId)
+			{
+				foreach($product['variants'] as $variant)
+				{
+					if($variant['id'] == $productVariantId)
+					{
+						if(isset($variant['images']))
+						{
+							foreach($variant['images'] as $image)
+							{
+								$id = $image['id'];
+								$path = substr($id, 0, 3);
+								$extension = $image['extension'];
+
+								$url = str_replace(array(
+									'{{path}}', '{{id}}', '{{extension}}', '{{width}}', '{{height}}'
+								), array(
+									$path, $id, $extension, $width, $height
+								), \CollinsAPI\Config::IMAGE_URL);
+
+								$urls[] = $url;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return $urls;
+	}
 }
