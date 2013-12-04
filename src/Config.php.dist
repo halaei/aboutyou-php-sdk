@@ -15,4 +15,6 @@ abstract class Config
 	const ENABLE_LOGGING = true;
 	const LOGGING_PATH = null;
 	const LOGGING_TEMPLATE = "Request:\r\n{{request}}\r\n\r\nResponse:\r\n{{response}}";
+	
+	const IMAGE_URL = 'http://cdn.mary-paul.de/product_images/{{path}}/{{id}}_{{width}}_{{height}}{{extension}}';
 }
