@@ -20,19 +20,26 @@ class FacetResult extends BaseResult
 	/**
 	 * Returns the part of the result for the facet with the passed ID
 	 * 
-	 * @param integer $id ID of the facet
+	 * @param mixed $id array of facet IDs or single ID
 	 * @return array facet data or null if facet not found
 	 */
-	public function getFacetById($id)
+	public function getFacetByIds($ids)
 	{
+		if(!is_array($ids))
+		{
+			$ids = array($ids);
+		}
+		
+		$facets = array();
+		
 		foreach($this->facet as $facet)
 		{
-			if($facet['facet_id'] == $id)
+			if(in_array($facet['facet_id'], $ids))
 			{
-				return $facet;
+				$facets[] = $facet;
 			}
 		}
 		
-		return null;
+		return $facets;
 	}
 }

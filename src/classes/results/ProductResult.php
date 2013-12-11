@@ -67,4 +67,44 @@ class ProductResult extends BaseResult
 		
 		return $arr;
 	}
+	
+	/**
+	 * Returns an array of facets for the given variant.
+	 * 
+	 * @param int $productId ID of the product
+	 * @param int $variantId ID of the product's variant
+	 * @return array array of facets
+	 */
+	public function getFacetsByVariant($productId, $variantId)
+	{
+		$result = array();
+		
+		if(isset($this->ids[$productId]))
+		{
+			$product = $this->ids[$productId];
+			
+			if(isset($product['variants']))
+			{
+				foreach($product['variants'] as $variant)
+				{
+					if($variant['id'] == $variantId)
+					{
+						if(isset($variant['attributes']))
+						{
+							foreach($variant['attributes'] as $groupId => $facetIds)
+							{
+								$groupId = intval(str_replace('attributes_', '', $groupId));
+								
+								$facets = \CollinsAPI\Collins::getFacets($groupId);
+								$result = array_merge($result, $facets->getFacetByIds($facetIds));
+							}
+						}
+						break;
+					}
+				}
+			}
+		}
+		
+		return $result;
+	}
 }
