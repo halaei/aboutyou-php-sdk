@@ -26,6 +26,8 @@ abstract class Collins
 	protected static $appId = Config::APP_ID;
 	protected static $appPassword = Config::APP_PASSWORD;
 	
+	protected static $memorizations = array();
+	
 	/**
 	 * Sets the app id for client authentification.
 	 * @param integer $id
@@ -449,44 +451,52 @@ abstract class Collins
 		{
 			self::$client = new \Guzzle\Http\Client(Config::ENTRY_POINT_URL);
 		}
+		
+		$body = json_encode(array($data));
+		
+		$memorizationKey = md5($body);
+		if(!isset(self::$memorizations[$memorizationKey]))
+		{
+			$request = self::$client->post();
+			$request->setBody($body);
+			$request->setAuth(self::$appId, self::$appPassword);
 
-		$request = self::$client->post();
-		$request->setBody(json_encode(array($data)));
-		$request->setAuth(self::$appId, self::$appPassword);
-		
-		if(Config::ENABLE_LOGGING)
-		{
-			$adapter = new \Guzzle\Log\ArrayLogAdapter();
-			$logPlugin = new \Guzzle\Plugin\Log\LogPlugin($adapter);
-			
-			$request->addSubscriber($logPlugin);
-		}
-		
-		$response = $request->send();
-		
-		if(Config::ENABLE_LOGGING)
-		{
-			$content = '';
-			foreach($adapter->getLogs() as $log)
+			if(Config::ENABLE_LOGGING)
 			{
-				$message = new \Guzzle\Log\MessageFormatter(Config::LOGGING_TEMPLATE);
-				$content .= $message->format($log['extras']['request'], $log['extras']['response']).PHP_EOL;
-				
+				$adapter = new \Guzzle\Log\ArrayLogAdapter();
+				$logPlugin = new \Guzzle\Plugin\Log\LogPlugin($adapter);
+
+				$request->addSubscriber($logPlugin);
 			}
-			$path = Config::LOGGING_PATH
-						? Config::LOGGING_PATH
-						: __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'logs';
 			
-			$operation = array_keys($data);
-			$operation = $operation[0];
-			
-			$fileName = date('Y-m-d_H_i_s_').$operation.'_'.  uniqid().'.txt';
-			
-			file_put_contents(
-				$path.DIRECTORY_SEPARATOR.$fileName,
-				$content
-			);
+			if(Config::ENABLE_LOGGING)
+			{
+				$content = '';
+				foreach($adapter->getLogs() as $log)
+				{
+					$message = new \Guzzle\Log\MessageFormatter(Config::LOGGING_TEMPLATE);
+					$content .= $message->format($log['extras']['request'], $log['extras']['response']).PHP_EOL;
+
+				}
+				$path = Config::LOGGING_PATH
+							? Config::LOGGING_PATH
+							: __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'logs';
+
+				$operation = array_keys($data);
+				$operation = $operation[0];
+
+				$fileName = date('Y-m-d_H_i_s_').$operation.'_'.  uniqid().'.txt';
+
+				file_put_contents(
+					$path.DIRECTORY_SEPARATOR.$fileName,
+					$content
+				);
+			}
+
+			self::$memorizations[$memorizationKey] = $request->send();
 		}
+		
+		$response = self::$memorizations[$memorizationKey];
 
 		if(!$response->isSuccessful() || !is_array($response->json()))
 		{

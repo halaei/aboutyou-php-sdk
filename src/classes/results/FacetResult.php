@@ -20,10 +20,11 @@ class FacetResult extends BaseResult
 	/**
 	 * Returns the part of the result for the facet with the passed ID
 	 * 
+	 * @param integer $groupId ID of the facet group
 	 * @param mixed $id array of facet IDs or single ID
 	 * @return array facet data or null if facet not found
 	 */
-	public function getFacetByIds($ids)
+	public function getFacetByIds($groupId, $ids)
 	{
 		if(!is_array($ids))
 		{
@@ -34,9 +35,12 @@ class FacetResult extends BaseResult
 		
 		foreach($this->facet as $facet)
 		{
-			if(in_array($facet['facet_id'], $ids))
+			if($facet['id'] == $groupId)
 			{
-				$facets[] = $facet;
+				if(in_array($facet['facet_id'], $ids))
+				{
+					$facets[] = $facet;
+				}
 			}
 		}
 		
