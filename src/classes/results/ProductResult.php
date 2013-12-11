@@ -107,4 +107,32 @@ class ProductResult extends BaseResult
 		
 		return $result;
 	}
+	
+	/**
+	 * Returns an array of merged facets of all variants of the given product.
+	 * 
+	 * @param int $productId ID of the product
+	 * @return array array of facets
+	 */
+	public function getFacetsbyProduct($productId)
+	{
+		$result = array();
+		if(isset($this->ids[$productId]))
+		{
+			$product = $this->ids[$productId];
+
+			if(isset($product['attributes_merged']))
+			{
+				foreach($product['attributes_merged'] as $groupId => $facetIds)
+				{
+					$groupId = intval(str_replace('attributes_', '', $groupId));
+
+					$facets = \CollinsAPI\Collins::getFacets($groupId);
+					$result = array_merge($result, $facets->getFacetByIds($facetIds));
+				}
+			}
+		}
+		
+		return $result;
+	}
 }
