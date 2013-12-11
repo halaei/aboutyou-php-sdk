@@ -20,7 +20,7 @@ $images = $productResult->getImageURLsByVariant($product_id, $variant_id);
 
 ?>
 
-<a href="results.php?brand_id=<?php echo $product['brand_id']?>">&laquo; zur&uuml;ck</a>
+<a href="index.php?page=results&brand_id=<?php echo $product['brand_id']?>">&laquo; zur&uuml;ck</a>
 
 <h1>Produktdetailseite: <?php echo htmlentities($product['name'])?></h1>
 
@@ -46,9 +46,9 @@ function addToCart(product_variant_id, quantity, userId)
 
 <h2>Weitere Varianten</h2>
 <?php foreach($product['variants'] as $v):?>
-	<div style="float: left; border-color: red; border-style: solid; border-width: <?php echo $v['id'] == $variant['id'] ? '1px' : '0px'?>">
+	<div class="variant <?php echo $v['id'] == $variant['id'] ? 'active' : ''?>">
 		<?php $imgs = $productResult->getImageURLsByVariant($product['id'], $v['id'], 100, 100)?>
-		<a href="detail.php?product_id=<?php echo $product['id']?>&variant_id=<?php echo $v['id']?>">
+		<a href="index.php?page=detail&product_id=<?php echo $product['id']?>&variant_id=<?php echo $v['id']?>">
 			<?php if(count($imgs)):?>
 				<img src="<?php echo $imgs[0]?>" alt="<?php echo $v['id']?>"/>
 

@@ -25,9 +25,9 @@ $products = $productResult->products;
 	
 <?php endif;?>
 <?php foreach($products as $product):?>
-	<div style="float: left; width: 200px; height: 150px; border-width: 1px; border-style: solid; border-color: darkgrey">
-		<a href="detail.php?product_id=<?php echo $product['id']?>"><?php echo htmlentities($product['name'])?></a><br />
-		<a href="detail.php?product_id=<?php echo $product['id']?>"><img src="<?php echo $productResult->getDefaultImageURL($product['id'], 100, 100)?>" alt="<?php echo htmlentities($product['name'])?>"/></a>
+	<div class="result">
+		<a href="index.php?page=detail&product_id=<?php echo $product['id']?>"><?php echo htmlentities($product['name'])?></a><br />
+		<a href="index.php?page=detail&product_id=<?php echo $product['id']?>"><img src="<?php echo $productResult->getDefaultImageURL($product['id'], 100, 100)?>" alt="<?php echo htmlentities($product['name'])?>"/></a>
 	</div>
 <?php endforeach; ?>
 <div style="clear: both"></div>
