@@ -114,7 +114,7 @@ class ProductResult extends BaseResult
 	 * @param int $productId ID of the product
 	 * @return array array of facets
 	 */
-	public function getFacetsbyProduct($productId)
+	public function getFacetsByProduct($productId)
 	{
 		$result = array();
 		if(isset($this->ids[$productId]))
