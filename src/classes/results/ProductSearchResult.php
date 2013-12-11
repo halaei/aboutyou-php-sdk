@@ -108,7 +108,7 @@ class ProductSearchResult extends BaseResult
 	}
 	
 	/**
-	 * Returns the image URL for a product variant that has the passed facet
+	 * Returns an array of variants that have the given facet
 	 * @param integer $productId ID of the product
 	 * @param integer $facetGroup ID of the facet group
 	 * @param mixed $facetIds single ID of a facet or array of facet IDs
