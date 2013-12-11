@@ -19,8 +19,8 @@ $products = $productResult->products;
 
 <?php if(!count($products)):?>
 	Diese Marke hat keine Produkte :( Beispiel-Marken, die Produkte haben: <br />
-	<a href="results.php?brand_id=2259">ALPHA</a><br />
-	<a href="results.php?brand_id=274">BRUNO BANANI</a><br />
+	<a href="index.php?page=results&brand_id=2259">ALPHA</a><br />
+	<a href="index.php?page=results&brand_id=274">BRUNO BANANI</a><br />
 	... und fast alle auf <a href="http://www.mary-paul.de/marken" target="_blank">Mary & Paul</a>
 	
 <?php endif;?>
