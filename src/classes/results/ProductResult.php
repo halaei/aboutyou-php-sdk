@@ -263,7 +263,7 @@ class ProductResult extends BaseResult
 					$groupId = intval(str_replace('attributes_', '', $groupId));
 
 					$facets = \CollinsAPI\Collins::getFacets($groupId);
-					$result = array_merge($result, $facets->getFacetByIds($facetIds));
+					$result = array_merge($result, $facets->getFacetByIds($groupId, $facetIds));
 				}
 			}
 		}

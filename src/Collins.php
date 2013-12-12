@@ -22,6 +22,14 @@ abstract class Collins
 	 */
 	protected static $client = null;
 	
+	/**
+	 * If Redis Cache is enabled, this predis client will be used
+	 * for setting and getting cache date.
+	 * Will be initialized before the first request is done.
+	 * @var \Predis\Client 
+	 */
+	protected static $predisClient = null;
+	
 	
 	protected static $appId = Config::APP_ID;
 	protected static $appPassword = Config::APP_PASSWORD;
@@ -161,12 +169,12 @@ abstract class Collins
 			)
 		);
 		
-		return new Results\CategoryResult(self::getResponse($data));
+		return new Results\CategoryResult(self::getResponse($data, 60*60));
 	}
 	
 	
 	/**
-	 * Returns the result a category tree API request.
+	 * Returns the result of a category tree API request.
 	 * It simply returns the whole category tree of your app.
 	 * 
 	 * @return \CollinsAPI\Results\CategoryTreeResult
@@ -177,7 +185,7 @@ abstract class Collins
 			'category_tree' => (object) null
 		);
 		
-		return new Results\CategoryTreeResult(self::getResponse($data));
+		return new Results\CategoryTreeResult(self::getResponse($data, 60*60));
 	}
 	
 	/**
@@ -219,7 +227,7 @@ abstract class Collins
 			$data['facets']['offset'] = $offset;
 		}
 		
-		return new Results\FacetResult(self::getResponse($data));
+		return new Results\FacetResult(self::getResponse($data, 60*60));
 	}
 	
 	/**
@@ -234,7 +242,7 @@ abstract class Collins
 			'facet_types' => (object) null
 		);
 		
-		return new Results\FacetTypeResult(self::getResponse($data));
+		return new Results\FacetTypeResult(self::getResponse($data, 60*60));
 	}
 	
 	/**
@@ -383,7 +391,7 @@ abstract class Collins
 			)
 		);
 		
-		return new Results\ProductResult(self::getResponse($data));
+		return new Results\ProductResult(self::getResponse($data, 60*60));
 	}
 	
 	/**
@@ -442,10 +450,11 @@ abstract class Collins
 	 * Executes the API request.
 	 * 
 	 * @param array $data array representing the API request data
+	 * @param integer $cacheDuration how long to save the response in the cache (if enabled) - 0 = no caching
 	 * @return \Guzzle\Http\Message\Response response object
 	 * @throws CollinsException will be thrown if response was invalid
 	 */
-	protected static function getResponse($data)
+	protected static function getResponse($data, $cacheDuration = 0)
 	{
 		if(!self::$client)
 		{
@@ -455,49 +464,78 @@ abstract class Collins
 		$body = json_encode(array($data));
 		
 		$memorizationKey = md5($body);
-		if(!isset(self::$memorizations[$memorizationKey]))
+		$response = isset(self::$memorizations[$memorizationKey])
+						? self::$memorizations[$memorizationKey]
+						: null;
+
+		if(!$response)
 		{
-			$request = self::$client->post();
-			$request->setBody($body);
-			$request->setAuth(self::$appId, self::$appPassword);
-
-			if(Config::ENABLE_LOGGING)
+			if(\CollinsAPI\Config::ENABLE_REDIS_CACHE)
 			{
-				$adapter = new \Guzzle\Log\ArrayLogAdapter();
-				$logPlugin = new \Guzzle\Plugin\Log\LogPlugin($adapter);
-
-				$request->addSubscriber($logPlugin);
+				if(!self::$predisClient)
+				{
+					self::$predisClient = new \Predis\Client(
+						array(
+							'scheme' => 'tcp',
+							'host'   => '127.0.0.1',
+							'port'   => 6379
+						)
+					);
+				}
+				
+				$response = unserialize(self::$predisClient->get($memorizationKey));
 			}
 			
-			if(Config::ENABLE_LOGGING)
+			if(!$response)
 			{
-				$content = '';
-				foreach($adapter->getLogs() as $log)
+				$request = self::$client->post();
+				$request->setBody($body);
+				$request->setAuth(self::$appId, self::$appPassword);
+
+				if(Config::ENABLE_LOGGING)
 				{
-					$message = new \Guzzle\Log\MessageFormatter(Config::LOGGING_TEMPLATE);
-					$content .= $message->format($log['extras']['request'], $log['extras']['response']).PHP_EOL;
+					$adapter = new \Guzzle\Log\ArrayLogAdapter();
+					$logPlugin = new \Guzzle\Plugin\Log\LogPlugin($adapter);
 
+					$request->addSubscriber($logPlugin);
 				}
-				$path = Config::LOGGING_PATH
-							? Config::LOGGING_PATH
-							: __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'logs';
 
-				$operation = array_keys($data);
-				$operation = $operation[0];
+				if(Config::ENABLE_LOGGING)
+				{
+					$content = '';
+					foreach($adapter->getLogs() as $log)
+					{
+						$message = new \Guzzle\Log\MessageFormatter(Config::LOGGING_TEMPLATE);
+						$content .= $message->format($log['extras']['request'], $log['extras']['response']).PHP_EOL;
 
-				$fileName = date('Y-m-d_H_i_s_').$operation.'_'.  uniqid().'.txt';
+					}
+					$path = Config::LOGGING_PATH
+								? Config::LOGGING_PATH
+								: __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'logs';
 
-				file_put_contents(
-					$path.DIRECTORY_SEPARATOR.$fileName,
-					$content
-				);
+					$operation = array_keys($data);
+					$operation = $operation[0];
+
+					$fileName = date('Y-m-d_H_i_s_').$operation.'_'.  uniqid().'.txt';
+
+					file_put_contents(
+						$path.DIRECTORY_SEPARATOR.$fileName,
+						$content
+					);
+				}
+
+				$response = $request->send();
+				
+				self::$memorizations[$memorizationKey] = $response;
+
+				if(\CollinsAPI\Config::ENABLE_REDIS_CACHE && $cacheDuration > 0)
+				{
+					self::$predisClient->set($memorizationKey, serialize($response));
+					self::$predisClient->expire($memorizationKey, $cacheDuration);
+				}
 			}
-
-			self::$memorizations[$memorizationKey] = $request->send();
 		}
 		
-		$response = self::$memorizations[$memorizationKey];
-
 		if(!$response->isSuccessful() || !is_array($response->json()))
 		{
 			throw new CollinsException(
