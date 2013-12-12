@@ -391,7 +391,7 @@ abstract class Collins
 			)
 		);
 		
-		return new Results\ProductResult(self::getResponse($data, 60*60));
+		return new Results\ProductResult(self::getResponse($data));
 	}
 	
 	/**

@@ -42,9 +42,9 @@ abstract class BaseResult
 		{
 			$result = $data[0][$this->resultKey];
 
-			if(isset($result['error_message']))
+			if(isset($result['error_code']))
 			{
-				$message = implode(PHP_EOL, $result['error_message']);
+				$message = implode(PHP_EOL, isset($result['error_message']) ? $result['error_message'] : '');
 				$code = isset($result['error_code']) ? $result['error_code'] : 400;
 				
 				throw new \CollinsAPI\CollinsException($message, $code);
