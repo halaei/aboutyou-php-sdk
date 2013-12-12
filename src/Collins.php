@@ -500,6 +500,16 @@ abstract class Collins
 					$request->addSubscriber($logPlugin);
 				}
 
+				$response = $request->send();
+				
+				self::$memorizations[$memorizationKey] = $response;
+
+				if(\CollinsAPI\Config::ENABLE_REDIS_CACHE && $cacheDuration > 0)
+				{
+					self::$predisClient->set($memorizationKey, serialize($response));
+					self::$predisClient->expire($memorizationKey, $cacheDuration);
+				}
+				
 				if(Config::ENABLE_LOGGING)
 				{
 					$content = '';
@@ -507,7 +517,6 @@ abstract class Collins
 					{
 						$message = new \Guzzle\Log\MessageFormatter(Config::LOGGING_TEMPLATE);
 						$content .= $message->format($log['extras']['request'], $log['extras']['response']).PHP_EOL;
-
 					}
 					$path = Config::LOGGING_PATH
 								? Config::LOGGING_PATH
@@ -522,16 +531,6 @@ abstract class Collins
 						$path.DIRECTORY_SEPARATOR.$fileName,
 						$content
 					);
-				}
-
-				$response = $request->send();
-				
-				self::$memorizations[$memorizationKey] = $response;
-
-				if(\CollinsAPI\Config::ENABLE_REDIS_CACHE && $cacheDuration > 0)
-				{
-					self::$predisClient->set($memorizationKey, serialize($response));
-					self::$predisClient->expire($memorizationKey, $cacheDuration);
 				}
 			}
 		}
