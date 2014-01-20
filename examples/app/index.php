@@ -1,5 +1,6 @@
-<?php 
-require_once(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'Collins.php');
+<?php
+error_reporting(E_ALL);
+require_once(__DIR__.'/../../src/Collins.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -64,6 +65,8 @@ require_once(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY
 		<?php $page = isset($_GET['page']) && in_array($_GET['page'], array('home', 'detail', 'results')) ? $_GET['page'] : 'home'?>
 		<?php require_once($page.'.php')?>
 	</div>
+
+    <script type="text/javascript" src="http://map.dev/apps/js/api.js"></script>
 </body>
 
 </html>

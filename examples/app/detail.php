@@ -29,20 +29,7 @@ $images = $productResult->getImageURLsByVariant($product_id, $variant_id);
 	<img src="<?php echo $image?>" alt="Bild" />
 <?php endforeach;?>
 
-<script type="text/javascript">
-function addToCart(product_variant_id, quantity, userId)
-{
-	var data = {
-		id: product_variant_id,
-		quantity: quantity,
-		userId: userId,
-		appId: <?php echo CollinsAPI\Config::APP_ID?>
-	};
-	parent.postMessage(data, 'http://www.mary-paul.de');
-}
-</script>
-<br />
-<input type="button" onclick="addToCart(<?php echo $variant['id']?>, 1, 12345)" value="in den Warenkorb"/>
+<input type="button" onclick="collins.addToCart(<?php echo $variant['id']?>, 1, 12345, <?php echo CollinsAPI\Config::APP_ID?>)" value="in den Warenkorb"/>
 
 <h2>Weitere Varianten</h2>
 <?php foreach($product['variants'] as $v):?>
