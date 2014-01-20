@@ -569,7 +569,7 @@ spl_autoload_register(function($class)
 {
 	//use this autoload function only for classes of the
 	// the CollinsAPI namespace
-	if(preg_match('/^(\\\|)CollinsAPI.+/i', $class) > 0)
+	if(preg_match('/^(\\\|)CollinsAPI\\\.+/i', $class) > 0)
 	{
 		$class = str_replace(array(
 			'CollinsAPI',
