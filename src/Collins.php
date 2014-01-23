@@ -579,6 +579,12 @@ abstract class Collins
 		return $url;
 	}
 	
+	
+	/**
+	 * Returns a HTML script tag that loads the Collins JavaScript fie.
+	 * 
+	 * @return string HTML script tag
+	 */
 	public static function getJavaScriptTag()
 	{
 		$tag = '<script type="text/javascript" src="'.self::getJavaScriptURL().'"></script>';
