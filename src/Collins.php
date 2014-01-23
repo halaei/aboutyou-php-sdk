@@ -563,6 +563,28 @@ abstract class Collins
 		
 		return new Results\SuggestResult(self::getResponse($data));
 	}
+	
+	/**
+	 * Returns the URL to the Collins JavaScript file for helper functions
+	 * to add product variants into the basket of Mary & Paul or auto-resizing
+	 * the Iframe. This URL may be changed in future, so please use this method instead
+	 * of hardcoding the URL into your HTML template.
+	 * 
+	 * @return string URL to the JavaScript file
+	 */
+	public static function getJavaScriptURL()
+	{
+		$url = '//devcenter.mary-paul.de/apps/js/api.js';
+		
+		return $url;
+	}
+	
+	public static function getJavaScriptTag()
+	{
+		$tag = '<script type="text/javascript" src="'.self::getJavaScriptURL().'"></script>';
+		
+		return $tag;
+	}
 }
 
 spl_autoload_register(function($class)

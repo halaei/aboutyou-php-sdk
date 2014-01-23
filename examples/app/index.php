@@ -58,6 +58,8 @@ require_once(__DIR__.'/../../src/Collins.php');
 		border-width: 1px;
 	}
 </style>
+
+<?php echo CollinsAPI\Collins::getJavaScriptTag()?>
 </head>
 
 <body>
@@ -65,8 +67,6 @@ require_once(__DIR__.'/../../src/Collins.php');
 		<?php $page = isset($_GET['page']) && in_array($_GET['page'], array('home', 'detail', 'results')) ? $_GET['page'] : 'home'?>
 		<?php require_once($page.'.php')?>
 	</div>
-
-    <script type="text/javascript" src="http://map.dev/apps/js/api.js"></script>
 </body>
 
 </html>
