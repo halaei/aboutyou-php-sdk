@@ -8,12 +8,12 @@ namespace CollinsAPI\Results;
  */
 class InitiateOrderResult extends BasketResult
 {
-	/**
-	 * Root key of the JSON API result
-	 * @var string 
-	 */
-	protected $resultKey = 'initiate_order';
-	
-	public $user_token = null;
-	public $app_token = null;
+    /**
+     * Root key of the JSON API result
+     * @var string
+     */
+    protected $resultKey = 'initiate_order';
+
+    public $user_token = null;
+    public $app_token = null;
 }
