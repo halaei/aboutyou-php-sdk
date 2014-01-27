@@ -42,4 +42,18 @@ class FacetResult extends BaseResult
 
         return $facets;
     }
+    
+    public function getFacetByValue($groupId, $value)
+    {
+        foreach($this->facet as $facet) {
+            
+            if($facet['id'] == $groupId && 
+                    isset($facet['value']) &&
+                    $facet['value'] == $value) {
+                return $facet;
+            }
+        }
+        
+        return null;
+    }
 }
