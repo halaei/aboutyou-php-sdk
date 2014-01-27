@@ -8,5 +8,5 @@ namespace CollinsAPI;
  */
 class CollinsException extends \Exception
 {
-	
+
 }

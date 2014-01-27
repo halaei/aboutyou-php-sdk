@@ -8,10 +8,10 @@ namespace CollinsAPI\Results;
  */
 class LiveVariantResult extends BaseResult
 {
-	/**
-	 * Root key of the JSON API result
-	 * @var string 
-	 */
-	protected $resultKey = 'live_variant';
-	
+    /**
+     * Root key of the JSON API result
+     * @var string
+     */
+    protected $resultKey = 'live_variant';
+
 }
