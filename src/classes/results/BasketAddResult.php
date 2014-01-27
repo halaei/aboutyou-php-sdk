@@ -8,9 +8,9 @@ namespace CollinsAPI\Results;
  */
 class BasketAddResult extends BasketResult
 {
-	/**
-	 * Root key of the JSON API result
-	 * @var string 
-	 */
-	protected $resultKey = 'basket_add';
+    /**
+     * Root key of the JSON API result
+     * @var string
+     */
+    protected $resultKey = 'basket_add';
 }
