@@ -227,7 +227,7 @@ abstract class Collins
             $data['facets']['offset'] = $offset;
         }
 
-        return new Results\FacetResult(self::getResponse($data, 60 * 60));
+        return new Results\FacetResult(self::getResponse($data, 60 * 60 * 24));
     }
 
     /**
