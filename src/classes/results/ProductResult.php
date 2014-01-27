@@ -21,6 +21,34 @@ class ProductResult extends BaseResult
 	public $ids = array();
 	
 	/**
+	 * Returns the name of a product
+	 * @param int $productId ID of the product
+	 */
+	public function getName($productId)
+	{
+		foreach($this->ids as $product)
+		{
+			if($product['id'] == $productId)
+			{
+				return $product['name'];
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Returns an array of IDs of all the products found
+	 * @return array array of product IDs
+	 */
+	public function getProductIds()
+	{
+		return array_map(function($product) {
+			return $product['id'];
+		}, $this->ids);
+	}
+	
+	/**
 	 * Returns an array of variants that have the given facets. A variant
 	 * needs to have all of the passed facets to be in the result (AND search)
 	 * @param integer $productId ID of the product
@@ -167,6 +195,25 @@ class ProductResult extends BaseResult
 		}
 		
 		return $facets;
+	}
+	
+	public function getVariantIds($productId)
+	{
+		$ids = array();
+		if(isset($this->ids[$productId]))
+		{
+			$product = $this->ids[$productId];
+			
+			if(isset($product['variants']))
+			{
+				foreach($product['variants'] as $variant)
+				{
+					$ids[] = $variant['id'];
+				}
+			}
+		}
+		
+		return $ids;
 	}
 	
 	/**

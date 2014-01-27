@@ -50,6 +50,23 @@ class ProductSearchResult extends BaseResult
 	}
 	
 	/**
+	 * Returns the name of a product
+	 * @param int $productId ID of the product
+	 */
+	public function getName($productId)
+	{
+		foreach($this->products as $product)
+		{
+			if($product['id'] == $productId)
+			{
+				return $product['name'];
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Returns the URLs for images of the default variant of 
 	 * passed products. If no products are passed, URLs for
 	 * all products will be returneed

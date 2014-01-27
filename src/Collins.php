@@ -462,7 +462,7 @@ abstract class Collins
 		}
 		
 		$body = json_encode(array($data));
-		
+
 		$memorizationKey = md5($body);
 		$response = isset(self::$memorizations[$memorizationKey])
 						? self::$memorizations[$memorizationKey]
@@ -485,7 +485,7 @@ abstract class Collins
 				
 				$response = unserialize(self::$predisClient->get($memorizationKey));
 			}
-			
+
 			if(!$response)
 			{
 				$request = self::$client->post();
@@ -542,6 +542,7 @@ abstract class Collins
 					$response->getStatusCode()
 			);
 		}
+		
 		return $response;
 	}
 	
