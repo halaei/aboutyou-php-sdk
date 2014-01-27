@@ -8,31 +8,28 @@ namespace CollinsAPI\Results;
  */
 class CategoryResult extends BaseResult
 {
-	/**
-	 * Category data
-	 * @var array 
-	 */
-	public $categories = null;
-	
-	/**
-	 * Root key of the JSON API result
-	 * @var string 
-	 */
-	protected $resultKey = 'category';
-	
-	/**
-	 * Initializes this result object.
-	 * This means, the object attributes will be filled with 
-	 * the data given from the API response.
-	 * By default all the result attributes will be matches to the
-	 * class attributes. This method can be overwritten of custom
-	 * data operations need to be done.
-	 * 
-	 * @param void
-	 */
-	protected function init(array $result)
-	{
-		$this->categories = $result;
-	}
-	
+    /**
+     * Root key of the JSON API result
+     * @var string
+     */
+    protected $resultKey = 'category';
+    
+    /**
+     * Stores the category data from the API
+     * @var array
+     */
+    public $categories = null;
+    
+    /**
+     * Initializes the CategoryResult object
+     * This works a bit different than the default initialization because the API
+     * root indices are the IDs of the categories. So we just store the result data
+     * in $this->categories.
+     *
+     * @param void
+     */
+    protected function init(array $result)
+    {
+        $this->categories = $result;
+    }
 }
