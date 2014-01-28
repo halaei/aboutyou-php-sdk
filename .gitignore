@@ -1,6 +1,9 @@
 # Ingore common cruft
 .DS_STORE
 coverage
+test
+runtime
+logs
 .idea
 
 # Ignore potentially sensitive file
