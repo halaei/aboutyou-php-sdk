@@ -2,9 +2,9 @@
 namespace Collins;
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . 'Config.php');
-require_once(__DIR__ . DIRECTORY_SEPARATOR . 'Constants.php');
-require_once(__DIR__ . DIRECTORY_SEPARATOR . 'CollinsException.php');
 require_once(__DIR__ . DIRECTORY_SEPARATOR . 'vendor/autoload.php');
+
+use Collins\ShopApi\Results as Results;
 
 /**
  * Provides access to the Collins Frontend Platform.
@@ -61,7 +61,7 @@ abstract class ShopApi
      * @param int $user_session_id free to choose ID of the current website visitor.
      * The website visitor is the person the basket belongs to.
      * @param array $product_variants set of product variants
-     * @return \CollinsAPI\Results\BasketResult
+     * @return \Collins\ShopApi\Results\BasketResult
      */
     public static function addToBasket($user_session_id, $product_variants)
     {
@@ -83,7 +83,7 @@ abstract class ShopApi
      * @param int $product_variant_id
      * @param int $amount
      *
-     * @return \CollinsAPI\Results\BasketResult
+     * @return \Collins\ShopApi\Results\BasketResult
      */
     public static function addProductVariantToBasket(
         $user_session_id,
@@ -111,14 +111,14 @@ abstract class ShopApi
      * @param array $types array of types to search for
      * (Constants::TYPE_PRODUCTS and/or CONSTANTS::TYPE_CATEGORIES)
      *
-     * @return \CollinsAPI\Results\AutocompleteResult
+     * @return \Collins\ShopApi\Results\AutocompleteResult
      */
     public static function getAutocomplete(
         $searchword,
         $limit = 50,
         $types = array(
-            \CollinsAPI\Constants::TYPE_PRODUCTS,
-            \CollinsAPI\Constants::TYPE_CATEGORIES
+            \Collins\ShopApi\Constants::TYPE_PRODUCTS,
+            \Collins\ShopApi\Constants::TYPE_CATEGORIES
         )
     ) {
         $data = array(
@@ -139,7 +139,7 @@ abstract class ShopApi
      * @param int $user_session_id free to choose ID of the current website visitor.
      * The website visitor is the person the basket belongs to.
      * @param array $product_variants set of product variants
-     * @return \CollinsAPI\Results\BasketResult
+     * @return \Collins\ShopApi\Results\BasketResult
      */
     public static function getBasket($user_session_id)
     {
@@ -158,7 +158,7 @@ abstract class ShopApi
      * a result of the categories data.
      *
      * @param mixed $ids either a single category ID as integer or an array of IDs
-     * @return \CollinsAPI\Results\CategoryResult
+     * @return \Collins\ShopApi\Results\CategoryResult
      */
     public static function getCategories($ids)
     {
@@ -182,7 +182,7 @@ abstract class ShopApi
      * Returns the result of a category tree API request.
      * It simply returns the whole category tree of your app.
      *
-     * @return \CollinsAPI\Results\CategoryTreeResult
+     * @return \Collins\ShopApi\Results\CategoryTreeResult
      */
     public static function getCategoryTree()
     {
@@ -198,7 +198,7 @@ abstract class ShopApi
      * It simply returns all the facets that are relevant for your app.
      *
      * @param array $group_ids array of group ids
-     * @return \CollinsAPI\Results\FacetResult
+     * @return \Collins\ShopApi\Results\FacetResult
      */
     public static function getFacets($group_ids = [], $limit = 0, $offset = 0)
     {
@@ -230,7 +230,7 @@ abstract class ShopApi
      * Returns the result of a facet type API request.
      * It simply returns all the ids of facet groups tat are relevant for your app.
      *
-     * @return \CollinsAPI\Results\FacetTypeResult
+     * @return \Collins\ShopApi\Results\FacetTypeResult
      */
     public static function getFacetTypes()
     {
@@ -251,7 +251,7 @@ abstract class ShopApi
      * @param string $cancel_url URL Collins will redirect to if the user cancels the order
      * on purpose.
      * @param string $error_url URL Collins will redirect to if the order couldn't be finished.
-     * * @return \CollinsAPI\Results\InitiateOrderResult
+     * * @return \Collins\ShopApi\Results\InitiateOrderResult
      */
     public static function initiateOrder($user_session_id, $success_url, $cancel_url, $error_url)
     {
@@ -276,7 +276,7 @@ abstract class ShopApi
      * single products e.g. before a product is added to the basket.
      *
      * @param mixed $ids either a single product ID as integer or an array of IDs
-     * @return \CollinsAPI\Results\LiveVariantResult
+     * @return \Collins\ShopApi\Results\LiveVariantResult
      */
     public static function getLiveVariant($ids)
     {
@@ -303,7 +303,7 @@ abstract class ShopApi
      * This field is required for tracking reasons.
      * @param array $filter contains data to filter products for
      * @param array $result contains data for reducing the result
-     * @return \CollinsAPI\Results\ProductSearchResult
+     * @return \Collins\ShopApi\Results\ProductSearchResult
      */
     public static function getProductSearch(
         $user_session_id,
@@ -351,7 +351,7 @@ abstract class ShopApi
      *
      * @param mixed $ids either a single category ID as integer or an array of IDs
      * @param array $fields fields of product data to be returned
-     * @return \CollinsAPI\Results\ProductResult
+     * @return \Collins\ShopApi\Results\ProductResult
      */
     public static function getProducts(
         $ids,
@@ -463,7 +463,7 @@ abstract class ShopApi
             : null;
 
         if (!$response) {
-            if (\CollinsAPI\Config::ENABLE_REDIS_CACHE) {
+            if (\Collins\ShopApi\Config::ENABLE_REDIS_CACHE) {
                 if (!self::$predisClient) {
                     self::$predisClient = new \Predis\Client(
                         array(
@@ -493,7 +493,7 @@ abstract class ShopApi
 
                 self::$memorizations[$memorizationKey] = $response;
 
-                if (\CollinsAPI\Config::ENABLE_REDIS_CACHE && $cacheDuration > 0) {
+                if (\Collins\ShopApi\Config::ENABLE_REDIS_CACHE && $cacheDuration > 0) {
                     self::$predisClient->set($memorizationKey, serialize($response));
                     self::$predisClient->expire($memorizationKey, $cacheDuration);
                 }
@@ -537,7 +537,7 @@ abstract class ShopApi
      * with the searchword you pass (e.g. "stretch" for "jeans").
      *
      * @param string $searchword the search string to search for
-     * @return \CollinsAPI\Results\SuggestResult
+     * @return \Collins\ShopApi\Results\SuggestResult
      */
     public static function getSuggest($searchword)
     {
@@ -582,12 +582,12 @@ abstract class ShopApi
 /*spl_autoload_register(
     function ($class) {
         //use this autoload function only for classes of the
-        // the CollinsAPI namespace
-        if (preg_match('/^(\\\|)CollinsAPI.+/i', $class) > 0) {
+        // the Collins\ShopApi namespace
+        if (preg_match('/^(\\\|)Collins\ShopApi.+/i', $class) > 0) {
             $class = str_replace(
                 array(
-                    'CollinsAPI',
-                    '\CollinsAPI'
+                    'Collins\ShopApi',
+                    '\Collins\ShopApi'
                 ),
                 '',
                 $class
