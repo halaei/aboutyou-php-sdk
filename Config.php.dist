@@ -1,5 +1,5 @@
 <?php
-namespace CollinsAPI;
+namespace Collins\ShopApi;
 
 /**
  * Contains configuration data needed for app development.
@@ -8,7 +8,10 @@ namespace CollinsAPI;
  */
 abstract class Config
 {
-    const ENTRY_POINT_URL = 'http://ant-shop-api1.wavecloud.de/api';
+    // Live API
+    //const ENTRY_POINT_URL = 'http://ant-shop-api1.wavecloud.de/api';
+    // Stage API
+    const ENTRY_POINT_URL = 'http://ant-core-staging-s-api1.wavecloud.de/api';
     const APP_ID = ''; // = App ID from the DevCenter
     const APP_PASSWORD = ''; // = App Token from the DevCenter
     
