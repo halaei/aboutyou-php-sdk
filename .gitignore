@@ -1,2 +1,16 @@
-/index.php
+# Ingore common cruft
 .DS_STORE
+coverage
+test
+runtime
+logs
+.idea
+
+# Ignore potentially sensitive file
+Config.php
+
+# Ignore composer generated files
+composer.phar
+composer.lock
+composer-test.lock
+vendor/
