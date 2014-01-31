@@ -1,26 +1,28 @@
 <?php
 namespace Collins;
 
-//require_once(__DIR__ . DIRECTORY_SEPARATOR . 'vendor/autoload.php');
-
 use Collins\ShopApi\Results as Results;
 use Collins\ShopApi\Config;
+use Psr\Log\LoggerInterface;
 
 /**
  * Provides access to the Collins Frontend Platform.
  * This class is abstract because it's not meant to be instanciated.
  * All the public methods cover a single API query.
  *
- * @author Antevorte GmbH
+ * @author Antevorte GmbH & Co KG
  */
-abstract class ShopApi
+class ShopApi
 {
+    const API_END_POINT_STAGE = 'http://ant-core-staging-s-api1.wavecloud.de/api';
+    const API_END_POINT_LIVE  = 'http://ant-shop-api1.wavecloud.de/api';
+
     /**
      * Guzzle client that is needed to execute API requests.
      * Will be initialized before the first request is done.
      * @var \Guzzle\Http\Client
      */
-    protected static $client = null;
+    protected $guzzleClient = null;
 
     /**
      * If Redis Cache is enabled, this predis client will be used
@@ -28,32 +30,110 @@ abstract class ShopApi
      * Will be initialized before the first request is done.
      * @var \Predis\Client
      */
-    protected static $predisClient = null;
+    protected $predisClient = null;
+    protected $memorizations = array();
 
+    /** @var LoggerInterface */
+    protected $logger;
 
-    protected static $appId = Config::APP_ID;
-    protected static $appPassword = Config::APP_PASSWORD;
+    /** @var CacheInterface */
+    protected $cache;
 
-    protected static $memorizations = array();
+    /** @var string */
+    protected $appId = null;
+    /** @var string */
+    protected $appPassword = null;
 
     /**
-     * Sets the app id for client authentification.
-     * @param integer $id
+     * @var string
+     *
+     * current end points are:
+     * stage: http://ant-core-staging-s-api1.wavecloud.de/api
+     * live:  http://ant-shop-api1.wavecloud.de/api
      */
-    public static function setAppId($id)
+    protected $apiEndPoint;
+
+    /**
+     * @param string $appId
+     * @param string $appPassword
+     * @param string $apiEndPoint
+     * @param CacheInterface $cache
+     * @param LoggerInterface $logger
+     */
+    public function __construct($appId, $appPassword, $apiEndPoint = 'stage', $cache = null, LoggerInterface $logger = null)
     {
-        self::$appId = $id;
+        $this->setAppCredencials($appId, $appPassword);
+        $this->setApiEndpoint($apiEndPoint);
     }
 
     /**
-     * Sets the app password for client authentification.
-     * @param string $password
+     * @param string $appId        the app id for client authentification
+     * @param string $appPassword  the app password/token for client authentification.
      */
-    public static function setAppPassword($password)
+    public function setAppCredencials($appId, $appPassword)
     {
-        self::$appPassword = $password;
+        $this->appId = $appId;
+        $this->appPassword = $appPassword;
     }
 
+    /**
+     * @return string
+     */
+    public function getApiEndPoint()
+    {
+        return $this->apiEndPoint;
+    }
+
+    /**
+     * @param string $apiEndPoint the endpoint can be the string 'stage' or 'live',
+     *                            then the default endpoints will be used or
+     *                            an absolute url
+     */
+    public function setApiEndpoint($apiEndPoint)
+    {
+        switch ($apiEndPoint) {
+            case 'stage':
+                $this->apiEndPoint = self::API_END_POINT_STAGE;
+                break;
+            case 'live':
+                $this->apiEndPoint = self::API_END_POINT_STAGE;
+                break;
+            default:
+                $this->apiEndPoint = $apiEndPoint;
+        }
+    }
+
+    /**
+     * @param CacheInterface $cache
+     */
+    public function setCache($cache)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
+     * @return CacheInterface
+     */
+    public function getCache()
+    {
+        return $this->cache;
+    }
+
+    /**
+     * @param \Psr\Log\LoggerInterface $logger
+     */
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
+     * @return \Psr\Log\LoggerInterface
+     */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
 
     /**
      * Adds a set of product variants to the basket and returns
@@ -63,7 +143,7 @@ abstract class ShopApi
      * @param array $product_variants set of product variants
      * @return \Collins\ShopApi\Results\BasketResult
      */
-    public static function addToBasket($user_session_id, $product_variants)
+    public function addToBasket($user_session_id, $product_variants)
     {
         $data = array(
             'basket_add' => array(
@@ -85,7 +165,7 @@ abstract class ShopApi
      *
      * @return \Collins\ShopApi\Results\BasketResult
      */
-    public static function addProductVariantToBasket(
+    public function addProductVariantToBasket(
         $user_session_id,
         $product_variant_id,
         $amount
@@ -113,7 +193,7 @@ abstract class ShopApi
      *
      * @return \Collins\ShopApi\Results\AutocompleteResult
      */
-    public static function getAutocomplete(
+    public function getAutocomplete(
         $searchword,
         $limit = 50,
         $types = array(
@@ -141,7 +221,7 @@ abstract class ShopApi
      * @param array $product_variants set of product variants
      * @return \Collins\ShopApi\Results\BasketResult
      */
-    public static function getBasket($user_session_id)
+    public function getBasket($user_session_id)
     {
         $data = array(
             'basket_get' => array(
@@ -160,7 +240,7 @@ abstract class ShopApi
      * @param mixed $ids either a single category ID as integer or an array of IDs
      * @return \Collins\ShopApi\Results\CategoryResult
      */
-    public static function getCategories($ids)
+    public function getCategories($ids)
     {
         // we allow to pass a single ID instead of an array
         if (!is_array($ids)) {
@@ -184,7 +264,7 @@ abstract class ShopApi
      *
      * @return \Collins\ShopApi\Results\CategoryTreeResult
      */
-    public static function getCategoryTree()
+    public function getCategoryTree()
     {
         $data = array(
             'category_tree' => (object)null
@@ -200,7 +280,7 @@ abstract class ShopApi
      * @param array $group_ids array of group ids
      * @return \Collins\ShopApi\Results\FacetResult
      */
-    public static function getFacets($group_ids = [], $limit = 0, $offset = 0)
+    public function getFacets($group_ids = [], $limit = 0, $offset = 0)
     {
         // special case, fetch all facets
         if (empty($group_ids) && empty($limit) && empty($offset)) {
@@ -232,7 +312,7 @@ abstract class ShopApi
      *
      * @return \Collins\ShopApi\Results\FacetTypeResult
      */
-    public static function getFacetTypes()
+    public function getFacetTypes()
     {
         $data = array(
             'facet_types' => (object)null
@@ -253,7 +333,7 @@ abstract class ShopApi
      * @param string $error_url URL Collins will redirect to if the order couldn't be finished.
      * * @return \Collins\ShopApi\Results\InitiateOrderResult
      */
-    public static function initiateOrder($user_session_id, $success_url, $cancel_url, $error_url)
+    public function initiateOrder($user_session_id, $success_url, $cancel_url, $error_url)
     {
         $data = array(
             'initiate_order' => array(
@@ -278,7 +358,7 @@ abstract class ShopApi
      * @param mixed $ids either a single product ID as integer or an array of IDs
      * @return \Collins\ShopApi\Results\LiveVariantResult
      */
-    public static function getLiveVariant($ids)
+    public function getLiveVariant($ids)
     {
         // we allow to pass a single ID instead of an array
         if (!is_array($ids)) {
@@ -305,7 +385,7 @@ abstract class ShopApi
      * @param array $result contains data for reducing the result
      * @return \Collins\ShopApi\Results\ProductSearchResult
      */
-    public static function getProductSearch(
+    public function getProductSearch(
         $user_session_id,
         array $filter = array(),
         array $result = array(
@@ -353,7 +433,7 @@ abstract class ShopApi
      * @param array $fields fields of product data to be returned
      * @return \Collins\ShopApi\Results\ProductResult
      */
-    public static function getProducts(
+    public function getProducts(
         $ids,
         array $fields = array(
             'id',
@@ -397,7 +477,7 @@ abstract class ShopApi
      * @params mixed $facets facet ID or array of facet IDs you want to filter for
      * @param array $result contains data for reducing the result
      */
-    public static function getProductSearchByFacet(
+    public function getProductSearchByFacet(
         $user_session_id,
         $facet_group_id,
         $facets,
@@ -449,23 +529,23 @@ abstract class ShopApi
      *
      * @throws CollinsException will be thrown if response was invalid
      */
-    protected static function getResponse($data, $cacheDuration = 0)
+    protected function getResponse($data, $cacheDuration = 0)
     {
-        if (!self::$client) {
-            self::$client = new \Guzzle\Http\Client(Config::ENTRY_POINT_URL);
+        if (!$this->guzzleClient) {
+            $this->guzzleClient = new \Guzzle\Http\Client(Config::ENTRY_POINT_URL);
         }
 
         $body = json_encode(array($data));
 
         $memorizationKey = md5($body);
-        $response = isset(self::$memorizations[$memorizationKey])
-            ? self::$memorizations[$memorizationKey]
+        $response = isset($this->memorizations[$memorizationKey])
+            ? $this->memorizations[$memorizationKey]
             : null;
 
         if (!$response) {
             if (\Collins\ShopApi\Config::ENABLE_REDIS_CACHE) {
-                if (!self::$predisClient) {
-                    self::$predisClient = new \Predis\Client(
+                if (!$this->predisClient) {
+                    $this->predisClient = new \Predis\Client(
                         array(
                             'scheme' => 'tcp',
                             'host' => '127.0.0.1',
@@ -474,13 +554,13 @@ abstract class ShopApi
                     );
                 }
 
-                $response = unserialize(self::$predisClient->get($memorizationKey));
+                $response = unserialize($this->predisClient->get($memorizationKey));
             }
 
             if (!$response) {
-                $request = self::$client->post();
+                $request = $this->guzzleClient->post();
                 $request->setBody($body);
-                $request->setAuth(self::$appId, self::$appPassword);
+                $request->setAuth($this->appId, $this->appPassword);
 
                 if (Config::ENABLE_LOGGING) {
                     $adapter = new \Guzzle\Log\ArrayLogAdapter();
@@ -491,11 +571,11 @@ abstract class ShopApi
 
                 $response = $request->send();
 
-                self::$memorizations[$memorizationKey] = $response;
+                $this->memorizations[$memorizationKey] = $response;
 
                 if (\Collins\ShopApi\Config::ENABLE_REDIS_CACHE && $cacheDuration > 0) {
-                    self::$predisClient->set($memorizationKey, serialize($response));
-                    self::$predisClient->expire($memorizationKey, $cacheDuration);
+                    $this->predisClient->set($memorizationKey, serialize($response));
+                    $this->predisClient->expire($memorizationKey, $cacheDuration);
                 }
 
                 if (Config::ENABLE_LOGGING) {
@@ -539,7 +619,7 @@ abstract class ShopApi
      * @param string $searchword the search string to search for
      * @return \Collins\ShopApi\Results\SuggestResult
      */
-    public static function getSuggest($searchword)
+    public function getSuggest($searchword)
     {
         $data = array(
             'suggest' => array(
@@ -558,7 +638,7 @@ abstract class ShopApi
      *
      * @return string URL to the JavaScript file
      */
-    public static function getJavaScriptURL()
+    public function getJavaScriptURL()
     {
         $url = '//devcenter.mary-paul.de/apps/js/api.js';
 
@@ -571,41 +651,10 @@ abstract class ShopApi
      *
      * @return string HTML script tag
      */
-    public static function getJavaScriptTag()
+    public function getJavaScriptTag()
     {
         $tag = '<script type="text/javascript" src="' . self::getJavaScriptURL() . '"></script>';
 
         return $tag;
     }
 }
-
-/*spl_autoload_register(
-    function ($class) {
-        //use this autoload function only for classes of the
-        // the Collins\ShopApi namespace
-        if (preg_match('/^(\\\|)Collins\ShopApi.+/i', $class) > 0) {
-            $class = str_replace(
-                array(
-                    'Collins\ShopApi',
-                    '\Collins\ShopApi'
-                ),
-                '',
-                $class
-            );
-
-
-            $pathElements = explode('\\', $class);
-
-            $path = '';
-            foreach ($pathElements as $i => $pathElement) {
-                if ($i < count($pathElements) - 1) {
-                    $pathElement = strtolower($pathElement);
-                }
-
-                $path .= DIRECTORY_SEPARATOR . $pathElement;
-            }
-
-            require_once('classes' . $path . '.php');
-        }
-    }
-);*/
