@@ -22,11 +22,10 @@
 
     "require": {
         "php": ">=5.3.3",
-        "guzzle/guzzle": "~3.7",
-        "predis/predis": "0.8.*"
+        "psr/log": "1.0.*",
+        "guzzle/guzzle": "~3.7"
     },
     "require-dev": {
-        "psr/log": "1.0.*",
         "monolog/monolog": "1.*",
         "phpunit/phpunit": "3.7.*"
     },
