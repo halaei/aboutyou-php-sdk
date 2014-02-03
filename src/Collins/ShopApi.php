@@ -1,9 +1,12 @@
 <?php
 namespace Collins;
 
+use Collins\Cache\NoCache;
 use Collins\ShopApi\Results as Results;
 use Collins\ShopApi\Config;
 use Psr\Log\LoggerInterface;
+use Collins\Cache\CacheInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Provides access to the Collins Frontend Platform.
@@ -23,15 +26,6 @@ class ShopApi
      * @var \Guzzle\Http\Client
      */
     protected $guzzleClient = null;
-
-    /**
-     * If Redis Cache is enabled, this predis client will be used
-     * for setting and getting cache date.
-     * Will be initialized before the first request is done.
-     * @var \Predis\Client
-     */
-    protected $predisClient = null;
-    protected $memorizations = array();
 
     /** @var LoggerInterface */
     protected $logger;
@@ -64,6 +58,8 @@ class ShopApi
     {
         $this->setAppCredencials($appId, $appPassword);
         $this->setApiEndpoint($apiEndPoint);
+        $this->setCache($cache ?: new NoCache());
+        $this->setLogger($logger ?: new NullLogger());
     }
 
     /**
@@ -106,7 +102,7 @@ class ShopApi
     /**
      * @param CacheInterface $cache
      */
-    public function setCache($cache)
+    public function setCache(CacheInterface $cache)
     {
         $this->cache = $cache;
     }
@@ -122,9 +118,9 @@ class ShopApi
     /**
      * @param \Psr\Log\LoggerInterface $logger
      */
-    public function setLogger($logger)
+    public function setLogger(LoggerInterface $logger)
     {
-        $this->logger = $logger;
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**
@@ -257,6 +253,17 @@ class ShopApi
         return new Results\CategoryResult(self::getResponse($data, 60 * 60));
     }
 
+    public function fetchCategoryTree($depth = 0)
+    {
+        $data = array(
+            'category_tree' => (object)null
+        );
+
+        $response = $this->request($data);
+        $jsonObject = json_decode($response->getBody(true));
+
+        return $jsonObject[0]->category_tree;
+    }
 
     /**
      * Returns the result of a category tree API request.
@@ -518,6 +525,16 @@ class ShopApi
         );
     }
 
+    public function getClient()
+    {
+        if ($this->guzzleClient) {
+            return $this->guzzleClient;
+        }
+        $this->guzzleClient = new \Guzzle\Http\Client($this->getApiEndPoint());
+
+        return $this->guzzleClient;
+    }
+
     /**
      * Builds a JSON string representing the request data via Guzzle.
      * Executes the API request.
@@ -529,77 +546,54 @@ class ShopApi
      *
      * @throws CollinsException will be thrown if response was invalid
      */
-    protected function getResponse($data, $cacheDuration = 0)
+    protected function request($data, $cacheDuration = 0)
     {
-        if (!$this->guzzleClient) {
-            $this->guzzleClient = new \Guzzle\Http\Client(Config::ENTRY_POINT_URL);
-        }
+        $apiClient = $this->getClient();
 
         $body = json_encode(array($data));
 
-        $memorizationKey = md5($body);
-        $response = isset($this->memorizations[$memorizationKey])
-            ? $this->memorizations[$memorizationKey]
-            : null;
+        $cacheKey = md5($body);
 
-        if (!$response) {
-            if (\Collins\ShopApi\Config::ENABLE_REDIS_CACHE) {
-                if (!$this->predisClient) {
-                    $this->predisClient = new \Predis\Client(
-                        array(
-                            'scheme' => 'tcp',
-                            'host' => '127.0.0.1',
-                            'port' => 6379
-                        )
-                    );
-                }
-
-                $response = unserialize($this->predisClient->get($memorizationKey));
-            }
-
-            if (!$response) {
-                $request = $this->guzzleClient->post();
-                $request->setBody($body);
-                $request->setAuth($this->appId, $this->appPassword);
-
-                if (Config::ENABLE_LOGGING) {
-                    $adapter = new \Guzzle\Log\ArrayLogAdapter();
-                    $logPlugin = new \Guzzle\Plugin\Log\LogPlugin($adapter);
-
-                    $request->addSubscriber($logPlugin);
-                }
-
-                $response = $request->send();
-
-                $this->memorizations[$memorizationKey] = $response;
-
-                if (\Collins\ShopApi\Config::ENABLE_REDIS_CACHE && $cacheDuration > 0) {
-                    $this->predisClient->set($memorizationKey, serialize($response));
-                    $this->predisClient->expire($memorizationKey, $cacheDuration);
-                }
-
-                if (Config::ENABLE_LOGGING) {
-                    $content = '';
-                    foreach ($adapter->getLogs() as $log) {
-                        $message = new \Guzzle\Log\MessageFormatter(Config::LOGGING_TEMPLATE);
-                        $content .= $message->format($log['extras']['request'], $log['extras']['response']) . PHP_EOL;
-                    }
-                    $path = Config::LOGGING_PATH
-                        ? Config::LOGGING_PATH
-                        : __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'logs';
-
-                    $operation = array_keys($data);
-                    $operation = $operation[0];
-
-                    $fileName = date('Y-m-d_H_i_s_') . $operation . '_' . uniqid() . '.txt';
-
-                    file_put_contents(
-                        $path . DIRECTORY_SEPARATOR . $fileName,
-                        $content
-                    );
-                }
-            }
+        $response = $this->cache->get($cacheKey);
+        if ($response) {
+            return $response;
         }
+
+        $request = $apiClient->post();
+        $request->setBody($body);
+        $request->setAuth($this->appId, $this->appPassword);
+
+//        if (Config::ENABLE_LOGGING) {
+//            $adapter = new \Guzzle\Log\ArrayLogAdapter();
+//            $logPlugin = new \Guzzle\Plugin\Log\LogPlugin($adapter);
+//
+//            $request->addSubscriber($logPlugin);
+//        }
+
+        $response = $request->send();
+
+        $this->cache->set($cacheKey, $response, $cacheDuration);
+
+//        if (Config::ENABLE_LOGGING) {
+//            $content = '';
+//            foreach ($adapter->getLogs() as $log) {
+//                $message = new \Guzzle\Log\MessageFormatter(Config::LOGGING_TEMPLATE);
+//                $content .= $message->format($log['extras']['request'], $log['extras']['response']) . PHP_EOL;
+//            }
+//            $path = Config::LOGGING_PATH
+//                ? Config::LOGGING_PATH
+//                : __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'logs';
+//
+//            $operation = array_keys($data);
+//            $operation = $operation[0];
+//
+//            $fileName = date('Y-m-d_H_i_s_') . $operation . '_' . uniqid() . '.txt';
+//
+//            file_put_contents(
+//                $path . DIRECTORY_SEPARATOR . $fileName,
+//                $content
+//            );
+//        }
 
         if (!$response->isSuccessful() || !is_array($response->json())) {
             throw new CollinsException(

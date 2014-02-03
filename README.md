@@ -1,7 +1,14 @@
 # Shop API SDK
 
 ## Installation
-You chould use [Composer](http://getcomposer.org/).
+
+The recommended way to install the ShopAPI is through [Composer](http://getcomposer.org).
+
+```bash
+# Install Composer
+curl -sS https://getcomposer.org/installer | php
+
+# Add the ShopAPI as a dependency
 
     ``` json
     {
@@ -16,6 +23,11 @@ You chould use [Composer](http://getcomposer.org/).
         }
     }
     ```
+After installing, you need to require Composer's autoloader:
+
+```php
+require 'vendor/autoload.php';
+```
 
 ## Testing
 $ php vendor/phpunit/phpunit/phpunit.php tests
