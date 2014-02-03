@@ -30,39 +30,46 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
 	/**
 	 *
 	 */
-	public function testFetchProduct()
+	public function testFetchProducts()
 	{
-		$categoryId = 123;
-		$product = $this->api->fetchProductById($categoryId);
-		$this->checkProduct($product);
+		$productIds = array(123, 456);
+		$products = $this->api->fetchProductsById($productIds);
+		$this->checkProduct($products[123]);
+		$this->checkProduct($products[456]);
 	}
 
 	/**
-	 * @depends testFetchProduct
+	 *
 	 */
-	public function testFetchProducts()
+	public function testSearchProducts()
 	{
-		// fetch all available products
-		$products = $this->api->fetchProducts();
+		// get all available products
+		$products = $this->api->searchProducts();
 		$this->checkProductList($products);
 
-		// fetch products by filter
+		// search products by filter
 		$filter = array(
 			'categoryId' => 123
 		);
-		$products = $this->api->fetchProducts($filter);
+		$products = $this->api->searchProducts($filter);
 		$this->checkProductList($products);
 
-		// fetch products and sort
+		// search products and sort
 		$sorting = array('name', ShopApi::SORT_ASC);
-		$products = $this->api->fetchProducts(null, $sorting);
+		$products = $this->api->searchProducts(null, $sorting);
 		$this->checkProductList($products);
 
-		// fetch limited products
-		$limit = 20;
-		$page = 2;
-		$pagination = [$limit, $page];
-		$products = $this->api->fetchProducts(null, null, $pagination);
+		// search products with limit
+		$pagination = array(
+			'pageSize' => 20,
+			'page' => 1,
+		);
+		// or:
+		$pagination = array(
+			'limit' => 20,
+			'offset' => 21,
+		);
+		$products = $this->api->searchProducts(null, null, $pagination);
 		$this->checkProductList($products);
 	}
 
