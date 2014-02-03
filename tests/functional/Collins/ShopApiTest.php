@@ -34,6 +34,7 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
 	{
 		$categoryId = 123;
 		$product = $this->api->fetchProductById($categoryId);
+		$this->checkProduct($product);
 	}
 
 	/**
@@ -43,22 +44,26 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
 	{
 		// fetch all available products
 		$products = $this->api->fetchProducts();
+		$this->checkProductList($products);
 
 		// fetch products by filter
 		$filter = array(
 			'categoryId' => 123
 		);
 		$products = $this->api->fetchProducts($filter);
+		$this->checkProductList($products);
 
 		// fetch products and sort
 		$sorting = array('name', ShopApi::SORT_ASC);
 		$products = $this->api->fetchProducts(null, $sorting);
+		$this->checkProductList($products);
 
 		// fetch limited products
-		$pagination = new Pagination();
-		$pagination->limit = 20;
-		$pagination->page = 2;
+		$limit = 20;
+		$page = 2;
+		$pagination = [$limit, $page];
 		$products = $this->api->fetchProducts(null, null, $pagination);
+		$this->checkProductList($products);
 	}
 
 	/**
@@ -66,13 +71,13 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testFetchCategoryTree()
 	{
-		$depth = 2;
-		$rootCategories = $this->api->fetchCategoryTree($depth);
+		$depth = 1;
+		$tree = $this->api->fetchCategoryTree($depth);
+		$this->checkCategory($tree->category);
 
-		foreach( $rootCategories as $category ) {
-			foreach( $category->childs as $childCategory ) {
-				$this->assertNull($childCategory->childs);
-			}
+		foreach( $tree->childs as $subTree ) {
+			$this->checkCategory($subTree->category);
+			$this->assertEmpty($subTree->childs);
 		}
 	}
 
@@ -83,5 +88,43 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
 	{
 		$categoryId = 123;
 		$categories = $this->api->fetchParentCategories($categoryId);
+
+		$this->assertTrue(is_array($categories));
+		foreach( $categories as $category ) {
+			$this->checkCategory($category);
+		}
+	}
+
+	/**
+	 *
+	 */
+	private function checkProduct($product)
+	{
+		$this->assertObjectHasAttribute('id', $product);
+		$this->assertObjectHasAttribute('name', $product);
+		//TODO: check if this is a product
+	}
+
+	/**
+	 *
+	 */
+	private function checkProductList($products)
+	{
+		$this->assertTrue(is_array($products));
+		foreach( $products as $product ) {
+			$this->checkProduct($product);
+		}
+	}
+
+
+	/**
+	 *
+	 */
+	private function checkCategory($category)
+	{
+		$this->assertObjectHasAttribute('id', $category);
+		$this->assertObjectHasAttribute('name', $category);
+		$this->assertObjectHasAttribute('active', $category);
+		//TODO: check if this is a category
 	}
 }
