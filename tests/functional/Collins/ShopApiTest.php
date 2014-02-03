@@ -7,7 +7,6 @@
 namespace Collins\Test\Functional;
 
 use Collins\ShopApi;
-use Collins\ShopApi\Pagination;
 
 class ShopApiTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,15 +15,12 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
 	 */
 	private $api = null;
 
-	private $sessionId = null;
-
 	/**
 	 *
 	 */
 	public function setUp()
 	{
 		$this->api = new ShopApi('key', 'token');
-		$this->sessionId = 'testing';
 	}
 
 	/**
