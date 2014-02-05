@@ -47,6 +47,9 @@ class ShopApi
      */
     protected $apiEndPoint;
 
+    /** @var string */
+    protected $imageUrlTemplate;
+
     /**
      * @param string $appId
      * @param string $appPassword
@@ -60,6 +63,7 @@ class ShopApi
         $this->setApiEndpoint($apiEndPoint);
         $this->setCache($cache ?: new NoCache());
         $this->setLogger($logger ?: new NullLogger());
+        $this->setImageUrlTemplate();
     }
 
     /**
@@ -131,6 +135,57 @@ class ShopApi
         return $this->logger;
     }
 
+    public function setBaseImageUrl($baseImageUrl = null)
+    {
+        if (!$baseImageUrl) {
+            $baseImageUrl = 'http://cdn.mary-paul.de/product_images/';
+        } else {
+            $baseImageUrl = rtrim($baseImageUrl, '/') . '/';
+        }
+        $this->setImageUrlTemplate($baseImageUrl. '{{path}}/{{id}}_{{width}}_{{height}}{{extension}}');
+    }
+
+    /**
+     * @param string $imageUrlTemplate
+     */
+    public function setImageUrlTemplate($imageUrlTemplate = null)
+    {
+        $this->imageUrlTemplate = $imageUrlTemplate
+            ?: 'http://cdn.mary-paul.de/product_images/{{path}}/{{id}}_{{width}}_{{height}}{{extension}}';
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageUrlTemplate()
+    {
+        return $this->imageUrlTemplate;
+    }
+
+    public function buildImageUrl($id, $extension, $width, $height)
+    {
+        $path = substr($id, 0, 3);
+        $url = str_replace(
+            array(
+                '{{path}}',
+                '{{id}}',
+                '{{extension}}',
+                '{{width}}',
+                '{{height}}'
+            ),
+            array(
+                $path,
+                $id,
+                $extension,
+                $width,
+                $height
+            ),
+            $this->imageUrlTemplate
+        );
+
+        return $url;
+    }
+
     /**
      * Adds a set of product variants to the basket and returns
      * the result of a basket API request.
@@ -148,7 +203,7 @@ class ShopApi
             )
         );
 
-        return new Results\BasketAddResult(self::getResponse($data));
+        return new Results\BasketAddResult($this->request($data), $this);
     }
 
     /**
@@ -205,7 +260,7 @@ class ShopApi
             )
         );
 
-        return new Results\AutocompleteResult(self::getResponse($data));
+        return new Results\AutocompleteResult($this->request($data), $this);
     }
 
     /**
@@ -225,7 +280,7 @@ class ShopApi
             )
         );
 
-        return new Results\BasketGetResult(self::getResponse($data));
+        return new Results\BasketGetResult($this->request($data), $this);
     }
 
     /**
@@ -250,7 +305,7 @@ class ShopApi
             )
         );
 
-        return new Results\CategoryResult(self::getResponse($data, 60 * 60));
+        return new Results\CategoryResult($this->request($data, 60 * 60), $this);
     }
 
     public function fetchCategoryTree($depth = 0)
@@ -262,7 +317,7 @@ class ShopApi
         $response = $this->request($data);
         $jsonObject = json_decode($response->getBody(true));
 
-        return $jsonObject[0]->category_tree;
+        return (object)$jsonObject[0]->category_tree;
     }
 
     /**
@@ -277,7 +332,7 @@ class ShopApi
             'category_tree' => (object)null
         );
 
-        return new Results\CategoryTreeResult(self::getResponse($data, 60 * 60));
+        return new Results\CategoryTreeResult($this->request($data, 60 * 60), $this);
     }
 
     /**
@@ -291,7 +346,7 @@ class ShopApi
     {
         // special case, fetch all facets
         if (empty($group_ids) && empty($limit) && empty($offset)) {
-            return new Results\FacetResult(self::getResponse(['facets' => (object)null], 60 * 60));
+            return new Results\FacetResult($this->request(['facets' => (object)null], 60 * 60), $this);
         }
 
         $facets = [];
@@ -310,7 +365,7 @@ class ShopApi
             $facets['offset'] = $offset;
         }
 
-        return new Results\FacetResult(self::getResponse(['facets' => $facets], 60 * 60));
+        return new Results\FacetResult($this->request(['facets' => $facets], 60 * 60), $this);
     }
 
     /**
@@ -325,7 +380,7 @@ class ShopApi
             'facet_types' => (object)null
         );
 
-        return new Results\FacetTypeResult(self::getResponse($data, 60 * 60));
+        return new Results\FacetTypeResult($this->request($data, 60 * 60), $this);
     }
 
     /**
@@ -351,7 +406,7 @@ class ShopApi
             )
         );
 
-        return new Results\InitiateOrderResult(self::getResponse($data));
+        return new Results\InitiateOrderResult($this->request($data), $this);
     }
 
     /**
@@ -377,7 +432,7 @@ class ShopApi
                 'ids' => $ids
             )
         );
-        return new Results\LiveVariantResult(self::getResponse($data));
+        return new Results\LiveVariantResult($this->request($data), $this);
     }
 
     /**
@@ -428,7 +483,7 @@ class ShopApi
             $data['product_search']['result'] = $result;
         }
 
-        return new Results\ProductSearchResult(self::getResponse($data));
+        return new Results\ProductSearchResult($this->request($data), $this);
     }
 
     /**
@@ -471,7 +526,7 @@ class ShopApi
             )
         );
 
-        return new Results\ProductResult(self::getResponse($data));
+        return new Results\ProductResult($this->request($data), $this);
     }
 
     /**
@@ -523,6 +578,11 @@ class ShopApi
             $filter,
             $result
         );
+    }
+
+    public function setClient(\Guzzle\Http\Client $guzzleClient)
+    {
+        $this->guzzleClient = $guzzleClient;
     }
 
     public function getClient()
@@ -621,7 +681,7 @@ class ShopApi
             )
         );
 
-        return new Results\SuggestResult(self::getResponse($data));
+        return new Results\SuggestResult($this->request($data), $this);
     }
 
     /**

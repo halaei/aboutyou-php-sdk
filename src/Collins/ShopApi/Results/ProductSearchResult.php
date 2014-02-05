@@ -69,26 +69,9 @@ class ProductSearchResult extends BaseResult
             if (isset($product['default_image'])) {
                 $image = $product['default_image'];
                 $id = $image['id'];
-                $path = substr($id, 0, 3);
-                $extension = $image['extension'];
+                $extension = isset($image['extension']) ? $image['extension'] : $image['ext'];
 
-                $url = str_replace(
-                    array(
-                        '{{path}}',
-                        '{{id}}',
-                        '{{extension}}',
-                        '{{width}}',
-                        '{{height}}'
-                    ),
-                    array(
-                        $path,
-                        $id,
-                        $extension,
-                        $width,
-                        $height
-                    ),
-                    \CollinsAPI\Config::IMAGE_URL
-                );
+                $url = $this->api->buildImageUrl($id, $extension, $width, $height);
 
                 if (!isset($urls[$product['id']])) {
                     $urls[$product['id']] = array();
@@ -169,26 +152,9 @@ class ProductSearchResult extends BaseResult
                         if (isset($variant['images'])) {
                             foreach ($variant['images'] as $image) {
                                 $id = $image['id'];
-                                $path = substr($id, 0, 3);
-                                $extension = $image['extension'];
+                                $extension = isset($image['extension']) ? $image['extension'] : $image['ext'];
 
-                                $url = str_replace(
-                                    array(
-                                        '{{path}}',
-                                        '{{id}}',
-                                        '{{extension}}',
-                                        '{{width}}',
-                                        '{{height}}'
-                                    ),
-                                    array(
-                                        $path,
-                                        $id,
-                                        $extension,
-                                        $width,
-                                        $height
-                                    ),
-                                    \CollinsAPI\Config::IMAGE_URL
-                                );
+                                $url = $this->api->buildImageUrl($id, $extension, $width, $height);
 
                                 $urls[] = $url;
                             }

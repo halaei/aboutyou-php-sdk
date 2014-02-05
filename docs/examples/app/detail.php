@@ -1,22 +1,20 @@
 <?php
-require_once(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'Collins.php');
-use CollinsAPI\Collins;
 
-$product_id = intval(@$_GET['product_id']);
-$productResult = Collins::getProducts(array($product_id));
+$productId = filter_input(INPUT_GET, 'product_id', FILTER_VALIDATE_INT);
+$productResult = $shopApi->getProducts(array($productId));
 
-$product = $productResult->ids[$product_id];
+$product = $productResult->ids[$productId];
 
-$variant_id = isset($_GET['variant_id']) ? $_GET['variant_id'] : $product['default_variant']['id'];
+$variantId = filter_input(INPUT_GET, 'variant_id', FILTER_VALIDATE_INT);
+$variantId = $variantId ?: $product['default_variant']['id'];
 
-$variant = $productResult->getVariantById($product['id'], $variant_id);
+$variant = $productResult->getVariantById($product['id'], $variantId);
 
-if(!$variant)
-{
+if (!$variant) {
 	$variant = $product['default_variant'];
 }
 
-$images = $productResult->getImageURLsByVariant($product_id, $variant_id);
+$images = $productResult->getImageURLsByVariant($productId, $variantId);
 
 ?>
 
@@ -24,7 +22,7 @@ $images = $productResult->getImageURLsByVariant($product_id, $variant_id);
 
 <h1>Produktdetailseite: <?php echo htmlentities($product['name'])?></h1>
 
-<h2>Bilder dieser Produktvariante (<?php echo $variant_id?>)</h2>
+<h2>Bilder dieser Produktvariante (<?php echo $variantId?>)</h2>
 <?php foreach($images as $image):?>
 	<img src="<?php echo $image?>" alt="Bild" />
 <?php endforeach;?>
@@ -47,7 +45,7 @@ $images = $productResult->getImageURLsByVariant($product_id, $variant_id);
 		<?php foreach($productResult->getFacetsByVariant($product['id'], $v['id']) as $facets):?>
 			<?php foreach($facets as $facet):?>
 				<?php if(in_array($facet['id'], array(
-					CollinsAPI\Constants::FACET_COLOR, CollinsAPI\Constants::FACET_SIZE
+					Collins\ShopApi\Constants::FACET_COLOR, Collins\ShopApi\Constants::FACET_SIZE
 				))):?>
 					<?php echo htmlentities($facet['name'])?><br />
 				<?php endif;?>

@@ -1,8 +1,6 @@
 <?php
-use CollinsAPI\Collins;
-
 // Alle Marken auslesen, die im System vorhanden sind
-$facetResult= Collins::getFacets(CollinsAPI\Constants::FACET_BRAND);
+$facetResult= $shopApi->getFacets(Collins\ShopApi\Constants::FACET_BRAND);
 $brands = $facetResult->facet;
 ?>
 

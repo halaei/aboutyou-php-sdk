@@ -1,13 +1,11 @@
 <?php
-require_once(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'Collins.php');
-use CollinsAPI\Collins;
 
 // Produkte mit der übergebenen Marke auslesen
-$brand_id = intval(@$_GET['brand_id']);
+$brandId = filter_input(INPUT_GET, 'brand_id', FILTER_VALIDATE_INT);
 
-$productResult = Collins::getProductSearch(12345,array(
+$productResult = $shopApi->getProductSearch(12345, array(
 	'facets' =>  (object) array( // (object), weil json_encode sonst Array generiert
-		CollinsAPI\Constants::FACET_BRAND => array($brand_id)
+		Collins\ShopApi\Constants::FACET_BRAND => array($brandId)
 	)
 ));
 

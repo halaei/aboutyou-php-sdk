@@ -1,6 +1,16 @@
 <?php
 error_reporting(E_ALL);
-require_once(__DIR__.'/../../src/Collins.php');
+
+$baseDir = dirname(dirname(dirname(__DIR__)));
+require $baseDir . '/Config.php';
+
+require $baseDir . '/vendor/autoload.php';
+
+$shopApi = new Collins\ShopApi(
+    CollinsAPI\Config::APP_ID,
+    CollinsAPI\Config::APP_PASSWORD,
+    CollinsAPI\Config::ENTRY_POINT_URL
+);
 ?>
 <!DOCTYPE html>
 <html>
@@ -59,7 +69,7 @@ require_once(__DIR__.'/../../src/Collins.php');
 	}
 </style>
 
-<?php echo CollinsAPI\Collins::getJavaScriptTag()?>
+<?php echo $shopApi->getJavaScriptTag(); ?>
 </head>
 
 <body>

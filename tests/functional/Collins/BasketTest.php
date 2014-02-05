@@ -8,7 +8,7 @@ namespace Collins\Test\Functional;
 
 use Collins\ShopApi;
 
-class ShopApiTest extends \PHPUnit_Framework_TestCase
+class BasketTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * @var \Collins\ShopApi

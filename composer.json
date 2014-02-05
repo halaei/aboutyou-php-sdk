@@ -33,6 +33,12 @@
         "psr/log": "1.0.*",
         "guzzle/guzzle": "~3.7"
     },
+    "suggest" : {
+        "monolog/monolog" : ".",
+        "ext-zlib" : "Allows handling gzip compressed responses.",
+        "lib-curl" : "Allows using cURL as a request backend.",
+        "lib-openssl" : "Allows handling SSL requests when not using cURL."
+    },
     "require-dev": {
         "monolog/monolog": "1.*",
         "phpunit/phpunit": "3.7.*"

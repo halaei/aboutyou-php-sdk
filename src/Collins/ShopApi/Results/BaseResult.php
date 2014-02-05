@@ -1,6 +1,9 @@
 <?php
 namespace Collins\ShopApi\Results;
 
+use Collins\ShopApi;
+use Collins\ShopApi\Exception as Exception;
+
 /**
  * Provides functionality to initialize a result object.
  * A result object, that stands for an API result, must extend this class.
@@ -21,20 +24,25 @@ abstract class BaseResult
      */
     public $pageHash = null;
 
+    /** @var ShopApi */
+    protected $api;
+
     /**
      * Parses the passed API response object and calls the initialization method of this result object.
      *
      * @param \Guzzle\Http\Message\Response $response response object of the API request
      *
-     * @throws \CollinsAPI\CollinsException if API result contains error message an exception will be thrown
+     * @throws \Collins\ShopApi\CollinsException if API result contains error message an exception will be thrown
      *
-     * @see \CollinsAPI\Collins::getResponse()
+     * @see \Collins\ShopApi\Collins::getResponse()
      */
-    public final function __construct(\Guzzle\Http\Message\Response $response)
+    public final function __construct(\Guzzle\Http\Message\Response $response, ShopApi $api)
     {
         if (!$this->resultKey) {
-            throw new \CollinsAPI\CollinsException('Result classes need to overwrite the $resultKey attribute.');
+            throw new Exception\IncompleteImplementationException('Result classes need to overwrite the $resultKey attribute.');
         }
+
+        $this->api = $api;
 
         $data = $response->json();
 
@@ -45,7 +53,7 @@ abstract class BaseResult
                 $message = implode(PHP_EOL, isset($result['error_message']) ? $result['error_message'] : '');
                 $code = isset($result['error_code']) ? $result['error_code'] : 400;
 
-                throw new \CollinsAPI\CollinsException($message, $code);
+                throw new Exception\ApiErrorException($message, $code);
             }
 
             $this->init($result);
@@ -53,7 +61,7 @@ abstract class BaseResult
             $message = 'Unexpected result:' . PHP_EOL . print_r($data, true);
             $code = 400;
 
-            throw new \CollinsAPI\CollinsException($message, $code);
+            throw new Exception\UnexpectedResultException($message, $code);
         }
     }
 
