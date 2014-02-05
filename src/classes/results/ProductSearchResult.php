@@ -70,7 +70,7 @@ class ProductSearchResult extends BaseResult
                 $image = $product['default_image'];
                 $id = $image['id'];
                 $path = substr($id, 0, 3);
-                $extension = $image['extension'];
+                $extension = isset($image['extension']) ? $image['extension'] : $image['ext'];
 
                 $url = str_replace(
                     array(
@@ -170,7 +170,7 @@ class ProductSearchResult extends BaseResult
                             foreach ($variant['images'] as $image) {
                                 $id = $image['id'];
                                 $path = substr($id, 0, 3);
-                                $extension = $image['extension'];
+                                $extension = isset($image['extension']) ? $image['extension'] : $image['ext'];
 
                                 $url = str_replace(
                                     array(
