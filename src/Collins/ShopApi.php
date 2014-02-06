@@ -57,9 +57,9 @@ class ShopApi
      * @param CacheInterface $cache
      * @param LoggerInterface $logger
      */
-    public function __construct($appId, $appPassword, $apiEndPoint = 'stage', $cache = null, LoggerInterface $logger = null)
+    public function __construct($appId, $appPassword, $apiEndPoint = 'stage', CacheInterface $cache = null, LoggerInterface $logger = null)
     {
-        $this->setAppCredencials($appId, $appPassword);
+        $this->setAppCredentials($appId, $appPassword);
         $this->setApiEndpoint($apiEndPoint);
         $this->setCache($cache ?: new NoCache());
         $this->setLogger($logger ?: new NullLogger());
@@ -67,10 +67,10 @@ class ShopApi
     }
 
     /**
-     * @param string $appId        the app id for client authentification
-     * @param string $appPassword  the app password/token for client authentification.
+     * @param string $appId        the app id for client authentication
+     * @param string $appPassword  the app password/token for client authentication.
      */
-    public function setAppCredencials($appId, $appPassword)
+    public function setAppCredentials($appId, $appPassword)
     {
         $this->appId = $appId;
         $this->appPassword = $appPassword;
