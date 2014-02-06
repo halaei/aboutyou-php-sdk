@@ -70,7 +70,7 @@ class ShopApi
      * @param string $appId        the app id for client authentification
      * @param string $appPassword  the app password/token for client authentification.
      */
-    public function setAppCredencials($appId, $appPassword)
+    public function setAppCredentials($appId, $appPassword)
     {
         $this->appId = $appId;
         $this->appPassword = $appPassword;
