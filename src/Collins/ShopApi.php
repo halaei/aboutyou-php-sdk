@@ -176,7 +176,7 @@ class ShopApi
     public function setImageUrlTemplate($imageUrlTemplate = null)
     {
         $this->imageUrlTemplate = $imageUrlTemplate
-            ?: 'http://cdn.mary-paul.de/product_images/{{path}}/{{id}}_{{width}}_{{height}}{{extension}}';
+            ?: 'http://ant-core-staging-media2.wavecloud.de/mmdb/file/{{hash}}?width={{width}}&height={{height}}';
     }
 
     /**
