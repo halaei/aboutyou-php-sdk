@@ -187,7 +187,7 @@ class ShopApi
         return $this->imageUrlTemplate;
     }
 
-    public function buildImageUrl($id, $extension, $width, $height)
+    public function buildImageUrl($id, $extension, $width, $height, $hash)
     {
         $path = substr($id, 0, 3);
         $url = str_replace(
@@ -196,14 +196,16 @@ class ShopApi
                 '{{id}}',
                 '{{extension}}',
                 '{{width}}',
-                '{{height}}'
+                '{{height}}',
+                '{{hash}}'
             ),
             array(
                 $path,
                 $id,
                 $extension,
                 $width,
-                $height
+                $height,
+                $hash
             ),
             $this->imageUrlTemplate
         );

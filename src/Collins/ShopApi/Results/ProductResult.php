@@ -264,8 +264,9 @@ class ProductResult extends BaseResult
                 $image = $product['default_image'];
                 $id = $image['id'];
                 $extension = isset($image['extension']) ? $image['extension'] : $image['ext'];
+                $hash = isset($image['hash']) ? $image['hash'] : null;
 
-                $url = $this->api->buildImageUrl($id, $extension, $width, $height);
+                $url = $this->api->buildImageUrl($id, $extension, $width, $height, $hash);
 
                 if (!isset($urls[$product['id']])) {
                     $urls[$product['id']] = array();
@@ -312,8 +313,9 @@ class ProductResult extends BaseResult
                             foreach ($variant['images'] as $image) {
                                 $id = $image['id'];
                                 $extension = isset($image['extension']) ? $image['extension'] : $image['ext'];
+                                $hash = isset($image['hash']) ? $image['hash'] : null;
 
-                                $url = $this->api->buildImageUrl($id, $extension, $width, $height);
+                                $url = $this->api->buildImageUrl($id, $extension, $width, $height, $hash);
 
                                 $urls[] = $url;
                             }
