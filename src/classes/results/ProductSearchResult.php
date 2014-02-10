@@ -68,9 +68,11 @@ class ProductSearchResult extends BaseResult
         foreach ($this->products as $product) {
             if (isset($product['default_image'])) {
                 $image = $product['default_image'];
+
                 $id = $image['id'];
                 $path = substr($id, 0, 3);
                 $extension = isset($image['extension']) ? $image['extension'] : $image['ext'];
+                $hash = isset($image['hash']) ? $image['hash'] : '';
 
                 $url = str_replace(
                     array(
@@ -78,14 +80,16 @@ class ProductSearchResult extends BaseResult
                         '{{id}}',
                         '{{extension}}',
                         '{{width}}',
-                        '{{height}}'
+                        '{{height}}',
+                        '{{hash}}'
                     ),
                     array(
                         $path,
                         $id,
                         $extension,
                         $width,
-                        $height
+                        $height,
+                        $hash
                     ),
                     \CollinsAPI\Config::IMAGE_URL
                 );
@@ -171,6 +175,7 @@ class ProductSearchResult extends BaseResult
                                 $id = $image['id'];
                                 $path = substr($id, 0, 3);
                                 $extension = isset($image['extension']) ? $image['extension'] : $image['ext'];
+                                $hash = isset($image['hash']) ? $image['hash'] : '';
 
                                 $url = str_replace(
                                     array(
@@ -178,14 +183,16 @@ class ProductSearchResult extends BaseResult
                                         '{{id}}',
                                         '{{extension}}',
                                         '{{width}}',
-                                        '{{height}}'
+                                        '{{height}}',
+                                        '{{hash}}'
                                     ),
                                     array(
                                         $path,
                                         $id,
                                         $extension,
                                         $width,
-                                        $height
+                                        $height,
+                                        $hash
                                     ),
                                     \CollinsAPI\Config::IMAGE_URL
                                 );
