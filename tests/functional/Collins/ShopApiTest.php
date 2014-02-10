@@ -76,14 +76,14 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
     {
         $depth = 1;
         $categories = $this->api->fetchCategoryTree($depth);
-        var_export($categories);
+//        var_export($categories);
 
         foreach ($categories as $category) {
             $this->checkCategory($category);
 
             foreach ($category->sub_categories as $subCategory) {
                 $this->checkCategory($subCategory);
-//                $this->assertEmpty($subCategory->sub_categories);
+                $this->assertEmpty($subCategory->sub_categories);
             }
         }
     }

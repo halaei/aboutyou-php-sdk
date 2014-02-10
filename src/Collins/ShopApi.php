@@ -2,8 +2,12 @@
 namespace Collins;
 
 use Collins\Cache\NoCache;
+use Collins\ShopApi\Constants;
+use Collins\ShopApi\Exception\ApiErrorException;
 use Collins\ShopApi\Results as Results;
 use Collins\ShopApi\Config;
+use Guzzle\Http\Client;
+use Guzzle\Http\Message\EntityEnclosingRequestInterface;
 use Psr\Log\LoggerInterface;
 use Collins\Cache\CacheInterface;
 use Psr\Log\NullLogger;
@@ -248,8 +252,8 @@ class ShopApi
         $searchword,
         $limit = 50,
         $types = array(
-            \Collins\ShopApi\Constants::TYPE_PRODUCTS,
-            \Collins\ShopApi\Constants::TYPE_CATEGORIES
+            Constants::TYPE_PRODUCTS,
+            Constants::TYPE_CATEGORIES
         )
     ) {
         $data = array(
@@ -267,9 +271,10 @@ class ShopApi
      * Returns the result of a basket API request.
      * This includes all the necessary information of a basket of the user
      * provided.
+     *
      * @param int $user_session_id free to choose ID of the current website visitor.
      * The website visitor is the person the basket belongs to.
-     * @param array $product_variants set of product variants
+     *
      * @return \Collins\ShopApi\Results\BasketResult
      */
     public function getBasket($user_session_id)
@@ -308,10 +313,10 @@ class ShopApi
         return new Results\CategoryResult($this->request($data, 60 * 60), $this);
     }
 
-    public function fetchCategoryTree($depth = 0)
+    public function fetchCategoryTree($maxDepth = -1)
     {
         $data = array(
-            'category_tree' => (object)null
+            'category_tree' => ['max_depth' => $maxDepth],
         );
 
         $response = $this->request($data);
@@ -340,6 +345,9 @@ class ShopApi
      * It simply returns all the facets that are relevant for your app.
      *
      * @param array $group_ids array of group ids
+     * @param int $limit
+     * @param int $offset
+     *
      * @return \Collins\ShopApi\Results\FacetResult
      */
     public function getFacets($group_ids = [], $limit = 0, $offset = 0)
@@ -536,8 +544,11 @@ class ShopApi
      * @param int $user_session_id free to choose ID of the current website visitor.
      * This field is required for tracking reasons.
      * @param int $facet_group_id ID of the facet group. You can use the Constants::FACET_* constants for this.
-     * @params mixed $facets facet ID or array of facet IDs you want to filter for
+     * @param mixed $facets facet ID or array of facet IDs you want to filter for
+     * @param array $filter
      * @param array $result contains data for reducing the result
+     *
+     * @return Results\ProductSearchResult
      */
     public function getProductSearchByFacet(
         $user_session_id,
@@ -580,7 +591,7 @@ class ShopApi
         );
     }
 
-    public function setClient(\Guzzle\Http\Client $guzzleClient)
+    public function setClient(Client $guzzleClient)
     {
         $this->guzzleClient = $guzzleClient;
     }
@@ -590,7 +601,7 @@ class ShopApi
         if ($this->guzzleClient) {
             return $this->guzzleClient;
         }
-        $this->guzzleClient = new \Guzzle\Http\Client($this->getApiEndPoint());
+        $this->guzzleClient = new Client($this->getApiEndPoint());
 
         return $this->guzzleClient;
     }
@@ -604,7 +615,7 @@ class ShopApi
      *
      * @return \Guzzle\Http\Message\Response response object
      *
-     * @throws CollinsException will be thrown if response was invalid
+     * @throws ApiErrorException will be thrown if response was invalid
      */
     protected function request($data, $cacheDuration = 0)
     {
@@ -619,6 +630,7 @@ class ShopApi
             return $response;
         }
 
+        /** @var EntityEnclosingRequestInterface $request */
         $request = $apiClient->post();
         $request->setBody($body);
         $request->setAuth($this->appId, $this->appPassword);
@@ -656,7 +668,7 @@ class ShopApi
 //        }
 
         if (!$response->isSuccessful() || !is_array($response->json())) {
-            throw new CollinsException(
+            throw new ApiErrorException(
                 $response->getReasonPhrase(),
                 $response->getStatusCode()
             );
