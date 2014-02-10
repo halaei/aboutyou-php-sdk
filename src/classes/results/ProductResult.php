@@ -21,6 +21,20 @@ class ProductResult extends BaseResult
     public $ids = array();
 
     /**
+     * Returns an array of IDs of all the products found
+     * @return array array of product IDs
+     */
+    public function getProductIds()
+    {
+        return array_map(
+            function ($product) {
+                return $product['id'];
+            },
+            $this->ids
+        );
+    }
+
+    /**
      * Returns an array of variants that have the given facets. A variant
      * needs to have all of the passed facets to be in the result (AND search)
      *
@@ -356,5 +370,21 @@ class ProductResult extends BaseResult
         }
 
         return $urls;
+    }
+
+    /**
+     * Returns products that are similar to those of this results one
+     *
+     * @param int $id ID of the product you want similar products for
+     * @return ProductResult products
+     */
+    public function getSimilarProducts($id) {
+        $productResult = new ProductResult();
+
+        if(isset($this->ids[$id]) && isset($this->ids[$id]['styles'])) {
+            $productResult->ids = $this->ids[$id]['styles'];
+        }
+
+        return $productResult;
     }
 }

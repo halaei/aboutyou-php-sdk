@@ -29,30 +29,33 @@ abstract class BaseResult
      * @throws \CollinsAPI\CollinsException if API result contains error message an exception will be thrown
      * @see \CollinsAPI\Collins::getResponse()
      */
-    public final function __construct(\Guzzle\Http\Message\Response $response)
+    public final function __construct(\Guzzle\Http\Message\Response $response = null)
     {
         if (!$this->resultKey) {
             throw new \CollinsAPI\CollinsException('Result classes need to overwrite the $resultKey attribute.');
         }
 
-        $data = $response->json();
+        if($response) {
+            $data = $response->json();
 
-        if (isset($data[0]) && isset($data[0][$this->resultKey])) {
-            $result = $data[0][$this->resultKey];
+            if (isset($data[0]) && isset($data[0][$this->resultKey])) {
+                $result = $data[0][$this->resultKey];
 
-            if (isset($result['error_code'])) {
-                $message = implode(PHP_EOL, isset($result['error_message']) ? $result['error_message'] : '');
-                $code = isset($result['error_code']) ? $result['error_code'] : 400;
+                if (isset($result['error_code'])) {
+                    $message = implode(PHP_EOL, isset($result['error_message']) ? $result['error_message'] : '');
+                    $code = isset($result['error_code']) ? $result['error_code'] : 400;
 
+                    throw new \CollinsAPI\CollinsException($message, $code);
+                }
+
+                $this->init($result);
+            } else {
+                $message = 'Unexpected result:' . PHP_EOL . print_r($data, true);
+                $code = 400;
                 throw new \CollinsAPI\CollinsException($message, $code);
             }
-
-            $this->init($result);
-        } else {
-            $message = 'Unexpected result:' . PHP_EOL . print_r($data, true);
-            $code = 400;
-            throw new \CollinsAPI\CollinsException($message, $code);
         }
+
     }
 
     /**
