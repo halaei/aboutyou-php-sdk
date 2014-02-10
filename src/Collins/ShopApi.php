@@ -34,6 +34,9 @@ class ShopApi
     /** @var LoggerInterface */
     protected $logger;
 
+    /** @var string */
+    protected $logTemplate;
+
     /** @var CacheInterface */
     protected $cache;
 
@@ -137,6 +140,24 @@ class ShopApi
     public function getLogger()
     {
         return $this->logger;
+    }
+
+    /**
+     * @param string $logTemplate
+     *
+     * @see http://api.guzzlephp.org/class-Guzzle.Log.MessageFormatter.html
+     */
+    public function setLogTemplate($logTemplate)
+    {
+        $this->logTemplate = $logTemplate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogTemplate()
+    {
+        return $this->logTemplate;
     }
 
     public function setBaseImageUrl($baseImageUrl = null)
@@ -635,37 +656,16 @@ class ShopApi
         $request->setBody($body);
         $request->setAuth($this->appId, $this->appPassword);
 
-//        if (Config::ENABLE_LOGGING) {
-//            $adapter = new \Guzzle\Log\ArrayLogAdapter();
-//            $logPlugin = new \Guzzle\Plugin\Log\LogPlugin($adapter);
-//
-//            $request->addSubscriber($logPlugin);
-//        }
+        if ($this->logger) {
+            $adapter = new \Guzzle\Log\PsrLogAdapter($this->logger);
+            $logPlugin = new \Guzzle\Plugin\Log\LogPlugin($adapter, $this->logTemplate);
+
+            $request->addSubscriber($logPlugin);
+        }
 
         $response = $request->send();
 
         $this->cache->set($cacheKey, $response, $cacheDuration);
-
-//        if (Config::ENABLE_LOGGING) {
-//            $content = '';
-//            foreach ($adapter->getLogs() as $log) {
-//                $message = new \Guzzle\Log\MessageFormatter(Config::LOGGING_TEMPLATE);
-//                $content .= $message->format($log['extras']['request'], $log['extras']['response']) . PHP_EOL;
-//            }
-//            $path = Config::LOGGING_PATH
-//                ? Config::LOGGING_PATH
-//                : __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'logs';
-//
-//            $operation = array_keys($data);
-//            $operation = $operation[0];
-//
-//            $fileName = date('Y-m-d_H_i_s_') . $operation . '_' . uniqid() . '.txt';
-//
-//            file_put_contents(
-//                $path . DIRECTORY_SEPARATOR . $fileName,
-//                $content
-//            );
-//        }
 
         if (!$response->isSuccessful() || !is_array($response->json())) {
             throw new ApiErrorException(
