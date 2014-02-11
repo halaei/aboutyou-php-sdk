@@ -11,7 +11,7 @@ curl -sS https://getcomposer.org/installer | php
 
 # Add the ShopAPI as a dependency
 
-    ``` json
+    ```json
     {
         "repositories": [
             {
