@@ -36,6 +36,11 @@ class Category
         $this->fromJson($jsonObject);
     }
 
+    public function createCategory($jsonCategory, $parent = null)
+    {
+        return new Category($jsonCategory, $parent);
+    }
+
     public function fromJson($jsonObject)
     {
         $this->parentId = $jsonObject->parent;
@@ -45,7 +50,7 @@ class Category
         $this->position = $jsonObject->position;
 
         foreach ($jsonObject->sub_categories as $jsonSubCategory) {
-            $this->subCategories[] = new Category($jsonSubCategory, $this);
+            $this->subCategories[] = $this->createCategory($jsonSubCategory, $this);
         }
     }
 

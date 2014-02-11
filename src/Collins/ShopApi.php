@@ -4,7 +4,8 @@ namespace Collins;
 use Collins\Cache\NoCache;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Exception\ApiErrorException;
-use Collins\ShopApi\Model\Category;
+use Collins\ShopApi\Exception\UnexpectedResultException;
+use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Results as Results;
 use Collins\ShopApi\Config;
 use Guzzle\Http\Client;
@@ -346,12 +347,14 @@ class ShopApi
         $response = $this->request($data);
         $jsonObject = json_decode($response->getBody(true));
 
-        $category = new Category($jsonObject[0]->category_tree[0]);
-//        echo '<pre>', __LINE__, ') ', __METHOD__, ': <b>$category</b>=', var_export($category), '</pre>';
+        if ($jsonObject === false || !isset($jsonObject[0]->category_tree)) {
+            throw new UnexpectedResultException();
+        }
 
-        $categories = [$category];
+        $categoryTree = new CategoryTree($jsonObject[0]->category_tree);
 
-        return $categories;
+
+        return $categoryTree;
     }
 
     /**

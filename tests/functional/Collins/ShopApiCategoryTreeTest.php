@@ -49,6 +49,15 @@ class ShopApiCategoryTreeTest extends \PHPUnit_Framework_TestCase
         return $client;
     }
 
+    protected function getShopApiWithResult($jsonString)
+    {
+        $client = $this->getGuzzleClient($jsonString);
+
+        $this->api->setClient($client);
+
+        return $this->api;
+    }
+
      /**
      *
      */
@@ -57,19 +66,17 @@ class ShopApiCategoryTreeTest extends \PHPUnit_Framework_TestCase
         $depth = 1;
 
         $jsonString = file_get_contents(__DIR__.'/testData/app-category-tree.json');
-        $client = $this->getGuzzleClient($jsonString);
+        $shopApi = $this->getShopApiWithResult($jsonString);
 
-        $this->api->setClient($client);
+        $categoryTree = $shopApi->fetchCategoryTree($depth);
 
-        $categories = $this->api->fetchCategoryTree($depth);
-
-        foreach ($categories as $category) {
+        foreach ($categoryTree->getCategories() as $category) {
             $this->checkCategory($category);
 
             foreach ($category->getSubCategories() as $subCategory) {
                 $this->checkCategory($subCategory);
                 $this->assertEquals($category, $subCategory->getParent());
-                $this->assertEmpty($subCategory->getSubCategories);
+                $this->assertEmpty($subCategory->getSubCategories());
             }
         }
     }
