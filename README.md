@@ -11,7 +11,7 @@ curl -sS https://getcomposer.org/installer | php
 
 # Add the ShopAPI as a dependency
 
-    ```json
+```json
     {
         "repositories": [
             {
@@ -23,7 +23,7 @@ curl -sS https://getcomposer.org/installer | php
             "collins/shop-sdk": "dev-feature/DEVCENTER-53"
         }
     }
-    ```
+```
 After installing, you need to require Composer's autoloader:
 
 ```php
