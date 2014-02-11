@@ -4,6 +4,7 @@ namespace Collins;
 use Collins\Cache\NoCache;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Exception\ApiErrorException;
+use Collins\ShopApi\Model\Category;
 use Collins\ShopApi\Results as Results;
 use Collins\ShopApi\Config;
 use Guzzle\Http\Client;
@@ -345,7 +346,12 @@ class ShopApi
         $response = $this->request($data);
         $jsonObject = json_decode($response->getBody(true));
 
-        return (object)$jsonObject[0]->category_tree;
+        $category = new Category($jsonObject[0]->category_tree[0]);
+//        echo '<pre>', __LINE__, ') ', __METHOD__, ': <b>$category</b>=', var_export($category), '</pre>';
+
+        $categories = [$category];
+
+        return $categories;
     }
 
     /**

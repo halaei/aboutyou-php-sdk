@@ -1,0 +1,31 @@
+[
+    {
+        "category_tree": [
+            {
+                "name": "Hauptkategorie",
+                "parent": null,
+                "sub_categories": [],
+                "active": false,
+                "position": 1,
+                "id": 11
+            },
+            {
+                "name": "Testkategorie",
+                "parent": null,
+                "sub_categories": [
+                    {
+                        "name": "Testkat",
+                        "parent": 11,
+                        "sub_categories": [],
+                        "active": true,
+                        "position": 1,
+                        "id": 22
+                    }
+                ],
+                "active": true,
+                "position": 2,
+                "id": 33
+            }
+        ]
+    }
+]
