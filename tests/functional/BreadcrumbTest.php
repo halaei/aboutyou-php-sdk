@@ -8,7 +8,7 @@ namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi;
 
-class ShopApiBreadcrumpTest extends ShopApiTest
+class BreadcrumbTest extends ShopApiTest
 {
      /**
      *
@@ -19,7 +19,6 @@ class ShopApiBreadcrumpTest extends ShopApiTest
 
         $categoryId = 123;
 
-        $shopApi =
         $categories = $this->api->fetchParentCategories($categoryId);
 
         $this->assertTrue(is_array($categories));

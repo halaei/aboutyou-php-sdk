@@ -8,7 +8,7 @@ namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi;
 
-class ShopApiGetProductsTest extends ShopApiTest
+class GetProductsTest extends ShopApiTest
 {
     /**
      *
