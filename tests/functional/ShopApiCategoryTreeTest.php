@@ -4,60 +4,12 @@
  * (c) Antevorte GmbH & Co KG
  */
 
-namespace Collins\Test\Functional;
+namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi;
-use Guzzle\Http\Message\Response;
-use Guzzle\Service\Client;
 
-
-class ShopApiCategoryTreeTest extends \PHPUnit_Framework_TestCase
+class ShopApiCategoryTreeTest extends ShopApiTest
 {
-    /**
-     * @var \Collins\ShopApi
-     */
-    private $api = null;
-
-    /**
-     *
-     */
-    public function setUp()
-    {
-        $this->api = new ShopApi('106', '7898aaf62cccbeb7210660b86ac80847');
-
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Client
-     */
-    protected function getGuzzleClient($jsonString)
-    {
-        $response = new Response('200 OK', null, $jsonString);
-
-        $request = $this->getMockBuilder('Guzzle\\Http\\Message\\EntityEnclosingRequest')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $request->expects($this->any())
-            ->method('send')
-            ->will($this->returnValue($response));
-
-        $client = $this->getMock('Guzzle\\Http\\Client');
-        $client->expects($this->any())
-            ->method('post')
-            ->will($this->returnValue($request));
-
-        return $client;
-    }
-
-    protected function getShopApiWithResult($jsonString)
-    {
-        $client = $this->getGuzzleClient($jsonString);
-
-        $this->api->setClient($client);
-
-        return $this->api;
-    }
-
      /**
      *
      */
