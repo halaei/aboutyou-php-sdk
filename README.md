@@ -20,7 +20,7 @@ curl -sS https://getcomposer.org/installer | php
             }
         ],
         "require": {
-            "collins/shop-sdk": "dev-development"
+            "collins/shop-sdk": "dev-master"
         }
     }
 ```
