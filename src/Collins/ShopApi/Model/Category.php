@@ -64,6 +64,12 @@ class Category
         return $this->subCategories;
     }
 
+    public function getBreadcrumb()
+    {
+        $breadcrumb = $this->parent ? $this->parent->getBreadcrumb() : [];
+        $breadcrumb[] = $this;
+        return $breadcrumb;
+    }
 
     public function fetchProducts($limit, $offset)
     {
