@@ -2,7 +2,7 @@
     {
         "category_tree": [
             {
-                "name": "Hauptkategorie",
+                "name": "Main Category 1",
                 "parent": null,
                 "sub_categories": [],
                 "active": false,
@@ -10,11 +10,11 @@
                 "id": 11
             },
             {
-                "name": "Testkategorie",
+                "name": "Main Category 2",
                 "parent": null,
                 "sub_categories": [
                     {
-                        "name": "Testkat",
+                        "name": "Subcategory ",
                         "parent": 11,
                         "sub_categories": [],
                         "active": true,

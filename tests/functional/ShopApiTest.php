@@ -34,6 +34,17 @@ abstract class ShopApiTest extends \PHPUnit_Framework_TestCase
         return $client;
     }
 
+    protected function getShopApiWithResultFile($filepath)
+    {
+        if (strpos($filepath, '/') !== 0) {
+            $filepath = __DIR__.'/testData/' . $filepath;
+        }
+        $jsonString = file_get_contents($filepath);
+
+        return $this->getShopApiWithResult($jsonString);
+    }
+
+
     /**
      * @param $jsonString
      *

@@ -6,6 +6,7 @@ use Collins\ShopApi\Constants;
 use Collins\ShopApi\Exception\ApiErrorException;
 use Collins\ShopApi\Exception\UnexpectedResultException;
 use Collins\ShopApi\Model\CategoryTree;
+use Collins\ShopApi\Model\ProductsResult;
 use Collins\ShopApi\Results as Results;
 use Collins\ShopApi\Config;
 use Guzzle\Http\Client;
@@ -353,6 +354,46 @@ class ShopApi
 
         $categoryTree = new CategoryTree($jsonObject[0]->category_tree);
 
+        return $categoryTree;
+    }
+
+    public function fetchProductsByIds(
+        array $ids,
+        array $fields = array(
+            'id',
+            'name',
+            'active',
+            'brand_id',
+            'description_long',
+            'description_short',
+            'default_variant',
+            'variants',
+            'min_price',
+            'max_price',
+            'sale',
+            'default_image',
+            'attributes_merged',
+            'categories'
+        )
+    ) {
+        // we allow to pass a single ID instead of an array
+        settype($ids, 'array');
+
+        $data = array(
+            'products' => array(
+                'ids' => $ids,
+                'fields' => $fields
+            )
+        );
+
+        $response = $this->request($data);
+        $jsonObject = json_decode($response->getBody(true));
+
+        if ($jsonObject === false || !isset($jsonObject[0]->products)) {
+            throw new UnexpectedResultException();
+        }
+
+        $categoryTree = new ProductsResult($jsonObject[0]->products);
 
         return $categoryTree;
     }

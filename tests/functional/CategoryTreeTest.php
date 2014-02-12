@@ -17,8 +17,7 @@ class CategoryTreeTest extends ShopApiTest
     {
         $depth = 1;
 
-        $jsonString = file_get_contents(__DIR__.'/testData/app-category-tree.json');
-        $shopApi = $this->getShopApiWithResult($jsonString);
+        $shopApi = $this->getShopApiWithResultFile('category-tree.json');
 
         $categoryTree = $shopApi->fetchCategoryTree($depth);
 
@@ -31,8 +30,21 @@ class CategoryTreeTest extends ShopApiTest
                 $this->assertEmpty($subCategory->getSubCategories());
             }
         }
+
+        return $categoryTree;
     }
 
+    /**
+     * @depends testFetchCategoryTree
+     */
+    public function testCategoryTreeIterator($categoryTree)
+    {
+        $this->assertInstanceOf('\IteratorAggregate', $categoryTree);
+
+        foreach ($categoryTree as $category) {
+            $this->checkCategory($category);
+        }
+    }
 
     /**
      *

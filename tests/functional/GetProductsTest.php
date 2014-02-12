@@ -10,18 +10,28 @@ use Collins\ShopApi;
 
 class GetProductsTest extends ShopApiTest
 {
-    /**
-     *
-     */
     public function testFetchProducts()
     {
-        $this->markTestIncomplete();
+//        $this->markTestIncomplete();
 
         $productIds = array(123, 456);
 
-        $shopApi = $this->getShopApiWithResult('');
+        $shopApi = $this->getShopApiWithResultFile('products.json');
 
         $products = $shopApi->fetchProductsByIds($productIds);
+        $products = $products->getProducts();
+        $this->checkProduct($products[123]);
+        $this->checkProduct($products[456]);
+    }
+
+    public function testFetchProductsAllFields()
+    {
+        $productIds = array(123, 456);
+
+        $shopApi = $this->getShopApiWithResultFile('products-full.json');
+
+        $products = $shopApi->fetchProductsByIds($productIds);
+        $products = $products->getProducts();
         $this->checkProduct($products[123]);
         $this->checkProduct($products[456]);
     }
