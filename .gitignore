@@ -8,6 +8,7 @@ logs
 
 # Ignore potentially sensitive file
 Config.php
+phpunit.xml
 
 # Ignore composer generated files
 composer.phar
