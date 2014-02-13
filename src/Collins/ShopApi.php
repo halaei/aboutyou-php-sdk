@@ -166,7 +166,7 @@ class ShopApi
     public function setBaseImageUrl($baseImageUrl = null)
     {
         if (!$baseImageUrl) {
-            $baseImageUrl = 'http://cdn.mary-paul.de/product_images/';
+            $baseImageUrl = 'http://cdn.mary-paul.de/file/';
         } else {
             $baseImageUrl = rtrim($baseImageUrl, '/') . '/';
         }
@@ -179,7 +179,7 @@ class ShopApi
     public function setImageUrlTemplate($imageUrlTemplate = null)
     {
         $this->imageUrlTemplate = $imageUrlTemplate
-            ?: 'http://ant-core-staging-media2.wavecloud.de/mmdb/file/{{hash}}?width={{width}}&height={{height}}';
+            ?: 'http://cdn.mary-paul.de/file/{{hash}}?width={{width}}&height={{height}}';
     }
 
     /**
@@ -526,7 +526,7 @@ class ShopApi
      * This field is required for tracking reasons.
      * @param array $filter contains data to filter products for
      * @param array $result contains data for reducing the result
-     * 
+     *
      * @return \Collins\ShopApi\Results\ProductSearchResult
      */
     public function getProductSearch(
