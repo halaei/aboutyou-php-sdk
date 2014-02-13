@@ -9,7 +9,7 @@
                     "sale": false,
                     "categories.98": [
                         [
-                            19080
+                            19080, 123
                         ],
                         [
                             19096
@@ -25,10 +25,10 @@
                         "attributes_0": 269
                     },
                     "brand_id": 269,
-                    "description_long": "Sandalette, Rieker. Mix aus Lederimitat und Textilmaterial, ungefüttert, Textildecksohle, Synthetiklaufsohle mit 65 mm Keilabsatz und 20 mm Plateau in Jute-Optik.",
+                    "description_long": "description long 1",
                     "active": false,
                     "variants": [],
-                    "description_short": "Sandalette, Rieker. Mix aus Lederimitat und Textilmaterial, ungefüttert, Textildecksohle, Synthetiklaufsohle mit 65 mm Keilabsatz und 20 mm Plateau in Jute-Optik.",
+                    "description_short": "description short 1",
                     "id": 123
                 },
                 "456": {
@@ -36,7 +36,7 @@
                     "active": true,
                     "name": "sweatshirt with logo",
                     "description_long": "Lässiger Hoodie von Tom Tailor plus Label-Frontprint im Vintage Look. Mit Rippbündchen und einer charakteristischen Kängurutasche auf der Vorderseite. Extrakomfort: Der Style ist innen weich aufgeraut.;70% Baumwolle, 30% Viskose",
-                    "sale": false,
+                    "sale": true,
                     "attributes_merged": {
                         "attributes_172": [
                             1967

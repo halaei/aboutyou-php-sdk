@@ -12,16 +12,53 @@ class GetProductsTest extends ShopApiTest
 {
     public function testFetchProducts()
     {
-//        $this->markTestIncomplete();
-
         $productIds = array(123, 456);
 
         $shopApi = $this->getShopApiWithResultFile('products.json');
 
-        $products = $shopApi->fetchProductsByIds($productIds);
-        $products = $products->getProducts();
-        $this->checkProduct($products[123]);
-        $this->checkProduct($products[456]);
+        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $products = $productResult->getProducts();
+        $this->assertCount(2, $products);
+        $p123 = $products[123];
+        $this->checkProduct($p123);
+        $this->assertEquals(123, $p123->getId());
+        $this->assertEquals('Product 1', $p123->getName());
+        $this->assertTrue($p123->isActive()); // default is true!
+        $this->assertFalse($p123->isSale());  // default is false!
+
+        $p456 = $products[456];
+        $this->checkProduct($p456);
+        $this->assertEquals('Product 2', $p456->getName());
+        $this->assertEquals(456, $p456->getId());
+
+        return $productResult;
+    }
+
+    /**
+     * @depends testFetchProducts
+     */
+    public function testProductResultIteratorInterface($productResult)
+    {
+        foreach ($productResult as $product) {
+            $this->checkProduct($product);
+        }
+    }
+
+    /**
+     * @depends testFetchProducts
+     */
+    public function testProductResultArrayAccessInterface($productResult)
+    {
+        $this->checkProduct($productResult[123]);
+        $this->checkProduct($productResult[456]);
+    }
+
+    /**
+     * @depends testFetchProducts
+     */
+    public function testProductResultCountableInterface($productResult)
+    {
+        $this->assertCount(2, $productResult);
     }
 
     public function testFetchProductsAllFields()
@@ -30,69 +67,86 @@ class GetProductsTest extends ShopApiTest
 
         $shopApi = $this->getShopApiWithResultFile('products-full.json');
 
-        $products = $shopApi->fetchProductsByIds($productIds);
-        $products = $products->getProducts();
-        $this->checkProduct($products[123]);
-        $this->checkProduct($products[456]);
+        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $products = $productResult->getProducts();
+        $this->assertCount(2, $products);
+
+        $p123 = $products[123];
+        $this->checkProduct($p123);
+        $this->assertNull($p123->getDefaultImage());
+        $this->assertFalse($p123->isActive());
+        $this->assertFalse($p123->isSale());
+        $this->assertEquals('description long 1', $p123->getDescriptionLong());
+        $this->assertEquals('description short 1', $p123->getDescriptionShort());
+        $c123Ids = $p123->getCategoryIds();
+        $this->assertCount(5, $c123Ids);
+        $this->assertEquals(19080, $c123Ids[0]);
+        $this->assertEquals(123, $c123Ids[1]);
+        $this->assertEquals(19096, $c123Ids[2]);
+
+        $this->assertNull($p123->getDefaultVariant());
+
+        $variants = $p123->getVariants();
+        $this->assertCount(0, $variants);
+
+        $p456 = $products[456];
+        $this->checkProduct($p456);
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Image', $p456->getDefaultImage());
+        $this->assertTrue($p456->isActive());
+        $this->assertTrue($p456->isSale());
+
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Variant', $p456->getDefaultVariant());
+
+        $variants = $p456->getVariants();
+        $this->assertCount(5, $variants);
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Variant', $variants[0]);
+
+        return $p456;
     }
 
     /**
-     *
+     * @depends testFetchProductsAllFields
      */
-    public function testSearchProducts()
+    public function testFetchProductsWithAttributs($product)
     {
-        $this->markTestIncomplete();
+        $this->markTestIncomplete('The Method is not implemented yet');
 
-        $shopApi = $this->getShopApiWithResult('');
-
-        // get all available products
-        $products = $shopApi->searchProducts();
-        $this->checkProductList($products);
-
-        // search products by filter
-        $filter = array(
-            'categoryId' => 123
-        );
-        $products = $shopApi->searchProducts($filter);
-        $this->checkProductList($products);
-
-        // search products and sort
-        $sorting = array('name', ShopApi::SORT_ASC);
-        $products = $shopApi->searchProducts(null, $sorting);
-        $this->checkProductList($products);
-
-        // search products with limit
-        $pagination = array(
-            'pageSize' => 20,
-            'page' => 1,
-        );
-        // or:
-        $pagination = array(
-            'limit' => 20,
-            'offset' => 21,
-        );
-        $products = $shopApi->searchProducts(null, null, $pagination);
-        $this->checkProductList($products);
+        $attributes = $product->getAttributs();
     }
 
     /**
-     *
+     * @depends testFetchProductsAllFields
      */
+    public function testFetchProductsWithBrand($product)
+    {
+        $this->markTestIncomplete('The Method is not implemented yet');
+
+        $attributes = $product->getBrand();
+    }
+
+    public function testFetchProductsWithStyles()
+    {
+        $productIds = array(220430);
+
+        $shopApi = $this->getShopApiWithResultFile('products-with-styles.json');
+
+        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $products = $productResult->getProducts();
+        $this->assertCount(1, $products);
+
+        $product = $products[220430];
+        $styles  = $product->getStyles();
+        $this->assertCount(5, $styles);
+        foreach ($styles as $style) {
+            $this->checkProduct($style);
+            $this->assertNotEquals($product, $style);
+        }
+    }
+
     private function checkProduct($product)
     {
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Product', $product);
         $this->assertObjectHasAttribute('id', $product);
         $this->assertObjectHasAttribute('name', $product);
-        //TODO: check if this is a product
-    }
-
-    /**
-     *
-     */
-    private function checkProductList($products)
-    {
-        $this->assertTrue(is_array($products));
-        foreach ($products as $product) {
-            $this->checkProduct($product);
-        }
     }
 }

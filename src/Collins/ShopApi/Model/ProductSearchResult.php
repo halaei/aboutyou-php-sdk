@@ -15,9 +15,12 @@ class ProductSearchResult extends ProductsResult
 
     protected $facets;
 
+    /**
+     * @return integer
+     */
     public function getProductCount()
     {
-
+        return $this->productCount;
     }
 
     public function getFacets()
