@@ -9,7 +9,6 @@ use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\ProductsResult;
 use Collins\ShopApi\Results as Results;
-use Collins\ShopApi\Config;
 use Guzzle\Http\Client;
 use Guzzle\Http\Message\EntityEnclosingRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -218,52 +217,6 @@ class ShopApi
     }
 
     /**
-     * Adds a set of product variants to the basket and returns
-     * the result of a basket API request.
-     * @param int $user_session_id free to choose ID of the current website visitor.
-     * The website visitor is the person the basket belongs to.
-     * @param array $product_variants set of product variants
-     * @return \Collins\ShopApi\Results\BasketResult
-     */
-    public function addToBasket($user_session_id, $product_variants)
-    {
-        $data = array(
-            'basket_add' => array(
-                'session_id' => (string)$user_session_id,
-                'product_variant' => $product_variants
-            )
-        );
-
-        return new Results\BasketAddResult($this->request($data), $this);
-    }
-
-    /**
-     * Adds a product variant to the basket and returns the result of a basket
-     * API request.
-     *
-     * @param int $user_session_id
-     * @param int $product_variant_id
-     * @param int $amount
-     *
-     * @return \Collins\ShopApi\Results\BasketResult
-     */
-    public function addProductVariantToBasket(
-        $user_session_id,
-        $product_variant_id,
-        $amount
-    ) {
-        $product_variants = array(
-            array(
-                'id' => $product_variant_id,
-                'command' => 'add',
-                'amount' => $amount
-            )
-        );
-
-        return self::addToBasket($user_session_id, $product_variants);
-    }
-
-    /**
      * Returns the result of an autocompletion API request.
      * Autocompletion searches for products and categories by
      * a given prefix ($searchword).
@@ -317,6 +270,106 @@ class ShopApi
         }
 
         return new Basket($jsonObject[0]->basket_get);
+    }
+
+    /**
+     * Add product variant to basket.
+     *
+     * @param string $sessionId        Free to choose ID of the current website visitor.
+     * @param int    $productVariantId ID of product variant.
+     * @param int    $amount           Amount of items to add.
+     *
+     * @return \Collins\ShopApi\Model\Basket
+     */
+    public function addToBasket($sessionId, $productVariantId, $amount = 1) {
+        $data = array(
+            'basket_add' => array(
+                'session_id' => $sessionId,
+                'product_variant' => array(
+                    array(
+                        'id' => $productVariantId,
+                        'command' => 'add',
+                        'amount' => $amount,
+                    ),
+                ),
+            )
+        );
+
+        $response = $this->request($data);
+        $jsonObject = json_decode($response->getBody(true));
+
+        if ($jsonObject === false || !isset($jsonObject[0]->basket_add)) {
+            throw new UnexpectedResultException();
+        }
+
+        return new Basket($jsonObject[0]->basket_add);
+    }
+
+    /**
+     * Remove product variant from basket.
+     *
+     * @param string $sessionId        Free to choose ID of the current website visitor.
+     * @param int    $productVariantId ID of product variant.
+     *
+     * @return \Collins\ShopApi\Model\Basket
+     */
+    public function removeFromBasket($sessionId, $productVariantId)
+    {
+        $data = array(
+            'basket_add' => array(
+                'session_id' => $sessionId,
+                'product_variant' => array(
+                    array(
+                        'id' => $productVariantId,
+                        'command' => 'set',
+                        'amount' => 0,
+                    ),
+                ),
+            )
+        );
+
+        $response = $this->request($data);
+        $jsonObject = json_decode($response->getBody(true));
+
+        if ($jsonObject === false || !isset($jsonObject[0]->basket_add)) {
+            throw new UnexpectedResultException();
+        }
+
+        return new Basket($jsonObject[0]->basket_add);
+    }
+
+    /**
+     * Update amount product variant in basket.
+     *
+     * @param string $sessionId        Free to choose ID of the current website visitor.
+     * @param int    $productVariantId ID of product variant.
+     * @param int    $amount           Amount to set.
+     *
+     * @return \Collins\ShopApi\Model\Basket
+     */
+    public function updateBasketAmount($sessionId, $productVariantId, $amount)
+    {
+        $data = array(
+            'basket_add' => array(
+                'session_id' => $sessionId,
+                'product_variant' => array(
+                    array(
+                        'id' => $productVariantId,
+                        'command' => 'set',
+                        'amount' => $amount,
+                    ),
+                ),
+            )
+        );
+
+        $response = $this->request($data);
+        $jsonObject = json_decode($response->getBody(true));
+
+        if ($jsonObject === false || !isset($jsonObject[0]->basket_add)) {
+            throw new UnexpectedResultException();
+        }
+
+        return new Basket($jsonObject[0]->basket_add);
     }
 
     /**

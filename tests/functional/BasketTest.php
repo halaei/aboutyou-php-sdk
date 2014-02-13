@@ -7,6 +7,7 @@
 namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi;
+use Collins\ShopApi\Model\Basket;
 
 class BasketTest extends ShopApiTest
 {
@@ -21,13 +22,10 @@ class BasketTest extends ShopApiTest
     }
 
     /**
-     *
+     * Check if given object is a valid basket.
      */
-    public function testBasket()
+    private function checkBasket(Basket $basket)
     {
-        $shopApi = $this->getShopApiWithResultFile('basket.json');
-
-        $basket = $shopApi->fetchBasket($this->sessionId);
         $this->assertInstanceOf('Collins\ShopApi\Model\Basket', $basket);
         $this->assertInternalType('int', $basket->getTotalPrice());
         $this->assertInternalType('int', $basket->getTotalNet());
@@ -45,8 +43,17 @@ class BasketTest extends ShopApiTest
             $this->assertInstanceOf('Collins\ShopApi\Model\Product', $item->getProduct());
             $this->assertInstanceOf('Collins\ShopApi\Model\ProductVariant', $item->getProductVariant());
         }
+    }
 
-        return $basket;
+    /**
+     *
+     */
+    public function testBasket()
+    {
+        $shopApi = $this->getShopApiWithResultFile('basket.json');
+
+        $basket = $shopApi->fetchBasket($this->sessionId);
+        $this->checkBasket($basket);
     }
 
     /**
@@ -54,18 +61,18 @@ class BasketTest extends ShopApiTest
      */
     public function testAddToBasket()
     {
-        $this->markTestIncomplete();
+        $shopApi = $this->getShopApiWithResultFile('basket-add.json');
 
         // add one item to basket
         $productVariantId = 123;
-        $success = $this->api->addToBasket($this->sessionId, $productVariantId);
-        $this->assertTrue($success);
+        $basket = $shopApi->addToBasket($this->sessionId, $productVariantId);
+        $this->checkBasket($basket);
 
         // add more of one item to basket
         $productVariantId = 123;
-        $quantity = 2;
-        $success = $this->api->addToBasket($this->sessionId, $productVariantId, $quantity);
-        $this->assertTrue($success);
+        $amount = 2;
+        $basket = $shopApi->addToBasket($this->sessionId, $productVariantId, $amount);
+        $this->checkBasket($basket);
     }
 
     /**
@@ -73,17 +80,24 @@ class BasketTest extends ShopApiTest
      */
     public function testRemoveFromBasket()
     {
-        $this->markTestIncomplete();
+        $shopApi = $this->getShopApiWithResultFile('basket-add.json');
 
-        // remove one item from basket
+        // remove all of one item from basket
         $productVariantId = 123;
-        $success = $this->api->removeFromBasket($this->sessionId, $productVariantId);
-        $this->assertTrue($success);
+        $basket = $shopApi->removeFromBasket($this->sessionId, $productVariantId);
+        $this->checkBasket($basket);
+    }
 
-        // remove more of one item from basket
+    /**
+     *
+     */
+    public function testUpdateBasketAmounts()
+    {
+        $shopApi = $this->getShopApiWithResultFile('basket-add.json');
+
         $productVariantId = 123;
-        $quantity = 2;
-        $success = $this->api->removeFromBasket($this->sessionId, $productVariantId, $quantity);
-        $this->assertTrue($success);
+        $amount = 2;
+        $basket = $shopApi->updateBasketAmount($this->sessionId, $productVariantId, $amount);
+        $this->checkBasket($basket);
     }
 }
