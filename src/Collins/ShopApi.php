@@ -5,8 +5,10 @@ use Collins\Cache\NoCache;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Exception\ApiErrorException;
 use Collins\ShopApi\Exception\UnexpectedResultException;
+use Collins\ShopApi\Exception\InvalidParameterException;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
+use Collins\ShopApi\Model\Facet;
 use Collins\ShopApi\Model\ProductsResult;
 use Collins\ShopApi\Results as Results;
 use Guzzle\Http\Client;
@@ -472,39 +474,36 @@ class ShopApi
     }
 
     /**
-     * Returns the result of a facet API request.
-     * It simply returns all the facets that are relevant for your app.
+     * Fetch the facets of the given groupIds.
      *
-     * @param array $group_ids array of group ids
-     * @param int $limit
-     * @param int $offset
+     * @param array $groupIds The group ids.
      *
-     * @return \Collins\ShopApi\Results\FacetResult
+     * @return \Collins\ShopApi\Model\Facet[]
      */
-    public function getFacets($group_ids = [], $limit = 0, $offset = 0)
+    public function fetchFacets(array $groupIds)
     {
-        // special case, fetch all facets
-        if (empty($group_ids) && empty($limit) && empty($offset)) {
-            return new Results\FacetResult($this->request(['facets' => (object)null], 60 * 60), $this);
+        if (!$groupIds) {
+            throw new InvalidParameterException('no groupId given');
         }
 
-        $facets = [];
+        $data = array(
+            'facets' => array(
+                'group_ids' => $groupIds
+            )
+        );
 
-        settype($group_ids, 'array');
+        $response = $this->request($data);
+        $jsonObject = json_decode($response->getBody(true));
 
-        if (count($group_ids)) {
-            $facets['group_ids'] = $group_ids;
+        if ($jsonObject === false || !isset($jsonObject[0]->facets) || !isset($jsonObject[0]->facets->facet)) {
+            throw new UnexpectedResultException();
         }
 
-        if ($limit) {
-            $facets['limit'] = $limit;
+        $facets = array();
+        foreach ($jsonObject[0]->facets->facet as $jsonFacet) {
+            $facets[] = new Facet($jsonFacet);
         }
-
-        if ($offset) {
-            $facets['offset'] = $offset;
-        }
-
-        return new Results\FacetResult($this->request(['facets' => $facets], 60 * 60), $this);
+        return $facets;
     }
 
     /**
