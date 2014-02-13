@@ -155,4 +155,13 @@ class Product
     {
 
     }
-} 
+
+    /**
+     * @return ProductVariant
+     */
+    public function getVariantById($variantId)
+    {
+        //TODO: get product variant by json data
+        return new ProductVariant();
+    }
+}

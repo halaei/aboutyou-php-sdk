@@ -5,6 +5,7 @@ use Collins\Cache\NoCache;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Exception\ApiErrorException;
 use Collins\ShopApi\Exception\UnexpectedResultException;
+use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\ProductsResult;
 use Collins\ShopApi\Results as Results;
@@ -294,24 +295,28 @@ class ShopApi
     }
 
     /**
-     * Returns the result of a basket API request.
-     * This includes all the necessary information of a basket of the user
-     * provided.
+     * Fetch the basket of the given sessionId.
      *
-     * @param int $user_session_id free to choose ID of the current website visitor.
-     * The website visitor is the person the basket belongs to.
+     * @param string $sessionId Free to choose ID of the current website visitor.
      *
-     * @return \Collins\ShopApi\Results\BasketResult
+     * @return \Collins\ShopApi\Model\Basket
      */
-    public function getBasket($user_session_id)
+    public function fetchBasket($sessionId)
     {
         $data = array(
             'basket_get' => array(
-                'session_id' => (string)$user_session_id
+                'session_id' => $sessionId
             )
         );
 
-        return new Results\BasketGetResult($this->request($data), $this);
+        $response = $this->request($data);
+        $jsonObject = json_decode($response->getBody(true));
+
+        if ($jsonObject === false || !isset($jsonObject[0]->basket_get)) {
+            throw new UnexpectedResultException();
+        }
+
+        return new Basket($jsonObject[0]->basket_get);
     }
 
     /**
