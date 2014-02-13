@@ -40,7 +40,7 @@ abstract class BaseResult
     {
 
         $this->api = $api;
-        
+
         if (!$this->resultKey) {
             throw new Exception\IncompleteImplementationException('Result classes need to overwrite the $resultKey attribute.');
         }
