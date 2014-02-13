@@ -279,25 +279,14 @@ class ProductResult extends BaseResult
                 $extension = isset($image['extension']) ? $image['extension'] : $image['ext'];
                 $hash = isset($image['hash']) ? $image['hash'] : '';
 
-                $url = str_replace(
-                    array(
-                        '{{path}}',
-                        '{{id}}',
-                        '{{extension}}',
-                        '{{width}}',
-                        '{{height}}',
-                        '{{hash}}'
-                    ),
-                    array(
-                        $path,
-                        $id,
-                        $extension,
-                        $width,
-                        $height,
-                        $hash
-                    ),
-                    \CollinsAPI\Config::IMAGE_URL
-                );
+                $url = \CollinsAPI\Collins::getImageURL(array(
+                    'path' => $path,
+                    'id' => $id,
+                    'extension' => $extension,
+                    'width' => $width,
+                    'height' => $height,
+                    'hash' => $hash
+                ));
 
                 if (!isset($urls[$product['id']])) {
                     $urls[$product['id']] = array();
@@ -346,25 +335,15 @@ class ProductResult extends BaseResult
                                 $path = substr($id, 0, 3);
                                 $extension = isset($image['extension']) ? $image['extension'] : $image['ext'];
                                 $hash = isset($image['hash']) ? $image['hash'] : '';
-                                $url = str_replace(
-                                    array(
-                                        '{{path}}',
-                                        '{{id}}',
-                                        '{{extension}}',
-                                        '{{width}}',
-                                        '{{height}}',
-                                        '{{hash}}'
-                                    ),
-                                    array(
-                                        $path,
-                                        $id,
-                                        $extension,
-                                        $width,
-                                        $height,
-                                        $hash
-                                    ),
-                                    \CollinsAPI\Config::IMAGE_URL
-                                );
+
+                                $url = \CollinsAPI\Collins::getImageURL(array(
+                                    'path' => $path,
+                                    'id' => $id,
+                                    'extension' => $extension,
+                                    'width' => $width,
+                                    'height' => $height,
+                                    'hash' => $hash
+                                ));
 
                                 $urls[] = $url;
                             }
