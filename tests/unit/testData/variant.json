@@ -1,0 +1,53 @@
+{
+    "ean": "ean1",
+    "default": false,
+    "price": 3990,
+    "old_price": 0,
+    "images": [
+        {
+            "hash": "882ff9a8365b6e1b46773992b189e4dc",
+            "name": "Antevorte-2_TOT0072001_140_21.jpg",
+            "image": {
+                "width": 1400,
+                "height": 2000
+            },
+            "ext": ".jpg",
+            "mime": "image/jpeg",
+            "size": 1874956
+        },
+        {
+            "hash": "2b0ee425a369b8feab3d1515a7bffaec",
+            "name": "Antevorte-2_TOT0072001_140_22.jpg",
+            "image": {
+                "width": 1400,
+                "height": 2000
+            },
+            "ext": ".jpg",
+            "mime": "image/jpeg",
+            "size": 1909980
+        }
+    ],
+    "attributes": {
+        "attributes_172": [
+            1967
+        ],
+        "attributes_173": [
+            2075
+        ],
+        "attributes_206": [
+            2382
+        ],
+        "attributes_211": [
+            2749
+        ],
+        "attributes_0": [
+            264
+        ],
+        "attributes_1": [
+            12
+        ]
+    },
+    "retail_price": 3995,
+    "id": 5145543,
+    "quantity": 5
+}

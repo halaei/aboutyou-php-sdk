@@ -15,7 +15,7 @@ class Image
     /** @var string */
     protected $name;
 
-    /** @var int */
+    /** @var integer */
     protected $filesize;
 
     /** @var string */
@@ -24,8 +24,8 @@ class Image
     /** @var string */
     protected $mimetype;
 
-    /** @var Dimension */
-    protected $dimension;
+    /** @var ImageSize */
+    protected $imageSize;
 
     public function __construct($jsonObject)
     {
@@ -40,15 +40,15 @@ class Image
         $this->ext = $jsonObject->ext;
         $this->mimetype = $jsonObject->mime;
 
-        $this->dimension = new Dimension((int)$jsonObject->image->width, (int)$jsonObject->image->height);
+        $this->imageSize = new ImageSize((int)$jsonObject->image->width, (int)$jsonObject->image->height);
     }
 
     /**
-     * @return \Collins\ShopApi\Model\Dimension
+     * @return \Collins\ShopApi\Model\ImageSize
      */
-    public function getDimension()
+    public function getImageSize()
     {
-        return $this->dimension;
+        return $this->imageSize;
     }
 
     /**
@@ -60,7 +60,7 @@ class Image
     }
 
     /**
-     * @return int
+     * @return integer
      */
     public function getFilesize()
     {
@@ -91,8 +91,8 @@ class Image
         return $this->name;
     }
 
-    public function getImageUrl()
+    public function getImageUrl($width = 200, $height = 0)
     {
-
+        return '/mmdb/file/' . $this->hash . '?width=' . $width . '&height=' . $height;
     }
 } 

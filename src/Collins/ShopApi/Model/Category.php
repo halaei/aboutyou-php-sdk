@@ -15,7 +15,7 @@ class Category
     /** @var string */
     public $name;
 
-    /** @var bool */
+    /** @var boolean */
     public $isActive;
 
     /** @var integer */
@@ -54,6 +54,46 @@ class Category
         }
     }
 
+    /**
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
     public function getParent()
     {
         return $this->parent;
@@ -75,6 +115,4 @@ class Category
     {
 
     }
-
-
 } 

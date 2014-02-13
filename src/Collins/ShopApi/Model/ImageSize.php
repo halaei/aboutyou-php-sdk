@@ -6,12 +6,12 @@
 
 namespace Collins\ShopApi\Model;
 
-final class Dimension
+final class ImageSize
 {
-    /** @var int */
+    /** @var integer */
     private $width;
 
-    /** @var int */
+    /** @var integer */
     private $height;
 
     public function __construct($width, $height)
@@ -21,7 +21,7 @@ final class Dimension
     }
 
     /**
-     * @return int
+     * @return integer
      */
     public function getWidth()
     {
@@ -29,7 +29,7 @@ final class Dimension
     }
 
     /**
-     * @return int
+     * @return integer
      */
     public function getHeight()
     {

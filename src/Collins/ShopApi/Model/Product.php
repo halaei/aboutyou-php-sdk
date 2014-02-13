@@ -9,42 +9,50 @@ namespace Collins\ShopApi\Model;
 
 class Product
 {
-    const SALE_INCLUDE = true;
-    const SALE_EXCLUDE = false;
-    const SALE_IGNORE  = null;
-    const SALE_UNKNOWN = -1;
-
-    const UNKNOWN = null;
-
-    /** @var int */
+    /** @var integer */
     protected $id;
 
     /** @var string */
     protected $name;
 
     /** @var mixed */
-    protected $sale;
+    protected $isSale;
 
-    /** @var bool */
+    /** @var boolean */
     protected $isActive;
 
     /** @var string */
-    protected $descritptionShort;
+    protected $descriptionShort;
 
     /** @var string */
     protected $descriptionLong;
 
-    /** @var int */
+    /** @var integer */
+    protected $minPrice;
+
+    /** @var integer */
+    protected $maxPrice;
+
+    /** @var integer */
     protected $brandId;
 
-    /** @var int[] */
+    /** @var integer[] */
     protected $categoryIds;
 
-    /** @var int[] */
+    /** @var integer[] */
     protected $attributeIds;
 
     /** @var Image */
     protected $defaultImage;
+
+    /** @var Variant */
+    protected $defaultVariant;
+
+    /** @var Variant[] */
+    protected $variants;
+
+    /** @var Product[] */
+    protected $styles;
 
     public function __construct($jsonObject)
     {
@@ -60,18 +68,50 @@ class Product
         $this->id   = $jobj->id;
         $this->name = $jobj->name;
 
-        $this->sale              = isset($jobj->sale)              ? $jobj->sale : self::SALE_UNKNOWN;
+        $this->isSale            = isset($jobj->sale)              ? $jobj->sale : false;
         $this->descritptionShort = isset($jobj->description_short) ? $jobj->description_short : '';
         $this->descriptionLong   = isset($jobj->description_long)  ? $jobj->description_long : '';
         $this->isActive          = isset($jobj->active)            ? $jobj->active : true;
 
-        $this->brandId           = isset($jobj->brandId)           ? $jobj->brandId : self::UNKNOWN;
 
-        $this->defaultImage      = !empty($jobj->default_image)    ? new Image($jobj->default_image) : self::UNKNOWN;
+        $this->brandId           = isset($jobj->brandId)           ? $jobj->brandId : null;
+
+        $this->defaultImage      = !empty($jobj->default_image)    ? new Image($jobj->default_image) : null;
+
+        $this->categoryIds       = self::parseCategoryIds($jobj);
+
+        $this->defaultVariant    = isset($jobj->default_variant) ? new Variant($jobj->default_variant) : null;
+
+        $this->variants = [];
+        if (!empty($jobj->variants)) {
+            foreach ($jobj->variants as $variant) {
+                $this->variants[] = new Variant($variant);
+            }
+        }
+
+        $this->styles = [];
+        if (!empty($jobj->styles)) {
+            foreach ($jobj->styles as $style) {
+                $this->styles[] = new Product($style);
+            }
+        }
+    }
+
+    protected static function parseCategoryIds($jobj)
+    {
+        $cIds = [];
+        foreach (get_object_vars($jobj) as $name => $aa) {
+            if (strpos($name, 'categories') !== 0) continue;
+            foreach ($aa as $ids) {
+                $cIds = array_merge($cIds, $ids);
+            }
+        }
+
+        return array_unique($cIds);
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getDescriptionLong()
     {
@@ -79,15 +119,15 @@ class Product
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDescritptionShort()
+    public function getDescriptionShort()
     {
         return $this->descritptionShort;
     }
 
     /**
-     * @return int
+     * @return integer
      */
     public function getId()
     {
@@ -111,39 +151,40 @@ class Product
     }
 
     /**
-     * @return mixed
+     * @return boolean
      */
-    public function getSale()
+    public function isSale()
     {
-        return $this->sale;
+        return $this->isSale;
     }
 
-    /** bool */
-    public function isSaleIncluded()
+    /**
+     * return integer|null in euro cent
+     */
+    public function getMinPrice()
     {
-        return $this->sale === self::SALE_INCLUDE;
-    }
-
-    /** bool */
-    public function isSaleExcluded()
-    {
-        return $this->sale === self::SALE_EXCLUDE;
-    }
-
-    /** bool */
-    public function isSaleIgnored()
-    {
-        return $this->sale === self::SALE_IGNORE;
+        return $this->minPrice;
     }
 
     public function getAttributes()
     {
-
+        // TODO: Implement me
     }
 
+    /**
+     * @return integer[]
+     */
+    public function getAttributeIds()
+    {
+        return $this->attributeIds;
+    }
+
+    /**
+     * @return integer[]
+     */
     public function getCategoryIds()
     {
-
+        return $this->categoryIds;
     }
 
     public function fetchCategories()
@@ -151,8 +192,51 @@ class Product
 
     }
 
+    /**
+     * @return Image|null
+     */
     public function getDefaultImage()
     {
+        return $this->defaultImage;
+    }
 
+    /**
+     * @return integer|null
+     */
+    public function getBrandId()
+    {
+        return $this->brandId;
+    }
+
+    /**
+     * @return Variant|null
+     */
+    public function getDefaultVariant()
+    {
+        return $this->defaultVariant;
+    }
+
+    /**
+     * @return Variant[]
+     */
+    public function getVariants()
+    {
+        return $this->variants;
+    }
+
+    /**
+     * @return Product[]
+     */
+    public function getStyles()
+    {
+        return $this->styles;
+    }
+
+    /**
+     * @return integer|null
+     */
+    public function getMaxPrice()
+    {
+        return $this->maxPrice;
     }
 } 
