@@ -30,14 +30,14 @@ class BasketTest extends ShopApiTest
         $this->assertInternalType('int', $basket->getTotalPrice());
         $this->assertInternalType('int', $basket->getTotalNet());
         $this->assertInternalType('int', $basket->getTotalVat());
-        $this->assertInternalType('int', $basket->getTotalQuantity());
+        $this->assertInternalType('int', $basket->getTotalAmount());
         $this->assertInternalType('int', $basket->getTotalVariants());
 
         foreach ($basket->getItems() as $item) {
             $this->assertInstanceOf('Collins\ShopApi\Model\BasketItem', $item);
             $this->assertInternalType('int', $item->getTotalPrice());
             $this->assertInternalType('int', $item->getUnitPrice());
-            $this->assertInternalType('int', $item->getQuantity());
+            $this->assertInternalType('int', $item->getAmount());
             $this->assertInternalType('int', $item->getTax());
             $this->assertInternalType('int', $item->getVat());
             $this->assertInstanceOf('Collins\ShopApi\Model\Product', $item->getProduct());

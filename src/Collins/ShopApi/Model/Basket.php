@@ -69,11 +69,11 @@ class Basket
     }
 
     /**
-     * Get the total quantity of all items.
+     * Get the total amount of all items.
      *
      * @return integer
      */
-    public function getTotalQuantity()
+    public function getTotalAmount()
     {
         return $this->jsonObject->amount_variants;
     }

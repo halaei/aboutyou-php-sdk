@@ -64,11 +64,11 @@ class BasketItem
     }
 
     /**
-     * Get the quantity.
+     * Get the amount of items.
      *
      * @return integer
      */
-    public function getQuantity()
+    public function getAmount()
     {
         return $this->jsonObject->amount;
     }
