@@ -7,7 +7,7 @@
 namespace Collins\ShopApi\Model;
 
 
-class CategoryTree implements \IteratorAggregate
+class CategoryTree implements \IteratorAggregate, \Countable
 {
     /** @var Category[] */
     protected $categories;
@@ -37,9 +37,22 @@ class CategoryTree implements \IteratorAggregate
 
     /**
      * allows foreach iteration over the products
+     *
+     * {@inheritdoc}
+     *
      * @return Iterator
      */
     public function getIterator() {
         return new \ArrayIterator($this->categories);
+    }
+
+    /**
+     * Count of the sub categories
+     *
+     * {@inheritdoc}
+     */
+    public function count()
+    {
+        return count($this->categories);
     }
 }
