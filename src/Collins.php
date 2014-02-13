@@ -65,10 +65,6 @@ abstract class Collins
      */
     public static function addToBasket($user_session_id, $product_variants)
     {
-        if(!$user_session_id) {
-            $user_session_id = self::getUserSessionId();
-        }
-
         $data = array(
             'basket_add' => array(
                 'session_id' => (string)$user_session_id,
@@ -145,14 +141,11 @@ abstract class Collins
      * @param array $product_variants set of product variants
      * @return \CollinsAPI\Results\BasketResult
      */
-    public static function getBasket($user_session_id = null)
+    public static function getBasket($user_session_id)
     {
-        if(!$user_session_id) {
-            $user_session_id = self::getUserSessionId();
-        }
         $data = array(
             'basket_get' => array(
-                'session_id' => (string) $user_session_id
+                'session_id' => (string)$user_session_id
             )
         );
 
@@ -266,13 +259,9 @@ abstract class Collins
      */
     public static function initiateOrder($user_session_id, $success_url, $cancel_url, $error_url)
     {
-        if(!$user_session_id) {
-            $user_session_id = self::getUserSessionId();
-        }
-
         $data = array(
             'initiate_order' => array(
-                'session_id' => (string) $user_session_id,
+                'session_id' => (string)$user_session_id,
                 'success_url' => $success_url,
                 'cancel_url' => $cancel_url,
                 'error_url' => $error_url
@@ -321,7 +310,7 @@ abstract class Collins
      * @return \CollinsAPI\Results\ProductSearchResult
      */
     public static function getProductSearch(
-        $user_session_id = null,
+        $user_session_id,
         array $filter = array(),
         array $result = array(
             'fields' => array(
@@ -342,10 +331,6 @@ abstract class Collins
             )
         )
     ) {
-        if(!$user_session_id) {
-            $user_session_id = self::getUserSessionId();
-        }
-
         $data = array(
             'product_search' => array(
                 'session_id' => (string)$user_session_id
@@ -469,7 +454,7 @@ abstract class Collins
     protected static function getResponse($data, $cacheDuration = 0)
     {
         if (!self::$client) {
-            self::$client = new \Guzzle\Http\Client(self::getEntryPointURL());
+            self::$client = new \Guzzle\Http\Client(Config::ENTRY_POINT_URL);
         }
 
         $body = json_encode(array($data));
@@ -592,57 +577,6 @@ abstract class Collins
         $tag = '<script type="text/javascript" src="' . self::getJavaScriptURL() . '"></script>';
 
         return $tag;
-    }
-
-    /**
-     * Returns a user session id that is generated without using cookies.
-     */
-    public static function getUserSessionId()
-    {
-        $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
-        $agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-        $accept = isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT'] : '';
-
-        return md5($ip.$agent.$accept);
-    }
-
-    public static function getImageURL($placeholders = array())
-    {
-        $url = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file/{{hash}}?width={{width}}&height={{height}}';
-
-        if(Config::IMAGE_URL) {
-            return Config::IMAGE_URL;
-        }
-
-        $url = str_replace(
-            array_map(function($key) {
-                return '{{'.$key.'}}';
-            }, array_keys($placeholders)),
-            $placeholders,
-            $url
-        );
-
-        return $url;
-    }
-
-    public static function getEntryPointURL()
-    {
-        if(Config::ENTRY_POINT_URL) {
-            return Config::ENTRY_POINT_URL;
-        }
-
-        return 'http://ant-shop-api1.wavecloud.de/api';
-    }
-
-    public static function getBrandImageUrl($id)
-    {
-        $url = 'http://www.mary-paul.de/assets/images/brand_images/{{id}}.jpg';
-
-        if(Config::BRAND_IMAGE_URL) {
-            return Config::BRAND_IMAGE_URL;
-        }
-
-        return str_replace('{{id}}', $id, $url);
     }
 }
 
