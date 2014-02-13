@@ -287,9 +287,9 @@ class ShopApi
                 'session_id' => $sessionId,
                 'product_variant' => array(
                     array(
-                        'id' => $productVariantId,
+                        'id' => (int)$productVariantId,
                         'command' => 'add',
-                        'amount' => $amount,
+                        'amount' => (int)$amount,
                     ),
                 ),
             )
@@ -320,7 +320,7 @@ class ShopApi
                 'session_id' => $sessionId,
                 'product_variant' => array(
                     array(
-                        'id' => $productVariantId,
+                        'id' => (int)$productVariantId,
                         'command' => 'set',
                         'amount' => 0,
                     ),
@@ -354,9 +354,9 @@ class ShopApi
                 'session_id' => $sessionId,
                 'product_variant' => array(
                     array(
-                        'id' => $productVariantId,
+                        'id' => (int)$productVariantId,
                         'command' => 'set',
-                        'amount' => $amount,
+                        'amount' => (int)$amount,
                     ),
                 ),
             )
