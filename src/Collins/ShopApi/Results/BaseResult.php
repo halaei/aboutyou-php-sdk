@@ -38,6 +38,9 @@ abstract class BaseResult
      */
     public final function __construct(\Guzzle\Http\Message\Response $response = null, ShopApi $api = null)
     {
+
+        $this->api = $api;
+        
         if (!$this->resultKey) {
             throw new Exception\IncompleteImplementationException('Result classes need to overwrite the $resultKey attribute.');
         }
@@ -45,7 +48,7 @@ abstract class BaseResult
         if (!$response) {
             return;
         }
-        
+
         $data = $response->json();
 
         if (isset($data[0]) && isset($data[0][$this->resultKey])) {
