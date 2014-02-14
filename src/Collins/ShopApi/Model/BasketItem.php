@@ -17,9 +17,9 @@ class BasketItem
     private $product = null;
 
     /**
-     * @var ProductVariant
+     * @var Variant
      */
-    private $productVariant = null;
+    private $variant = null;
 
     /**
      * Constructor.
@@ -109,13 +109,13 @@ class BasketItem
     /**
      * Get the product variant.
      *
-     * @return ProductVariant
+     * @return Variant
      */
-    public function getProductVariant()
+    public function getVariant()
     {
-        if (!$this->productVariant) {
-            $this->productVariant = $this->getProduct()->getVariantById($this->jsonObject->id);
+        if (!$this->variant) {
+            $this->variant = $this->getProduct()->getVariantById($this->jsonObject->id);
         }
-        return $this->productVariant;
+        return $this->variant;
     }
 }

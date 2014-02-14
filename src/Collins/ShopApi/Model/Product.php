@@ -65,27 +65,27 @@ class Product
         if (!isset($jobj->id) || !isset($jobj->name)) {
             throw MalformedJsonException();
         }
-        $this->id   = $jobj->id;
+        $this->id = $jobj->id;
         $this->name = $jobj->name;
 
-        $this->isSale            = isset($jobj->sale)              ? $jobj->sale : false;
+        $this->isSale = isset($jobj->sale) ? $jobj->sale : false;
         $this->descritptionShort = isset($jobj->description_short) ? $jobj->description_short : '';
-        $this->descriptionLong   = isset($jobj->description_long)  ? $jobj->description_long : '';
-        $this->isActive          = isset($jobj->active)            ? $jobj->active : true;
+        $this->descriptionLong = isset($jobj->description_long) ? $jobj->description_long : '';
+        $this->isActive = isset($jobj->active) ? $jobj->active : true;
 
 
-        $this->brandId           = isset($jobj->brandId)           ? $jobj->brandId : null;
+        $this->brandId = isset($jobj->brandId) ? $jobj->brandId : null;
 
-        $this->defaultImage      = !empty($jobj->default_image)    ? new Image($jobj->default_image) : null;
+        $this->defaultImage = !empty($jobj->default_image) ? new Image($jobj->default_image) : null;
 
-        $this->categoryIds       = self::parseCategoryIds($jobj);
+        $this->categoryIds = self::parseCategoryIds($jobj);
 
-        $this->defaultVariant    = isset($jobj->default_variant) ? new Variant($jobj->default_variant) : null;
+        $this->defaultVariant = isset($jobj->default_variant) ? new Variant($jobj->default_variant) : null;
 
         $this->variants = [];
         if (!empty($jobj->variants)) {
             foreach ($jobj->variants as $variant) {
-                $this->variants[] = new Variant($variant);
+                $this->variants[$variant->id] = new Variant($variant);
             }
         }
 
@@ -101,7 +101,9 @@ class Product
     {
         $cIds = [];
         foreach (get_object_vars($jobj) as $name => $aa) {
-            if (strpos($name, 'categories') !== 0) continue;
+            if (strpos($name, 'categories') !== 0) {
+                continue;
+            }
             foreach ($aa as $ids) {
                 $cIds = array_merge($cIds, $ids);
             }
@@ -189,7 +191,6 @@ class Product
 
     public function fetchCategories()
     {
-
     }
 
     /**
@@ -241,11 +242,17 @@ class Product
     }
 
     /**
-     * @return ProductVariant
+     * Get variant by id.
+     *
+     * @param integer $variantId The variant id.
+     *
+     * @return Variant
      */
     public function getVariantById($variantId)
     {
-        //TODO: get product variant by json data
-        return new ProductVariant();
+        if (isset($this->variants[$variantId])) {
+            return $this->variants[$variantId];
+        }
+        return null;
     }
 }

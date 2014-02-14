@@ -41,7 +41,7 @@ class BasketTest extends ShopApiTest
             $this->assertInternalType('int', $item->getTax());
             $this->assertInternalType('int', $item->getVat());
             $this->assertInstanceOf('Collins\ShopApi\Model\Product', $item->getProduct());
-            $this->assertInstanceOf('Collins\ShopApi\Model\ProductVariant', $item->getProductVariant());
+            $this->assertInstanceOf('Collins\ShopApi\Model\Variant', $item->getVariant());
         }
     }
 
