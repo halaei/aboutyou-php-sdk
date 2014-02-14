@@ -485,7 +485,7 @@ class ShopApi
      *
      * @param array $groupIds The group ids.
      *
-     * @return \Collins\ShopApi\Model\Facet[]
+     * @return \Collins\ShopApi\Model\Facet[] With facet id as key.
      */
     public function fetchFacets(array $groupIds)
     {
@@ -508,7 +508,7 @@ class ShopApi
 
         $facets = array();
         foreach ($jsonObject[0]->facets->facet as $jsonFacet) {
-            $facets[] = new Facet($jsonFacet);
+            $facets[$jsonFacet->facet_id] = new Facet($jsonFacet);
         }
         return $facets;
     }
