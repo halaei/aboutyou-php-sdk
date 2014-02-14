@@ -51,6 +51,20 @@ class Variant
     }
 
     /**
+     * Get default image.
+     *
+     * @return Image
+     */
+    public function getImage()
+    {
+        $images = $this->getImages();
+        if (isset($images[0])) {
+            return $images[0];
+        }
+        return null;
+    }
+
+    /**
      * @return string
      */
     public function getEan()
@@ -99,4 +113,4 @@ class Variant
     {
         return $this->jsonObject->quantity;
     }
-} 
+}
