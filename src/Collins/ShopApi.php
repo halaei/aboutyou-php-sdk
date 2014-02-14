@@ -10,6 +10,7 @@ use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\Facet;
 use Collins\ShopApi\Model\ProductsResult;
+use Collins\ShopApi\Model\Autocomplete;
 use Collins\ShopApi\Results as Results;
 use Guzzle\Http\Client;
 use Guzzle\Http\Message\EntityEnclosingRequestInterface;
@@ -223,14 +224,13 @@ class ShopApi
      * Autocompletion searches for products and categories by
      * a given prefix ($searchword).
      *
-     * @param string $searchword The prefix search word to search for
-     * @param int $limit Maximum number of results
-     * @param array $types array of types to search for
-     * (Constants::TYPE_PRODUCTS and/or CONSTANTS::TYPE_CATEGORIES)
+     * @param string $searchword The prefix search word to search for.
+     * @param int    $limit      Maximum number of results.
+     * @param array  $types      Array of types to search for (Constants::TYPE_...).
      *
-     * @return \Collins\ShopApi\Results\AutocompleteResult
+     * @return \Collins\ShopApi\Model\Autocomplete
      */
-    public function getAutocomplete(
+    public function fetchAutocomplete(
         $searchword,
         $limit = 50,
         $types = array(
@@ -246,7 +246,14 @@ class ShopApi
             )
         );
 
-        return new Results\AutocompleteResult($this->request($data), $this);
+        $response = $this->request($data);
+        $jsonObject = json_decode($response->getBody(true));
+
+        if ($jsonObject === false || !isset($jsonObject[0]->autocompletion)) {
+            throw new UnexpectedResultException();
+        }
+
+        return new Autocomplete($jsonObject[0]->autocompletion);
     }
 
     /**

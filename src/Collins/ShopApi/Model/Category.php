@@ -49,8 +49,10 @@ class Category
         $this->isActive = $jsonObject->active;
         $this->position = $jsonObject->position;
 
-        foreach ($jsonObject->sub_categories as $jsonSubCategory) {
-            $this->subCategories[] = $this->createCategory($jsonSubCategory, $this);
+        if (isset($jsonObject->sub_categories)) {
+            foreach ($jsonObject->sub_categories as $jsonSubCategory) {
+                $this->subCategories[] = $this->createCategory($jsonSubCategory, $this);
+            }
         }
     }
 
@@ -115,4 +117,4 @@ class Category
     {
 
     }
-} 
+}
