@@ -70,4 +70,23 @@ class Facet
     {
         return $this->jsonObject->group_name;
     }
+
+    /**
+     * Get option value.
+     *
+     * @param string $key The option key.
+     *
+     * @return mixed
+     */
+    public function getOption($key)
+    {
+        if (isset($this->jsonObject->options)) {
+            foreach ($this->jsonObject->options as $option) {
+                if ($option->key == $key) {
+                    return $option->value;
+                }
+            }
+        }
+        return null;
+    }
 }
