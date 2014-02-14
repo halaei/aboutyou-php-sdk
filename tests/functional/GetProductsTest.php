@@ -143,6 +143,38 @@ class GetProductsTest extends ShopApiTest
         }
     }
 
+    /**
+     *
+     */
+    public function testSelectVariant()
+    {
+        $this->markTestIncomplete('The Method is not implemented yet');
+
+        $productIds = array(123);
+
+        $shopApi = $this->getShopApiWithResultFile('products.json');
+
+        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $products = $productResult->getProducts();
+        $product = $products[123];
+
+        // if no variant is selected, return default variant
+        $defaultVariant = $product->getDefaultVariant();
+        $selectedVariant = $product->getSelectedVariant();
+        $this->assertEquals($defaultVariant, $selectedVariant);
+
+        // select specific variant
+        $variantId = 111;
+        $product->selectVariant($variantId);
+        $selectedVariant = $product->getSelectedVariant();
+        $this->assertNotEquals($defaultVariant, $selectedVariant);
+
+        // select default variant
+        $product->selectVariant(null);
+        $selectedVariant = $product->getSelectedVariant();
+        $this->assertEquals($defaultVariant, $selectedVariant);
+    }
+
     private function checkProduct($product)
     {
         $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Product', $product);
