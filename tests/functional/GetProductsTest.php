@@ -184,7 +184,7 @@ class GetProductsTest extends ShopApiTest
 
         $productIds = array(123);
 
-        $shopApi = $this->getShopApiWithResultFile('products.json');
+        $shopApi = $this->getShopApiWithResultFile('products-full.json');
 
         $productResult = $shopApi->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
@@ -193,11 +193,11 @@ class GetProductsTest extends ShopApiTest
 
         // select specific image
         $defaultImage = $variant->getImage();
-        $imageId = 111;
-        $variant->selectImage($imageId);
+        $imageHash = '2b0ee425a369b8feab3d1515a7bffaec';
+        $variant->selectImage($imageHash);
         $selectedImage = $variant->getImage();
         $this->assertNotEquals($defaultImage, $selectedImage);
-        $this->assertEquals($selectedImage, $variant->getImageById($imageId));
+        $this->assertEquals($selectedImage, $variant->getImageByHash($imageHash));
 
         // select default image
         $variant->selectImage(null);

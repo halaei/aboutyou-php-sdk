@@ -13,6 +13,11 @@ class Variant
 
     protected $images = null;
 
+    /**
+     * @var Image
+     */
+    protected $selectedImage = null;
+
     public function __construct($jsonObject)
     {
         $this->fromJson($jsonObject);
@@ -32,7 +37,7 @@ class Variant
     }
 
     /**
-     * @return array
+     * @return Image[]
      */
     public function getImages()
     {
@@ -51,15 +56,56 @@ class Variant
     }
 
     /**
-     * Get default image.
+     * Get image by given hash.
+     *
+     * @param string $hash The image hash.
+     *
+     * @return Image
+     */
+    public function getImageByHash($hash)
+    {
+        $images = $this->getImages();
+        foreach ($images as $image) {
+            if ($image->getHash() == $hash) {
+                return $image;
+            }
+        }
+        if (isset($images[0])) {
+            return $images[0];
+        }
+        return null;
+    }
+
+    /**
+     * Select a specific image.
+     *
+     * @param string $hash The image hash or null for default image.
+     *
+     * @return void
+     */
+    public function selectImage($hash)
+    {
+        if ($hash) {
+            $this->selectedImage = $this->getImageByHash($hash);
+        } else {
+            $this->selectedImage = null;
+        }
+    }
+
+    /**
+     * Get selected or default image.
      *
      * @return Image
      */
     public function getImage()
     {
-        $images = $this->getImages();
-        if (isset($images[0])) {
-            return $images[0];
+        if ($this->selectedImage) {
+            return $this->selectedImage;
+        } else {
+            $images = $this->getImages();
+            if (isset($images[0])) {
+                return $images[0];
+            }
         }
         return null;
     }
