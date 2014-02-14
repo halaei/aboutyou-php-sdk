@@ -798,10 +798,11 @@ class ShopApi
      * Suggestions are words that are often searched together
      * with the searchword you pass (e.g. "stretch" for "jeans").
      *
-     * @param string $searchword the search string to search for
-     * @return \Collins\ShopApi\Results\SuggestResult
+     * @param string $searchword The search string to search for.
+     *
+     * @return array
      */
-    public function getSuggest($searchword)
+    public function fetchSuggest($searchword)
     {
         $data = array(
             'suggest' => array(
@@ -809,7 +810,14 @@ class ShopApi
             )
         );
 
-        return new Results\SuggestResult($this->request($data), $this);
+        $response = $this->request($data);
+        $jsonObject = json_decode($response->getBody(true));
+
+        if ($jsonObject === false || !isset($jsonObject[0]->suggest)) {
+            throw new UnexpectedResultException();
+        }
+
+        return $jsonObject[0]->suggest;
     }
 
     /**
