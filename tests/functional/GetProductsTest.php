@@ -99,7 +99,9 @@ class GetProductsTest extends ShopApiTest
 
         $variants = $p456->getVariants();
         $this->assertCount(5, $variants);
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Variant', $variants[0]);
+        $variant = reset($variants);
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Variant', $variant);
+        $this->assertEquals(5145543, $variant->getId());
 
         return $p456;
     }
