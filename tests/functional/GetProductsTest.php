@@ -175,6 +175,36 @@ class GetProductsTest extends ShopApiTest
         $this->assertEquals($defaultVariant, $selectedVariant);
     }
 
+    /**
+     *
+     */
+    public function testVariantImages()
+    {
+        $this->markTestIncomplete('The Method is not implemented yet');
+
+        $productIds = array(123);
+
+        $shopApi = $this->getShopApiWithResultFile('products.json');
+
+        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $products = $productResult->getProducts();
+        $product = $products[123];
+        $variant = $product->getDefaultVariant();
+
+        // select specific image
+        $defaultImage = $variant->getImage();
+        $imageId = 111;
+        $variant->selectImage($imageId);
+        $selectedImage = $variant->getImage();
+        $this->assertNotEquals($defaultImage, $selectedImage);
+        $this->assertEquals($selectedImage, $variant->getImageById($imageId));
+
+        // select default image
+        $variant->selectImage(null);
+        $selectedImage = $variant->getImage();
+        $this->assertEquals($defaultImage, $selectedImage);
+    }
+
     private function checkProduct($product)
     {
         $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Product', $product);
