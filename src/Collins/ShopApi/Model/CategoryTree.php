@@ -10,11 +10,15 @@ namespace Collins\ShopApi\Model;
 class CategoryTree implements \IteratorAggregate, \Countable
 {
     /** @var Category[] */
-    protected $categories;
+    protected $allCategories;
+
+    /** @var Category[] */
+    protected $activeCategories;
 
     public function __construct($jsonObject)
     {
-        $this->categories = [];
+        $this->allCategories = [];
+        $this->activeCategories = [];
         $this->fromJson($jsonObject);
     }
 
@@ -26,24 +30,36 @@ class CategoryTree implements \IteratorAggregate, \Countable
     public function fromJson($jsonObject)
     {
         foreach ($jsonObject as $jsonCategory) {
-            $this->categories[] = $this->createCategory($jsonCategory);
+            $category = $this->createCategory($jsonCategory);
+            $this->allCategories[] = $category;
+            if ($category->isActive()) {
+                $this->activeCategories[] = $category;
+            }
         }
     }
 
-    public function getCategories()
+    /**
+     * @param bool $activeOnly if true, then only active categories will returned, otherwise all categories
+     *
+     * @return array|Category[]
+     */
+    public function getCategories($activeOnly = true)
     {
-        return $this->categories;
+        if ($activeOnly) {
+            return $this->activeCategories;
+        }
+        return $this->allCategories;
     }
 
     /**
-     * allows foreach iteration over the products
+     * allows foreach iteration on active top categories
      *
      * {@inheritdoc}
      *
      * @return Iterator
      */
     public function getIterator() {
-        return new \ArrayIterator($this->categories);
+        return new \ArrayIterator($this->activeCategories);
     }
 
     /**
@@ -53,6 +69,6 @@ class CategoryTree implements \IteratorAggregate, \Countable
      */
     public function count()
     {
-        return count($this->categories);
+        return count($this->allCategories);
     }
 }

@@ -7,24 +7,32 @@
                 "sub_categories": [],
                 "active": false,
                 "position": 1,
-                "id": 11
+                "id": 100
             },
             {
                 "name": "Main Category 2",
                 "parent": null,
                 "sub_categories": [
                     {
-                        "name": "Subcategory ",
+                        "name": "Subcategory 2.1",
                         "parent": 11,
                         "sub_categories": [],
                         "active": true,
                         "position": 1,
-                        "id": 22
+                        "id": 210
+                    },
+                    {
+                        "name": "Subcategory 2.2",
+                        "parent": 11,
+                        "sub_categories": [],
+                        "active": false,
+                        "position": 1,
+                        "id": 220
                     }
                 ],
                 "active": true,
                 "position": 2,
-                "id": 33
+                "id": 200
             }
         ]
     }
