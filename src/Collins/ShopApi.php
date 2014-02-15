@@ -9,6 +9,7 @@ use Collins\ShopApi\Exception\InvalidParameterException;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\Facet;
+use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
 use Collins\ShopApi\Model\Autocomplete;
 use Collins\ShopApi\Results as Results;
@@ -460,9 +461,66 @@ class ShopApi
             throw new UnexpectedResultException();
         }
 
-        $categoryTree = new ProductsResult($jsonObject[0]->products);
+        $result = new ProductsResult($jsonObject[0]->products);
 
-        return $categoryTree;
+        return $result;
+    }
+
+    /**
+     * @param string $userSessionId
+     * @param array $filter
+     * @param array $result
+     *
+     * @return ProductSearchResult
+     *
+     * @throws ShopApi\Exception\UnexpectedResultException
+     */
+    public function fetchProductSearch(
+        $userSessionId,
+        array $filter = array(),
+        array $result = array(
+            'fields' => array(
+                'id',
+                'name',
+                'active',
+                'brand_id',
+                'description_long',
+                'description_short',
+                'default_variant',
+                'variants',
+                'min_price',
+                'max_price',
+                'sale',
+                'default_image',
+                'attributes_merged',
+                'categories'
+            )
+        )
+    ) {
+        $data = array(
+            'product_search' => array(
+                'session_id' => (string)$userSessionId
+            )
+        );
+
+        if (count($filter) > 0) {
+            $data['product_search']['filter'] = $filter;
+        }
+
+        if (count($result) > 0) {
+            $data['product_search']['result'] = $result;
+        }
+
+        $response = $this->request($data);
+        $jsonObject = json_decode($response->getBody(true));
+
+        if ($jsonObject === false || !isset($jsonObject[0]->product_search)) {
+            throw new UnexpectedResultException();
+        }
+
+        $result = new ProductSearchResult($jsonObject[0]->product_search);
+
+        return $result;
     }
 
     /**
