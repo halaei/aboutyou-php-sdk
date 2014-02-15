@@ -9,6 +9,11 @@ namespace Collins\ShopApi\Model;
 
 class Image
 {
+    const MIN_WIDTH  = 50;
+    const MIN_HEIGHT = 50;
+    const MAX_WIDTH  = 1400;
+    const MAX_HEIGHT = 2000;
+
     /** @var string */
     protected $hash;
 
@@ -93,6 +98,8 @@ class Image
 
     public function getImageUrl($width = 200, $height = 0)
     {
+        $width = max(min($width, self::MAX_WIDTH), self::MIN_WIDTH);
+        $height = max(min($height, self::MAX_WIDTH), self::MIN_WIDTH);
         return '/mmdb/file/' . $this->hash . '?width=' . $width . '&height=' . $height;
     }
 } 

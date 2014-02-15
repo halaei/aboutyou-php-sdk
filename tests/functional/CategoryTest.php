@@ -28,11 +28,11 @@ class CategoryTest extends ShopApiTest
     {
         $breadcrumb = $this->category->getBreadcrumb();
         $this->assertCount(1, $breadcrumb);
-        $this->assertEquals(33, $breadcrumb[0]->id);
+        $this->assertEquals(200, $breadcrumb[0]->getId());
 
         $breadcrumb = $this->category->getSubCategories()[0]->getBreadcrumb();
         $this->assertCount(2, $breadcrumb);
-        $this->assertEquals(33, $breadcrumb[0]->id);
-        $this->assertEquals(22, $breadcrumb[1]->id);
+        $this->assertEquals(200, $breadcrumb[0]->getId());
+        $this->assertEquals(210, $breadcrumb[1]->getId());
     }
 }

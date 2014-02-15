@@ -1,0 +1,19 @@
+[
+    {
+        "product_search": {
+            "product_count": 1234,
+            "pageHash": "hash",
+            "facets": {},
+            "products": [
+                {
+                    "id": 123,
+                    "name": "Product 1"
+                },
+                {
+                    "id": 456,
+                    "name": "Product 2"
+                }
+            ]
+        }
+    }
+]

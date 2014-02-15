@@ -9,33 +9,51 @@ namespace Collins\ShopApi\Model;
 
 class Category
 {
+    const ALL = false;
+    const ACTIVE_ONLY = true;
+
     /** @var integer */
-    public $id;
+    protected $id;
 
     /** @var string */
-    public $name;
+    protected $name;
 
     /** @var boolean */
-    public $isActive;
+    protected  $isActive;
 
     /** @var integer */
-    public $position;
+    protected $position;
 
-    public $parentId;
+    /** @var Category */
+    protected $parentId;
 
     /** @var Category */
     protected $parent;
 
     /** @var Category[] */
-    protected $subCategories;
+    protected $allSubCategories;
 
+    /** @var Category[] */
+    protected $activeSubCategories;
+
+    /**
+     * @param object        $jsonObject  json as object tree
+     * @param Category|null $parent
+     */
     public function __construct($jsonObject, $parent = null)
     {
-        $this->subCategories = [];
+        $this->allSubCategories = [];
+        $this->activeSubCategories = [];
         $this->parent = $parent;
         $this->fromJson($jsonObject);
     }
 
+    /**
+     * @param object        $jsonCategory  json as object tree
+     * @param Category|null $parent
+     *
+     * @return Category
+     */
     public function createCategory($jsonCategory, $parent = null)
     {
         return new Category($jsonCategory, $parent);
@@ -44,14 +62,18 @@ class Category
     public function fromJson($jsonObject)
     {
         $this->parentId = $jsonObject->parent;
-        $this->id = $jsonObject->id;
-        $this->name = $jsonObject->name;
+        $this->id       = $jsonObject->id;
+        $this->name     = $jsonObject->name;
         $this->isActive = $jsonObject->active;
         $this->position = $jsonObject->position;
 
         if (isset($jsonObject->sub_categories)) {
             foreach ($jsonObject->sub_categories as $jsonSubCategory) {
-                $this->subCategories[] = $this->createCategory($jsonSubCategory, $this);
+                $category = $this->createCategory($jsonSubCategory, $this);
+                $this->allSubCategories[] = $category;
+                if ($category->isActive) {
+                    $this->activeSubCategories[] = $category;
+                }
             }
         }
     }
@@ -67,7 +89,7 @@ class Category
     /**
      * @return boolean
      */
-    public function getIsActive()
+    public function isActive()
     {
         return $this->isActive;
     }
@@ -96,25 +118,36 @@ class Category
         return $this->position;
     }
 
+    /**
+     * @return Category|null
+     */
     public function getParent()
     {
         return $this->parent;
     }
 
-    public function getSubCategories()
+    /**
+     * @param bool $activeOnly
+     *
+     * @return Category[]
+     */
+    public function getSubCategories($activeOnly = self::ACTIVE_ONLY)
     {
-        return $this->subCategories;
+        if ($activeOnly) {
+            return $this->activeSubCategories;
+        }
+
+        return $this->allSubCategories;
     }
 
+    /**
+     * @return Category[]
+     */
     public function getBreadcrumb()
     {
         $breadcrumb = $this->parent ? $this->parent->getBreadcrumb() : [];
         $breadcrumb[] = $this;
+
         return $breadcrumb;
-    }
-
-    public function fetchProducts($limit, $offset)
-    {
-
     }
 }

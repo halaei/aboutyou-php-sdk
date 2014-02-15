@@ -2,29 +2,45 @@
 
 namespace Collins\ShopApi\Test\Functional;
 
+use Collins\ShopApi\Model\ProductSearchResult;
+
 class ProductSearchTest extends ShopApiTest
 {
     public function testProductSearch()
     {
         $this->markTestIncomplete();
 
-        $shopApi = $this->getShopApiWithResult('');
+        $shopApi = $this->getShopApiWithResultFile('product_search.json');
 
         // get all available products
-        $products = $shopApi->searchProducts();
-        $this->checkProductList($products);
+        $productSearchResult = $shopApi->fetchProductSearch('1234');
+        $this->checkProductSearchResult($productSearchResult);
+    }
+
+    public function testProductSearchFilter()
+    {
+//        $this->markTestIncomplete();
+
+        $shopApi = $this->getShopApiWithResultFile('product_search.json');
 
         // search products by filter
         $filter = array(
             'categoryId' => 123
         );
-        $products = $shopApi->searchProducts($filter);
-        $this->checkProductList($products);
+        $products = $shopApi->fetchProductSearch('1234', $filter);
+        $this->checkProductSearchResult($products);
 
-        // search products and sort
-        $sorting = array('name', ShopApi::SORT_ASC);
-        $products = $shopApi->searchProducts(null, $sorting);
-        $this->checkProductList($products);
+//        // search products and sort
+//        $sorting = array('name', ShopApi::SORT_ASC);
+//        $products = $shopApi->fetchSearchProducts(null, $sorting);
+//        $this->checkProductList($products);
+    }
+
+    public function testProductSearchPagination()
+    {
+        $this->markTestIncomplete();
+
+        $shopApi = $this->getShopApiWithResultFile('product_search.json');
 
         // search products with limit
         $pagination = array(
@@ -36,8 +52,7 @@ class ProductSearchTest extends ShopApiTest
             'limit' => 20,
             'offset' => 21,
         );
-        $products = $shopApi->searchProducts(null, null, $pagination);
-        $this->checkProductList($products);
+        $products = $shopApi->fetchSearchProducts(null, null, $pagination);
     }
 
     /**
@@ -50,12 +65,10 @@ class ProductSearchTest extends ShopApiTest
         //TODO: check if this is a product
     }
 
-    /**
-     *
-     */
-    private function checkProductList($products)
+    private function checkProductSearchResult(ProductSearchResult $products)
     {
-        $this->assertTrue(is_array($products));
+        $this->assertEquals(1234, $products->getProductCount());
+
         foreach ($products as $product) {
             $this->checkProduct($product);
         }

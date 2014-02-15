@@ -7,6 +7,7 @@
 namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi;
+use Collins\ShopApi\Model\Category;
 
 class CategoryTreeTest extends ShopApiTest
 {
@@ -21,11 +22,33 @@ class CategoryTreeTest extends ShopApiTest
 
         $categoryTree = $shopApi->fetchCategoryTree($depth);
 
+        $this->assertCount(2, $categoryTree->getCategories(Category::ALL));
+        $this->assertCount(1, $categoryTree->getCategories(Category::ACTIVE_ONLY));
+        $this->assertCount(1, $categoryTree->getCategories());
+        $this->assertEquals(2, count($categoryTree));
+
+        $subCategory = $categoryTree->getCategories()[0];
+        $this->assertCount(2, $subCategory->getSubCategories(Category::ALL));
+        $this->assertCount(1, $subCategory->getSubCategories(Category::ACTIVE_ONLY));
+        $this->assertCount(1, $subCategory->getSubCategories());
+
+        foreach ($categoryTree->getCategories(Category::ALL) as $category) {
+            $this->checkCategory($category);
+
+            foreach ($category->getSubCategories(Category::ALL) as $subCategory) {
+                $this->checkCategory($subCategory);
+                $this->assertEquals($category, $subCategory->getParent());
+                $this->assertEmpty($subCategory->getSubCategories());
+            }
+        }
+
         foreach ($categoryTree->getCategories() as $category) {
             $this->checkCategory($category);
+            $this->assertTrue($category->isActive());
 
             foreach ($category->getSubCategories() as $subCategory) {
                 $this->checkCategory($subCategory);
+                $this->assertTrue($subCategory->isActive());
                 $this->assertEquals($category, $subCategory->getParent());
                 $this->assertEmpty($subCategory->getSubCategories());
             }
@@ -43,20 +66,18 @@ class CategoryTreeTest extends ShopApiTest
 
         foreach ($categoryTree as $category) {
             $this->checkCategory($category);
+            $this->assertTrue($category->isActive());
         }
     }
 
     /**
-     *
+     * @param Category $category
      */
-    private function checkCategory($category)
+    private function checkCategory(Category $category)
     {
-        $this->assertObjectHasAttribute('id', $category);
-        $this->assertObjectHasAttribute('name', $category);
-        $this->assertObjectHasAttribute('isActive', $category);
-        $this->assertNotNull($category->id);
-        $this->assertNotNull($category->name);
-        $this->assertNotNull($category->isActive);
-        //TODO: check if this is a category
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+        $this->assertNotNull($category->getId());
+        $this->assertNotNull($category->getName());
+        $this->assertNotNull($category->isActive());
     }
 }
