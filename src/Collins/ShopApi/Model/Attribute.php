@@ -4,7 +4,7 @@ namespace Collins\ShopApi\Model;
 /**
  *
  */
-class Facet
+class Attribute
 {
     /**
      * @var object
@@ -26,9 +26,19 @@ class Facet
      *
      * @return integer
      */
-    public function getFacetId()
+    public function getId()
     {
         return $this->jsonObject->facet_id;
+    }
+
+    public function getUniqueKey()
+    {
+        return $this->getGroupId() . '_' . $this->getId();
+    }
+
+    public static function uniqueKey($groupId, $attributeId)
+    {
+        return $groupId . '_' . $attributeId;
     }
 
     /**

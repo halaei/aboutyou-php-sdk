@@ -8,7 +8,7 @@ use Collins\ShopApi\Exception\UnexpectedResultException;
 use Collins\ShopApi\Exception\InvalidParameterException;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
-use Collins\ShopApi\Model\Facet;
+use Collins\ShopApi\Model\Attribute;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
 use Collins\ShopApi\Model\Autocomplete;
@@ -64,6 +64,14 @@ class ShopApi
     /** @var string */
     protected $imageUrlTemplate;
 
+    // TODO: Refactore me!
+    private static $currentApi;
+
+    public static function getCurrentApi()
+    {
+        return self::$currentApi;
+    }
+
     /**
      * @param string $appId
      * @param string $appPassword
@@ -78,6 +86,8 @@ class ShopApi
         $this->setCache($cache ?: new NoCache());
         $this->setLogger($logger ?: new NullLogger());
         $this->setImageUrlTemplate();
+
+        self::$currentApi = $this;
     }
 
     /**
@@ -543,9 +553,9 @@ class ShopApi
      *
      * @param array $groupIds The group ids.
      *
-     * @return \Collins\ShopApi\Model\Facet[] With facet id as key.
+     * @return \Collins\ShopApi\Model\Attribute[] With facet id as key.
      */
-    public function fetchFacets(array $groupIds)
+    public function fetchAttributes(array $groupIds)
     {
         if (!$groupIds) {
             throw new InvalidParameterException('no groupId given');
@@ -566,8 +576,11 @@ class ShopApi
 
         $facets = array();
         foreach ($jsonObject[0]->facets->facet as $jsonFacet) {
-            $facets[$jsonFacet->facet_id] = new Facet($jsonFacet);
+            $attribute = new Attribute($jsonFacet);
+            $key = $attribute->getUniqueKey();
+            $facets[$key] = $attribute;
         }
+
         return $facets;
     }
 

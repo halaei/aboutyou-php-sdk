@@ -6,6 +6,8 @@
 
 namespace Collins\ShopApi\Model;
 
+use Collins\ShopApi;
+use Collins\ShopApi\Model\Attribute;
 
 class Product
 {
@@ -54,6 +56,9 @@ class Product
     /** @var Product[] */
     protected $styles;
 
+    /** @var ProductAttributes */
+    protected $attributes;
+
     public function __construct($jsonObject)
     {
         $this->fromJson($jsonObject);
@@ -65,36 +70,46 @@ class Product
         if (!isset($jobj->id) || !isset($jobj->name)) {
             throw MalformedJsonException();
         }
-        $this->id = $jobj->id;
+        $this->id   = $jobj->id;
         $this->name = $jobj->name;
 
-        $this->isSale = isset($jobj->sale) ? $jobj->sale : false;
+        $this->isSale            = isset($jobj->sale) ? $jobj->sale : false;
         $this->descritptionShort = isset($jobj->description_short) ? $jobj->description_short : '';
-        $this->descriptionLong = isset($jobj->description_long) ? $jobj->description_long : '';
-        $this->isActive = isset($jobj->active) ? $jobj->active : true;
+        $this->descriptionLong   = isset($jobj->description_long) ? $jobj->description_long : '';
+        $this->isActive          = isset($jobj->active) ? $jobj->active : true;
+        $this->brandId           = isset($jobj->brand_id) ? $jobj->brand_id : null;
 
-
-        $this->brandId = isset($jobj->brandId) ? $jobj->brandId : null;
-
-        $this->defaultImage = !empty($jobj->default_image) ? new Image($jobj->default_image) : null;
-
-        $this->categoryIds = self::parseCategoryIds($jobj);
-
+        $this->defaultImage   = isset($jobj->default_image) ? new Image($jobj->default_image) : null;
         $this->defaultVariant = isset($jobj->default_variant) ? new Variant($jobj->default_variant) : null;
 
-        $this->variants = [];
+        $this->variants     = self::parseVariants($jobj);
+        $this->styles       = self::parseStyles($jobj);
+        $this->categoryIds  = self::parseCategoryIds($jobj);
+        $this->attributeIds = self::parseAttributeIds($jobj);
+    }
+
+    protected static function parseVariants($jobj)
+    {
+        $variants = [];
         if (!empty($jobj->variants)) {
             foreach ($jobj->variants as $variant) {
-                $this->variants[$variant->id] = new Variant($variant);
+                $variants[$variant->id] = new Variant($variant);
             }
         }
 
-        $this->styles = [];
+        return $variants;
+    }
+
+    protected static function parseStyles($jobj)
+    {
+        $styles = [];
         if (!empty($jobj->styles)) {
             foreach ($jobj->styles as $style) {
-                $this->styles[] = new Product($style);
+                $styles[] = new Product($style);
             }
         }
+
+        return $styles;
     }
 
     protected static function parseCategoryIds($jobj)
@@ -110,6 +125,19 @@ class Product
         }
 
         return array_unique($cIds);
+    }
+
+    protected static function parseAttributeIds($jobj)
+    {
+        $ids = [];
+        if (!empty($jobj->attributes_merged)) {
+            foreach ($jobj->attributes_merged as $group => $aIds) {
+                $gid = substr($group, 11); // rm prefix "attributs_"
+                $ids[$gid] = $aIds;
+            }
+        }
+
+        return $ids;
     }
 
     /**
@@ -168,9 +196,21 @@ class Product
         return $this->minPrice;
     }
 
+    protected function generateAttributes()
+    {
+        $this->attributes = new ProductAttributes($this->attributeIds);
+    }
+
+    /**
+     * @return ProductAttributes|null
+     */
     public function getAttributes()
     {
-        // TODO: Implement me
+        if (!$this->attributes) {
+            $this->generateAttributes();
+        }
+
+        return $this->attributes;
     }
 
     /**
@@ -207,6 +247,16 @@ class Product
     public function getBrandId()
     {
         return $this->brandId;
+    }
+
+    /**
+     * return Facet
+     */
+    public function getBrand()
+    {
+        $key = Attribute::uniqueKey(ShopApi\Constants::FACET_BRAND, $this->brandId);
+
+        return $this->getAttributes()->getAttributeByKey($key);
     }
 
     /**

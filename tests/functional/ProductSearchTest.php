@@ -2,6 +2,7 @@
 
 namespace Collins\ShopApi\Test\Functional;
 
+use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
 
 class ProductSearchTest extends ShopApiTest
@@ -58,11 +59,10 @@ class ProductSearchTest extends ShopApiTest
     /**
      *
      */
-    private function checkProduct($product)
+    private function checkProduct(Product $product)
     {
         $this->assertObjectHasAttribute('id', $product);
         $this->assertObjectHasAttribute('name', $product);
-        //TODO: check if this is a product
     }
 
     private function checkProductSearchResult(ProductSearchResult $products)
