@@ -46,7 +46,7 @@ class ProductAttributesTest extends ShopApiTest
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\ProductAttributes', $attributes);
 
         $groups = $attributes->getGroups();
-        $this->assertCount(3, $groups);
+        $this->assertCount(4, $groups);
 
         $brand = $groups[ShopApi\Constants::FACET_BRAND];
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\AttributeGroup', $brand);
@@ -58,5 +58,18 @@ class ProductAttributesTest extends ShopApiTest
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\AttributeGroup', $color);
         $this->assertEquals(1, $color->getId());
         $this->assertEquals('color', $color->getName());
+    }
+
+    public function testGetGroupAttributes()
+    {
+        $colors = $this->product->getGroupAttributes(ShopApi\Constants::FACET_COLOR);
+        $this->assertNotNull($colors);
+        $this->assertInternalType('array', $colors);
+        $color = $colors[12];
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Attribute', $color);
+        $this->assertEquals(12, $color->getId());
+        $this->assertEquals('Grau', $color->getName());
+        $this->assertEquals('grau', $color->getValue());
+        $this->assertEquals('color', $color->getGroupName());
     }
 }

@@ -74,6 +74,18 @@ class ProductAttributes
     }
 
     /**
+     * @return AttributeGroup
+     */
+    public function getGroup($groupId)
+    {
+        $groups = $this->getGroups();
+        if( isset($groups[$groupId]) ) {
+            return $groups[$groupId];
+        }
+        return null;
+    }
+
+    /**
      * @param integer $attributeId
      *
      * @return Attribute|null

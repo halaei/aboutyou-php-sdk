@@ -229,6 +229,22 @@ class Product
         return $this->categoryIds;
     }
 
+    /**
+     * Get attributes of given group id.
+     *
+     * @param integer $groupId The group id.
+     *
+     * @return \Collins\ShopApi\Model\Attribute[]
+     */
+    public function getGroupAttributes($groupId)
+    {
+        $group = $this->getAttributes()->getGroup($groupId);
+        if ($group) {
+            return $group->getAttributes();
+        }
+        return [];
+    }
+
     public function fetchCategories()
     {
     }
@@ -250,7 +266,7 @@ class Product
     }
 
     /**
-     * return Facet
+     * @return \Collins\ShopApi\Model\Attribute
      */
     public function getBrand()
     {
