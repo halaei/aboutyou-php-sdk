@@ -50,6 +50,9 @@ class Product
     /** @var Variant */
     protected $defaultVariant;
 
+    /** @var Variant */
+    protected $selectedVariant;
+
     /** @var Variant[] */
     protected $variants;
 
@@ -320,5 +323,30 @@ class Product
             return $this->variants[$variantId];
         }
         return null;
+    }
+
+    /**
+     * Select a variant.
+     *
+     * @param integer $variantId The variant id.
+     *
+     * @return void
+     */
+    public function selectVariant($variantId)
+    {
+        $this->selectedVariant = $this->getVariantById($variantId);
+    }
+
+    /**
+     * Get the selected or default variant.
+     *
+     * @return Variant
+     */
+    public function getSelectedVariant()
+    {
+        if( $this->selectedVariant ) {
+            return $this->selectedVariant;
+        }
+        return $this->defaultVariant;
     }
 }
