@@ -7,7 +7,7 @@
 namespace Collins\ShopApi\Model;
 
 use Collins\ShopApi;
-use Collins\ShopApi\Model\Attribute;
+use Collins\ShopApi\Exception\MalformedJsonException;
 
 class Product
 {
@@ -71,7 +71,7 @@ class Product
     {
         // these are required fields
         if (!isset($jobj->id) || !isset($jobj->name)) {
-            throw MalformedJsonException();
+            throw new MalformedJsonException();
         }
         $this->id   = $jobj->id;
         $this->name = $jobj->name;
