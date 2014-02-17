@@ -15,16 +15,22 @@ abstract class ShopApiTest extends \PHPUnit_Framework_TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|Client
      */
-    protected function getGuzzleClient($jsonString)
+    protected function getGuzzleClient($jsonString, $exceptedRequestBody = null)
     {
-        $response = new Response('200 OK', null, $jsonString);
-
         $request = $this->getMockBuilder('Guzzle\\Http\\Message\\EntityEnclosingRequest')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $response = new Response('200 OK', null, $jsonString ?: '');
         $request->expects($this->any())
             ->method('send')
             ->will($this->returnValue($response));
+
+        if ($exceptedRequestBody) {
+            $request->expects($this->any())
+                ->method('setBody')
+                ->with($exceptedRequestBody);
+        }
 
         $client = $this->getMock('Guzzle\\Http\\Client');
         $client->expects($this->any())
