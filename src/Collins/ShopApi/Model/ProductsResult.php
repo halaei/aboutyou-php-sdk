@@ -15,6 +15,8 @@ class ProductsResult implements \IteratorAggregate, \ArrayAccess, \Countable
     /** @var string */
     protected $pageHash;
 
+    protected $productsNotFound = [];
+
     public function __construct($jsonObject)
     {
         $this->products = [];
@@ -32,6 +34,10 @@ class ProductsResult implements \IteratorAggregate, \ArrayAccess, \Countable
 
         if (isset($jsonObject->ids)) {
             foreach ($jsonObject->ids as $key => $jsonProduct) {
+                if (isset($jsonProduct->error_code)) {
+                    $this->productsNotFound[] = $key;
+                    continue;
+                }
                 $this->products[$key] = $this->createProduct($jsonProduct);
             }
         }
@@ -52,6 +58,18 @@ class ProductsResult implements \IteratorAggregate, \ArrayAccess, \Countable
     {
         return $this->products;
     }
+
+    /**
+     * @return array of product ids
+     */
+    public function getProductsNotFound()
+    {
+        return $this->productsNotFound;
+    }
+
+    /*
+     * Interface implementations
+     */
 
     /**
      * allows foreach iteration over the products

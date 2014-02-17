@@ -177,6 +177,36 @@ class GetProductsTest extends ShopApiTest
         $this->assertEquals($defaultVariant, $selectedVariant);
     }
 
+    public function testProductNotFound()
+    {
+        $result = <<<EOS
+[
+    {
+        "products": {
+            "pageHash": "2163505b-0083-44b6-b547-b564ae463328",
+            "ids": {
+                "1": { "error_message": [ "product not found" ], "error_code": 404 },
+                "123": { "active": false, "styles": [], "id": 123, "name": "Product 123" }
+            }
+        }
+    }
+]
+EOS;
+        $shopApi = $this->getShopApiWithResult($result);
+
+        $logger = $this->getMockForAbstractClass('Psr\Log\LoggerInterface');
+        $logger->expects($this->once())
+            ->method('warning')
+        ;
+        $shopApi->setLogger($logger);
+
+        $productResult = $shopApi->fetchProductsByIds([1, 123]);
+        $products = $productResult->getProducts();
+        $this->assertCount(1, $products);
+        $product = reset($products);
+        $this->assertEquals(123, $product->getId());
+    }
+
     /**
      *
      */

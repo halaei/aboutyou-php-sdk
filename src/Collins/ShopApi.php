@@ -475,6 +475,11 @@ class ShopApi
 
         $result = new ProductsResult($jsonObject[0]->products);
 
+        $productsNotFound = $result->getProductsNotFound();
+        if (!empty($productsNotFound)) {
+            $this->logger->warning('products not found: appid=' . $this->appId . ' product ids=[' . join(',', $productsNotFound) . ']');
+        }
+
         return $result;
     }
 
