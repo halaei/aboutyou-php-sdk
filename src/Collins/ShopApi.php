@@ -3,7 +3,9 @@ namespace Collins;
 
 use Collins\Cache\NoCache;
 use Collins\ShopApi\Constants;
+use Collins\ShopApi\CriteriaInterface;
 use Collins\ShopApi\Exception\ApiErrorException;
+use Collins\ShopApi\Exception\MalformedJsonException;
 use Collins\ShopApi\Exception\UnexpectedResultException;
 use Collins\ShopApi\Exception\InvalidParameterException;
 use Collins\ShopApi\Model\Basket;
@@ -478,7 +480,7 @@ class ShopApi
 
     /**
      * @param string $userSessionId
-     * @param array $filter
+     * @param array|CriteriaInterface $filter
      * @param array $result
      *
      * @return ProductSearchResult
@@ -487,7 +489,7 @@ class ShopApi
      */
     public function fetchProductSearch(
         $userSessionId,
-        array $filter = array(),
+        $filter = array(),
         array $result = array(
             'fields' => array(
                 'id',
@@ -513,6 +515,9 @@ class ShopApi
             )
         );
 
+        if ($filter instanceof CriteriaInterface) {
+            $filter = $filter->toArray();
+        }
         if (count($filter) > 0) {
             $data['product_search']['filter'] = $filter;
         }
@@ -854,10 +859,27 @@ class ShopApi
 
         $this->cache->set($cacheKey, $response, $cacheDuration);
 
-        if (!$response->isSuccessful() || !is_array($response->json())) {
+        try {
+            if (!$response->isSuccessful()) {
+                throw new ApiErrorException(
+                    $response->getReasonPhrase(),
+                    $response->getStatusCode()
+                );
+            }
+            try {
+                 if (!is_array($response->json())) {
+                    throw new MalformedJsonException(
+                        'result is not array'
+                    );
+                }
+            } catch (\Exception $e) {
+                 throw new MalformedJsonException(
+                     'unknown error occurred', 0, $e
+                 );
+            }
+        } catch (\Exception $e) {
             throw new ApiErrorException(
-                $response->getReasonPhrase(),
-                $response->getStatusCode()
+                'unknown error occurred', 0, $e
             );
         }
 

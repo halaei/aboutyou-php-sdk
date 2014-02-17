@@ -4,6 +4,7 @@ namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
+use Collins\ShopApi\ProductSearchFilter;
 
 class ProductSearchTest extends ShopApiTest
 {
@@ -37,6 +38,33 @@ class ProductSearchTest extends ShopApiTest
 //        $this->checkProductList($products);
     }
 
+    /**
+     * @see tests/unit/ShopApi/ProductSearchFilterTest.php
+     */
+    public function testProductSearchFilterObject()
+    {
+        $dummyResult = <<<EOS
+[
+    {
+        "product_search": {
+            "product_count": 35034,
+            "pageHash": "d136109b-abd8-4d1c-99ac-4a621f3adb0e",
+            "facets": {},
+            "products": []
+        }
+    }
+]
+EOS;
+        // This is the imported part of this test!!
+        $expectedRequestBody = '["categories": [123]]';
+
+        $shopApi = $this->getShopApiWithResult($dummyResult, $expectedRequestBody);
+
+        $filter = ProductSearchFilter::create()
+            ->addCategories([123]);
+        $shopApi->fetchProductSearch('1234', $filter);
+    }
+
     public function testProductSearchPagination()
     {
         $this->markTestIncomplete();
@@ -56,9 +84,8 @@ class ProductSearchTest extends ShopApiTest
         $products = $shopApi->fetchSearchProducts(null, null, $pagination);
     }
 
-    /**
-     *
-     */
+    /***************************************************/
+
     private function checkProduct(Product $product)
     {
         $this->assertObjectHasAttribute('id', $product);
