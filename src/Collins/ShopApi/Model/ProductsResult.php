@@ -28,10 +28,12 @@ class ProductsResult implements \IteratorAggregate, \ArrayAccess, \Countable
 
     public function fromJson($jsonObject)
     {
-        $this->pageHash = $jsonObject->pageHash;
+        $this->pageHash = isset($jsonObject->pageHash) ? $jsonObject->pageHash : null;
 
-        foreach ($jsonObject->ids as $key => $jsonProduct) {
-            $this->products[$key] = $this->createProduct($jsonProduct);
+        if (isset($jsonObject->ids)) {
+            foreach ($jsonObject->ids as $key => $jsonProduct) {
+                $this->products[$key] = $this->createProduct($jsonProduct);
+            }
         }
     }
 
@@ -56,7 +58,7 @@ class ProductsResult implements \IteratorAggregate, \ArrayAccess, \Countable
      *
      * {@inheritdoc}
      *
-     * @return Iterator
+     * @return \Iterator
      */
     public function getIterator() {
         return new \ArrayIterator($this->products);
