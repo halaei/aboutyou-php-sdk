@@ -38,7 +38,7 @@ class Product
     /** @var integer */
     protected $brandId;
 
-    /** @var integer[] */
+    /** @var array */
     protected $categoryIds;
 
     /** @var integer[] */
@@ -61,6 +61,9 @@ class Product
 
     /** @var ProductAttributes */
     protected $attributes;
+
+    /** @var Category */
+    protected $category;
 
     public function __construct($jsonObject)
     {
@@ -122,12 +125,10 @@ class Product
             if (strpos($name, 'categories') !== 0) {
                 continue;
             }
-            foreach ($aa as $ids) {
-                $cIds = array_merge($cIds, $ids);
-            }
+            $cIds = $aa;
         }
 
-        return array_unique($cIds);
+        return $cIds;
     }
 
     protected static function parseAttributeIds($jobj)
@@ -225,11 +226,43 @@ class Product
     }
 
     /**
-     * @return integer[]
+     * @return array
      */
     public function getCategoryIds()
     {
         return $this->categoryIds;
+    }
+
+    /**
+     * Get product category.
+     *
+     * @return Category
+     */
+    public function getCategory()
+    {
+        //TODO: refactor
+        $api = ShopApi::getCurrentApi();
+
+        if (!$this->category) {
+            foreach ($this->categoryIds as $ids) {
+                if ($ids) {
+                    $categories = $api->fetchCategoriesByIds($ids)->getCategories();
+                    $firstId = array_shift($ids);
+                    $firstCategory = $categories[$firstId];
+                    if ($firstCategory && $firstCategory->isActive()) {
+                        $this->category = $firstCategory;
+                        foreach ($ids as $id) {
+                            if (!$categories[$id]->isActive()) {
+                                break;
+                            }
+                            $this->category = $categories[$id];
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        return $this->category;
     }
 
     /**
