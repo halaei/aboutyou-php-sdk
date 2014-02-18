@@ -26,6 +26,9 @@ class ImageTest extends AbstractModelTest
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\ImageSize', $imageSize);
         $this->assertEquals(1400, $imageSize->getWidth());
         $this->assertEquals(2000, $imageSize->getHeight());
+
+        $this->assertStringStartsWith('/hash1', $image->getUrl());
+        $this->assertStringStartsWith('/hash1?width=123&height=456', $image->getUrl(123, 456));
     }
 }
  

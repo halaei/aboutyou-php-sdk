@@ -96,10 +96,25 @@ class Image
         return $this->name;
     }
 
-    public function getImageUrl($width = 200, $height = 0)
+    /**
+     * @param int $width
+     * @param int $height
+     *
+     * @return string returns the relative url
+     */
+    public function getUrl($width = 200, $height = 0)
     {
         $width = max(min($width, self::MAX_WIDTH), self::MIN_WIDTH);
         $height = max(min($height, self::MAX_WIDTH), self::MIN_WIDTH);
-        return '/mmdb/file/' . $this->hash . '?width=' . $width . '&height=' . $height;
+
+        return '/' . $this->hash . '?width=' . $width . '&height=' . $height;
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getImageUrl($width = 200, $height = 0)
+    {
+        return $this->getUrl($width, $height);
     }
 } 
