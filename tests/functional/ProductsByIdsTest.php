@@ -106,26 +106,6 @@ class GetProductsTest extends ShopApiTest
         return $p456;
     }
 
-    /**
-     * @depends testFetchProductsAllFields
-     */
-    public function testFetchProductsWithAttributs($product)
-    {
-        $this->markTestIncomplete('The Method is not implemented yet');
-
-        $attributes = $product->getAttributs();
-    }
-
-    /**
-     * @depends testFetchProductsAllFields
-     */
-    public function testFetchProductsWithBrand($product)
-    {
-        $this->markTestIncomplete('The Method is not implemented yet');
-
-        $attributes = $product->getBrand();
-    }
-
     public function testFetchProductsWithStyles()
     {
         $productIds = array(220430);

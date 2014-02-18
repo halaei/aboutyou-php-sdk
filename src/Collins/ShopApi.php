@@ -11,7 +11,7 @@ use Collins\ShopApi\Exception\InvalidParameterException;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\CategoriesResult;
-use Collins\ShopApi\Model\Attribute;
+use Collins\ShopApi\Model\Facet;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
 use Collins\ShopApi\Model\Autocomplete;
@@ -600,12 +600,12 @@ class ShopApi
      *
      * @param array $groupIds The group ids.
      *
-     * @return \Collins\ShopApi\Model\Attribute[] With facet id as key.
+     * @return \Collins\ShopApi\Model\Facet[] With facet id as key.
      *
      * @throws ShopApi\Exception\MalformedJsonException
      * @throws ShopApi\Exception\UnexpectedResultException
      */
-    public function fetchAttributes(array $groupIds)
+    public function fetchFacets(array $groupIds)
     {
         if (!$groupIds) {
             throw new InvalidParameterException('no groupId given');
@@ -626,9 +626,9 @@ class ShopApi
 
         $facets = array();
         foreach ($jsonObject[0]->facets->facet as $jsonFacet) {
-            $attribute = new Attribute($jsonFacet);
-            $key = $attribute->getUniqueKey();
-            $facets[$key] = $attribute;
+            $facet = Facet::createFromJson($jsonFacet);
+            $key = $facet->getUniqueKey();
+            $facets[$key] = $facet;
         }
 
         return $facets;

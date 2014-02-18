@@ -42,7 +42,7 @@ class Product
     protected $categoryIds;
 
     /** @var integer[] */
-    protected $attributeIds;
+    protected $facetIds;
 
     /** @var Image */
     protected $defaultImage;
@@ -59,8 +59,8 @@ class Product
     /** @var Product[] */
     protected $styles;
 
-    /** @var ProductAttributes */
-    protected $attributes;
+    /** @var FacetGroupSet */
+    protected $facetGroups;
 
     /** @var Category */
     protected $category;
@@ -91,7 +91,7 @@ class Product
         $this->variants     = self::parseVariants($jobj);
         $this->styles       = self::parseStyles($jobj);
         $this->categoryIds  = self::parseCategoryIds($jobj);
-        $this->attributeIds = self::parseAttributeIds($jobj);
+        $this->facetIds     = self::parseFacetIds($jobj);
     }
 
     protected static function parseVariants($jobj)
@@ -131,7 +131,7 @@ class Product
         return $cIds;
     }
 
-    protected static function parseAttributeIds($jobj)
+    protected static function parseFacetIds($jobj)
     {
         $ids = [];
         if (!empty($jobj->attributes_merged)) {
@@ -200,29 +200,29 @@ class Product
         return $this->minPrice;
     }
 
-    protected function generateAttributes()
+    protected function generateFacetGroupSet()
     {
-        $this->attributes = new ProductAttributes($this->attributeIds);
+        $this->facetGroups = new FacetGroupSet($this->facetIds);
     }
 
     /**
-     * @return ProductAttributes|null
+     * @return FacetGroupSet|null
      */
-    public function getAttributes()
+    public function getFacetGroupSet()
     {
-        if (!$this->attributes) {
-            $this->generateAttributes();
+        if (!$this->facetGroups) {
+            $this->generateFacetGroupSet();
         }
 
-        return $this->attributes;
+        return $this->facetGroups;
     }
 
     /**
      * @return integer[]
      */
-    public function getAttributeIds()
+    public function getFacetIds()
     {
-        return $this->attributeIds;
+        return $this->facetIds;
     }
 
     /**
@@ -266,23 +266,55 @@ class Product
     }
 
     /**
-     * Get attributes of given group id.
+     * Get facets of given group id.
      *
      * @param integer $groupId The group id.
      *
-     * @return \Collins\ShopApi\Model\Attribute[]
+     * @return \Collins\ShopApi\Model\Facet[]
      */
-    public function getGroupAttributes($groupId)
+    public function getGroupFacets($groupId)
     {
-        $group = $this->getAttributes()->getGroup($groupId);
+        $group = $this->getFacetGroupSet()->getGroup($groupId);
         if ($group) {
-            return $group->getAttributes();
+            return $group->getFacets();
         }
         return [];
     }
 
-    public function fetchCategories()
+    /**
+     * Returns all FacetGroups from all Variants
+     *
+     * @param integer $groupId
+     *
+     * @return FacetGroup[]
+     */
+    public function getFacetGroups($groupId)
     {
+        $allGroups = [];
+        foreach ($this->getVariants() as $variant) {
+            $groups = $variant->getFacetGroupSet()->getGroups();
+            foreach ($groups as $group) {
+                if ($group->getId() === $groupId) {
+                    $allGroups[] = $group;
+                }
+            }
+        }
+
+        return $allGroups;
+    }
+
+    /**
+     * Returns all FacetGroups, which matches the current facet group set
+     *
+     * TODO: implement me
+     *
+     * @param integer $groupId
+     *
+     * @param FacetGroupSet $facetGroupSet
+     */
+    public function getSelectableFacetGroups($groupId, FacetGroupSet $facetGroupSet)
+    {
+        $this->getFacetGroups($groupId);
     }
 
     /**
@@ -302,13 +334,13 @@ class Product
     }
 
     /**
-     * @return \Collins\ShopApi\Model\Attribute
+     * @return \Collins\ShopApi\Model\Facet
      */
     public function getBrand()
     {
-        $key = Attribute::uniqueKey(ShopApi\Constants::FACET_BRAND, $this->brandId);
+        $key = Facet::uniqueKey(ShopApi\Constants::FACET_BRAND, $this->brandId);
 
-        return $this->getAttributes()->getAttributeByKey($key);
+        return $this->getFacetGroupSet()->getFacetByKey($key);
     }
 
     /**
@@ -355,6 +387,7 @@ class Product
         if (isset($this->variants[$variantId])) {
             return $this->variants[$variantId];
         }
+
         return null;
     }
 
@@ -380,6 +413,26 @@ class Product
         if( $this->selectedVariant ) {
             return $this->selectedVariant;
         }
+
         return $this->defaultVariant;
+    }
+
+    /**
+     * This returns the first variant, which matches the given facet group set
+     *
+     * @param FacetGroupSet $facets
+     *
+     * @return Variant|null
+     */
+    public function getVariantByFacets(FacetGroupSet $facets)
+    {
+        $key = $facets->getUniqueKey();
+        foreach ($this->variants as $variant) {
+            if ($variant->getFacetGroupSet()->getUniqueKey() === $key) {
+                return $variant;
+            }
+        }
+
+        return null;
     }
 }

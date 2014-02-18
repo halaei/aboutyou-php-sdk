@@ -12,11 +12,11 @@ class FacetsTest extends ShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFile('facets-206.json');
 
-        $facets = $shopApi->fetchAttributes([206]);
+        $facets = $shopApi->fetchFacets([206]);
         $this->assertInternalType('array', $facets);
 
         foreach ($facets as $facet) {
-            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Attribute', $facet);
+            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Facet', $facet);
             $this->assertInternalType('int', $facet->getId());
             $this->assertInternalType('string', $facet->getName());
             $this->assertInternalType('string', $facet->getValue());
@@ -32,6 +32,6 @@ class FacetsTest extends ShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFile('facets-206.json');
 
-        $shopApi->fetchAttributes([]);
+        $shopApi->fetchFacets([]);
     }
 }

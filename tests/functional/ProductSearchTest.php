@@ -20,7 +20,7 @@ class ProductSearchTest extends ShopApiTest
     }
 
     /**
-     * @deprecated
+     * @deprecated to search with an array
      * @see /tests/unit/ShopApi/ProductSearchFilterTest.php
      */
     public function testProductSearchFilter()

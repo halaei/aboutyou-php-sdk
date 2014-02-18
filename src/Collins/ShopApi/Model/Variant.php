@@ -11,7 +11,11 @@ class Variant
 {
     protected $jsonObject;
 
+    /** @var Image[]|null */
     protected $images = null;
+
+    /** @var FacetGroupSet */
+    protected $facetGroups;
 
     /**
      * @var Image
@@ -159,4 +163,48 @@ class Variant
     {
         return $this->jsonObject->quantity;
     }
+
+    protected static function parseFacetIds($jsonObject)
+    {
+        $ids = [];
+        if (!empty($jsonObject->attributes)) {
+            foreach ($jsonObject->attributes as $group => $aIds) {
+                $gid = substr($group, 11); // rm prefix "attributs_"
+                $ids[$gid] = $aIds;
+            }
+        }
+
+        return $ids;
+    }
+
+    protected function generateFacetGroupSet()
+    {
+        $ids = self::parseFacetIds($this->jsonObject);
+        $this->facetGroups = new FacetGroupSet($ids);
+    }
+
+    /**
+     * @return FacetGroupSet
+     */
+    public function getFacetGroupSet()
+    {
+        if (!$this->facetGroups) {
+            $this->generateFacetGroupSet();
+        }
+
+        return $this->facetGroups;
+    }
+
+    /**
+     * @param integer $groupId
+     *
+     * @return FacetGroup|null
+     */
+    public function getFacetGroup($groupId)
+    {
+        $groups = $this->getFacetGroupSet();
+
+        return $groups->getGroup($groupId);
+    }
+
 }
