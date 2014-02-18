@@ -10,6 +10,7 @@ use Collins\ShopApi\Exception\UnexpectedResultException;
 use Collins\ShopApi\Exception\InvalidParameterException;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
+use Collins\ShopApi\Model\CategoriesResult;
 use Collins\ShopApi\Model\Attribute;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
@@ -400,15 +401,15 @@ class ShopApi
      * a result of the categories data.
      *
      * @param mixed $ids either a single category ID as integer or an array of IDs
-     * @return \Collins\ShopApi\Results\CategoryResult
+     *
+     * @return \Collins\ShopApi\Model\CategoriesResult
      */
-    public function getCategories($ids)
+    public function fetchCategoriesByIds($ids)
     {
         // we allow to pass a single ID instead of an array
         if (!is_array($ids)) {
             $ids = array($ids);
         }
-
 
         $data = array(
             'category' => array(
@@ -416,7 +417,22 @@ class ShopApi
             )
         );
 
-        return new Results\CategoryResult($this->request($data, 60 * 60), $this);
+        $response = $this->request($data);
+        $jsonObject = json_decode($response->getBody(true));
+
+        if ($jsonObject === false || !isset($jsonObject[0]->category)) {
+            throw new UnexpectedResultException();
+        }
+
+        $jsonObject[0]->category->ids = $ids;
+        $result = new CategoriesResult($jsonObject[0]->category);
+
+        $notFound = $result->getCategoriesNotFound();
+        if (!empty($notFound)) {
+            $this->logger->warning('categories not found: appid=' . $this->appId . ' product ids=[' . join(',', $notFound) . ']');
+        }
+
+        return $result;
     }
 
     public function fetchCategoryTree($maxDepth = -1)
