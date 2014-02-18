@@ -76,7 +76,7 @@ class ProductSearchFilter implements CriteriaInterface
      * @param array $attributes  array of array with group id and attribute ids
      *   for example [0 => [264]]: search for products with the brand "TOM TAILER"
      *
-     * TODO: allow ot filter by AttributeGroup
+     * TODO: allow ot filter by FacetGroup
      *
      * @return ProductSearchFilter
      */

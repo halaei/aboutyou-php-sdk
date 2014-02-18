@@ -6,7 +6,7 @@
 
 namespace Collins\ShopApi\Test\Unit\ShopApi;
 
-use Collins\ShopApi\Model\ProductAttributes;
+use Collins\ShopApi\Model\FacetGroupSet;
 use Collins\ShopApi\ProductSearchFilter;
 
 class ProductSearchFilterTest extends \PHPUnit_Framework_TestCase
@@ -58,7 +58,7 @@ class ProductSearchFilterTest extends \PHPUnit_Framework_TestCase
 
         $this->markTestIncomplete();
 //        $filter = ProductSearchFilter::create()
-//            ->addAttributes(new ProductAttributes([0 => [264]]));
+//            ->addAttributes(new FacetGroupSet([0 => [264]]));
 //        $this->assertEquals(['facets' => [0 => [264]]], $filter->toArray());
     }
 }
