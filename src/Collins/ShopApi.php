@@ -276,6 +276,9 @@ class ShopApi
      * @param string $sessionId Free to choose ID of the current website visitor.
      *
      * @return \Collins\ShopApi\Model\Basket
+     *
+     * @throws ShopApi\Exception\MalformedJsonException
+     * @throws ShopApi\Exception\UnexpectedResultException
      */
     public function fetchBasket($sessionId)
     {
@@ -435,6 +438,14 @@ class ShopApi
         return $result;
     }
 
+    /**
+     * @param int $maxDepth  -1 <= $maxDepth <= 10
+     *
+     * @return CategoryTree
+     *
+     * @throws ShopApi\Exception\MalformedJsonException
+     * @throws ShopApi\Exception\UnexpectedResultException
+     */
     public function fetchCategoryTree($maxDepth = -1)
     {
         $data = array(
@@ -453,6 +464,15 @@ class ShopApi
         return $categoryTree;
     }
 
+    /**
+     * @param array $ids
+     * @param array $fields
+     *
+     * @return ProductsResult
+     *
+     * @throws ShopApi\Exception\MalformedJsonException
+     * @throws ShopApi\Exception\UnexpectedResultException
+     */
     public function fetchProductsByIds(
         array $ids,
         array $fields = array(
@@ -506,6 +526,7 @@ class ShopApi
      *
      * @return ProductSearchResult
      *
+     * @throws ShopApi\Exception\MalformedJsonException
      * @throws ShopApi\Exception\UnexpectedResultException
      */
     public function fetchProductSearch(
@@ -580,6 +601,9 @@ class ShopApi
      * @param array $groupIds The group ids.
      *
      * @return \Collins\ShopApi\Model\Attribute[] With facet id as key.
+     *
+     * @throws ShopApi\Exception\MalformedJsonException
+     * @throws ShopApi\Exception\UnexpectedResultException
      */
     public function fetchAttributes(array $groupIds)
     {
