@@ -19,10 +19,12 @@ class ProductSearchTest extends ShopApiTest
         $this->checkProductSearchResult($productSearchResult);
     }
 
+    /**
+     * @deprecated
+     * @see /tests/unit/ShopApi/ProductSearchFilterTest.php
+     */
     public function testProductSearchFilter()
     {
-//        $this->markTestIncomplete();
-
         $shopApi = $this->getShopApiWithResultFile('product_search.json');
 
         // search products by filter
