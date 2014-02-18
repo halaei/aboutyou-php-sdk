@@ -43,6 +43,11 @@ class ProductSearchFilterTest extends \PHPUnit_Framework_TestCase
         $filter = ProductSearchFilter::create()
             ->addSearchword('word1 word2');
         $this->assertEquals(['searchword' => 'word1 word2'], $filter->toArray());
+
+        $filter = ProductSearchFilter::create()
+            ->addSearchword('word')
+            ->addIsSale(null);
+        $this->assertEquals(['searchword' => 'word', 'sale' => null], $filter->toArray());
     }
 
     public function testAddAttributes()
