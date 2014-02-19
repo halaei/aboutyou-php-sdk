@@ -12,6 +12,7 @@ use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\CategoriesResult;
 use Collins\ShopApi\Model\Facet;
+use Collins\ShopApi\Model\FacetGroup;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
 use Collins\ShopApi\Model\Autocomplete;
@@ -599,22 +600,40 @@ class ShopApi
      * Fetch the facets of the given groupIds.
      *
      * @param array $groupIds The group ids.
+     * @param integer $limit max number of facets per group
+     * @param integer $offset facets to skip per group
      *
      * @return \Collins\ShopApi\Model\Facet[] With facet id as key.
      *
      * @throws ShopApi\Exception\MalformedJsonException
      * @throws ShopApi\Exception\UnexpectedResultException
      */
-    public function fetchFacets(array $groupIds = array())
+    public function fetchFacets(array $groupIds = array(), $limit = null, $offset = null)
     {
         $data = [
             'facets' => (object) null
         ];
 
-        if(count($groupIds)) {
-            $data['facets'] = $groupIds;
+        if(count($groupIds) || $limit || $offset) {
+            $data = [
+                'facets' => []
+            ];
+
+            if(count($groupIds)) {
+                $data['facets'] = [
+                    'group_ids' => $groupIds
+                ];
+            }
+
+            if($limit) {
+                $data['facets']['limit'] = intval($limit);
+            }
+
+            if($offset) {
+                $data['facets']['offset'] = intval($offset);
+            }
         }
-        
+
         $response = $this->request($data);
         $jsonObject = json_decode($response->getBody(true));
 
@@ -633,18 +652,42 @@ class ShopApi
     }
 
     /**
-     * Returns the result of a facet type API request.
-     * It simply returns all the ids of facet groups tat are relevant for your app.
+     * Fetches all the available facet groups
      *
      * @return \Collins\ShopApi\Results\FacetTypeResult
      */
-    public function getFacetTypes()
+    public function fetchFacetGroups()
     {
         $data = array(
             'facet_types' => (object)null
         );
+        $response = $this->request($data);
+        $jsonObject = json_decode($response->getBody(true));
 
-        return new Results\FacetTypeResult($this->request($data, 60 * 60), $this);
+        if ($jsonObject === false || !isset($jsonObject[0]->facet_types)) {
+            throw new UnexpectedResultException();
+        }
+
+        // Because the facet_types query does not return the name,
+        // we do a facet query now that returns us a single facet for
+        $facetGroupIds = array_values($jsonObject[0]->facet_types);
+
+        $facetGroups = [];
+
+        $facets = $this->fetchFacets(array(0));
+
+        foreach($facets as $facet) {
+            $groupId = $facet->getGroupId();
+            $groupName = $facet->getGroupName();
+
+            if(!isset($facetGroups[$groupId])) {
+                $facetGroups[$groupId] = new FacetGroup($groupId, $groupName);
+            }
+
+            $facetGroups[$groupId]->addFacet($facet);
+        }
+
+        return $facetGroups;
     }
 
     /**
