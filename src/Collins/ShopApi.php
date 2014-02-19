@@ -607,16 +607,14 @@ class ShopApi
      */
     public function fetchFacets(array $groupIds = array())
     {
-        $params = [
+        $data = [
             'facets' => (object) null
         ];
 
         if(count($groupIds)) {
-            $params['facets'] = $groupIds;
+            $data['facets'] = $groupIds;
         }
-
-        $data = [ $params ];
-
+        
         $response = $this->request($data);
         $jsonObject = json_decode($response->getBody(true));
 
