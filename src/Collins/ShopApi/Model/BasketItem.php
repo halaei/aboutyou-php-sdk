@@ -93,6 +93,17 @@ class BasketItem
         return $this->jsonObject->total_vat;
     }
 
+
+    /**
+     * Get the variant old price in euro cents.
+     *
+     * @return integer
+     */
+    public function getOldPrice()
+    {
+        return $this->getVariant()->getOldPrice();
+    }
+
     /**
      * Get the product.
      *
@@ -103,6 +114,7 @@ class BasketItem
         if (!$this->product) {
             $this->product = $this->createProduct($this->jsonObject->product);
         }
+
         return $this->product;
     }
 
@@ -116,6 +128,7 @@ class BasketItem
         if (!$this->variant) {
             $this->variant = $this->getProduct()->getVariantById($this->jsonObject->id);
         }
+
         return $this->variant;
     }
 }
