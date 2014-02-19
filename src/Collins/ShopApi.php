@@ -605,17 +605,17 @@ class ShopApi
      * @throws ShopApi\Exception\MalformedJsonException
      * @throws ShopApi\Exception\UnexpectedResultException
      */
-    public function fetchFacets(array $groupIds)
+    public function fetchFacets(array $groupIds = array())
     {
-        if (!$groupIds) {
-            throw new InvalidParameterException('no groupId given');
+        $params = [
+            'facets' => (object) null
+        ];
+
+        if(count($groupIds)) {
+            $params['facets'] = $groupIds;
         }
 
-        $data = array(
-            'facets' => array(
-                'group_ids' => $groupIds
-            )
-        );
+        $data = [ $params ];
 
         $response = $this->request($data);
         $jsonObject = json_decode($response->getBody(true));
