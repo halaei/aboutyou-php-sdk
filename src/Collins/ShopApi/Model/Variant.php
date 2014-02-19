@@ -157,6 +157,20 @@ class Variant
     }
 
     /**
+     * Returns the unstructured additional info
+     *
+     * return object|null
+     */
+    public function getAdditionalInfo()
+    {
+        return
+            isset($this->jsonObject->additional_info) ?
+            $this->jsonObject->additional_info :
+            null
+        ;
+    }
+
+    /**
      * @return interger
      */
     public function getMaxQuantity()

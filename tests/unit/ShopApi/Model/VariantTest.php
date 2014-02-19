@@ -48,4 +48,19 @@ class VariantTest extends AbstractModelTest
 //        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroup', $group);
 //        $this->assertNull($variant->getFacetGroup(1234));
     }
-} 
+
+    public function testFromJsonAdditionalInfo()
+    {
+        $jsonObject = json_decode('{"additional_info":null}');
+        $variant = new Variant($jsonObject);
+        $this->assertEquals(null, $variant->getAdditionalInfo());
+
+        $expected = json_decode('{"some":"data"}');
+        $jsonObject = json_decode('{"additional_info":{"some":"data"}}');
+        $variant = new Variant($jsonObject);
+        $this->assertEquals($expected, $variant->getAdditionalInfo());
+        $this->assertEquals("data", $variant->getAdditionalInfo()->some);
+
+        return $variant;
+    }
+}
