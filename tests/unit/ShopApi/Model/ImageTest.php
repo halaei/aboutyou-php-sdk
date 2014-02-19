@@ -17,10 +17,10 @@ class ImageTest extends AbstractModelTest
         $image = new Image($jsonObject);
 
         $this->assertEquals('hash1', $image->getHash());
-        $this->assertEquals('name1', $image->getName());
         $this->assertEquals('.jpg', $image->getExt());
         $this->assertEquals('image/jpeg', $image->getMimetype());
         $this->assertEquals(12345678, $image->getFilesize());
+        $this->assertEquals(['tag1', 'tag2'], $image->getTags());
 
         $imageSize = $image->getImageSize();
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\ImageSize', $imageSize);

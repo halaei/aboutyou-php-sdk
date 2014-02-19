@@ -17,9 +17,6 @@ class Image
     /** @var string */
     protected $hash;
 
-    /** @var string */
-    protected $name;
-
     /** @var integer */
     protected $filesize;
 
@@ -32,6 +29,9 @@ class Image
     /** @var ImageSize */
     protected $imageSize;
 
+    /** @var array|null */
+    protected $tags;
+
     public function __construct($jsonObject)
     {
         $this->fromJson($jsonObject);
@@ -39,11 +39,11 @@ class Image
 
     public function fromJson($jsonObject)
     {
-        $this->hash = $jsonObject->hash;
-        $this->name = $jsonObject->name;
+        $this->hash     = $jsonObject->hash;
         $this->filesize = (int)$jsonObject->size;
-        $this->ext = $jsonObject->ext;
+        $this->ext      = $jsonObject->ext;
         $this->mimetype = $jsonObject->mime;
+        $this->tags     = isset($jsonObject->tags) ? $jsonObject->tags : null;
 
         $this->imageSize = new ImageSize((int)$jsonObject->image->width, (int)$jsonObject->image->height);
     }
@@ -89,11 +89,11 @@ class Image
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getName()
+    public function getTags()
     {
-        return $this->name;
+        return $this->tags;
     }
 
     /**
