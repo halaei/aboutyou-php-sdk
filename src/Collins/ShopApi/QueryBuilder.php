@@ -11,6 +11,7 @@ use Collins\ShopApi\Exception\InvalidParameterException;
 
 class QueryBuilder
 {
+    /** @var array */
     protected $query;
 
     public function __construct()
@@ -19,10 +20,6 @@ class QueryBuilder
     }
 
     /**
-     * Returns the result of an autocompletion API request.
-     * Autocompletion searches for products and categories by
-     * a given prefix ($searchword).
-     *
      * @param string $searchword The prefix search word to search for.
      * @param int    $limit      Maximum number of results.
      * @param array  $types      Array of types to search for (Constants::TYPE_...).
@@ -49,8 +46,6 @@ class QueryBuilder
     }
 
     /**
-     * Fetch the basket of the given sessionId.
-     *
      * @param string $sessionId Free to choose ID of the current website visitor.
      *
      * @return $this
@@ -67,8 +62,6 @@ class QueryBuilder
     }
 
     /**
-     * Add product variant to basket.
-     *
      * @param string $sessionId        Free to choose ID of the current website visitor.
      * @param int    $productVariantId ID of product variant.
      * @param int    $amount           Amount of items to add.
@@ -94,8 +87,6 @@ class QueryBuilder
     }
 
     /**
-     * Remove product variant from basket.
-     *
      * @param string $sessionId        Free to choose ID of the current website visitor.
      * @param int    $productVariantId ID of product variant.
      *
@@ -120,8 +111,6 @@ class QueryBuilder
     }
 
     /**
-     * Update amount product variant in basket.
-     *
      * @param string $sessionId        Free to choose ID of the current website visitor.
      * @param int    $productVariantId ID of product variant.
      * @param int    $amount           Amount to set.
@@ -147,11 +136,7 @@ class QueryBuilder
     }
 
     /**
-     * Returns the result of a category search API request.
-     * By passing one or several category ids it will return
-     * a result of the categories data.
-     *
-     * @param mixed $ids either a single category ID as integer or an array of IDs
+     * @param int[]|string[] $ids either a single category ID as integer or an array of IDs
      *
      * @return $this
      */
@@ -252,11 +237,11 @@ class QueryBuilder
     }
 
     /**
-     * Fetch the facets of the given groupIds.
+     * @param array $groupIds
      *
-     * @param array $groupIds The group ids.
+     * @return $this
      *
-     * @return \Collins\ShopApi\Model\Facet[] With facet id as key.
+     * @throws Exception\InvalidParameterException
      */
     public function fetchFacets(array $groupIds)
     {
@@ -276,10 +261,6 @@ class QueryBuilder
     }
 
     /**
-     * Returns the result of a suggest API request.
-     * Suggestions are words that are often searched together
-     * with the searchword you pass (e.g. "stretch" for "jeans").
-     *
      * @param string $searchword The search string to search for.
      *
      * @return $this
@@ -295,6 +276,9 @@ class QueryBuilder
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getQueryString()
     {
         return json_encode($this->query);

@@ -1,31 +1,18 @@
 <?php
 namespace Collins;
 
-use Collins\Cache\NoCache;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\CriteriaInterface;
-use Collins\ShopApi\Exception\ApiErrorException;
-use Collins\ShopApi\Exception\MalformedJsonException;
-use Collins\ShopApi\Exception\UnexpectedResultException;
-use Collins\ShopApi\Exception\InvalidParameterException;
 use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
-use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
-use Collins\ShopApi\Model\CategoriesResult;
-use Collins\ShopApi\Model\Facet;
-use Collins\ShopApi\Model\Image;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
-use Collins\ShopApi\Model\Autocomplete;
 use Collins\ShopApi\Query;
 use Collins\ShopApi\Results as Results;
 use Collins\ShopApi\ShopApiClient;
-use Guzzle\Http\Client;
-use Guzzle\Http\Message\EntityEnclosingRequestInterface;
 use Psr\Log\LoggerInterface;
 use Collins\Cache\CacheInterface;
-use Psr\Log\NullLogger;
 
 /**
  * Provides access to the Collins Frontend Platform.

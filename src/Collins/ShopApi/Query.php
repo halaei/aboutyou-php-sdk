@@ -6,8 +6,7 @@
 
 namespace Collins\ShopApi;
 
-
-use Collins\ShopApi\Factory\DefaultModelFactory;
+use Collins\ShopApi\Factory\ModelFactoryInterface;
 
 class Query extends QueryBuilder
 {
@@ -17,12 +16,21 @@ class Query extends QueryBuilder
     /** @var ModelFactoryInterface */
     protected $factory;
 
-    public function __construct(ShopApiClient $client, DefaultModelFactory $factory)
+    /**
+     * @param ShopApiClient       $client
+     * @param ModelFactoryInterface $factory
+     */
+    public function __construct(ShopApiClient $client, ModelFactoryInterface $factory)
     {
         $this->client  = $client;
         $this->factory = $factory;
     }
 
+    /**
+     * request the queries and returns an array of the results
+     *
+     * @return array
+     */
     public function execute()
     {
         if (empty($this->query)) {
@@ -37,6 +45,11 @@ class Query extends QueryBuilder
         return $this->parseResult($jsonResponse);
     }
 
+    /**
+     * request the current query and returns the first result
+     *
+     * @return mixed
+     */
     public function executeSingle()
     {
         $result = $this->execute();
@@ -56,6 +69,15 @@ class Query extends QueryBuilder
         'suggest'        => 'createSuggest'
     ];
 
+    /**
+     * returns an array of parsed results
+     *
+     * @param array $jsonResponse the response body as json array
+     *
+     * @return array
+     *
+     * @throws UnexpectedResultException
+     */
     protected function parseResult($jsonResponse)
     {
         if ($jsonResponse === false ||

@@ -14,7 +14,7 @@ class ProductSearchFilter implements CriteriaInterface
     const FILTER_SEARCHWORD    = 'searchword';
     const FILTER_ATTRIBUTES    = 'facets';
 
-    /** @var filter */
+    /** @var array */
     protected $filter = [];
 
     public static function create()

@@ -152,11 +152,17 @@ class ShopApiClient
         return $this->logTemplate;
     }
 
+    /**
+     * @param Client $guzzleClient
+     */
     public function setClient(Client $guzzleClient)
     {
         $this->guzzleClient = $guzzleClient;
     }
 
+    /**
+     * @return Client
+     */
     public function getClient()
     {
         if ($this->guzzleClient) {
@@ -172,7 +178,7 @@ class ShopApiClient
      * Builds a JSON string representing the request data via Guzzle.
      * Executes the API request.
      *
-     * @param array $data array representing the API request data
+     * @param string $body the queries as json string
      * @param integer $cacheDuration how long to save the response in the cache (if enabled) - 0 = no caching
      *
      * @return \Guzzle\Http\Message\Response response object
