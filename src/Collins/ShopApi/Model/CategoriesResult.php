@@ -11,7 +11,7 @@ class CategoriesResult implements \IteratorAggregate, \ArrayAccess, \Countable
 
     protected $categoriesNotFound = [];
 
-    public function __construct($jsonObject)
+    public function __construct($jsonObject, $orderByIds = null)
     {
         $this->fromJson($jsonObject);
     }
@@ -21,19 +21,22 @@ class CategoriesResult implements \IteratorAggregate, \ArrayAccess, \Countable
         return new Category($jsonCategory);
     }
 
-    public function fromJson($jsonObject)
+    public function fromJson($jsonObject, $orderByIds = null)
     {
+        if ($orderByIds === null) {
+            $orderByIds = array_keys(get_object_vars($jsonObject));
+        }
 
-        if (isset($jsonObject->ids)) {
-            foreach ($jsonObject->ids as $id) {
-                if( isset($jsonObject->$id) ) {
-                    $jsonCategory = $jsonObject->$id;
-                    if (isset($jsonCategory->error_code)) {
-                        $this->categoriesNotFound[] = $id;
-                    } else {
-                        $this->categories[$id] = $this->createCategory($jsonCategory);
-                    }
-                }
+        foreach ($orderByIds as $id) {
+            if (!isset($jsonObject->$id) ) {
+                continue;
+            }
+
+            $jsonCategory = $jsonObject->$id;
+            if (isset($jsonCategory->error_code)) {
+                $this->categoriesNotFound[] = $id;
+            } else {
+                $this->categories[$id] = $this->createCategory($jsonCategory);
             }
         }
     }

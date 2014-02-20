@@ -7,7 +7,7 @@
 namespace Collins\ShopApi\Model;
 
 
-class Image
+class Image extends AbstractModel
 {
     const MIN_WIDTH  = 50;
     const MIN_HEIGHT = 50;
@@ -96,6 +96,11 @@ class Image
         return $this->tags;
     }
 
+    public function getBaseUrl()
+    {
+        $this->getShopApi()->getBaseImageUrl();
+    }
+
     /**
      * @param int $width
      * @param int $height
@@ -107,7 +112,7 @@ class Image
         $width = max(min($width, self::MAX_WIDTH), self::MIN_WIDTH);
         $height = max(min($height, self::MAX_WIDTH), self::MIN_WIDTH);
 
-        return '/' . $this->hash . '?width=' . $width . '&height=' . $height;
+        return $this->getBaseUrl() . '/' . $this->hash . '?width=' . $width . '&height=' . $height;
     }
 
     /**

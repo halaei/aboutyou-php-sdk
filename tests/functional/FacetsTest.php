@@ -22,7 +22,14 @@ class FacetsTest extends ShopApiTest
             $this->assertInternalType('string', $facet->getValue());
             $this->assertInternalType('int', $facet->getGroupId());
             $this->assertInternalType('string', $facet->getGroupName());
+            $this->assertEquals('size_code', $facet->getGroupName());
+            $this->assertEquals(206, $facet->getGroupId());
         }
+
+        $facet = $facets[ShopApi\Model\Facet::uniqueKey(206, 2353)];
+        $this->assertEquals($facet, reset($facets));
+        $this->assertEquals(2353, $facet->getId());
+        $this->assertEquals('01', $facet->getName());
     }
 
     /**

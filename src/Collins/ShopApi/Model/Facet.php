@@ -1,6 +1,8 @@
 <?php
 namespace Collins\ShopApi\Model;
 
+use Collins\ShopApi\ModelFactoryInterface;
+
 /**
  *
  */
@@ -42,9 +44,12 @@ class Facet
     }
 
     /**
-     * Constructor.
-     *
-     * @param object $jsonObject The facet data.
+     * @param integer $id
+     * @param string  $name
+     * @param string  $value
+     * @param integer $groupId
+     * @param string  $groupName
+     * @param array   $options
      */
     public function __construct($id, $name, $value, $groupId, $groupName, array $options = null)
     {

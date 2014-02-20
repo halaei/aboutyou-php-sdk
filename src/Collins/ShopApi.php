@@ -8,15 +8,19 @@ use Collins\ShopApi\Exception\ApiErrorException;
 use Collins\ShopApi\Exception\MalformedJsonException;
 use Collins\ShopApi\Exception\UnexpectedResultException;
 use Collins\ShopApi\Exception\InvalidParameterException;
+use Collins\ShopApi\Factory\DefaultModelFactory;
+use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\CategoriesResult;
 use Collins\ShopApi\Model\Facet;
-use Collins\ShopApi\Model\FacetGroup;
+use Collins\ShopApi\Model\Image;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
 use Collins\ShopApi\Model\Autocomplete;
+use Collins\ShopApi\Query;
 use Collins\ShopApi\Results as Results;
+use Collins\ShopApi\ShopApiClient;
 use Guzzle\Http\Client;
 use Guzzle\Http\Message\EntityEnclosingRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -32,46 +36,26 @@ use Psr\Log\NullLogger;
  */
 class ShopApi
 {
-    const API_END_POINT_STAGE = 'http://ant-core-staging-s-api1.wavecloud.de/api';
-    const API_END_POINT_LIVE  = 'http://ant-shop-api1.wavecloud.de/api';
+    const DEFAULT_BASE_IMAGE_URL = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file/';
 
-    /**
-     * Guzzle client that is needed to execute API requests.
-     * Will be initialized before the first request is done.
-     * @var \Guzzle\Http\Client
-     */
-    protected $guzzleClient = null;
+    /** @var ShopApiClient */
+    protected $shopApiClient;
+
+    /** @var string */
+    protected $baseImageUrl;
+
+    /** @var ModelFactoryInterface */
+    protected $modelFactory;
 
     /** @var LoggerInterface */
     protected $logger;
 
-    /** @var string */
-    protected $logTemplate;
-
-    /** @var CacheInterface */
-    protected $cache;
-
-    /** @var string */
-    protected $appId = null;
-    /** @var string */
-    protected $appPassword = null;
-
-    /**
-     * @var string
-     *
-     * current end points are:
-     * stage: http://ant-core-staging-s-api1.wavecloud.de/api
-     * live:  http://ant-shop-api1.wavecloud.de/api
-     */
-    protected $apiEndPoint;
-
-    /** @var string */
-    protected $imageUrlTemplate;
+    protected $appId;
 
     // TODO: Refactore me!
     private static $currentApi;
 
-    public static function getCurrentApi()
+    public static function _getCurrentApi()
     {
         return self::$currentApi;
     }
@@ -85,13 +69,21 @@ class ShopApi
      */
     public function __construct($appId, $appPassword, $apiEndPoint = 'stage', CacheInterface $cache = null, LoggerInterface $logger = null)
     {
-        $this->setAppCredentials($appId, $appPassword);
-        $this->setApiEndpoint($apiEndPoint);
-        $this->setCache($cache ?: new NoCache());
-        $this->setLogger($logger ?: new NullLogger());
-        $this->setImageUrlTemplate();
+        $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $cache, $logger);
+
+        $this->modelFactory = new DefaultModelFactory($this);
+
+        $this->baseImageUrl = self::DEFAULT_BASE_IMAGE_URL;
+
+        $this->logger = $logger;
+        $this->appId  = $appId;
 
         self::$currentApi = $this;
+    }
+
+    public function getApiClient()
+    {
+        return $this->shopApiClient;
     }
 
     /**
@@ -101,7 +93,7 @@ class ShopApi
     public function setAppCredentials($appId, $appPassword)
     {
         $this->appId = $appId;
-        $this->appPassword = $appPassword;
+        $this->shopApiClient->setAppCredentials($appId, $appPassword);
     }
 
     /**
@@ -109,7 +101,7 @@ class ShopApi
      */
     public function getApiEndPoint()
     {
-        return $this->apiEndPoint;
+        return $this->shopApiClient->getApiEndPoint();
     }
 
     /**
@@ -119,16 +111,7 @@ class ShopApi
      */
     public function setApiEndpoint($apiEndPoint)
     {
-        switch ($apiEndPoint) {
-            case 'stage':
-                $this->apiEndPoint = self::API_END_POINT_STAGE;
-                break;
-            case 'live':
-                $this->apiEndPoint = self::API_END_POINT_STAGE;
-                break;
-            default:
-                $this->apiEndPoint = $apiEndPoint;
-        }
+        $this->shopApiClient->setApiEndpoint($apiEndPoint);
     }
 
     /**
@@ -136,7 +119,7 @@ class ShopApi
      */
     public function setCache(CacheInterface $cache)
     {
-        $this->cache = $cache;
+        $this->shopApiClient->setCache($cache);
     }
 
     /**
@@ -144,7 +127,7 @@ class ShopApi
      */
     public function getCache()
     {
-        return $this->cache;
+        return $this->shopApiClient->getCache();
     }
 
     /**
@@ -152,7 +135,8 @@ class ShopApi
      */
     public function setLogger(LoggerInterface $logger)
     {
-        $this->logger = $logger ?: new NullLogger();
+        $this->logger = $logger;
+        $this->shopApiClient->setLogger($logger);
     }
 
     /**
@@ -160,7 +144,7 @@ class ShopApi
      */
     public function getLogger()
     {
-        return $this->logger;
+        return $this->shopApiClient->getLogger();
     }
 
     /**
@@ -170,7 +154,7 @@ class ShopApi
      */
     public function setLogTemplate($logTemplate)
     {
-        $this->logTemplate = $logTemplate;
+        $this->shopApiClient->setLogTemplate($logTemplate);
     }
 
     /**
@@ -178,65 +162,34 @@ class ShopApi
      */
     public function getLogTemplate()
     {
-        return $this->logTemplate;
-    }
-
-    public function setBaseImageUrl($baseImageUrl = null)
-    {
-        if (!$baseImageUrl) {
-            $baseImageUrl = 'http://cdn.mary-paul.de/product_images/';
-        } else {
-            $baseImageUrl = rtrim($baseImageUrl, '/') . '/';
-        }
-        $this->setImageUrlTemplate($baseImageUrl. '{{path}}/{{id}}_{{width}}_{{height}}{{extension}}');
+        return $this->shopApiClient->getLogTemplate();
     }
 
     /**
-     * @param string $imageUrlTemplate
+     * @param null|false|string $baseImageUrl
      */
-    public function setImageUrlTemplate($imageUrlTemplate = null)
+    public function setBaseImageUrl($baseImageUrl = null)
     {
-        $this->imageUrlTemplate = $imageUrlTemplate
-            ?: 'http://ant-core-staging-media2.wavecloud.de/mmdb/file/{{hash}}?width={{width}}&height={{height}}';
+        if ($baseImageUrl === null) {
+            $this->baseImageUrl = self::DEFAULT_BASE_IMAGE_URL;
+        } else if (is_string($baseImageUrl)) {
+            $this->baseImageUrl = rtrim($baseImageUrl, '/') . '/';
+        } else {
+            $this->baseImageUrl = '';
+        }
     }
 
     /**
      * @return string
      */
-    public function getImageUrlTemplate()
+    public function getBaseImageUrl()
     {
-        return $this->imageUrlTemplate;
-    }
-
-    public function buildImageUrl($id, $extension, $width, $height, $hash)
-    {
-        $path = substr($id, 0, 3);
-        $url = str_replace(
-            array(
-                '{{path}}',
-                '{{id}}',
-                '{{extension}}',
-                '{{width}}',
-                '{{height}}',
-                '{{hash}}'
-            ),
-            array(
-                $path,
-                $id,
-                $extension,
-                $width,
-                $height,
-                $hash
-            ),
-            $this->imageUrlTemplate
-        );
-
-        return $url;
+        return $this->baseImageUrl;
     }
 
     /**
-     * Returns the result of an autocompletion API request.
-     * Autocompletion searches for products and categories by
+     * Returns the result of an auto completion API request.
+     * Auto completion searches for products and categories by
      * a given prefix ($searchword).
      *
      * @param string $searchword The prefix search word to search for.
@@ -253,22 +206,18 @@ class ShopApi
             Constants::TYPE_CATEGORIES
         )
     ) {
-        $data = array(
-            'autocompletion' => array(
-                'searchword' => $searchword,
-                'types' => $types,
-                'limit' => $limit
-            )
-        );
+        $query = $this->getQuery()
+            ->fetchAutocomplete($searchword, $limit, $types)
+        ;
 
-        $response = $this->request($data);
-        $jsonObject = json_decode($response->getBody(true));
+        return $query->executeSingle();
+    }
 
-        if ($jsonObject === false || !isset($jsonObject[0]->autocompletion)) {
-            throw new UnexpectedResultException();
-        }
+    public function getQuery()
+    {
+        $query = new Query($this->shopApiClient, $this->modelFactory);
 
-        return new Autocomplete($jsonObject[0]->autocompletion);
+        return $query;
     }
 
     /**
@@ -283,21 +232,10 @@ class ShopApi
      */
     public function fetchBasket($sessionId)
     {
-        $data = array(
-            'basket_get' => array(
-                'session_id' => $sessionId
-            )
-        );
+        $query = $this->getQuery()->fetchBasket($sessionId);
 
-        $response = $this->request($data);
-        $jsonObject = json_decode($response->getBody(true));
-
-        if ($jsonObject === false || !isset($jsonObject[0]->basket_get)) {
-            throw new UnexpectedResultException();
-        }
-
-        return new Basket($jsonObject[0]->basket_get);
-    }
+        return $query->executeSingle();
+     }
 
     /**
      * Add product variant to basket.
@@ -308,28 +246,13 @@ class ShopApi
      *
      * @return \Collins\ShopApi\Model\Basket
      */
-    public function addToBasket($sessionId, $productVariantId, $amount = 1) {
-        $data = array(
-            'basket_add' => array(
-                'session_id' => $sessionId,
-                'product_variant' => array(
-                    array(
-                        'id' => (int)$productVariantId,
-                        'command' => 'add',
-                        'amount' => (int)$amount,
-                    ),
-                ),
-            )
-        );
+    public function addToBasket($sessionId, $productVariantId, $amount = 1)
+    {
+        $query = $this->getQuery()
+            ->addToBasket($sessionId, $productVariantId, $amount)
+        ;
 
-        $response = $this->request($data);
-        $jsonObject = json_decode($response->getBody(true));
-
-        if ($jsonObject === false || !isset($jsonObject[0]->basket_add)) {
-            throw new UnexpectedResultException();
-        }
-
-        return new Basket($jsonObject[0]->basket_add);
+        return $query->executeSingle();
     }
 
     /**
@@ -342,27 +265,11 @@ class ShopApi
      */
     public function removeFromBasket($sessionId, $productVariantId)
     {
-        $data = array(
-            'basket_add' => array(
-                'session_id' => $sessionId,
-                'product_variant' => array(
-                    array(
-                        'id' => (int)$productVariantId,
-                        'command' => 'set',
-                        'amount' => 0,
-                    ),
-                ),
-            )
-        );
+        $query = $this->getQuery()
+            ->removeFromBasket($sessionId, $productVariantId)
+        ;
 
-        $response = $this->request($data);
-        $jsonObject = json_decode($response->getBody(true));
-
-        if ($jsonObject === false || !isset($jsonObject[0]->basket_add)) {
-            throw new UnexpectedResultException();
-        }
-
-        return new Basket($jsonObject[0]->basket_add);
+        return $query->executeSingle();
     }
 
     /**
@@ -376,27 +283,11 @@ class ShopApi
      */
     public function updateBasketAmount($sessionId, $productVariantId, $amount)
     {
-        $data = array(
-            'basket_add' => array(
-                'session_id' => $sessionId,
-                'product_variant' => array(
-                    array(
-                        'id' => (int)$productVariantId,
-                        'command' => 'set',
-                        'amount' => (int)$amount,
-                    ),
-                ),
-            )
-        );
+        $query = $this->getQuery()
+            ->updateBasketAmount($sessionId, $productVariantId, $amount)
+        ;
 
-        $response = $this->request($data);
-        $jsonObject = json_decode($response->getBody(true));
-
-        if ($jsonObject === false || !isset($jsonObject[0]->basket_add)) {
-            throw new UnexpectedResultException();
-        }
-
-        return new Basket($jsonObject[0]->basket_add);
+        return $query->executeSingle();
     }
 
     /**
@@ -415,24 +306,14 @@ class ShopApi
             $ids = array($ids);
         }
 
-        $data = array(
-            'category' => array(
-                'ids' => $ids
-            )
-        );
+        $query = $this->getQuery()
+            ->fetchCategoriesByIds($ids)
+        ;
 
-        $response = $this->request($data);
-        $jsonObject = json_decode($response->getBody(true));
-
-        if ($jsonObject === false || !isset($jsonObject[0]->category)) {
-            throw new UnexpectedResultException();
-        }
-
-        $jsonObject[0]->category->ids = $ids;
-        $result = new CategoriesResult($jsonObject[0]->category);
+        $result = $query->executeSingle();
 
         $notFound = $result->getCategoriesNotFound();
-        if (!empty($notFound)) {
+        if (!empty($notFound) && $this->logger) {
             $this->logger->warning('categories not found: appid=' . $this->appId . ' product ids=[' . join(',', $notFound) . ']');
         }
 
@@ -449,20 +330,11 @@ class ShopApi
      */
     public function fetchCategoryTree($maxDepth = -1)
     {
-        $data = array(
-            'category_tree' => ['max_depth' => $maxDepth],
-        );
+        $query = $this->getQuery()
+            ->fetchCategoryTree($maxDepth)
+        ;
 
-        $response = $this->request($data);
-        $jsonObject = json_decode($response->getBody(true));
-
-        if ($jsonObject === false || !isset($jsonObject[0]->category_tree)) {
-            throw new UnexpectedResultException();
-        }
-
-        $categoryTree = new CategoryTree($jsonObject[0]->category_tree);
-
-        return $categoryTree;
+        return $query->executeSingle();
     }
 
     /**
@@ -496,28 +368,34 @@ class ShopApi
         // we allow to pass a single ID instead of an array
         settype($ids, 'array');
 
-        $data = array(
-            'products' => array(
-                'ids' => $ids,
-                'fields' => $fields
-            )
-        );
+        $query = $this->getQuery()
+            ->fetchProductsByIds($ids, $fields)
+        ;
 
-        $response = $this->request($data);
-        $jsonObject = json_decode($response->getBody(true));
-
-        if ($jsonObject === false || !isset($jsonObject[0]->products)) {
-            throw new UnexpectedResultException();
-        }
-
-        $result = new ProductsResult($jsonObject[0]->products);
+        $result = $query->executeSingle();
 
         $productsNotFound = $result->getProductsNotFound();
-        if (!empty($productsNotFound)) {
+        if (!empty($productsNotFound) && $this->logger) {
             $this->logger->warning('products not found: appid=' . $this->appId . ' product ids=[' . join(',', $productsNotFound) . ']');
         }
 
         return $result;
+    }
+
+    /**
+     * @param ModelFactoryInterface $modelFactory
+     */
+    public function setModelFactory(ModelFactoryInterface $modelFactory)
+    {
+        $this->modelFactory = $modelFactory;
+    }
+
+    /**
+     * @return ModelFactoryInterface
+     */
+    public function getModelFactory()
+    {
+        return $this->modelFactory;
     }
 
     /**
@@ -552,424 +430,30 @@ class ShopApi
             )
         )
     ) {
-        $data = array(
-            'product_search' => array(
-                'session_id' => (string)$userSessionId
-            )
-        );
+        $query = $this->getQuery()
+            ->fetchProductSearch($userSessionId, $filter, $result)
+        ;
 
-        if ($filter instanceof CriteriaInterface) {
-            $filter = $filter->toArray();
-        }
-        if (count($filter) > 0) {
-            $data['product_search']['filter'] = $filter;
-        }
-
-        if (count($result) > 0) {
-            $data['product_search']['result'] = $result;
-        }
-
-        $response = $this->request($data);
-        $jsonObject = json_decode($response->getBody(true));
-
-        if ($jsonObject === false || !isset($jsonObject[0]->product_search)) {
-            throw new UnexpectedResultException();
-        }
-
-        $result = new ProductSearchResult($jsonObject[0]->product_search);
-
-        return $result;
-    }
-
-    /**
-     * Returns the result of a category tree API request.
-     * It simply returns the whole category tree of your app.
-     *
-     * @return \Collins\ShopApi\Results\CategoryTreeResult
-     */
-    public function getCategoryTree()
-    {
-        $data = array(
-            'category_tree' => (object)null
-        );
-
-        return new Results\CategoryTreeResult($this->request($data, 60 * 60), $this);
+        return $query->executeSingle();
     }
 
     /**
      * Fetch the facets of the given groupIds.
      *
      * @param array $groupIds The group ids.
-     * @param integer $limit max number of facets per group
-     * @param integer $offset facets to skip per group
      *
      * @return \Collins\ShopApi\Model\Facet[] With facet id as key.
      *
      * @throws ShopApi\Exception\MalformedJsonException
      * @throws ShopApi\Exception\UnexpectedResultException
      */
-    public function fetchFacets(array $groupIds = array(), $limit = null, $offset = null)
+    public function fetchFacets(array $groupIds)
     {
-        $data = [
-            'facets' => (object) null
-        ];
+        $query = $this->getQuery()
+            ->fetchFacets($groupIds)
+        ;
 
-        if(count($groupIds) || $limit || $offset) {
-            $data = [
-                'facets' => []
-            ];
-
-            if(count($groupIds)) {
-                $data['facets'] = [
-                    'group_ids' => $groupIds
-                ];
-            }
-
-            if($limit) {
-                $data['facets']['limit'] = intval($limit);
-            }
-
-            if($offset) {
-                $data['facets']['offset'] = intval($offset);
-            }
-        }
-
-        $response = $this->request($data);
-        $jsonObject = json_decode($response->getBody(true));
-
-        if ($jsonObject === false || !isset($jsonObject[0]->facets) || !isset($jsonObject[0]->facets->facet)) {
-            throw new UnexpectedResultException();
-        }
-
-        $facets = array();
-        foreach ($jsonObject[0]->facets->facet as $jsonFacet) {
-            $facet = Facet::createFromJson($jsonFacet);
-            $key = $facet->getUniqueKey();
-            $facets[$key] = $facet;
-        }
-
-        return $facets;
-    }
-
-    /**
-     * Fetches all the available facet groups
-     *
-     * @return \Collins\ShopApi\Results\FacetTypeResult
-     */
-    public function fetchFacetGroups()
-    {
-        $data = array(
-            'facet_types' => (object)null
-        );
-        $response = $this->request($data);
-        $jsonObject = json_decode($response->getBody(true));
-
-        if ($jsonObject === false || !isset($jsonObject[0]->facet_types)) {
-            throw new UnexpectedResultException();
-        }
-
-        // Because the facet_types query does not return the name,
-        // we do a facet query now that returns us a single facet for
-        $facetGroupIds = array_values($jsonObject[0]->facet_types);
-
-        $facetGroups = [];
-
-        $facets = $this->fetchFacets(array(0));
-
-        foreach($facets as $facet) {
-            $groupId = $facet->getGroupId();
-            $groupName = $facet->getGroupName();
-
-            if(!isset($facetGroups[$groupId])) {
-                $facetGroups[$groupId] = new FacetGroup($groupId, $groupName);
-            }
-
-            $facetGroups[$groupId]->addFacet($facet);
-        }
-
-        return $facetGroups;
-    }
-
-    /**
-     * Initiates an order.
-     *
-     * @param int $user_session_id free to choose ID of the current website visitor.
-     * This is needed here to get the basket of the user.
-     * @param string $success_url URL Collins will redirect to after the order
-     * is finished.
-     * @param string $cancel_url URL Collins will redirect to if the user cancels the order
-     * on purpose.
-     * @param string $error_url URL Collins will redirect to if the order couldn't be finished.
-     * * @return \Collins\ShopApi\Results\InitiateOrderResult
-     */
-    public function initiateOrder($user_session_id, $success_url, $cancel_url, $error_url)
-    {
-        $data = array(
-            'initiate_order' => array(
-                'session_id' => (string)$user_session_id,
-                'success_url' => $success_url,
-                'cancel_url' => $cancel_url,
-                'error_url' => $error_url
-            )
-        );
-
-        return new Results\InitiateOrderResult($this->request($data), $this);
-    }
-
-    /**
-     * Returns the result of a live query API request.
-     * Use this to check if a product variant is really in stock.
-     * This call skips the internal cache and could return a different
-     * result than the product request because of this. Don't use
-     * this for a lot of products, e.g. on category pages but for
-     * single products e.g. before a product is added to the basket.
-     *
-     * @param mixed $ids either a single product ID as integer or an array of IDs
-     * @return \Collins\ShopApi\Results\LiveVariantResult
-     */
-    public function getLiveVariant($ids)
-    {
-        // we allow to pass a single ID instead of an array
-        if (!is_array($ids)) {
-            $ids = array($ids);
-        }
-
-        $data = array(
-            'live_variant' => array(
-                'ids' => $ids
-            )
-        );
-        return new Results\LiveVariantResult($this->request($data), $this);
-    }
-
-    /**
-     * Returns the result of a product search API request.
-     * Use this method to search for products you don't know the ID of.
-     * If you already know the ID, e.g. on a product detail page, use
-     * Collins::getProducts() instead.
-     *
-     * @param int $user_session_id free to choose ID of the current website visitor.
-     * This field is required for tracking reasons.
-     * @param array $filter contains data to filter products for
-     * @param array $result contains data for reducing the result
-     * @return \Collins\ShopApi\Results\ProductSearchResult
-     */
-    public function getProductSearch(
-        $user_session_id,
-        array $filter = array(),
-        array $result = array(
-            'fields' => array(
-                'id',
-                'name',
-                'active',
-                'brand_id',
-                'description_long',
-                'description_short',
-                'default_variant',
-                'variants',
-                'min_price',
-                'max_price',
-                'sale',
-                'default_image',
-                'attributes_merged',
-                'categories'
-            )
-        )
-    ) {
-        $data = array(
-            'product_search' => array(
-                'session_id' => (string)$user_session_id
-            )
-        );
-
-        if (count($filter) > 0) {
-            $data['product_search']['filter'] = $filter;
-        }
-
-        if (count($result) > 0) {
-            $data['product_search']['result'] = $result;
-        }
-
-        return new Results\ProductSearchResult($this->request($data), $this);
-    }
-
-    /**
-     * Returns the result of a product get API request.
-     * Use this method to get product data of products you already know
-     * the ID of. E.g. on a product detail page.
-     *
-     * @param mixed $ids either a single category ID as integer or an array of IDs
-     * @param array $fields fields of product data to be returned
-     * @return \Collins\ShopApi\Results\ProductResult
-     */
-    public function getProducts(
-        $ids,
-        array $fields = array(
-            'id',
-            'name',
-            'active',
-            'brand_id',
-            'description_long',
-            'description_short',
-            'default_variant',
-            'variants',
-            'min_price',
-            'max_price',
-            'sale',
-            'default_image',
-            'attributes_merged',
-            'categories'
-        )
-    ) {
-        // we allow to pass a single ID instead of an array
-        if (!is_array($ids)) {
-            $ids = array($ids);
-        }
-
-        $data = array(
-            'products' => array(
-                'ids' => $ids,
-                'fields' => $fields
-            )
-        );
-
-        return new Results\ProductResult($this->request($data), $this);
-    }
-
-    /**
-     * Returns the result of a product get API request.
-     * Use this method to search for products with a given facet
-     *
-     * @param int $user_session_id free to choose ID of the current website visitor.
-     * This field is required for tracking reasons.
-     * @param int $facet_group_id ID of the facet group. You can use the Constants::FACET_* constants for this.
-     * @param mixed $facets facet ID or array of facet IDs you want to filter for
-     * @param array $filter
-     * @param array $result contains data for reducing the result
-     *
-     * @return Results\ProductSearchResult
-     */
-    public function getProductSearchByFacet(
-        $user_session_id,
-        $facet_group_id,
-        $facets,
-        array $filter = array(),
-        array $result = array(
-            'fields' => array(
-                'id',
-                'name',
-                'active',
-                'brand_id',
-                'description_long',
-                'description_short',
-                'default_variant',
-                'variants',
-                'min_price',
-                'max_price',
-                'sale',
-                'default_image',
-                'attributes_merged',
-                'categories'
-            )
-        )
-    ) {
-        if (!is_array($facets)) {
-            $facets = array($facets);
-        }
-
-        $filter = array(
-            'facets' => array(
-                $facet_group_id => $facets
-            )
-        );
-
-        return self::getProductSearch(
-            $user_session_id,
-            $filter,
-            $result
-        );
-    }
-
-    public function setClient(Client $guzzleClient)
-    {
-        $this->guzzleClient = $guzzleClient;
-    }
-
-    public function getClient()
-    {
-        if ($this->guzzleClient) {
-            return $this->guzzleClient;
-        }
-        $this->guzzleClient = new Client($this->getApiEndPoint());
-
-        return $this->guzzleClient;
-    }
-
-    /**
-     * Builds a JSON string representing the request data via Guzzle.
-     * Executes the API request.
-     *
-     * @param array $data array representing the API request data
-     * @param integer $cacheDuration how long to save the response in the cache (if enabled) - 0 = no caching
-     *
-     * @return \Guzzle\Http\Message\Response response object
-     *
-     * @throws ApiErrorException will be thrown if response was invalid
-     */
-    protected function request($data, $cacheDuration = 0)
-    {
-        $apiClient = $this->getClient();
-
-        $body = json_encode(array($data));
-
-        $cacheKey = md5($body);
-
-        $response = $this->cache->get($cacheKey);
-        if ($response) {
-            return $response;
-        }
-
-        /** @var EntityEnclosingRequestInterface $request */
-        $request = $apiClient->post();
-        $request->setBody($body);
-        $request->setAuth($this->appId, $this->appPassword);
-
-        if ($this->logger) {
-            $adapter = new \Guzzle\Log\PsrLogAdapter($this->logger);
-            $logPlugin = new \Guzzle\Plugin\Log\LogPlugin($adapter, $this->logTemplate);
-
-            $request->addSubscriber($logPlugin);
-        }
-
-        $response = $request->send();
-
-        $this->cache->set($cacheKey, $response, $cacheDuration);
-
-        try {
-            if (!$response->isSuccessful()) {
-                throw new ApiErrorException(
-                    $response->getReasonPhrase(),
-                    $response->getStatusCode()
-                );
-            }
-            try {
-                 if (!is_array($response->json())) {
-                    throw new MalformedJsonException(
-                        'result is not array'
-                    );
-                }
-            } catch (\Exception $e) {
-                 throw new MalformedJsonException(
-                     'unknown error occurred', 0, $e
-                 );
-            }
-        } catch (\Exception $e) {
-            throw new ApiErrorException(
-                'unknown error occurred', 0, $e
-            );
-        }
-
-        return $response;
+        return $query->executeSingle();
     }
 
     /**
@@ -983,20 +467,11 @@ class ShopApi
      */
     public function fetchSuggest($searchword)
     {
-        $data = array(
-            'suggest' => array(
-                'searchword' => $searchword
-            )
-        );
+        $query = $this->getQuery()
+            ->fetchSuggest($searchword)
+        ;
 
-        $response = $this->request($data);
-        $jsonObject = json_decode($response->getBody(true));
-
-        if ($jsonObject === false || !isset($jsonObject[0]->suggest)) {
-            throw new UnexpectedResultException();
-        }
-
-        return $jsonObject[0]->suggest;
+        return $query->executeSingle();
     }
 
     /**

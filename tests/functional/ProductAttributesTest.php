@@ -19,7 +19,8 @@ class ProductAttributesTest extends ShopApiTest
 
     public function setup()
     {
-        $json = json_decode(file_get_contents(__DIR__ . '/testData/product-with-attributes.json'));
+//        $json = $this->getJsonObjectFromFile('product/product-257770.json');
+        $json = $this->getJsonObjectFromFile('product/product-with-attributes.json');
         $this->product = new ShopApi\Model\Product($json);
 
         $this->shopApi = $this->getShopApiWithResultFile('facets-all.json');

@@ -9,7 +9,7 @@ namespace Collins\ShopApi\Model;
 use Collins\ShopApi;
 use Collins\ShopApi\Model\FacetGroup;
 
-class FacetGroupSet
+class FacetGroupSet extends AbstractModel
 {
     /** @var array */
     protected $ids;
@@ -56,8 +56,7 @@ class FacetGroupSet
     {
         if ($this->facets !== null) return;
 
-        // TODO: Refactore me
-        $shopApi = ShopApi::getCurrentApi();
+        $shopApi = $this->getShopApi();
 
         $groupIds = array_keys($this->ids);
         $allFacets = $shopApi->fetchFacets($groupIds);

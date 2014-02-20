@@ -40,12 +40,24 @@ abstract class ShopApiTest extends \PHPUnit_Framework_TestCase
         return $client;
     }
 
-    protected function getShopApiWithResultFile($filepath)
+    protected function getJsonObjectFromFile($filepath)
+    {
+        return json_decode($this->getJsonStringFromFile($filepath));
+    }
+
+    protected function getJsonStringFromFile($filepath)
     {
         if (strpos($filepath, '/') !== 0) {
             $filepath = __DIR__.'/testData/' . $filepath;
         }
         $jsonString = file_get_contents($filepath);
+
+        return $jsonString;
+    }
+
+    protected function getShopApiWithResultFile($filepath)
+    {
+        $jsonString = $this->getJsonStringFromFile($filepath);
 
         return $this->getShopApiWithResult($jsonString);
     }
@@ -61,7 +73,7 @@ abstract class ShopApiTest extends \PHPUnit_Framework_TestCase
         $client = $this->getGuzzleClient($jsonString);
 
         $shopApi = new ShopApi('id', 'token');
-        $shopApi->setClient($client);
+        $shopApi->getApiClient()->setClient($client);
 
         return $shopApi;
     }
