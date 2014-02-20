@@ -28,7 +28,8 @@ class ProductSearchResult extends ProductsResult
 
     public function fromJson($jsonObject)
     {
-        $this->pageHash = $jsonObject->pageHash;
+        // workaround for SHOPAPI-278
+        $this->pageHash = isset($jsonObject->pageHash) ? $jsonObject->pageHash : null;
         $this->productCount = $jsonObject->product_count;
 
         foreach ($jsonObject->products as $key => $jsonProduct) {
