@@ -158,9 +158,9 @@ class QueryBuilder
     public function fetchCategoriesByIds($ids)
     {
         // we allow to pass a single ID instead of an array
-        if (!is_array($ids)) {
-            $ids = array($ids);
-        }
+        settype($ids, 'array');
+
+        $ids = array_map('intval', $ids);
 
         $this->query[] = [
             'category' => array(
@@ -172,7 +172,7 @@ class QueryBuilder
     }
 
     /**
-     * @param int $maxDepth  -1 <= $maxDepth <= 10
+     * @param int $maxDepth -1 <= $maxDepth <= 10,
      *
      * @return $this
      */
@@ -191,7 +191,7 @@ class QueryBuilder
     }
 
     /**
-     * @param array $ids
+     * @param string[]|int[] $ids
      * @param array $fields
      *
      * @return $this
@@ -202,6 +202,8 @@ class QueryBuilder
     ) {
         // we allow to pass a single ID instead of an array
         settype($ids, 'array');
+
+        $ids = array_map('intval', $ids);
 
         $this->query[] = [
             'products' => array(
@@ -261,6 +263,8 @@ class QueryBuilder
         if (empty($groupIds)) {
             throw new InvalidParameterException('no groupId given');
         }
+
+        $groupIds = array_map('intval', $groupIds);
 
         $this->query[] = [
             'facets' => array(
