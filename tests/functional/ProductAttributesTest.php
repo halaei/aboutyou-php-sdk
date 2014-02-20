@@ -19,11 +19,24 @@ class ProductAttributesTest extends ShopApiTest
 
     public function setup()
     {
-//        $json = $this->getJsonObjectFromFile('product/product-257770.json');
         $json = $this->getJsonObjectFromFile('product/product-with-attributes.json');
         $this->product = new ShopApi\Model\Product($json);
 
         $this->shopApi = $this->getShopApiWithResultFile('facets-all.json');
+    }
+
+    public function testGetBrandWorkaround()
+    {
+        $json = $this->getJsonObjectFromFile('product/product-257770.json');
+        $product = new ShopApi\Model\Product($json);
+        $brand = $product->getBrand();
+
+        $this->assertNotNull($brand);
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Facet', $brand);
+        $this->assertEquals(0, $brand->getGroupId());
+        $this->assertEquals(596, $brand->getId());
+        $this->assertEquals('MARC O`POLO', $brand->getName());
+        $this->assertEquals('brand', $brand->getGroupName());
     }
 
     public function testGetBrand()

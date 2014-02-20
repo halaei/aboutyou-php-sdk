@@ -65,6 +65,12 @@ class FacetGroupSet extends AbstractModel
         $this->groups = [];
 
         foreach ($this->ids as $groupId => $facetIds) {
+
+            // TODO: Remove Workaround for Ticket ???
+            settype($facetIds, 'array');
+//            echo '<pre>', __LINE__, ') ', __METHOD__, ': <b>$facetIds</b>=', var_export($facetIds), '</pre>', PHP_EOL;
+
+
             foreach ($facetIds as $facetId) {
                 $key = $groupId . '_' . $facetId;
                 if (!isset($allFacets[$key])) {
