@@ -66,7 +66,10 @@ class ProductAttributesTest extends ShopApiTest
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroup', $brands);
         $this->assertEquals(0, $brands->getId());
         $this->assertEquals('brand', $brands->getName());
-        $attribute = reset($brands->getFacets());
+
+        $facets = $brands->getFacets(); // save in new variable because only variables should be passed as reference for reset
+        $attribute = reset($facets);
+
         $this->assertEquals($attribute, $this->product->getBrand());
         $this->assertEquals(0, $attribute->getGroupId());
         $this->assertEquals('brand', $attribute->getGroupName());

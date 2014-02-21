@@ -8,8 +8,10 @@ namespace Collins\ShopApi\Criteria;
 
 use Collins\ShopApi\Exception\InvalidParameterException;
 use Collins\ShopApi\Model\FacetGroup;
+use Collins\ShopApi\Model\FacetGroupSet;
+use Collins\ShopApi\Model\Product;
 
-class SearchCriteria implements SearchCriteriaInterface
+class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterface
 {
     const SORT_TYPE_RELEVANCE   = 'relevance';
     const SORT_TYPE_UPDATED     = 'updated_date';
@@ -22,11 +24,19 @@ class SearchCriteria implements SearchCriteriaInterface
 
     const FACETS_ALL = '_all';
 
+    const FILTER_SALE          = 'sale';
+    const FILTER_CATEGORY_IDS  = 'categories';
+    const FILTER_PRICE         = 'prices';
+    const FILTER_SEARCHWORD    = 'searchword';
+    const FILTER_ATTRIBUTES    = 'facets';
+
+    /** @var array */
+    protected $filter = [];
+
+
     /** @var array */
     protected $result;
 
-    /** @var ProductSearchFilter */
-    protected $filter;
 
     /** @var string */
     protected $sessionId;
@@ -38,6 +48,118 @@ class SearchCriteria implements SearchCriteriaInterface
     {
         $this->sessionId = $sessionId;
         $this->result    = [];
+    }
+
+    /**
+     * Creates a new instance of this class and returns it.
+     * @return ProductSearchCriteria
+     */
+    public static function create($sessionId)
+    {
+        return new self($sessionId);
+    }
+
+    /**
+     * @param string $key
+     * @param string $value
+     *
+     * @return ProductSearchCriteria
+     */
+    public function set($key, $value)
+    {
+        $this->filter[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param boolean|null $sale
+     *    true => only sale products
+     *    false => no sale products
+     *    null => both (default)
+     *
+     * @return ProductSearchCriteria
+     */
+    public function setIsSale($sale)
+    {
+        if (!is_bool($sale)) {
+            $sale = null;
+        }
+
+        return $this->set(self::FILTER_SALE, $sale);
+    }
+
+    /**
+     * @param string $searchword
+     *
+     * @return ProductSearchCriteria
+     */
+    public function setSearchword($searchword)
+    {
+        return $this->set(self::FILTER_SEARCHWORD, $searchword);
+    }
+
+    /**
+     * @param array $categoryIds array of integer
+     *
+     * @return ProductSearchCriteria
+     */
+    public function addCategories(array $categoryIds)
+    {
+        return $this->set(self::FILTER_CATEGORY_IDS, $categoryIds);
+    }
+
+    /**
+     * @param array $attributes  array of array with group id and attribute ids
+     *   for example [0 => [264]]: search for products with the brand "TOM TAILER"
+     *
+     * @return ProductSearchFilter
+     */
+    public function setAttributes(array $attributes)
+    {
+        return $this->set(self::FILTER_ATTRIBUTES, (object)$attributes);
+    }
+
+    /**
+     * @param FacetGroup $facetGroup
+     *
+     * @return ProductSearchCriteria
+     */
+    public function setFacetGroup(FacetGroup $facetGroup)
+    {
+        return $this->set(self::FILTER_ATTRIBUTES, (object)$facetGroup->getIds());
+    }
+
+    /**
+     * @param FacetGroupSet $facetGroupSet
+     *
+     * @return ProductSearchCriteria
+     */
+    public function setFacetGroupSet(FacetGroupSet $facetGroupSet)
+    {
+        return $this->set(self::FILTER_ATTRIBUTES, (object)$facetGroupSet->getIds());
+    }
+
+    /**
+     * @param integer $from  must be 1 or greater
+     * @param integer $to    must be 1 or greater
+     *
+     * @return ProductSearchCriteria
+     */
+    public function setPriceRange($from = 0, $to = 0)
+    {
+        settype($from, 'int');
+        settype($to, 'int');
+
+        $price = [];
+        if ($from > 0) {
+            $price['from'] = $from;
+        }
+        if ($to > 0) {
+            $price['to'] = $to;
+        }
+
+        return $this->set(self::FILTER_PRICE, $price);
     }
 
     /**
@@ -74,7 +196,7 @@ class SearchCriteria implements SearchCriteriaInterface
      *
      * @return $this
      */
-    public function saleFacets($enable = false)
+    public function setSale($enable = false)
     {
         if ($enable) {
             $this->result['sale'] = true;
@@ -90,7 +212,7 @@ class SearchCriteria implements SearchCriteriaInterface
      *
      * @return $this
      */
-    public function priceFactes($enable = false)
+    public function selectPrice($enable = false)
     {
         if ($enable) {
             $this->result['price'] = true;
@@ -107,7 +229,7 @@ class SearchCriteria implements SearchCriteriaInterface
      *
      * @return $this
      */
-    public function otherFacets($groupId, $limit)
+    public function setFacets($groupId, $limit)
     {
         if ($groupId instanceof FacetGroup) {
             $groupId = $groupId->getId();
@@ -134,7 +256,7 @@ class SearchCriteria implements SearchCriteriaInterface
      *
      * @return $this
      */
-    public function categoryFacets($enable = false)
+    public function selectCategoryFacets($enable = false)
     {
         if ($enable) {
             $this->result['categories'] = true;
@@ -146,12 +268,20 @@ class SearchCriteria implements SearchCriteriaInterface
     }
 
     /**
-     * @param integer[] $ids
+     * @param integer|Product[] $ids
      *
      * @return $this
      */
-    public function boostProducts(array $ids)
+    public function setBoostProducts(array $ids)
     {
+        $ids = array_map(function($val) {
+            if($val instanceof Product) {
+                return $val->getId();
+            }
+
+            return intval($val);
+        }, $ids);
+
         if (empty($this->result['boost'])) {
             unset($this->result['boost']);
         }
@@ -187,22 +317,6 @@ class SearchCriteria implements SearchCriteriaInterface
     }
 
     /**
-     * @param ProductSearchFilter $filter
-     *
-     * @return ProductSearchFilter
-     */
-    public function filter(ProductSearchFilter $filter = null)
-    {
-        if ($filter !== null) {
-            $this->filter = $filter;
-        } else if ($this->filter === null) {
-            $this->filter = new ProductSearchFilter();
-        }
-
-        return $this->filter;
-    }
-
-    /**
      * @return array
      */
     public function toArray()
@@ -215,7 +329,7 @@ class SearchCriteria implements SearchCriteriaInterface
             $params['result'] = $this->result;
         }
         if ($this->filter) {
-            $params['filter'] = $this->filter->toArray();
+            $params['filter'] = $this->filter;
         }
 
         return $params;
