@@ -16,7 +16,7 @@ use Collins\ShopApi\Criteria\SearchCriteria;
  *
  * @see tests/unit/ShopApi/Criteria/SearchCriteriaTest.php
  */
-class SearchCriteriaTest extends \PHPUnit_Framework_TestCase
+class SearchCriteriaTest extends ShopApiTest
 {
     public function testGetSearchCriteria()
     {
@@ -41,8 +41,6 @@ class SearchCriteriaTest extends \PHPUnit_Framework_TestCase
 
         $expected = '{"session_id":"my session","result":{"fields":["default_image","default_variant"],"sort":{"by":"price","direction":"desc"},"limit":40,"offset":0,"categories":true},"filter":{"prices":{"to":1000}}}';
         $this->assertEquals($expected, json_encode($criteria->toArray()));
-
-        $shopApi->fetchProductSearch($criteria);
     }
 }
  

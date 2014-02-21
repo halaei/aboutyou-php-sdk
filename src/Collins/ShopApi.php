@@ -325,8 +325,8 @@ class ShopApi
     }
 
     /**
-     * @param array $ids
-     * @param array $fields
+     * @param integer[] $ids
+     * @param string[] $fields
      *
      * @return ProductsResult
      *
@@ -335,22 +335,7 @@ class ShopApi
      */
     public function fetchProductsByIds(
         array $ids,
-        array $fields = array(
-            'id',
-            'name',
-            'active',
-            'brand_id',
-            'description_long',
-            'description_short',
-            'default_variant',
-            'variants',
-            'min_price',
-            'max_price',
-            'sale',
-            'default_image',
-            'attributes_merged',
-            'categories'
-        )
+        array $fields = []
     ) {
         // we allow to pass a single ID instead of an array
         settype($ids, 'array');
