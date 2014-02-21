@@ -4,10 +4,12 @@
  * (c) Antevorte GmbH & Co KG
  */
 
-namespace Collins\ShopApi\Test\Unit\ShopApi;
+namespace Collins\ShopApi\Test\Unit\ShopApi\Criteria;
 
+use Collins\ShopApi\Criteria\ProductSearchFilter;
+use Collins\ShopApi\Model\Facet;
+use Collins\ShopApi\Model\FacetGroup;
 use Collins\ShopApi\Model\FacetGroupSet;
-use Collins\ShopApi\ProductSearchFilter;
 
 class ProductSearchFilterTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,6 +25,7 @@ class ProductSearchFilterTest extends \PHPUnit_Framework_TestCase
         $filter = ProductSearchFilter::create()
             ->addCategories([123, 456]);
         $this->assertEquals(['categories' => [123, 456]], $filter->toArray());
+        $this->assertEquals('{"categories":[123,456]}', json_encode($filter->toArray()));
 
         $filter = ProductSearchFilter::create()
             ->addPrice(123);
@@ -33,6 +36,8 @@ class ProductSearchFilterTest extends \PHPUnit_Framework_TestCase
         $filter = ProductSearchFilter::create()
             ->addPrice(123, 456);
         $this->assertEquals(['prices' => ['from' => 123, 'to' => 456]], $filter->toArray());
+        $this->assertEquals('{"prices":{"from":123,"to":456}}', json_encode($filter->toArray()));
+
         $filter = ProductSearchFilter::create()
             ->addPrice(-1);
         $this->assertEquals(['prices' => []], $filter->toArray());
@@ -54,12 +59,17 @@ class ProductSearchFilterTest extends \PHPUnit_Framework_TestCase
     {
         $filter = ProductSearchFilter::create()
             ->addAttributes([0 => [264]]);
-        $this->assertEquals(['facets' => [0 => [264]]], $filter->toArray());
+        $this->assertEquals('{"facets":{"0":[264]}}', json_encode($filter->toArray()));
 
-        $this->markTestIncomplete();
-//        $filter = ProductSearchFilter::create()
-//            ->addAttributes(new FacetGroupSet([0 => [264]]));
-//        $this->assertEquals(['facets' => [0 => [264]]], $filter->toArray());
+        $filter = ProductSearchFilter::create()
+            ->addFacetGroupSet(new FacetGroupSet([0 => [264]]));
+        $this->assertEquals('{"facets":{"0":[264]}}', json_encode($filter->toArray()));
+
+        $facetGroup = new FacetGroup(0, 'brand');
+        $facetGroup->addFacet(new Facet(264, 'TOM', null, 0, 'brand'));
+        $filter = ProductSearchFilter::create()
+            ->addFacetGroup($facetGroup);
+        $this->assertEquals('{"facets":{"0":[264]}}', json_encode($filter->toArray()));
     }
 }
  

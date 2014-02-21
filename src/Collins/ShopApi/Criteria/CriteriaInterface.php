@@ -4,7 +4,7 @@
  * (c) Antevorte GmbH & Co KG
  */
 
-namespace Collins\ShopApi;
+namespace Collins\ShopApi\Criteria;
 
 interface CriteriaInterface
 {

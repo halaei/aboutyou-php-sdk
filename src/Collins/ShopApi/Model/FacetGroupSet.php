@@ -28,6 +28,11 @@ class FacetGroupSet extends AbstractModel
         $this->ids = $ids;
     }
 
+    public function getIds()
+    {
+        return $this->ids;
+    }
+
     protected function genLazyGroups()
     {
         $groups = [];

@@ -4,7 +4,10 @@
  * (c) Antevorte GmbH & Co KG
  */
 
-namespace Collins\ShopApi;
+namespace Collins\ShopApi\Criteria;
+
+use Collins\ShopApi\Model\FacetGroup;
+use Collins\ShopApi\Model\FacetGroupSet;
 
 class ProductSearchFilter implements CriteriaInterface
 {
@@ -76,13 +79,31 @@ class ProductSearchFilter implements CriteriaInterface
      * @param array $attributes  array of array with group id and attribute ids
      *   for example [0 => [264]]: search for products with the brand "TOM TAILER"
      *
-     * TODO: allow ot filter by FacetGroup
-     *
      * @return ProductSearchFilter
      */
     public function addAttributes(array $attributes)
     {
-        return $this->set(self::FILTER_ATTRIBUTES, $attributes);
+        return $this->set(self::FILTER_ATTRIBUTES, (object)$attributes);
+    }
+
+    /**
+     * @param FacetGroup $facetGroup
+     *
+     * @return ProductSearchFilter
+     */
+    public function addFacetGroup(FacetGroup $facetGroup)
+    {
+        return $this->set(self::FILTER_ATTRIBUTES, (object)$facetGroup->getIds());
+    }
+
+    /**
+     * @param FacetGroupSet $facetGroupSet
+     *
+     * @return ProductSearchFilter
+     */
+    public function addFacetGroupSet(FacetGroupSet $facetGroupSet)
+    {
+        return $this->set(self::FILTER_ATTRIBUTES, (object)$facetGroupSet->getIds());
     }
 
     /**

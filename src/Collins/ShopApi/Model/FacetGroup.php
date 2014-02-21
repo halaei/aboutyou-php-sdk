@@ -88,6 +88,14 @@ class FacetGroup
         return $this->id . ':' . join(',', $facetIds);
     }
 
+    public function getIds()
+    {
+        return [
+            $this->id => array_keys($this->facets)
+        ];
+    }
+
+
     public function contains(Facet $facet)
     {
         return isset($this->facets[$facet->getId()]);

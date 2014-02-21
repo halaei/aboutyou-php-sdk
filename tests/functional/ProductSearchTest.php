@@ -2,42 +2,33 @@
 
 namespace Collins\ShopApi\Test\Functional;
 
+use Collins\ShopApi\Criteria\SearchCriteria;
 use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
-use Collins\ShopApi\ProductSearchFilter;
 
 class ProductSearchTest extends ShopApiTest
 {
     public function testProductSearch()
     {
-        $this->markTestIncomplete();
-
         $shopApi = $this->getShopApiWithResultFile('product_search.json');
 
         // get all available products
-        $productSearchResult = $shopApi->fetchProductSearch('1234');
+        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getSearchCriteria('1234'));
         $this->checkProductSearchResult($productSearchResult);
     }
 
-    /**
-     * @deprecated to search with an array
-     * @see /tests/unit/ShopApi/ProductSearchFilterTest.php
-     */
-    public function testProductSearchFilter()
+    public function testProductSearchSort()
     {
         $shopApi = $this->getShopApiWithResultFile('product_search.json');
 
-        // search products by filter
-        $filter = array(
-            'categoryId' => 123
-        );
-        $products = $shopApi->fetchProductSearch('1234', $filter);
+        // search products and sort
+        $criteria = $shopApi->getSearchCriteria('1234')
+            ->sortBy(
+                SearchCriteria::SORT_TYPE_MOST_VIEWED
+            )
+        ;
+        $products = $shopApi->fetchProductSearch($criteria);
         $this->checkProductSearchResult($products);
-
-//        // search products and sort
-//        $sorting = array('name', ShopApi::SORT_ASC);
-//        $products = $shopApi->fetchSearchProducts(null, $sorting);
-//        $this->checkProductList($products);
     }
 
     /**
@@ -49,7 +40,7 @@ class ProductSearchTest extends ShopApiTest
 [
     {
         "product_search": {
-            "product_count": 35034,
+            "product_count": 1234,
             "pageHash": "d136109b-abd8-4d1c-99ac-4a621f3adb0e",
             "facets": {},
             "products": []
@@ -62,28 +53,28 @@ EOS;
 
         $shopApi = $this->getShopApiWithResult($dummyResult, $expectedRequestBody);
 
-        $filter = ProductSearchFilter::create()
-            ->addCategories([123]);
-        $shopApi->fetchProductSearch('1234', $filter);
+        // search products by filter
+        $criteria = $shopApi->getSearchCriteria('1234');
+        $criteria->filter()->addCategories([
+            123
+        ]);
+        $products = $shopApi->fetchProductSearch($criteria);
+        $this->checkProductSearchResult($products);
     }
 
     public function testProductSearchPagination()
     {
-        $this->markTestIncomplete();
-
         $shopApi = $this->getShopApiWithResultFile('product_search.json');
 
-        // search products with limit
-        $pagination = array(
-            'pageSize' => 20,
-            'page' => 1,
-        );
-        // or:
         $pagination = array(
             'limit' => 20,
             'offset' => 21,
         );
-        $products = $shopApi->fetchSearchProducts(null, null, $pagination);
+        $criteria = $shopApi->getSearchCriteria('1234')
+            ->setLimit($pagination['limit'], $pagination['offset'])
+        ;
+        $products = $shopApi->fetchProductSearch($criteria);
+        $this->checkProductSearchResult($products);
     }
 
     /***************************************************/

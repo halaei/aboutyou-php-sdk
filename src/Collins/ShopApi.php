@@ -1,18 +1,18 @@
 <?php
 namespace Collins;
 
+use Collins\Cache\CacheInterface;
 use Collins\ShopApi\Constants;
-use Collins\ShopApi\CriteriaInterface;
+use Collins\ShopApi\Criteria\SearchCriteria;
+use Collins\ShopApi\Criteria\CriteriaInterface;
 use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
 use Collins\ShopApi\Query;
-use Collins\ShopApi\Results as Results;
 use Collins\ShopApi\ShopApiClient;
 use Psr\Log\LoggerInterface;
-use Collins\Cache\CacheInterface;
 
 /**
  * Provides access to the Collins Frontend Platform.
@@ -386,6 +386,8 @@ class ShopApi
     }
 
     /**
+     * @param
+     *
      * @param string $userSessionId
      * @param array|CriteriaInterface $filter
      * @param array $result
@@ -396,29 +398,10 @@ class ShopApi
      * @throws ShopApi\Exception\UnexpectedResultException
      */
     public function fetchProductSearch(
-        $userSessionId,
-        $filter = array(),
-        array $result = array(
-            'fields' => array(
-                'id',
-                'name',
-                'active',
-                'brand_id',
-                'description_long',
-                'description_short',
-                'default_variant',
-                'variants',
-                'min_price',
-                'max_price',
-                'sale',
-                'default_image',
-                'attributes_merged',
-                'categories'
-            )
-        )
+        SearchCriteria $criteria
     ) {
         $query = $this->getQuery()
-            ->fetchProductSearch($userSessionId, $filter, $result)
+            ->fetchProductSearch($criteria)
         ;
 
         return $query->executeSingle();
@@ -459,6 +442,28 @@ class ShopApi
         ;
 
         return $query->executeSingle();
+    }
+
+    /**
+     * @return string
+     */
+    public function getSessionId()
+    {
+        return session_id();
+    }
+
+    /**
+     * @param string|null $sessionId
+     *
+     * @return SearchCriteria
+     */
+    public function getSearchCriteria($sessionId = null)
+    {
+        if (!$sessionId) {
+            $sessionId = $this->getSessionId();
+        }
+
+        return new SearchCriteria($sessionId);
     }
 
     /**

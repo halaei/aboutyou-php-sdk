@@ -6,6 +6,7 @@
 
 namespace Collins\ShopApi;
 
+use Collins\ShopApi\Exception\UnexpectedResultException;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 
 class Query extends QueryBuilder

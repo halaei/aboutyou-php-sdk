@@ -7,6 +7,7 @@
 namespace Collins\ShopApi;
 
 
+use Collins\ShopApi\Criteria\SearchCriteria;
 use Collins\ShopApi\Exception\InvalidParameterException;
 
 class QueryBuilder
@@ -208,30 +209,11 @@ class QueryBuilder
      * @return $this
      */
     public function fetchProductSearch(
-        $userSessionId,
-        $filter = array(),
-        array $result = array(
-            'fields' => []
-        )
+        SearchCriteria $criteria
     ) {
-        $data = array(
-            'product_search' => array(
-                'session_id' => (string)$userSessionId
-            )
-        );
-
-        if ($filter instanceof CriteriaInterface) {
-            $filter = $filter->toArray();
-        }
-        if (count($filter) > 0) {
-            $data['product_search']['filter'] = $filter;
-        }
-
-        if (count($result) > 0) {
-            $data['product_search']['result'] = $result;
-        }
-
-        $this->query[] = $data;
+        $this->query[] = [
+            'product_search' => $criteria->toArray()
+        ];
 
         return $this;
     }
