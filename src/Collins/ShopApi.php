@@ -412,6 +412,20 @@ class ShopApi
     }
 
     /**
+     * @param string|integer $orderId
+     *
+     * @return \Collins\ShopApi\Model\Order
+     */
+    public function fetchOrder($orderId)
+    {
+        $query = $this->getQuery()
+            ->fetchOrder($orderId)
+        ;
+
+        return $query->executeSingle();
+    }
+
+    /**
      * Returns the result of a suggest API request.
      * Suggestions are words that are often searched together
      * with the searchword you pass (e.g. "stretch" for "jeans").

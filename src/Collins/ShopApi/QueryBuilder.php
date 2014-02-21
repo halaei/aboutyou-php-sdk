@@ -201,6 +201,17 @@ class QueryBuilder
         return $this;
     }
 
+    public function fetchOrder($orderId)
+    {
+        $this->query[] = [
+            'get_order' => [
+                'order_id' => $orderId
+            ]
+        ];
+
+        return $this;
+    }
+
     /**
      * @param string $userSessionId
      * @param array|CriteriaInterface $filter

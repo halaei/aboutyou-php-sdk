@@ -79,4 +79,9 @@ class DefaultModelFactory implements ModelFactoryInterface
     {
         return new ShopApi\Model\Variant($json);
     }
+
+    public function createOrder($json)
+    {
+        return new ShopApi\Model\Order($json);
+    }
 }
