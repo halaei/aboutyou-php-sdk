@@ -80,7 +80,7 @@ class Product
         $this->name = $jobj->name;
 
         $this->isSale            = isset($jobj->sale) ? $jobj->sale : false;
-        $this->descritptionShort = isset($jobj->description_short) ? $jobj->description_short : '';
+        $this->descriptionShort = isset($jobj->description_short) ? $jobj->description_short : '';
         $this->descriptionLong   = isset($jobj->description_long) ? $jobj->description_long : '';
         $this->isActive          = isset($jobj->active) ? $jobj->active : true;
         $this->brandId           = isset($jobj->brand_id) ? $jobj->brand_id : null;
@@ -160,7 +160,7 @@ class Product
      */
     public function getDescriptionShort()
     {
-        return $this->descritptionShort;
+        return $this->descriptionShort;
     }
 
     /**
