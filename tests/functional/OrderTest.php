@@ -19,4 +19,19 @@ class OrderTest extends ShopApiTest
         $basket = $order->getBasket();
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\Basket', $basket);
     }
-} 
+
+    public function testInitiateOrderSuccess()
+    {
+        $this->markTestIncomplete('implement me');
+    }
+
+    public function testInitiateOrderVerifyUrl()
+    {
+        $this->markTestIncomplete('implement me');
+    }
+
+    public function testInitiateOrderFailed()
+    {
+        $this->markTestIncomplete('implement me');
+    }
+}
