@@ -85,6 +85,9 @@ class Product
         $this->isActive          = isset($jobj->active) ? $jobj->active : true;
         $this->brandId           = isset($jobj->brand_id) ? $jobj->brand_id : null;
 
+        $this->minPrice         = isset($jobj->min_price) ? $jobj->min_price : null;
+        $this->maxPrice         = isset($jobj->max_price) ? $jobj->max_price : null;
+
         $this->defaultImage   = isset($jobj->default_image) ? new Image($jobj->default_image) : null;
         $this->defaultVariant = isset($jobj->default_variant) ? new Variant($jobj->default_variant) : null;
 

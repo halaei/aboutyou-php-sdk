@@ -94,6 +94,8 @@ class GetProductsTest extends ShopApiTest
         $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Image', $p456->getDefaultImage());
         $this->assertTrue($p456->isActive());
         $this->assertTrue($p456->isSale());
+        $this->assertEquals(3980, $p456->getMinPrice());
+        $this->assertEquals(3990, $p456->getMaxPrice());
 
         $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Variant', $p456->getDefaultVariant());
 
