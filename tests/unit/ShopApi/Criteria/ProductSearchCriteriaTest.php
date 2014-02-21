@@ -77,7 +77,7 @@ class ProductSearchCriteriaTest extends \PHPUnit_Framework_TestCase
 
         $criteria = ProductSearchCriteria::create(12345)
             ->setIsSale(false);
-        
+
         $this->assertEquals(['session_id' => 12345, 'filter' => ['sale' => false]], $criteria->toArray());
 
         $criteria = ProductSearchCriteria::create(12345)
