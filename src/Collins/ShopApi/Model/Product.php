@@ -255,8 +255,8 @@ class Product extends AbstractModel
         $ids = $this->getCategoryIds();
         if (empty($ids)) {
             return null;
-        }
-        
+       }
+
         if ($this->category) {
             return $this->category;
         }
