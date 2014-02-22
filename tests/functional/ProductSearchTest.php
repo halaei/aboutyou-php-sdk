@@ -2,7 +2,7 @@
 
 namespace Collins\ShopApi\Test\Functional;
 
-use Collins\ShopApi\Criteria\SearchCriteria;
+use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
 
@@ -13,7 +13,7 @@ class ProductSearchTest extends ShopApiTest
         $shopApi = $this->getShopApiWithResultFile('product_search.json');
 
         // get all available products
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getSearchCriteria('1234'));
+        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('1234'));
         $this->checkProductSearchResult($productSearchResult);
     }
 
@@ -22,9 +22,9 @@ class ProductSearchTest extends ShopApiTest
         $shopApi = $this->getShopApiWithResultFile('product_search.json');
 
         // search products and sort
-        $criteria = $shopApi->getSearchCriteria('1234')
+        $criteria = $shopApi->getProductSearchCriteria('1234')
             ->sortBy(
-                SearchCriteria::SORT_TYPE_MOST_VIEWED
+                ProductSearchCriteria::SORT_TYPE_MOST_VIEWED
             )
         ;
         $products = $shopApi->fetchProductSearch($criteria);
@@ -54,8 +54,8 @@ EOS;
         $shopApi = $this->getShopApiWithResult($dummyResult, $expectedRequestBody);
 
         // search products by filter
-        $criteria = $shopApi->getSearchCriteria('1234');
-        $criteria->filter()->addCategories([
+        $criteria = $shopApi->getProductSearchCriteria('1234');
+        $criteria->addCategories([
             123
         ]);
         $products = $shopApi->fetchProductSearch($criteria);
@@ -70,7 +70,7 @@ EOS;
             'limit' => 20,
             'offset' => 21,
         );
-        $criteria = $shopApi->getSearchCriteria('1234')
+        $criteria = $shopApi->getProductSearchCriteria('1234')
             ->setLimit($pagination['limit'], $pagination['offset'])
         ;
         $products = $shopApi->fetchProductSearch($criteria);

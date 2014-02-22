@@ -7,7 +7,7 @@
 namespace Collins\ShopApi;
 
 
-use Collins\ShopApi\Criteria\SearchCriteria;
+use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Exception\InvalidParameterException;
 
 class QueryBuilder
@@ -209,7 +209,7 @@ class QueryBuilder
      * @return $this
      */
     public function fetchProductSearch(
-        SearchCriteria $criteria
+        ProductSearchCriteria $criteria
     ) {
         $this->query[] = [
             'product_search' => $criteria->toArray()

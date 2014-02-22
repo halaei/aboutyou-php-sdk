@@ -3,7 +3,7 @@ namespace Collins;
 
 use Collins\Cache\CacheInterface;
 use Collins\ShopApi\Constants;
-use Collins\ShopApi\Criteria\SearchCriteria;
+use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Criteria\CriteriaInterface;
 use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
@@ -383,7 +383,7 @@ class ShopApi
      * @throws ShopApi\Exception\UnexpectedResultException
      */
     public function fetchProductSearch(
-        SearchCriteria $criteria
+        ProductSearchCriteria $criteria
     ) {
         $query = $this->getQuery()
             ->fetchProductSearch($criteria)
@@ -440,15 +440,15 @@ class ShopApi
     /**
      * @param string|null $sessionId
      *
-     * @return SearchCriteria
+     * @return ProductSearchCriteria
      */
-    public function getSearchCriteria($sessionId = null)
+    public function getProductSearchCriteria($sessionId = null)
     {
         if (!$sessionId) {
             $sessionId = $this->getSessionId();
         }
 
-        return new SearchCriteria($sessionId);
+        return new ProductSearchCriteria($sessionId);
     }
 
     /**
