@@ -124,11 +124,12 @@ class Product extends AbstractModel
     protected static function parseCategoryIds($jobj)
     {
         $cIds = [];
-        foreach (get_object_vars($jobj) as $name => $aa) {
+        foreach (get_object_vars($jobj) as $name => $subIds) {
             if (strpos($name, 'categories') !== 0) {
                 continue;
             }
-            $cIds = $aa;
+            // flatten array
+            $cIds = call_user_func_array('array_merge', $subIds);
         }
 
         return $cIds;
@@ -237,34 +238,38 @@ class Product extends AbstractModel
     }
 
     /**
+     * @deprecated
+     */
+    public function getCategory()
+    {
+        return $this->getMainCategory();
+    }
+
+    /**
      * Get product category.
      *
      * @return Category
      */
-    public function getCategory()
+    public function getMainCategory()
     {
-        //TODO: refactor
-        $api = ShopApi::getCurrentApi();
+        $ids = $this->getCategoryIds();
+        if (empty($ids)) {
+            return null;
+        }
+        
+        if ($this->category) {
+            return $this->category;
+        }
 
-        if (!$this->category) {
-            foreach ($this->categoryIds as $ids) {
-                if ($ids) {
-                    $categories = $api->fetchCategoriesByIds($ids)->getCategories();
-                    $firstId = array_shift($ids);
-                    $firstCategory = $categories[$firstId];
-                    if ($firstCategory && $firstCategory->isActive()) {
-                        $this->category = $firstCategory;
-                        foreach ($ids as $id) {
-                            if (!$categories[$id]->isActive()) {
-                                break;
-                            }
-                            $this->category = $categories[$id];
-                        }
-                        break;
-                    }
-                }
+        $api = $this->getShopApi();
+        $categories = $api->fetchCategoriesByIds($ids)->getCategories();
+        foreach ($categories as $category) {
+            if ($category->isActive()) {
+                $this->category = $category;
+                break;
             }
         }
+
         return $this->category;
     }
 
