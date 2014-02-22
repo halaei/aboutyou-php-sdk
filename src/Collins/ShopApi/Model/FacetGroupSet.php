@@ -7,7 +7,6 @@
 namespace Collins\ShopApi\Model;
 
 use Collins\ShopApi;
-use Collins\ShopApi\Model\FacetGroup;
 
 class FacetGroupSet extends AbstractModel
 {
@@ -73,8 +72,6 @@ class FacetGroupSet extends AbstractModel
 
             // TODO: Remove Workaround for Ticket ???
             settype($facetIds, 'array');
-//            echo '<pre>', __LINE__, ') ', __METHOD__, ': <b>$facetIds</b>=', var_export($facetIds), '</pre>', PHP_EOL;
-
 
             foreach ($facetIds as $facetId) {
                 $key = $groupId . '_' . $facetId;
@@ -113,7 +110,9 @@ class FacetGroupSet extends AbstractModel
     }
 
     /**
-     * @return FacetGroup
+     * @param $groupId
+     *
+     * @return FacetGroup|null
      */
     public function getGroup($groupId)
     {
