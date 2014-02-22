@@ -9,7 +9,7 @@ namespace Collins\ShopApi\Model;
 use Collins\ShopApi;
 use Collins\ShopApi\Exception\MalformedJsonException;
 
-class Product
+class Product extends AbstractModel
 {
     /** @var integer */
     protected $id;
@@ -80,7 +80,7 @@ class Product
         $this->name = $jobj->name;
 
         $this->isSale            = isset($jobj->sale) ? $jobj->sale : false;
-        $this->descritptionShort = isset($jobj->description_short) ? $jobj->description_short : '';
+        $this->descriptionShort  = isset($jobj->description_short) ? $jobj->description_short : '';
         $this->descriptionLong   = isset($jobj->description_long) ? $jobj->description_long : '';
         $this->isActive          = isset($jobj->active) ? $jobj->active : true;
         $this->brandId           = isset($jobj->brand_id) ? $jobj->brand_id : null;
@@ -124,11 +124,12 @@ class Product
     protected static function parseCategoryIds($jobj)
     {
         $cIds = [];
-        foreach (get_object_vars($jobj) as $name => $aa) {
+        foreach (get_object_vars($jobj) as $name => $subIds) {
             if (strpos($name, 'categories') !== 0) {
                 continue;
             }
-            $cIds = $aa;
+            // flatten array
+            $cIds = call_user_func_array('array_merge', $subIds);
         }
 
         return $cIds;
@@ -160,7 +161,7 @@ class Product
      */
     public function getDescriptionShort()
     {
-        return $this->descritptionShort;
+        return $this->descriptionShort;
     }
 
     /**
@@ -237,34 +238,38 @@ class Product
     }
 
     /**
+     * @deprecated
+     */
+    public function getCategory()
+    {
+        return $this->getMainCategory();
+    }
+
+    /**
      * Get product category.
      *
      * @return Category
      */
-    public function getCategory()
+    public function getMainCategory()
     {
-        //TODO: refactor
-        $api = ShopApi::getCurrentApi();
+        $ids = $this->getCategoryIds();
+        if (empty($ids)) {
+            return null;
+       }
 
-        if (!$this->category) {
-            foreach ($this->categoryIds as $ids) {
-                if ($ids) {
-                    $categories = $api->fetchCategoriesByIds($ids)->getCategories();
-                    $firstId = array_shift($ids);
-                    $firstCategory = $categories[$firstId];
-                    if ($firstCategory && $firstCategory->isActive()) {
-                        $this->category = $firstCategory;
-                        foreach ($ids as $id) {
-                            if (!$categories[$id]->isActive()) {
-                                break;
-                            }
-                            $this->category = $categories[$id];
-                        }
-                        break;
-                    }
-                }
+        if ($this->category) {
+            return $this->category;
+        }
+
+        $api = $this->getShopApi();
+        $categories = $api->fetchCategoriesByIds($ids)->getCategories();
+        foreach ($categories as $category) {
+            if ($category->isActive()) {
+                $this->category = $category;
+                break;
             }
         }
+
         return $this->category;
     }
 
