@@ -412,6 +412,60 @@ class ShopApi
     }
 
     /**
+     * @param string|integer $orderId the order id
+     *
+     * @return \Collins\ShopApi\Model\Order the order
+     */
+    public function fetchOrder($orderId)
+    {
+        $query = $this->getQuery()
+            ->fetchOrder($orderId)
+        ;
+
+        return $query->executeSingle();
+    }
+
+    /**
+     * @param string $sessionId the session id
+     * @param string $successUrl callback URL if the order was OK
+     * @param string $cancelUrl callback URL if the order was canceled [optional]
+     * @param string $errorUrl callback URL if the order had any exceptions [optional]
+     *
+     * @return \Collins\ShopApi\Model\InitiateOrder
+     */
+    public function initiateOrder(
+        $sessionId,
+        $successUrl,
+        $cancelUrl = NULL,
+        $errorUrl = NULL
+    ) {
+        $query = $this->getQuery()
+            ->InitiateOrder($sessionId, $successUrl, $cancelUrl, $errorUrl)
+        ;
+
+        return $query->executeSingle();
+    }
+
+    /**
+     * Fetch single facets by id and group id
+     *
+     * @param array $params Array of (id, group_id) pairs
+     *
+     * @return \Collins\ShopApi\Model\Facet[] With facet id as key.
+     *
+     * @throws ShopApi\Exception\MalformedJsonException
+     * @throws ShopApi\Exception\UnexpectedResultException
+     */
+    public function fetchFacet(array $params)
+    {
+        $query = $this->getQuery()
+            ->fetchFacet($params)
+        ;
+
+        return $query->executeSingle();
+    }
+
+    /**
      * Returns the result of a suggest API request.
      * Suggestions are words that are often searched together
      * with the searchword you pass (e.g. "stretch" for "jeans").
@@ -424,6 +478,20 @@ class ShopApi
     {
         $query = $this->getQuery()
             ->fetchSuggest($searchword)
+        ;
+
+        return $query->executeSingle();
+    }
+
+    /**
+     * Returns the list of child apps
+     *
+     * @return array
+     */
+    public function fetchChildApps()
+    {
+        $query = $this->getQuery()
+            ->fetchChildApps()
         ;
 
         return $query->executeSingle();
