@@ -201,6 +201,42 @@ class QueryBuilder
         return $this;
     }
 
+   /**
+     * @param string|int $id
+     *
+     * @return $this
+     */
+    public function fetchOrder($orderId)
+    {
+        $this->query[] = [
+            'get_order' => [
+                'order_id' => $orderId
+            ]
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @param string $sessionId
+     * @param string $successUrl
+     * @param string $cancelUrl
+     * @param string $errorUrl
+     *
+     * @return $this
+     */
+    public function initiateOrder($sessionId, $successUrl, $cancelUrl, $errorUrl)
+    {
+        $args = [];
+        $args['session_id'] = $sessionId;
+        $args['success_url'] = $successUrl;
+        if ($cancelUrl) $args['cancel_url'] = $cancelUrl;
+        if ($errorUrl) $args['error_url'] = $errorUrl;
+        $this->query[] = [ 'initiate_order' => $args ];
+
+        return $this;
+    }
+
     /**
      * @param string $userSessionId
      * @param array|CriteriaInterface $filter
