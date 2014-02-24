@@ -91,4 +91,22 @@ class DefaultModelFactory implements ModelFactoryInterface
     {
         return new ShopApi\Model\InitiateOrder($json);
     }
+
+    public function createChildApps($json)
+    {
+        $apps = [];
+        foreach ($json->child_apps as $jsonApp) {
+            $app = $this->createApp($jsonApp);
+            $key   = $app->getId();
+            $apps[$key] = $app;
+        }
+
+        return $apps;
+    }
+
+    public function createApp($json)
+    {
+        return new ShopApi\Model\App($json);
+    }
+
 }

@@ -484,6 +484,20 @@ class ShopApi
     }
 
     /**
+     * Returns the list of child apps
+     *
+     * @return array
+     */
+    public function fetchChildApps()
+    {
+        $query = $this->getQuery()
+            ->fetchChildApps()
+        ;
+
+        return $query->executeSingle();
+    }
+
+    /**
      * @return string
      */
     public function getSessionId()

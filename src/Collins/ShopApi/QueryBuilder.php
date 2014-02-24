@@ -313,6 +313,16 @@ class QueryBuilder
     }
 
     /**
+     * @return $this
+     */
+    public function fetchChildApps()
+    {
+        $this->query[] = ['child_apps' => NULL ];
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getQueryString()
