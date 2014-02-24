@@ -24,7 +24,7 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
      */
     public function __construct(array $ids)
     {
-        foreach ($ids as $groupId => &$facetIds) {
+        foreach ($ids as $facetIds) {
             if (!is_array($facetIds)) {
                 throw new ShopApi\Exception\InvalidParameterException('$ids must be an associative array of array: [$groupId => [$facetId,...],...]');
             }
