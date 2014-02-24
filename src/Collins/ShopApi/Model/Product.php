@@ -435,9 +435,9 @@ class Product extends AbstractModel
      *
      * @return Variant|null
      */
-    public function getVariantByFacets(FacetUniqueKeyInterface $facet)
+    public function getVariantByFacets(FacetGroupSet $facetGroupSet)
     {
-        $key = $facet->getUniqueKey();
+        $key = $facetGroupSet->getUniqueKey();
         foreach ($this->variants as $variant) {
             if ($variant->getFacetGroupSet()->getUniqueKey() === $key) {
                 return $variant;

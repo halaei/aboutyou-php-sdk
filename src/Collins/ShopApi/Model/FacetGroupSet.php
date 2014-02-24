@@ -169,7 +169,7 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
             return $this->containsFacetGroupSet($facetCompable);
         }
 
-        if ($facetCompable instanceof FacetGetGroupInterfaceGroup) {
+        if ($facetCompable instanceof FacetGetGroupInterface) {
             return $this->containsFacetGetGroupInterface($facetCompable);
         }
 
