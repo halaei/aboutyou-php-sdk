@@ -13,7 +13,7 @@ use Collins\ShopApi\Model\FacetGroup;
 use Collins\ShopApi\Model\Facet;
 use Collins\ShopApi\Model\FacetGroupSet;
 
-class ProductSearchCriteriaTest extends \PHPUnit_Framework_TestCase
+class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
 {
     public function getCriteria()
     {

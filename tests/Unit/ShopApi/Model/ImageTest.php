@@ -4,7 +4,7 @@
  * (c) Antevorte GmbH & Co KG
  */
 
-namespace Collins\ShopApi\Test\Unit\ShopApi\Model;
+namespace Collins\ShopApi\Test\Unit\Model;
 
 use Collins\ShopApi\Model\Image;
 
@@ -15,6 +15,7 @@ class ImageTest extends AbstractModelTest
         $jsonObject = $this->getJsonObject('image.json');
 
         $image = new Image($jsonObject);
+        $this->assertNull($image->getShopApi());
 
         $this->assertEquals('hash1', $image->getHash());
         $this->assertEquals('.jpg', $image->getExt());

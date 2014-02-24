@@ -1,0 +1,25 @@
+<?php
+/**
+ * @auther nils.droege@antevorte.org
+ * (c) Antevorte GmbH & Co KG
+ */
+
+namespace Collins\ShopApi\Test;
+
+class ShopSdkTest extends \PHPUnit_Framework_TestCase
+{
+    public function setUp()
+    {
+        $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\FacetGroupSet');
+        $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\Image');
+        $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\Product');
+    }
+
+    protected function resetAbstractModelShopApi($className)
+    {
+        $class = new \ReflectionClass($className);
+        $property = $class->getProperty('shopApi');
+        $property->setAccessible(true);
+        $property->setValue(null);
+    }
+} 

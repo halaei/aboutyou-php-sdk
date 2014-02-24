@@ -4,7 +4,7 @@
  * (c) Antevorte GmbH & Co KG
  */
 
-namespace Collins\ShopApi\Test\Unit\ShopApi\Model;
+namespace Collins\ShopApi\Test\Unit\Model;
 
 use Collins\ShopApi\Model\Variant;
 

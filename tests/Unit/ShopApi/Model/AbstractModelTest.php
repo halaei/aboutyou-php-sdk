@@ -4,9 +4,9 @@
  * (c) Antevorte GmbH & Co KG
  */
 
-namespace Collins\ShopApi\Test\Unit\ShopApi\Model;
+namespace Collins\ShopApi\Test\Unit\Model;
 
-abstract class AbstractModelTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractModelTest extends \Collins\ShopApi\Test\ShopSdkTest
 {
     protected function getJsonObject($filepath)
     {

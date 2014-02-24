@@ -10,7 +10,7 @@ use Collins\ShopApi;
 use Guzzle\Http\Message\Response;
 use Guzzle\Service\Client;
 
-abstract class ShopApiTest extends \PHPUnit_Framework_TestCase
+abstract class ShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
 {
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|Client
@@ -73,6 +73,7 @@ abstract class ShopApiTest extends \PHPUnit_Framework_TestCase
         $client = $this->getGuzzleClient($jsonString);
 
         $shopApi = new ShopApi('id', 'token');
+
         $shopApi->getApiClient()->setClient($client);
 
         return $shopApi;

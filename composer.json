@@ -47,7 +47,7 @@
             "Collins\\": "src/"
         },
         "psr-4": {
-            "Collins\\ShopApi\\Test\\Functional\\": "tests/functional/"
+            "Collins\\ShopApi\\Test\\": "tests/"
         }
     }
 }

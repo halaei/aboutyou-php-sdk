@@ -98,7 +98,8 @@ class Image extends AbstractModel
 
     public function getBaseUrl()
     {
-        return $this->getShopApi()->getBaseImageUrl();
+        $api = $this->getShopApi();
+        return $api ? $api->getBaseImageUrl() : '';
     }
 
     /**
