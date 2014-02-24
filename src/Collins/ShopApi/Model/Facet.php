@@ -6,7 +6,7 @@ use Collins\ShopApi\ModelFactoryInterface;
 /**
  *
  */
-class Facet
+class Facet implements FacetUniqueKeyInterface, FacetGetGroupInterface
 {
     /**
      * @var object
@@ -78,7 +78,7 @@ class Facet
      */
     public function getUniqueKey()
     {
-        return $this->getGroupId() . '_' . $this->getId();
+        return $this->getGroupId() . ':' . $this->getId();
     }
 
     /**
@@ -88,7 +88,7 @@ class Facet
      */
     public static function uniqueKey($groupId, $facetId)
     {
-        return $groupId . '_' . $facetId;
+        return $groupId . ':' . $facetId;
     }
 
     /**

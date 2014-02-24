@@ -27,7 +27,7 @@ class FactoryTest extends ShopApiTest
         $facet = $factory->createFacet($json);
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\Facet', $facet);
 
-        $json = $this->getJsonObjectFromFile('product-full.json');
+        $json = $this->getJsonObjectFromFile('product/product-full.json');
         $product = $factory->createProduct($json);
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\Product', $product);
     }

@@ -7,7 +7,7 @@
 namespace Collins\ShopApi\Model;
 
 
-class FacetGroup
+class FacetGroup implements FacetUniqueKeyInterface, FacetGetGroupInterface
 {
     /** @var Facet[] */
     protected $facets;
@@ -41,6 +41,14 @@ class FacetGroup
      * @return integer
      */
     public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getGroupId()
     {
         return $this->id;
     }

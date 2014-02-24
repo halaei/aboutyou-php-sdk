@@ -9,7 +9,7 @@ namespace Collins\ShopApi\Test\Functional;
 use Collins\ShopApi;
 use Collins\ShopApi\Model\Product;
 
-class ProductAttributesTest extends ShopApiTest
+class ProductFacetsTest extends ShopApiTest
 {
     /** @var Product */
     private $product;
@@ -97,7 +97,7 @@ class ProductAttributesTest extends ShopApiTest
 
     public function testGetFacetGroups()
     {
-        $json = json_decode(file_get_contents(__DIR__ . '/testData/product-full.json'));
+        $json = $this->getJsonObjectFromFile('product/product-full.json');
         $product = new ShopApi\Model\Product($json);
 
         $facetGroups = $product->getFacetGroups(206);
@@ -106,5 +106,36 @@ class ProductAttributesTest extends ShopApiTest
             $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroup', $group);
             $this->assertEquals(206, $group->getId());
         }
+    }
+
+    public function testGetVariantByFacets()
+    {
+        $json = $this->getJsonObjectFromFile('product/product-full.json');
+        $product = new ShopApi\Model\Product($json);
+
+        $facetGroupSet = new ShopApi\Model\FacetGroupSet([206 => [2402]]);
+        $variant = $product->getVariantByFacets($facetGroupSet);
+        $this->assertNull($variant);
+
+        $variants = $product->getVariants();
+        foreach ($variants as $expected) {
+            $variant = $product->getVariantByFacets($expected->getFacetGroupSet());
+            $this->assertEquals($expected, $variant);
+        }
+    }
+
+    public function testGetVariantsByFacetId()
+    {
+        $json = $this->getJsonObjectFromFile('product/product-full.json');
+        $product = new ShopApi\Model\Product($json);
+
+        $facet = new ShopApi\Model\Facet(2402, '', '', 206, '');
+        $variants = $product->getVariantsByFacetId($facet->getId(), $facet->getGroupId());
+        $this->assertCount(1, $variants);
+
+        $brand = $product->getBrand();
+        $variants = $product->getVariantsByFacetId($brand->getId(), $brand->getGroupId());
+        $this->assertCount(5, $variants);
+
     }
 }

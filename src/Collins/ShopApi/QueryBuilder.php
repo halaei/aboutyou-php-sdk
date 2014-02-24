@@ -201,6 +201,42 @@ class QueryBuilder
         return $this;
     }
 
+   /**
+     * @param string|int $id
+     *
+     * @return $this
+     */
+    public function fetchOrder($orderId)
+    {
+        $this->query[] = [
+            'get_order' => [
+                'order_id' => $orderId
+            ]
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @param string $sessionId
+     * @param string $successUrl
+     * @param string $cancelUrl
+     * @param string $errorUrl
+     *
+     * @return $this
+     */
+    public function initiateOrder($sessionId, $successUrl, $cancelUrl, $errorUrl)
+    {
+        $args = [];
+        $args['session_id'] = $sessionId;
+        $args['success_url'] = $successUrl;
+        if ($cancelUrl) $args['cancel_url'] = $cancelUrl;
+        if ($errorUrl) $args['error_url'] = $errorUrl;
+        $this->query[] = [ 'initiate_order' => $args ];
+
+        return $this;
+    }
+
     /**
      * @param string $userSessionId
      * @param array|CriteriaInterface $filter
@@ -243,6 +279,24 @@ class QueryBuilder
     }
 
     /**
+     * @param array $params
+     *
+     * @return $this
+     *
+     * @throws Exception\InvalidParameterException
+     */
+    public function fetchFacet(array $params)
+    {
+        if (empty($params)) {
+            throw new InvalidParameterException('no params given');
+        }
+
+        $this->query[] = ['facet' => $params];
+
+        return $this;
+    }
+
+    /**
      * @param string $searchword The search string to search for.
      *
      * @return $this
@@ -254,6 +308,16 @@ class QueryBuilder
                 'searchword' => $searchword
             )
         ];
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function fetchChildApps()
+    {
+        $this->query[] = ['child_apps' => NULL ];
 
         return $this;
     }

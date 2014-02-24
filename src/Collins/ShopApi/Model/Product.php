@@ -139,9 +139,12 @@ class Product extends AbstractModel
     {
         $ids = [];
         if (!empty($jobj->attributes_merged)) {
-            foreach ($jobj->attributes_merged as $group => $aIds) {
+            foreach ($jobj->attributes_merged as $group => $facetIds) {
                 $gid = substr($group, 11); // rm prefix "attributs_"
-                $ids[$gid] = $aIds;
+
+                // TODO: Remove Workaround for Ticket ???
+                settype($facetIds, 'array');
+                $ids[$gid] = $facetIds;
             }
         }
 
@@ -426,15 +429,15 @@ class Product extends AbstractModel
     }
 
     /**
-     * This returns the first variant, which matches the given facet group set
+     * This returns the first variant, which matches exactly the given facet group set
      *
-     * @param FacetGroupSet $facets
+     * @param FacetUniqueKeyInterface $facet
      *
      * @return Variant|null
      */
-    public function getVariantByFacets(FacetGroupSet $facets)
+    public function getVariantByFacets(FacetGroupSet $facetGroupSet)
     {
-        $key = $facets->getUniqueKey();
+        $key = $facetGroupSet->getUniqueKey();
         foreach ($this->variants as $variant) {
             if ($variant->getFacetGroupSet()->getUniqueKey() === $key) {
                 return $variant;
@@ -442,5 +445,26 @@ class Product extends AbstractModel
         }
 
         return null;
+    }
+
+    /**
+     * This returns the all variants, which matches some of the given facet
+     *
+     * @param $facetId
+     * @param $groupId
+     *
+     * @return Variant[]
+     */
+    public function getVariantsByFacetId($facetId, $groupId)
+    {
+        $variants = [];
+        $facet = new Facet($facetId, '', '', $groupId, '');
+        foreach ($this->variants as $variant) {
+            if ($variant->getFacetGroupSet()->contains($facet)) {
+                $variants[] = $variant;
+            }
+        }
+
+        return $variants;
     }
 }
