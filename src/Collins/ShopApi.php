@@ -447,6 +447,25 @@ class ShopApi
     }
 
     /**
+     * Fetch single facets by id and group id
+     *
+     * @param array $params Array of (id, group_id) pairs
+     *
+     * @return \Collins\ShopApi\Model\Facet[] With facet id as key.
+     *
+     * @throws ShopApi\Exception\MalformedJsonException
+     * @throws ShopApi\Exception\UnexpectedResultException
+     */
+    public function fetchFacet(array $params)
+    {
+        $query = $this->getQuery()
+            ->fetchFacet($params)
+        ;
+
+        return $query->executeSingle();
+    }
+
+    /**
      * Returns the result of a suggest API request.
      * Suggestions are words that are often searched together
      * with the searchword you pass (e.g. "stretch" for "jeans").
