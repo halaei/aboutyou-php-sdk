@@ -27,8 +27,19 @@ class ProductSearchTest extends ShopApiTest
                 ProductSearchCriteria::SORT_TYPE_MOST_VIEWED
             )
         ;
-        $products = $shopApi->fetchProductSearch($criteria);
-        $this->checkProductSearchResult($products);
+        $productSearchResult = $shopApi->fetchProductSearch($criteria);
+        $this->checkProductSearchResult($productSearchResult);
+
+        $rawFacets = $productSearchResult->getRawFacets();
+        $this->assertInstanceOf('\stdClass', $rawFacets);
+        $this->assertObjectHasAttribute("0", $rawFacets);
+        $brandFacets = $rawFacets->{"0"};
+        $this->assertInstanceOf('\stdClass', $brandFacets);
+        $this->assertObjectHasAttribute('_type', $brandFacets);
+        $this->assertObjectHasAttribute('total', $brandFacets);
+        $this->assertObjectHasAttribute('terms', $brandFacets);
+        $this->assertObjectHasAttribute('other', $brandFacets);
+        $this->assertObjectHasAttribute('missing', $brandFacets);
     }
 
     /**
@@ -36,22 +47,10 @@ class ProductSearchTest extends ShopApiTest
      */
     public function testProductSearchFilterObject()
     {
-        $dummyResult = <<<EOS
-[
-    {
-        "product_search": {
-            "product_count": 1234,
-            "pageHash": "d136109b-abd8-4d1c-99ac-4a621f3adb0e",
-            "facets": {},
-            "products": []
-        }
-    }
-]
-EOS;
         // This is the imported part of this test!!
         $expectedRequestBody = '["categories": [123]]';
 
-        $shopApi = $this->getShopApiWithResult($dummyResult, $expectedRequestBody);
+        $shopApi = $this->getShopApiWithResult($this->getDummyResult(), $expectedRequestBody);
 
         // search products by filter
         $criteria = $shopApi->getProductSearchCriteria('1234');
@@ -92,5 +91,23 @@ EOS;
         foreach ($products as $product) {
             $this->checkProduct($product);
         }
+    }
+
+    protected function getDummyResult()
+    {
+        $dummyResult = <<<EOS
+[
+    {
+        "product_search": {
+            "product_count": 1234,
+            "pageHash": "d136109b-abd8-4d1c-99ac-4a621f3adb0e",
+            "facets": {},
+            "products": []
+        }
+    }
+]
+EOS;
+
+        return $dummyResult;
     }
 }

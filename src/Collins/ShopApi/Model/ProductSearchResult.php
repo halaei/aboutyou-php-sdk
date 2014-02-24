@@ -15,6 +15,9 @@ class ProductSearchResult extends ProductsResult
     /** @var array */
     protected $facets;
 
+    /** @var array */
+    protected $rawFacets;
+
     public function __construct($jsonObject)
     {
         $this->products = [];
@@ -31,6 +34,7 @@ class ProductSearchResult extends ProductsResult
         // workaround for SHOPAPI-278
         $this->pageHash = isset($jsonObject->pageHash) ? $jsonObject->pageHash : null;
         $this->productCount = $jsonObject->product_count;
+        $this->rawFacets = $jsonObject->facets;
 
         foreach ($jsonObject->products as $key => $jsonProduct) {
             $this->products[$key] = $this->createProduct($jsonProduct);
@@ -43,6 +47,14 @@ class ProductSearchResult extends ProductsResult
     public function getProductCount()
     {
         return $this->productCount;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRawFacets()
+    {
+        return $this->rawFacets;
     }
 
     public function getFacets()
