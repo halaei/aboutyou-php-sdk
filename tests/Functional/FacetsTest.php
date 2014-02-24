@@ -15,6 +15,7 @@ class FacetsTest extends ShopApiTest
         $facets = $shopApi->fetchFacets([206]);
         $this->assertInternalType('array', $facets);
 
+        $count = 0;
         foreach ($facets as $facet) {
             $this->assertInstanceOf('Collins\\ShopApi\\Model\\Facet', $facet);
             $this->assertInternalType('int', $facet->getId());
@@ -24,6 +25,7 @@ class FacetsTest extends ShopApiTest
             $this->assertInternalType('string', $facet->getGroupName());
             $this->assertEquals('size_code', $facet->getGroupName());
             $this->assertEquals(206, $facet->getGroupId());
+            if ($count++ > 2) break; // tree is enough
         }
 
         $facet = $facets[ShopApi\Model\Facet::uniqueKey(206, 2353)];

@@ -139,9 +139,12 @@ class Product extends AbstractModel
     {
         $ids = [];
         if (!empty($jobj->attributes_merged)) {
-            foreach ($jobj->attributes_merged as $group => $aIds) {
+            foreach ($jobj->attributes_merged as $group => $facetIds) {
                 $gid = substr($group, 11); // rm prefix "attributs_"
-                $ids[$gid] = $aIds;
+
+                // TODO: Remove Workaround for Ticket ???
+                settype($facetIds, 'array');
+                $ids[$gid] = $facetIds;
             }
         }
 
