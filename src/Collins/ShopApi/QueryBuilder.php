@@ -243,6 +243,24 @@ class QueryBuilder
     }
 
     /**
+     * @param array $params
+     *
+     * @return $this
+     *
+     * @throws Exception\InvalidParameterException
+     */
+    public function fetchFacet(array $params)
+    {
+        if (empty($params)) {
+            throw new InvalidParameterException('no params given');
+        }
+
+        $this->query[] = ['facet' => $params];
+
+        return $this;
+    }
+
+    /**
      * @param string $searchword The search string to search for.
      *
      * @return $this
