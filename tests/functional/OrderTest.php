@@ -22,7 +22,35 @@ class OrderTest extends ShopApiTest
 
     public function testInitiateOrderSuccess()
     {
-        $this->markTestIncomplete('implement me');
+        $shopApi = $this->getShopApiWithResultFile('initiate-order.json');
+        $initiateOrder = $shopApi->initiateOrder(
+            "abcabcabc",
+            "http://somedomain.com/url"
+        );
+        $this->assertEquals(
+            'http://ant-web1.wavecloud.de/?user_token=34f9b86d-c899-4703-b85a-3c4971601b59&app_token=10268cc8-2025-4285-8e17-bc3160865824',
+            $initiateOrder->getUrl()
+        );
+        $this->assertEquals(
+            '34f9b86d-c899-4703-b85a-3c4971601b59',
+            $initiateOrder->getUserToken()
+        );
+        $this->assertEquals(
+            '10268cc8-2025-4285-8e17-bc3160865824',
+            $initiateOrder->getAppToken()
+        );
+    }
+
+    public function testInitiateOrderWithCancelAndErrorUrls()
+    {
+        $shopApi = $this->getShopApiWithResultFile('initiate-order.json');
+        $initiateOrder = $shopApi->initiateOrder(
+            "abcabcabc",
+            "http://somedomain.com/url",
+            "http://somedomain.com/cancel",
+            "http://somedomain.com/error"
+        );
+        $this->assertInternalType('string', $initiateOrder->getUrl());
     }
 
     public function testInitiateOrderVerifyUrl()

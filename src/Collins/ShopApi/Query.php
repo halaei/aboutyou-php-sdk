@@ -68,7 +68,8 @@ class Query extends QueryBuilder
         'products'       => 'createProductsResult',
         'product_search' => 'createProductSearchResult',
         'suggest'        => 'createSuggest',
-        'get_order'      => 'createOrder'
+        'get_order'      => 'createOrder',
+        'initiate_order'      => 'initiateOrder'
     ];
 
     /**

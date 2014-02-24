@@ -412,14 +412,35 @@ class ShopApi
     }
 
     /**
-     * @param string|integer $orderId
+     * @param string|integer $orderId the order id
      *
-     * @return \Collins\ShopApi\Model\Order
+     * @return \Collins\ShopApi\Model\Order the order
      */
     public function fetchOrder($orderId)
     {
         $query = $this->getQuery()
             ->fetchOrder($orderId)
+        ;
+
+        return $query->executeSingle();
+    }
+
+    /**
+     * @param string $sessionId the session id
+     * @param string $successUrl callback URL if the order was OK
+     * @param string $cancelUrl callback URL if the order was canceled [optional]
+     * @param string $errorUrl callback URL if the order had any exceptions [optional]
+     *
+     * @return \Collins\ShopApi\Model\InitiateOrder
+     */
+    public function initiateOrder(
+        $sessionId,
+        $successUrl,
+        $cancelUrl = NULL,
+        $errorUrl = NULL
+    ) {
+        $query = $this->getQuery()
+            ->InitiateOrder($sessionId, $successUrl, $cancelUrl, $errorUrl)
         ;
 
         return $query->executeSingle();
