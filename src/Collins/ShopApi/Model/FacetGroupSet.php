@@ -8,7 +8,7 @@ namespace Collins\ShopApi\Model;
 
 use Collins\ShopApi;
 
-class FacetGroupSet extends AbstractModel
+class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
 {
     /** @var array */
     protected $ids;
@@ -24,6 +24,12 @@ class FacetGroupSet extends AbstractModel
      */
     public function __construct(array $ids)
     {
+        foreach ($ids as $facetIds) {
+            if (!is_array($facetIds)) {
+                throw new ShopApi\Exception\InvalidParameterException('$ids must be an associative array of array: [$groupId => [$facetId,...],...]');
+            }
+        }
+
         $this->ids = $ids;
     }
 
@@ -74,7 +80,7 @@ class FacetGroupSet extends AbstractModel
             settype($facetIds, 'array');
 
             foreach ($facetIds as $facetId) {
-                $key = $groupId . '_' . $facetId;
+                $key = Facet::uniqueKey($groupId, $facetId);
                 if (!isset($allFacets[$key])) {
                     // TODO: error handling
                     continue;
@@ -156,11 +162,36 @@ class FacetGroupSet extends AbstractModel
     }
 
     /**
-     * @param FacetGroupSet $facetGroupSet
+     * @param FacetUniqueKeyInterface $facetCompable
      *
      * @return boolean
      */
-    public function contains(FacetGroupSet $facetGroupSet)
+    public function contains(FacetUniqueKeyInterface $facetCompable)
+    {
+        if ($facetCompable instanceof FacetGroupSet) {
+            return $this->containsFacetGroupSet($facetCompable);
+        }
+
+        if ($facetCompable instanceof FacetGetGroupInterfaceGroup) {
+            return $this->containsFacetGetGroupInterface($facetCompable);
+        }
+
+        return false;
+    }
+
+    private function containsFacetGetGroupInterface(FacetGetGroupInterface $facet)
+    {
+        $myLazyGroups = $this->getLazyGroups();
+        $id = $facet->getGroupId();
+
+        if (isset($myLazyGroups[$id])) {
+            return $myLazyGroups[$id]->getUniqueKey() === $facet->getUniqueKey();
+        }
+
+        return false;
+    }
+
+    private function containsFacetGroupSet(FacetGroupSet $facetGroupSet)
     {
         if ($this->getUniqueKey() === $facetGroupSet->getUniqueKey()) {
             return true;
