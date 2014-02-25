@@ -431,7 +431,7 @@ class Product extends AbstractModel
     /**
      * This returns the first variant, which matches exactly the given facet group set
      *
-     * @param FacetUniqueKeyInterface $facet
+     * @param FacetGroupSet $facetGroupSet
      *
      * @return Variant|null
      */
