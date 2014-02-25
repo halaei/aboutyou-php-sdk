@@ -408,6 +408,8 @@ class Product extends AbstractModel
      * @param integer $variantId The variant id.
      *
      * @return void
+     *
+     * @deprecated
      */
     public function selectVariant($variantId)
     {
@@ -418,6 +420,8 @@ class Product extends AbstractModel
      * Get the selected or default variant.
      *
      * @return Variant
+     *
+     * @deprecated
      */
     public function getSelectedVariant()
     {
