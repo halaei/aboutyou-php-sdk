@@ -111,7 +111,6 @@ class Query extends QueryBuilder
             }
 
             if (!isset($this->mapping[$resultKey])) {
-                echo '<pre>', __LINE__, ') ', __METHOD__, ': <b>$resultKey</b>=', var_export($resultKey), '</pre>', PHP_EOL;
                 throw new UnexpectedResultException('internal error, '. $resultKey . ' is unknown result');
             }
 
