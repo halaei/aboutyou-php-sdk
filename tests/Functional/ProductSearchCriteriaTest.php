@@ -32,11 +32,11 @@ class ProductSearchCriteriaTest extends ShopApiTest
         $this->assertEquals('{"session_id":"my session","result":{"limit":10,"offset":0}}', json_encode($criteria->toArray()));
 
         $criteria = $shopApi->getProductSearchCriteria('my session')
-            ->selectFields([ProductFields::DEFAULT_IMAGE,  ProductFields::DEFAULT_VARIANT])
+            ->selectProductFields([ProductFields::DEFAULT_IMAGE,  ProductFields::DEFAULT_VARIANT])
             ->sortBy(ProductSearchCriteria::SORT_TYPE_PRICE, ProductSearchCriteria::SORT_DESC)
             ->setLimit(40)
             ->selectCategoryFacets(true)
-            ->setPriceRange(0,1000);
+            ->filterByPriceRange(0,1000);
 
         $expected = '{"session_id":"my session","result":{"fields":["default_image","default_variant"],"sort":{"by":"price","direction":"desc"},"limit":40,"offset":0,"categories":true},"filter":{"prices":{"to":1000}}}';
         $this->assertEquals($expected, json_encode($criteria->toArray()));

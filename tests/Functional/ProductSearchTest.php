@@ -54,7 +54,7 @@ class ProductSearchTest extends ShopApiTest
 
         // search products by filter
         $criteria = $shopApi->getProductSearchCriteria('1234');
-        $criteria->addCategories([
+        $criteria->filterByCategoryIds([
             123
         ]);
         $products = $shopApi->fetchProductSearch($criteria);

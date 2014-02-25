@@ -65,7 +65,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return ProductSearchCriteria
      */
-    public function set($key, $value)
+    public function filterBy($key, $value)
     {
         $this->filter[$key] = $value;
 
@@ -80,13 +80,13 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return ProductSearchCriteria
      */
-    public function setIsSale($sale)
+    public function filterBySale($sale)
     {
         if (!is_bool($sale)) {
             $sale = null;
         }
 
-        return $this->set(self::FILTER_SALE, $sale);
+        return $this->filterBy(self::FILTER_SALE, $sale);
     }
 
     /**
@@ -94,9 +94,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return ProductSearchCriteria
      */
-    public function setSearchword($searchword)
+    public function filterBySearchword($searchword)
     {
-        return $this->set(self::FILTER_SEARCHWORD, $searchword);
+        return $this->filterBy(self::FILTER_SEARCHWORD, $searchword);
     }
 
     /**
@@ -104,9 +104,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return ProductSearchCriteria
      */
-    public function addCategories(array $categoryIds)
+    public function filterByCategoryIds(array $categoryIds)
     {
-        return $this->set(self::FILTER_CATEGORY_IDS, $categoryIds);
+        return $this->filterBy(self::FILTER_CATEGORY_IDS, $categoryIds);
     }
 
     /**
@@ -115,9 +115,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return ProductSearchFilter
      */
-    public function setAttributes(array $attributes)
+    public function filterByFacetIds(array $attributes)
     {
-        return $this->set(self::FILTER_ATTRIBUTES, (object)$attributes);
+        return $this->filterBy(self::FILTER_ATTRIBUTES, (object)$attributes);
     }
 
     /**
@@ -125,9 +125,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return ProductSearchCriteria
      */
-    public function setFacetGroup(FacetGroup $facetGroup)
+    public function filterByFacetGroup(FacetGroup $facetGroup)
     {
-        return $this->set(self::FILTER_ATTRIBUTES, (object)$facetGroup->getIds());
+        return $this->filterBy(self::FILTER_ATTRIBUTES, (object)$facetGroup->getIds());
     }
 
     /**
@@ -135,9 +135,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return ProductSearchCriteria
      */
-    public function setFacetGroupSet(FacetGroupSet $facetGroupSet)
+    public function filterByFacetGroupSet(FacetGroupSet $facetGroupSet)
     {
-        return $this->set(self::FILTER_ATTRIBUTES, (object)$facetGroupSet->getIds());
+        return $this->filterBy(self::FILTER_ATTRIBUTES, (object)$facetGroupSet->getIds());
     }
 
     /**
@@ -146,7 +146,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return ProductSearchCriteria
      */
-    public function setPriceRange($from = 0, $to = 0)
+    public function filterByPriceRange($from = 0, $to = 0)
     {
         settype($from, 'int');
         settype($to, 'int');
@@ -159,7 +159,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
             $price['to'] = $to;
         }
 
-        return $this->set(self::FILTER_PRICE, $price);
+        return $this->filterBy(self::FILTER_PRICE, $price);
     }
 
     /**
@@ -196,7 +196,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return $this
      */
-    public function setSale($enable = false)
+    public function selectSaleFacets($enable = true)
     {
         if ($enable) {
             $this->result['sale'] = true;
@@ -212,7 +212,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return $this
      */
-    public function selectPrice($enable = false)
+    public function selectPriceFacets($enable = true)
     {
         if ($enable) {
             $this->result['price'] = true;
@@ -229,7 +229,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return $this
      */
-    public function setFacets($groupId, $limit)
+    public function selectFacetsByGroupId($groupId, $limit)
     {
         if ($groupId instanceof FacetGroup) {
             $groupId = $groupId->getId();
@@ -256,7 +256,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return $this
      */
-    public function selectCategoryFacets($enable = false)
+    public function selectCategoryFacets($enable = true)
     {
         if ($enable) {
             $this->result['categories'] = true;
@@ -272,7 +272,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return $this
      */
-    public function setBoostProducts(array $ids)
+    public function boostProducts(array $ids)
     {
         $ids = array_map(function($val) {
             if($val instanceof Product) {
@@ -297,7 +297,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return $this
      */
-    public function selectFields(array $fields)
+    public function selectProductFields(array $fields)
     {
         $this->result['fields'] = array_unique($fields);
 

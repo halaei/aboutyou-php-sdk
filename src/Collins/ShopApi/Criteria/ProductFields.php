@@ -24,5 +24,4 @@ class ProductFields
     const DEFAULT_IMAGE     = "default_image";
     const ATTRIBUTES_MERGED = "attributes_merged";
     const CATEGORIES        = "categories";
-    const STYLES            = "styles";
-} 
+}
