@@ -39,14 +39,6 @@ class ShopApi
 
     protected $appId;
 
-    // TODO: Refactore me!
-    private static $currentApi;
-
-    public static function _getCurrentApi()
-    {
-        return self::$currentApi;
-    }
-
     /**
      * @param string $appId
      * @param string $appPassword
@@ -64,8 +56,6 @@ class ShopApi
 
         $this->logger = $logger;
         $this->appId  = $appId;
-
-        self::$currentApi = $this;
     }
 
     public function getApiClient()
