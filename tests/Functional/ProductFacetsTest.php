@@ -22,7 +22,7 @@ class ProductFacetsTest extends ShopApiTest
         $json = $this->getJsonObjectFromFile('product/product-with-attributes.json');
         $this->product = new ShopApi\Model\Product($json);
 
-        $this->shopApi = $this->getShopApiWithResultFile('facets-all.json');
+        $this->shopApi = $this->getShopApiWithResultFile('facets-for-product.json');
     }
 
     public function testGetBrandWorkaround()
