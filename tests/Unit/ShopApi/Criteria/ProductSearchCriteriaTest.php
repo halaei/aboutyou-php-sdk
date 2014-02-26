@@ -53,19 +53,19 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
         $this->assertEquals('{"session_id":"my","result":{"sort":{"by":"price","direction":"desc"}}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
-            ->selectFacetFacets(206, 3);
+            ->selectFacetsByGroupId(206, 3);
         $this->assertEquals('{"session_id":"my","result":{"facets":{"206":{"limit":3}}}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
-            ->selectFacetFacets(ProductSearchCriteria::FACETS_ALL, 2);
+            ->selectFacetsByGroupId(ProductSearchCriteria::FACETS_ALL, 2);
         $this->assertEquals('{"session_id":"my","result":{"facets":{"_all":{"limit":2}}}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
-            ->selectFacetFacets(new FacetGroup('0', 'brand'), 4);
+            ->selectFacetsByGroupId(new FacetGroup('0', 'brand'), 4);
         $this->assertEquals('{"session_id":"my","result":{"facets":{"0":{"limit":4}}}}', json_encode($criteria->toArray()));
         $criteria = $this->getCriteria()
-            ->selectFacetFacets(new FacetGroup('0', 'brand'), 4)
-            ->selectFacetFacets(206, 5);
+            ->selectFacetsByGroupId(new FacetGroup('0', 'brand'), 4)
+            ->selectFacetsByGroupId(206, 5);
         $this->assertEquals('{"session_id":"my","result":{"facets":{"0":{"limit":4},"206":{"limit":5}}}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
