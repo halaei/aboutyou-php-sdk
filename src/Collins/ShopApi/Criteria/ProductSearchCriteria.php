@@ -7,6 +7,7 @@
 namespace Collins\ShopApi\Criteria;
 
 use Collins\ShopApi\Exception\InvalidParameterException;
+use Collins\ShopApi\Model\FacetGetGroupInterface;
 use Collins\ShopApi\Model\FacetGroup;
 use Collins\ShopApi\Model\FacetGroupSet;
 use Collins\ShopApi\Model\Product;
@@ -196,7 +197,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return $this
      */
-    public function selectSaleFacets($enable = true)
+    public function selectSales($enable = true)
     {
         if ($enable) {
             $this->result['sale'] = true;
@@ -212,7 +213,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return $this
      */
-    public function selectPriceFacets($enable = true)
+    public function selectPriceRanges($enable = true)
     {
         if ($enable) {
             $this->result['price'] = true;
@@ -224,16 +225,17 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     }
 
     /**
-     * @param integer|string|FacetGroup $groupId
+     * @param integer|string $groupId
      * @param integer $limit
      *
      * @return $this
+     *
+     * @throws \Collins\ShopApi\Exception\InvalidParameterException
      */
     public function selectFacetsByGroupId($groupId, $limit)
     {
-        if ($groupId instanceof FacetGroup) {
-            $groupId = $groupId->getId();
-        } else if ($groupId !== self::FACETS_ALL && !is_long($groupId) && !ctype_digit($groupId)) {
+        $this->checkFacetLimit($limit);
+        if (!is_long($groupId) && !ctype_digit($groupId)) {
             throw new InvalidParameterException();
         }
 
@@ -242,21 +244,52 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         }
 
         if (!isset($this->result['facets']->{$groupId})) {
-            $this->result['facets']->{$groupId} = new \StdClass;
+            $this->result['facets']->{$groupId} = ['limit' => $limit];
         }
-
-        $this->result['facets']->{$groupId}->limit = $limit;
 
         return $this;
     }
 
+    /**
+     * @param FacetGetGroupInterface $group
+     * @param integer $limit
+     *
+     * @return $this
+     */
+    public function selectFacetsByFacetGroup(FacetGetGroupInterface $group, $limit)
+    {
+        return $this->selectFacetsByGroupId($group->getGroupId(), $limit);
+    }
+
+    /**
+     * @param integer $limit
+     *
+     * @return $this
+     */
+    public function selectAllFacets($limit)
+    {
+        $this->checkFacetLimit($limit);
+        $this->result['facets'] = [self::FACETS_ALL => ['limit' => $limit]];
+
+        return $this;
+    }
+
+    protected function checkFacetLimit($limit)
+    {
+        if (!is_long($limit)) {
+            throw new InvalidParameterException('limit must be an integer');
+        }
+        if ($limit < 0) {
+            throw new InvalidParameterException('limit must be positive');
+        }
+    }
 
     /**
      * @param bool $enable
      *
      * @return $this
      */
-    public function selectCategoryFacets($enable = true)
+    public function selectCategories($enable = true)
     {
         if ($enable) {
             $this->result['categories'] = true;

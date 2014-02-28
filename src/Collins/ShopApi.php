@@ -505,6 +505,8 @@ class ShopApi
         return new ProductSearchCriteria($sessionId);
     }
 
+
+
     /**
      * Returns the URL to the Collins JavaScript file for helper functions
      * to add product variants into the basket of Mary & Paul or auto-resizing

@@ -7,7 +7,7 @@
 namespace Collins\ShopApi\Model\ProductSearchResult;
 
 
-class SaleCounts extends TermsFacet
+class SaleCounts extends TermsCounts
 {
     /** @var integer */
     protected $productCountInSale;

@@ -167,13 +167,13 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function createAttributesFactes(\stdClass $jsonObject)
+    public function createFacetsCounts(\stdClass $jsonObject)
     {
         $termFacets = [];
         foreach ($jsonObject as $key => $jsonResultFacet) {
-            $factes = $this->getTermFacets($jsonResultFacet->terms);
+            $facets = $this->getTermFacets($jsonResultFacet->terms);
 
-            $termFacets[$key] = new ShopApi\Model\ProductSearchResult\FacetCounts($key, $jsonResultFacet, $factes);
+            $termFacets[$key] = new ShopApi\Model\ProductSearchResult\FacetCounts($key, $jsonResultFacet, $facets);
         }
 
         return $termFacets;
@@ -188,9 +188,9 @@ class DefaultModelFactory implements ModelFactoryInterface
         foreach ($jsonTerms as $jsonTerm) {
             $ids[] = ['id' => (int)$jsonTerm->term, 'group_id' => 0];
         }
-        $factes = $api->fetchFacet($ids);
+        $facets = $api->fetchFacet($ids);
 
-        return $factes;
+        return $facets;
     }
 
     /**

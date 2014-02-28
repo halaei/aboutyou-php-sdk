@@ -6,7 +6,6 @@
 
 namespace Collins\ShopApi\Model\ProductSearchResult;
 
-
 class TermCount
 {
     /** @var integer */

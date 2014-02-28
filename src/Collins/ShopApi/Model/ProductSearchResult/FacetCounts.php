@@ -6,7 +6,7 @@
 
 namespace Collins\ShopApi\Model\ProductSearchResult;
 
-class FacetCounts extends TermsFacet
+class FacetCounts extends TermsCounts
 {
     protected $groupId;
 

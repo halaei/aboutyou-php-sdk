@@ -45,7 +45,7 @@ interface ModelFactoryInterface extends ResultFactoryInterface
      *
      * @return \Collins\ShopApi\Model\ProductSearchResult\FacetCounts[]
      */
-    public function createAttributesFactes(\stdClass $jsonObject);
+    public function createFacetsCounts(\stdClass $jsonObject);
 
     /**
      * @param \stdClass $jsonObject

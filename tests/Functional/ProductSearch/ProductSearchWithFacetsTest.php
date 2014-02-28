@@ -6,126 +6,75 @@ use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
 
-class ProductSearchTest extends ShopApiTest
+class ProductSearchWithFacetsTest extends ShopApiTest
 {
-    public function testProductSearch()
+    public function testProductSearchWithSaleResult()
     {
-        $shopApi = $this->getShopApiWithResultFile('product_search.json');
+        $shopApi = $this->getShopApiWithResultFile('result-product-search-with-facets.json');
+
+        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('1234'));
+
+        $saleFacet = $productSearchResult->getSaleCounts();
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\ProductSearchResult\\SaleFacet', $saleFacet);
+        $this->assertEquals(25303, $saleFacet->getProductCountTotal());
+        $this->assertEquals(5261, $saleFacet->getProductCountInSale());
+        $this->assertEquals(20042, $saleFacet->getProductCountNotInSale());
+    }
+
+    public function testProductSearchWithPriceRangeResult()
+    {
+        $shopApi = $this->getShopApiWithResultFile('result-product-search-with-facets.json');
 
         // get all available products
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('1234'));
-        $this->checkProductSearchResult($productSearchResult);
+        $priceRanges = $productSearchResult->getPriceRanges();
+        $this->assertInternalType('array', $priceRanges);
+        $this->assertCount(6, $priceRanges);
+
+        $this->assertEquals(25138, $priceRanges[0]->getProductCount());
+        $this->assertEquals(0, $priceRanges[0]->getFrom());
+        $this->assertEquals(20000, $priceRanges[0]->getTo());
+        $this->assertEquals(399, $priceRanges[0]->getMin());
+        $this->assertEquals(19999, $priceRanges[0]->getMax());
+        $this->assertEquals(5328, $priceRanges[0]->getMean());
+        $this->assertEquals(133930606, $priceRanges[0]->getSum());
+
+        $this->assertEquals(163, $priceRanges[1]->getProductCount());
+        $this->assertEquals(20000, $priceRanges[1]->getFrom());
+        $this->assertEquals(50000, $priceRanges[1]->getTo());
+        $this->assertEquals(20000, $priceRanges[1]->getMin());
+        $this->assertEquals(39995, $priceRanges[1]->getMax());
+        $this->assertEquals(25199, $priceRanges[1]->getMean());
+        $this->assertEquals(4107552, $priceRanges[1]->getSum());
+
+        $this->assertEquals(0, $priceRanges[5]->getProductCount());
+        $this->assertEquals(500000, $priceRanges[5]->getFrom());
+        $this->assertEquals(null, $priceRanges[5]->getTo());
+        $this->assertEquals(null, $priceRanges[5]->getMin());
+        $this->assertEquals(null, $priceRanges[5]->getMax());
+        $this->assertEquals(0, $priceRanges[5]->getMean());
+        $this->assertEquals(0, $priceRanges[5]->getSum());
     }
 
-    public function testProductSearchSort()
+    public function testProductSearchWithFacetResult()
     {
-        $shopApi = $this->getShopApiWithResultFile('product_search.json');
-
-        // search products and sort
-        $criteria = $shopApi->getProductSearchCriteria('1234')
-            ->sortBy(
-                ProductSearchCriteria::SORT_TYPE_MOST_VIEWED
-            )
-        ;
-        $productSearchResult = $shopApi->fetchProductSearch($criteria);
-        $this->checkProductSearchResult($productSearchResult);
-
-        $rawFacets = $productSearchResult->getRawFacets();
-        $this->assertInstanceOf('\stdClass', $rawFacets);
-        $this->assertObjectHasAttribute("0", $rawFacets);
-        $brandFacets = $rawFacets->{"0"};
-        $this->assertInstanceOf('\stdClass', $brandFacets);
-        $this->assertObjectHasAttribute('_type', $brandFacets);
-        $this->assertObjectHasAttribute('total', $brandFacets);
-        $this->assertObjectHasAttribute('terms', $brandFacets);
-        $this->assertObjectHasAttribute('other', $brandFacets);
-        $this->assertObjectHasAttribute('missing', $brandFacets);
+        $this->markTestIncomplete('Is not implemented yet');
     }
 
-    /**
-     * @see tests/unit/ShopApi/ProductSearchFilterTest.php
-     */
-    public function testProductSearchFilterObject()
+    public function testProductSearchWithCategoriesResult()
     {
-        // This is the imported part of this test!!
-        $expectedRequestBody = '["categories": [123]]';
-
-        $shopApi = $this->getShopApiWithResult($this->getDummyResult(), $expectedRequestBody);
-
-        // search products by filter
-        $criteria = $shopApi->getProductSearchCriteria('1234');
-        $criteria->filterByCategoryIds([
-            123
-        ]);
-        $products = $shopApi->fetchProductSearch($criteria);
-        $this->checkProductSearchResult($products);
-    }
-
-    public function testProductSearchPagination()
-    {
-        $shopApi = $this->getShopApiWithResultFile('product_search.json');
-
-        $pagination = array(
-            'limit' => 20,
-            'offset' => 21,
-        );
-        $criteria = $shopApi->getProductSearchCriteria('1234')
-            ->setLimit($pagination['limit'], $pagination['offset'])
-        ;
-        $products = $shopApi->fetchProductSearch($criteria);
-        $this->checkProductSearchResult($products);
+        $this->markTestIncomplete('Is not implemented yet');
     }
 
     /***************************************************/
 
-    private function checkProduct(Product $product)
+    protected function getJsonStringFromFile($filepath)
     {
-        $this->assertObjectHasAttribute('id', $product);
-        $this->assertObjectHasAttribute('name', $product);
-    }
-
-    private function checkProductSearchResult(ProductSearchResult $products)
-    {
-        $this->assertEquals(1234, $products->getProductCount());
-
-        foreach ($products as $product) {
-            $this->checkProduct($product);
+        if (strpos($filepath, '/') !== 0) {
+            $filepath = __DIR__.'/testData/' . $filepath;
         }
-    }
+        $jsonString = file_get_contents($filepath);
 
-    protected function getDummyResult()
-    {
-        $dummyResult = <<<EOS
-[
-    {
-        "product_search": {
-            "product_count": 1234,
-            "pageHash": "d136109b-abd8-4d1c-99ac-4a621f3adb0e",
-            "facets": {},
-            "products": []
-        }
+        return $jsonString;
     }
-]
-EOS;
-
-        return $dummyResult;
-    }
-
-    protected $query = <<<EOS
-[
-  {
-    "product_search": {
-      "session_id": "12356",
-      "result":{
-        "limit":0,
-        "facets":{"0":{"limit":3}},
-        "categories":true,
-        "price":true,
-        "sale":true
-      }
-    }
-  }
-]
-EOS;
-
 }

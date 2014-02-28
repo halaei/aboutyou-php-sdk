@@ -37,15 +37,15 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
         $this->assertEquals('{"session_id":"my","result":{"boost":[1,2,3]}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
-            ->selectCategoryFacets();
+            ->selectCategories();
         $this->assertEquals('{"session_id":"my","result":{"categories":true}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
-            ->selectPriceFacets();
+            ->selectPriceRanges();
         $this->assertEquals('{"session_id":"my","result":{"price":true}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
-            ->selectSaleFacets();
+            ->selectSales();
         $this->assertEquals('{"session_id":"my","result":{"sale":true}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
@@ -57,14 +57,17 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
         $this->assertEquals('{"session_id":"my","result":{"facets":{"206":{"limit":3}}}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
-            ->selectFacetsByGroupId(ProductSearchCriteria::FACETS_ALL, 2);
+            ->selectAllFacets(2);
         $this->assertEquals('{"session_id":"my","result":{"facets":{"_all":{"limit":2}}}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
-            ->selectFacetsByGroupId(new FacetGroup('0', 'brand'), 4);
+            ->selectFacetsByFacetGroup(new FacetGroup(0, 'brand'), 4);
         $this->assertEquals('{"session_id":"my","result":{"facets":{"0":{"limit":4}}}}', json_encode($criteria->toArray()));
         $criteria = $this->getCriteria()
-            ->selectFacetsByGroupId(new FacetGroup('0', 'brand'), 4)
+            ->selectFacetsByFacetGroup(new Facet(1234, '', '', 1, 'brand'), 3);
+        $this->assertEquals('{"session_id":"my","result":{"facets":{"1":{"limit":3}}}}', json_encode($criteria->toArray()));
+        $criteria = $this->getCriteria()
+            ->selectFacetsByFacetGroup(new FacetGroup('0', 'brand'), 4)
             ->selectFacetsByGroupId(206, 5);
         $this->assertEquals('{"session_id":"my","result":{"facets":{"0":{"limit":4},"206":{"limit":5}}}}', json_encode($criteria->toArray()));
 

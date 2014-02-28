@@ -41,4 +41,14 @@ class ProductSearchCriteriaTest extends ShopApiTest
         $expected = '{"session_id":"my session","result":{"fields":["default_image","default_variant"],"sort":{"by":"price","direction":"desc"},"limit":40,"offset":0,"categories":true},"filter":{"prices":{"to":1000}}}';
         $this->assertEquals($expected, json_encode($criteria->toArray()));
     }
+
+    protected function getJsonStringFromFile($filepath)
+    {
+        if (strpos($filepath, '/') !== 0) {
+            $filepath = __DIR__.'/testData/' . $filepath;
+        }
+        $jsonString = file_get_contents($filepath);
+
+        return $jsonString;
+    }
 }

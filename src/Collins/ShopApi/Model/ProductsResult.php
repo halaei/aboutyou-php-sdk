@@ -7,7 +7,7 @@
 namespace Collins\ShopApi\Model;
 
 
-class ProductsResult implements \IteratorAggregate, \ArrayAccess, \Countable
+class ProductsResult extends AbstractModel implements \IteratorAggregate, \ArrayAccess, \Countable
 {
     /** @var Product[] */
     protected $products;
@@ -23,14 +23,11 @@ class ProductsResult implements \IteratorAggregate, \ArrayAccess, \Countable
         $this->fromJson($jsonObject);
     }
 
-    public function createProduct($jsonProduct)
-    {
-        return new Product($jsonProduct);
-    }
-
     public function fromJson($jsonObject)
     {
         $this->pageHash = isset($jsonObject->pageHash) ? $jsonObject->pageHash : null;
+
+        $factory = $this->getModelFactory();
 
         if (isset($jsonObject->ids)) {
             foreach ($jsonObject->ids as $key => $jsonProduct) {
@@ -38,7 +35,7 @@ class ProductsResult implements \IteratorAggregate, \ArrayAccess, \Countable
                     $this->productsNotFound[] = $key;
                     continue;
                 }
-                $this->products[$key] = $this->createProduct($jsonProduct);
+                $this->products[$key] = $factory->createProduct($jsonProduct);
             }
         }
     }

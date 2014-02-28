@@ -7,7 +7,10 @@
 namespace Collins\ShopApi\Model\ProductSearchResult;
 
 
-class FacetCount
+class FacetCount extends TermCount
 {
-
+    public function getFacet()
+    {
+        $api = $this->getShopApi();
+    }
 } 

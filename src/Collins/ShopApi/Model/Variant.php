@@ -27,9 +27,9 @@ class Variant
         $this->fromJson($jsonObject);
     }
 
-    public function fromJson($jobj)
+    public function fromJson($jsonObject)
     {
-        $this->jsonObject = $jobj;
+        $this->jsonObject = $jsonObject;
     }
 
     /**

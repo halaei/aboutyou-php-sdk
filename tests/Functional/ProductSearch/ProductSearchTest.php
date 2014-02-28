@@ -30,7 +30,7 @@ class ProductSearchTest extends ShopApiTest
         $productSearchResult = $shopApi->fetchProductSearch($criteria);
         $this->checkProductSearchResult($productSearchResult);
 
-        $rawFacets = $productSearchResult->getJson()->facets;
+        $rawFacets = $productSearchResult->getRawFacets();
         $this->assertInstanceOf('\stdClass', $rawFacets);
         $this->assertObjectHasAttribute("0", $rawFacets);
         $brandFacets = $rawFacets->{"0"};
@@ -109,5 +109,15 @@ class ProductSearchTest extends ShopApiTest
 EOS;
 
         return $dummyResult;
+    }
+
+    protected function getJsonStringFromFile($filepath)
+    {
+        if (strpos($filepath, '/') !== 0) {
+            $filepath = __DIR__.'/testData/' . $filepath;
+        }
+        $jsonString = file_get_contents($filepath);
+
+        return $jsonString;
     }
 }

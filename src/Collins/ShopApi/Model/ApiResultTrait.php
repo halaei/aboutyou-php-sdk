@@ -9,5 +9,10 @@ namespace Collins\ShopApi\Model;
 
 trait ApiResultTrait
 {
+    protected $jsonObject;
 
+    public function getJson()
+    {
+        return $this->jsonObject;
+    }
 } 
