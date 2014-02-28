@@ -110,4 +110,22 @@ EOS;
 
         return $dummyResult;
     }
+
+    protected $query = <<<EOS
+[
+  {
+    "product_search": {
+      "session_id": "12356",
+      "result":{
+        "limit":0,
+        "facets":{"0":{"limit":3}},
+        "categories":true,
+        "price":true,
+        "sale":true
+      }
+    }
+  }
+]
+EOS;
+
 }
