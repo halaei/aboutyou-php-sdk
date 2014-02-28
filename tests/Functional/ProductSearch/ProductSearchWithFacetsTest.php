@@ -15,7 +15,7 @@ class ProductSearchWithFacetsTest extends ShopApiTest
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('1234'));
 
         $saleFacet = $productSearchResult->getSaleCounts();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\ProductSearchResult\\SaleFacet', $saleFacet);
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\ProductSearchResult\\SaleCounts', $saleFacet);
         $this->assertEquals(25303, $saleFacet->getProductCountTotal());
         $this->assertEquals(5261, $saleFacet->getProductCountInSale());
         $this->assertEquals(20042, $saleFacet->getProductCountNotInSale());
