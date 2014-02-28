@@ -70,7 +70,7 @@ class Query extends QueryBuilder
         'product_search' => 'createProductSearchResult',
         'suggest'        => 'createSuggest',
         'get_order'      => 'createOrder',
-        'initiate_order'      => 'initiateOrder',
+        'initiate_order' => 'initiateOrder',
         'child_apps'     => 'createChildApps'
     ];
 

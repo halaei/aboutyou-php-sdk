@@ -54,7 +54,7 @@ class ProductSearchTest extends ShopApiTest
 
         // search products by filter
         $criteria = $shopApi->getProductSearchCriteria('1234');
-        $criteria->addCategories([
+        $criteria->filterByCategoryIds([
             123
         ]);
         $products = $shopApi->fetchProductSearch($criteria);
@@ -109,5 +109,15 @@ class ProductSearchTest extends ShopApiTest
 EOS;
 
         return $dummyResult;
+    }
+
+    protected function getJsonStringFromFile($filepath)
+    {
+        if (strpos($filepath, '/') !== 0) {
+            $filepath = __DIR__.'/testData/' . $filepath;
+        }
+        $jsonString = file_get_contents($filepath);
+
+        return $jsonString;
     }
 }

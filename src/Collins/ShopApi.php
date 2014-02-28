@@ -361,11 +361,7 @@ class ShopApi
     }
 
     /**
-     * @param
-     *
-     * @param string $userSessionId
-     * @param array|CriteriaInterface $filter
-     * @param array $result
+     * @param ProductSearchCriteria $criteria
      *
      * @return ProductSearchResult
      *
@@ -508,6 +504,8 @@ class ShopApi
 
         return new ProductSearchCriteria($sessionId);
     }
+
+
 
     /**
      * Returns the URL to the Collins JavaScript file for helper functions

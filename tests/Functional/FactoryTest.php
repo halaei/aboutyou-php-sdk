@@ -20,7 +20,7 @@ class FactoryTest extends ShopApiTest
         $factory = $shopApi->getModelFactory();
         $this->assertInstanceOf('Collins\\ShopApi\\Factory\\ModelFactoryInterface', $factory);
 
-        $variant = $factory->createVariant('{}');
+        $variant = $factory->createVariant(json_decode('{}'));
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\Variant', $variant);
 
         $json = $this->getJsonObjectFromFile('facet.json');

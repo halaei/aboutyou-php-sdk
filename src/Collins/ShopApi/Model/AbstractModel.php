@@ -28,4 +28,14 @@ abstract class AbstractModel
     {
         return self::$shopApi;
     }
+
+    /**
+     * @return ShopApi\Factory\ModelFactoryInterface
+     */
+    public function getModelFactory()
+    {
+        $factory = $this->getShopApi()->getModelFactory();
+
+        return $factory;
+    }
 }

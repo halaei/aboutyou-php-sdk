@@ -13,7 +13,7 @@ class CategoriesResult implements \IteratorAggregate, \ArrayAccess, \Countable
 
     public function __construct($jsonObject, $orderByIds = null)
     {
-        $this->fromJson($jsonObject);
+        $this->fromJson($jsonObject, $orderByIds);
     }
 
     public function createCategory($jsonCategory)

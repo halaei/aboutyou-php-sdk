@@ -7,6 +7,7 @@
 namespace Collins\ShopApi\Criteria;
 
 use Collins\ShopApi\Exception\InvalidParameterException;
+use Collins\ShopApi\Model\FacetGetGroupInterface;
 use Collins\ShopApi\Model\FacetGroup;
 use Collins\ShopApi\Model\FacetGroupSet;
 use Collins\ShopApi\Model\Product;
@@ -65,7 +66,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return ProductSearchCriteria
      */
-    public function set($key, $value)
+    public function filterBy($key, $value)
     {
         $this->filter[$key] = $value;
 
@@ -80,13 +81,13 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return ProductSearchCriteria
      */
-    public function setIsSale($sale)
+    public function filterBySale($sale)
     {
         if (!is_bool($sale)) {
             $sale = null;
         }
 
-        return $this->set(self::FILTER_SALE, $sale);
+        return $this->filterBy(self::FILTER_SALE, $sale);
     }
 
     /**
@@ -94,9 +95,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return ProductSearchCriteria
      */
-    public function setSearchword($searchword)
+    public function filterBySearchword($searchword)
     {
-        return $this->set(self::FILTER_SEARCHWORD, $searchword);
+        return $this->filterBy(self::FILTER_SEARCHWORD, $searchword);
     }
 
     /**
@@ -104,9 +105,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return ProductSearchCriteria
      */
-    public function addCategories(array $categoryIds)
+    public function filterByCategoryIds(array $categoryIds)
     {
-        return $this->set(self::FILTER_CATEGORY_IDS, $categoryIds);
+        return $this->filterBy(self::FILTER_CATEGORY_IDS, $categoryIds);
     }
 
     /**
@@ -115,9 +116,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return ProductSearchFilter
      */
-    public function setAttributes(array $attributes)
+    public function filterByFacetIds(array $attributes)
     {
-        return $this->set(self::FILTER_ATTRIBUTES, (object)$attributes);
+        return $this->filterBy(self::FILTER_ATTRIBUTES, (object)$attributes);
     }
 
     /**
@@ -125,9 +126,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return ProductSearchCriteria
      */
-    public function setFacetGroup(FacetGroup $facetGroup)
+    public function filterByFacetGroup(FacetGroup $facetGroup)
     {
-        return $this->set(self::FILTER_ATTRIBUTES, (object)$facetGroup->getIds());
+        return $this->filterBy(self::FILTER_ATTRIBUTES, (object)$facetGroup->getIds());
     }
 
     /**
@@ -135,9 +136,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return ProductSearchCriteria
      */
-    public function setFacetGroupSet(FacetGroupSet $facetGroupSet)
+    public function filterByFacetGroupSet(FacetGroupSet $facetGroupSet)
     {
-        return $this->set(self::FILTER_ATTRIBUTES, (object)$facetGroupSet->getIds());
+        return $this->filterBy(self::FILTER_ATTRIBUTES, (object)$facetGroupSet->getIds());
     }
 
     /**
@@ -146,7 +147,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return ProductSearchCriteria
      */
-    public function setPriceRange($from = 0, $to = 0)
+    public function filterByPriceRange($from = 0, $to = 0)
     {
         settype($from, 'int');
         settype($to, 'int');
@@ -159,7 +160,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
             $price['to'] = $to;
         }
 
-        return $this->set(self::FILTER_PRICE, $price);
+        return $this->filterBy(self::FILTER_PRICE, $price);
     }
 
     /**
@@ -196,7 +197,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return $this
      */
-    public function setSale($enable = false)
+    public function selectSales($enable = true)
     {
         if ($enable) {
             $this->result['sale'] = true;
@@ -212,7 +213,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return $this
      */
-    public function selectPrice($enable = false)
+    public function selectPriceRanges($enable = true)
     {
         if ($enable) {
             $this->result['price'] = true;
@@ -224,16 +225,17 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     }
 
     /**
-     * @param integer|string|FacetGroup $groupId
+     * @param integer|string $groupId
      * @param integer $limit
      *
      * @return $this
+     *
+     * @throws \Collins\ShopApi\Exception\InvalidParameterException
      */
-    public function setFacets($groupId, $limit)
+    public function selectFacetsByGroupId($groupId, $limit)
     {
-        if ($groupId instanceof FacetGroup) {
-            $groupId = $groupId->getId();
-        } else if ($groupId !== self::FACETS_ALL && !is_long($groupId) && !ctype_digit($groupId)) {
+        $this->checkFacetLimit($limit);
+        if (!is_long($groupId) && !ctype_digit($groupId)) {
             throw new InvalidParameterException();
         }
 
@@ -242,21 +244,52 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         }
 
         if (!isset($this->result['facets']->{$groupId})) {
-            $this->result['facets']->{$groupId} = new \StdClass;
+            $this->result['facets']->{$groupId} = ['limit' => $limit];
         }
-
-        $this->result['facets']->{$groupId}->limit = $limit;
 
         return $this;
     }
 
+    /**
+     * @param FacetGetGroupInterface $group
+     * @param integer $limit
+     *
+     * @return $this
+     */
+    public function selectFacetsByFacetGroup(FacetGetGroupInterface $group, $limit)
+    {
+        return $this->selectFacetsByGroupId($group->getGroupId(), $limit);
+    }
+
+    /**
+     * @param integer $limit
+     *
+     * @return $this
+     */
+    public function selectAllFacets($limit)
+    {
+        $this->checkFacetLimit($limit);
+        $this->result['facets'] = [self::FACETS_ALL => ['limit' => $limit]];
+
+        return $this;
+    }
+
+    protected function checkFacetLimit($limit)
+    {
+        if (!is_long($limit)) {
+            throw new InvalidParameterException('limit must be an integer');
+        }
+        if ($limit < 0) {
+            throw new InvalidParameterException('limit must be positive');
+        }
+    }
 
     /**
      * @param bool $enable
      *
      * @return $this
      */
-    public function selectCategoryFacets($enable = false)
+    public function selectCategories($enable = true)
     {
         if ($enable) {
             $this->result['categories'] = true;
@@ -272,7 +305,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return $this
      */
-    public function setBoostProducts(array $ids)
+    public function boostProducts(array $ids)
     {
         $ids = array_map(function($val) {
             if($val instanceof Product) {
@@ -297,7 +330,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return $this
      */
-    public function selectFields(array $fields)
+    public function selectProductFields(array $fields)
     {
         $this->result['fields'] = array_unique($fields);
 
