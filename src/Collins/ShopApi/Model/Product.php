@@ -62,46 +62,46 @@ class Product extends AbstractModel
     /** @var FacetGroupSet */
     protected $facetGroups;
 
-    /** @var Category */
-    protected $category;
+    /** @var Category[] */
+    protected $categories;
 
     public function __construct($jsonObject)
     {
         $this->fromJson($jsonObject);
     }
 
-    public function fromJson($jobj)
+    public function fromJson($jsonObject)
     {
         // these are required fields
-        if (!isset($jobj->id) || !isset($jobj->name)) {
+        if (!isset($jsonObject->id) || !isset($jsonObject->name)) {
             throw new MalformedJsonException();
         }
-        $this->id   = $jobj->id;
-        $this->name = $jobj->name;
+        $this->id   = $jsonObject->id;
+        $this->name = $jsonObject->name;
 
-        $this->isSale            = isset($jobj->sale) ? $jobj->sale : false;
-        $this->descriptionShort  = isset($jobj->description_short) ? $jobj->description_short : '';
-        $this->descriptionLong   = isset($jobj->description_long) ? $jobj->description_long : '';
-        $this->isActive          = isset($jobj->active) ? $jobj->active : true;
-        $this->brandId           = isset($jobj->brand_id) ? $jobj->brand_id : null;
+        $this->isSale            = isset($jsonObject->sale) ? $jsonObject->sale : false;
+        $this->descriptionShort  = isset($jsonObject->description_short) ? $jsonObject->description_short : '';
+        $this->descriptionLong   = isset($jsonObject->description_long) ? $jsonObject->description_long : '';
+        $this->isActive          = isset($jsonObject->active) ? $jsonObject->active : true;
+        $this->brandId           = isset($jsonObject->brand_id) ? $jsonObject->brand_id : null;
 
-        $this->minPrice         = isset($jobj->min_price) ? $jobj->min_price : null;
-        $this->maxPrice         = isset($jobj->max_price) ? $jobj->max_price : null;
+        $this->minPrice         = isset($jsonObject->min_price) ? $jsonObject->min_price : null;
+        $this->maxPrice         = isset($jsonObject->max_price) ? $jsonObject->max_price : null;
 
-        $this->defaultImage   = isset($jobj->default_image) ? new Image($jobj->default_image) : null;
-        $this->defaultVariant = isset($jobj->default_variant) ? new Variant($jobj->default_variant) : null;
+        $this->defaultImage   = isset($jsonObject->default_image) ? new Image($jsonObject->default_image) : null;
+        $this->defaultVariant = isset($jsonObject->default_variant) ? new Variant($jsonObject->default_variant) : null;
 
-        $this->variants     = self::parseVariants($jobj);
-        $this->styles       = self::parseStyles($jobj);
-        $this->categoryIds  = self::parseCategoryIds($jobj);
-        $this->facetIds     = self::parseFacetIds($jobj);
+        $this->variants     = self::parseVariants($jsonObject);
+        $this->styles       = self::parseStyles($jsonObject);
+        $this->categoryIds  = self::parseCategoryIds($jsonObject);
+        $this->facetIds     = self::parseFacetIds($jsonObject);
     }
 
-    protected static function parseVariants($jobj)
+    protected static function parseVariants($jsonObject)
     {
         $variants = [];
-        if (!empty($jobj->variants)) {
-            foreach ($jobj->variants as $variant) {
+        if (!empty($jsonObject->variants)) {
+            foreach ($jsonObject->variants as $variant) {
                 $variants[$variant->id] = new Variant($variant);
             }
         }
@@ -109,11 +109,11 @@ class Product extends AbstractModel
         return $variants;
     }
 
-    protected static function parseStyles($jobj)
+    protected static function parseStyles($jsonObject)
     {
         $styles = [];
-        if (!empty($jobj->styles)) {
-            foreach ($jobj->styles as $style) {
+        if (!empty($jsonObject->styles)) {
+            foreach ($jsonObject->styles as $style) {
                 $styles[] = new Product($style);
             }
         }
@@ -121,10 +121,10 @@ class Product extends AbstractModel
         return $styles;
     }
 
-    protected static function parseCategoryIds($jobj)
+    protected static function parseCategoryIds($jsonObject)
     {
         $cIds = [];
-        foreach (get_object_vars($jobj) as $name => $subIds) {
+        foreach (get_object_vars($jsonObject) as $name => $subIds) {
             if (strpos($name, 'categories') !== 0) {
                 continue;
             }
@@ -135,12 +135,12 @@ class Product extends AbstractModel
         return $cIds;
     }
 
-    protected static function parseFacetIds($jobj)
+    protected static function parseFacetIds($jsonObject)
     {
         $ids = [];
-        if (!empty($jobj->attributes_merged)) {
-            foreach ($jobj->attributes_merged as $group => $facetIds) {
-                $gid = substr($group, 11); // rm prefix "attributs_"
+        if (!empty($jsonObject->attributes_merged)) {
+            foreach ($jsonObject->attributes_merged as $group => $facetIds) {
+                $gid = substr($group, 11); // rm prefix "attributes"
 
                 // TODO: Remove Workaround for Ticket ???
                 settype($facetIds, 'array');
@@ -225,7 +225,25 @@ class Product extends AbstractModel
     }
 
     /**
-     * @return integer[]
+     * This is a low level method.
+     *
+     * Returns an array of arrays:
+     * [
+     *  "<facet group id>" => [<facet id>, <facet id>, ...],
+     *  "<facet group id>" => [<facet id>, ...],
+     *  ...
+     * ]
+     * "<facet group id>" are strings with digits
+     * <facet id> are integers
+     *
+     * for example:
+     * [
+     *  "0"   => [264],
+     *  "1"   => [1234],
+     *  "206" => [123,234,345]
+     * ]
+     *
+     * @return array
      */
     public function getFacetIds()
     {
@@ -249,31 +267,63 @@ class Product extends AbstractModel
     }
 
     /**
-     * Get product category.
+     * Returns the first active category and, if non active, then it return the first category
      *
-     * @return Category
+     * @return Category|null
      */
     public function getMainCategory()
     {
-        $ids = $this->getCategoryIds();
-        if (empty($ids)) {
-            return null;
-       }
-
-        if ($this->category) {
-            return $this->category;
+        $category = $this->getFirstActiveCategory();
+        if ($category === null) {
+            $category = $this->getFirstCategory();
         }
 
-        $api = $this->getShopApi();
-        $categories = $api->fetchCategoriesByIds($ids)->getCategories();
+        return $category;
+    }
+
+    /**
+     * @return Category|null
+     */
+    public function getFirstActiveCategory()
+    {
+        $categories = $this->getCategories();
         foreach ($categories as $category) {
             if ($category->isActive()) {
-                $this->category = $category;
-                break;
+                return $category;
             }
         }
 
-        return $this->category;
+        return null;
+    }
+
+    /**
+     * @return Category|null
+     */
+    public function getFirstCategory()
+    {
+        $categories = $this->getCategories();
+
+        return count($categories) ? reset($categories) : null;
+    }
+
+    /**
+     * @return Category[]
+     */
+    public function getCategories()
+    {
+        if ($this->categories) {
+            return $this->categories;
+        }
+
+        $ids = $this->getCategoryIds();
+        if (empty($ids)) {
+            $this->categories = [];
+        } else {
+            $api = $this->getShopApi();
+            $this->categories = $api->fetchCategoriesByIds($ids)->getCategories();
+        }
+
+        return $this->categories;
     }
 
     /**
@@ -337,7 +387,8 @@ class Product extends AbstractModel
     }
 
     /**
-     * @return integer|null
+     * @return integer
+     * @deprecated
      */
     public function getBrandId()
     {
