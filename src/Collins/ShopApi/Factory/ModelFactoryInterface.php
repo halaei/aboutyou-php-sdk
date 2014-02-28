@@ -6,27 +6,58 @@
 
 namespace Collins\ShopApi\Factory;
 
-interface ModelFactoryInterface
+interface ModelFactoryInterface extends ResultFactoryInterface
 {
-    public function createAutocomplete($json);
+    /**
+     * @param \stdClass $json
+     *
+     * @return \Collins\ShopApi\Model\Facet
+     */
+    public function createFacet(\stdClass $json);
 
-    public function createBasket($json);
+    /**
+     * @param \stdClass $json
+     *
+     * @return \Collins\ShopApi\Model\Product
+     */
+    public function createProduct(\stdClass $json);
 
-    public function createCategoriesResult($json, $queryParams);
+    /**
+     * @param \stdClass $json
+     *
+     * @return \Collins\ShopApi\Model\Variant
+     */
+    public function createVariant(\stdClass $json);
 
-    public function createCategoryTree($json);
+    /***************************************+
+     * ProductSearchResult Facets
+     +++++++++++++++++++++++++++++++++++++++++*/
 
-    public function createFacet($json);
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return \Collins\ShopApi\Model\ProductSearchResult\PriceRange[]
+     */
+    public function createPriceRanges(\stdClass $jsonObject);
 
-    public function createFacetList($json);
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return \Collins\ShopApi\Model\ProductSearchResult\FacetCounts[]
+     */
+    public function createAttributesFactes(\stdClass $jsonObject);
 
-    public function createProduct($json);
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return \Collins\ShopApi\Model\ProductSearchResult\SaleCounts
+     */
+    public function createSaleFacet(\stdClass $jsonObject);
 
-    public function createProductsResult($json);
-
-    public function createProductSearchResult($json);
-
-    public function createSuggest($json);
-
-    public function createVariant($json);
+    /**
+     * @param \stdClass[] $jsonObject
+     *
+     * @return \Collins\ShopApi\Model\ProductSearchResult\
+     */
+    public function createCategoriesFacets(array $jsonObject);
 }
