@@ -314,6 +314,11 @@ class Product extends AbstractModel
             $api = $this->getShopApi();
             $this->categories = $api->fetchCategoriesByIds($ids)->getCategories();
         }
+        echo '<pre>', __LINE__, ') ', __METHOD__, ': <b>$ids</b>=', var_export($ids), '</pre>', PHP_EOL;
+        echo '<pre>', __LINE__, ') ', __METHOD__, ': <b>$this->categories</b>=', var_export(
+            $this->categories
+        ), '</pre>', PHP_EOL;
+exit;
 
         return $this->categories;
     }
