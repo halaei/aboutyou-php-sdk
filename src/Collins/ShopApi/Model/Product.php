@@ -259,14 +259,6 @@ class Product extends AbstractModel
     }
 
     /**
-     * @deprecated
-     */
-    public function getCategory()
-    {
-        return $this->getMainCategory();
-    }
-
-    /**
      * Returns the first active category and, if non active, then it return the first category
      *
      * @return Category|null
@@ -387,15 +379,6 @@ class Product extends AbstractModel
     }
 
     /**
-     * @return integer
-     * @deprecated
-     */
-    public function getBrandId()
-    {
-        return $this->brandId;
-    }
-
-    /**
      * @return \Collins\ShopApi\Model\Facet
      */
     public function getBrand()
@@ -451,36 +434,6 @@ class Product extends AbstractModel
         }
 
         return null;
-    }
-
-    /**
-     * Select a variant.
-     *
-     * @param integer $variantId The variant id.
-     *
-     * @return void
-     *
-     * @deprecated
-     */
-    public function selectVariant($variantId)
-    {
-        $this->selectedVariant = $this->getVariantById($variantId);
-    }
-
-    /**
-     * Get the selected or default variant.
-     *
-     * @return Variant
-     *
-     * @deprecated
-     */
-    public function getSelectedVariant()
-    {
-        if( $this->selectedVariant ) {
-            return $this->selectedVariant;
-        }
-
-        return $this->defaultVariant;
     }
 
     /**

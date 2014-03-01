@@ -41,8 +41,6 @@ class ProductFacetsTest extends ShopApiTest
 
     public function testGetBrand()
     {
-        $this->assertEquals(264, $this->product->getBrandId());
-
         $brand = $this->product->getBrand();
 
         $this->assertNotNull($brand);

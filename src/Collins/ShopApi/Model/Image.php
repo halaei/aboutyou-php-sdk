@@ -115,12 +115,4 @@ class Image extends AbstractModel
 
         return $this->getBaseUrl() . '/' . $this->hash . '?width=' . $width . '&height=' . $height;
     }
-
-    /**
-     * @deprecated
-     */
-    public function getImageUrl($width = 200, $height = 0)
-    {
-        return $this->getUrl($width, $height);
-    }
 }
