@@ -3,7 +3,7 @@ namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi;
 
-class FacetTest extends ShopApiTest
+class FacetTestAbstract extends AbstractShopApiTest
 {
     /**
      *

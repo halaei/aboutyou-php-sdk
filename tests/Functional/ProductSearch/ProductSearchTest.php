@@ -6,7 +6,7 @@ use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
 
-class ProductSearchTest extends ShopApiTest
+class ProductSearchTestAbstract extends AbstractShopApiTest
 {
     public function testProductSearch()
     {

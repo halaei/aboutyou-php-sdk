@@ -4,7 +4,7 @@ namespace Collins\ShopApi\Model;
 /**
  *
  */
-class CategoriesResult implements \IteratorAggregate, \ArrayAccess, \Countable
+class CategoriesResult extends AbstractModel implements \IteratorAggregate, \ArrayAccess, \Countable
 {
     /** @var Category[] */
     protected $categories = [];
@@ -16,16 +16,13 @@ class CategoriesResult implements \IteratorAggregate, \ArrayAccess, \Countable
         $this->fromJson($jsonObject, $orderByIds);
     }
 
-    public function createCategory($jsonCategory)
-    {
-        return new Category($jsonCategory);
-    }
-
     public function fromJson($jsonObject, $orderByIds = null)
     {
         if ($orderByIds === null) {
             $orderByIds = array_keys(get_object_vars($jsonObject));
         }
+
+        $factory = $this->getModelFactory();
 
         foreach ($orderByIds as $id) {
             if (!isset($jsonObject->$id) ) {
@@ -36,7 +33,7 @@ class CategoriesResult implements \IteratorAggregate, \ArrayAccess, \Countable
             if (isset($jsonCategory->error_code)) {
                 $this->categoriesNotFound[] = $id;
             } else {
-                $this->categories[$id] = $this->createCategory($jsonCategory);
+                $this->categories[$id] = $factory->createCategory($jsonCategory);
             }
         }
     }

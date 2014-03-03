@@ -34,7 +34,7 @@ abstract class AbstractModel
      */
     public function getModelFactory()
     {
-        $factory = $this->getShopApi()->getModelFactory();
+        $factory = $this->getShopApi()->getResultFactory();
 
         return $factory;
     }

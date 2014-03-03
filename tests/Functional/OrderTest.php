@@ -7,7 +7,7 @@
 namespace Collins\ShopApi\Test\Functional;
 
 
-class OrderTest extends ShopApiTest
+class OrderTestAbstract extends AbstractShopApiTest
 {
     public function testFetchOrder()
     {

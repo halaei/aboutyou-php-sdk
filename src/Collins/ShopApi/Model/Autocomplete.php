@@ -4,7 +4,7 @@ namespace Collins\ShopApi\Model;
 /**
  *
  */
-class Autocomplete
+class Autocomplete extends AbstractModel
 {
     /**
      * @var object
@@ -32,30 +32,6 @@ class Autocomplete
     }
 
     /**
-     * Create product from json object.
-     *
-     * @param object $jsonProduct
-     *
-     * @return Product
-     */
-    protected function createProduct($jsonProduct)
-    {
-        return new Product($jsonProduct);
-    }
-
-    /**
-     * Create category from json object.
-     *
-     * @param object $jsonCategory
-     *
-     * @return Category
-     */
-    protected function createCategory($jsonCategory)
-    {
-        return new Category($jsonCategory);
-    }
-
-    /**
      * Get autocompleted products.
      *
      * @return Product[]
@@ -63,10 +39,12 @@ class Autocomplete
     public function getProducts()
     {
         if (!$this->products) {
+            $factory = $this->getModelFactory();
+
             $this->products = array();
             if ($this->jsonObject->products) {
                 foreach ($this->jsonObject->products as $product) {
-                    $this->products[] = $this->createProduct($product);
+                    $this->products[] = $factory->createProduct($product);
                 }
             }
             unset($this->jsonObject->products); // free memory
@@ -82,10 +60,12 @@ class Autocomplete
     public function getCategories()
     {
         if (!$this->categories) {
+            $factory = $this->getModelFactory();
+
             $this->categories = array();
             if ($this->jsonObject->categories) {
                 foreach ($this->jsonObject->categories as $category) {
-                    $this->categories[] = $this->createCategory($category);
+                    $this->categories[] = $factory->createCategory($category);
                 }
             }
             unset($this->jsonObject->categories); // free memory

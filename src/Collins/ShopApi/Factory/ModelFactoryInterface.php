@@ -10,6 +10,14 @@ interface ModelFactoryInterface extends ResultFactoryInterface
 {
     /**
      * @param \stdClass $json
+     * @param \Collins\ShopApi\Model\Category|null $parent
+     *
+     * @return \Collins\ShopApi\Model\Category
+     */
+    public function createCategory(\stdClass $json, $parent = null);
+
+    /**
+     * @param \stdClass $json
      *
      * @return \Collins\ShopApi\Model\Facet
      */

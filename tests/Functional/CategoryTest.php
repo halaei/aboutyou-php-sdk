@@ -8,7 +8,7 @@ namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi;
 
-class CategoryTest extends ShopApiTest
+class CategoryTestAbstract extends AbstractShopApiTest
 {
     /**
      * @var $category \Collins\ShopApi\Model\Category
@@ -17,6 +17,7 @@ class CategoryTest extends ShopApiTest
 
     public function setUp()
     {
+        $this->getShopApiWithResult(''); // Init DefaultModelFactory
         $json = json_decode(file_get_contents(__DIR__ . '/testData/category-tree.json'));
         $this->category = new \Collins\ShopApi\Model\Category($json[0]->category_tree[1]);
     }
