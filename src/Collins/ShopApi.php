@@ -434,6 +434,11 @@ class ShopApi
 
     /**
      * Fetch single facets by id and group id
+     * For example:
+     * $shopApi->fetchFacet([
+     *   ["id" => 123, "group_id" => 0 ],
+     *   ["id" => 456, "group_id" => 0 ]
+     * ]);
      *
      * @param array $params Array of (id, group_id) pairs
      *
