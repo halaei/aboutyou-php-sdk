@@ -18,7 +18,7 @@ use Psr\Log\NullLogger;
 class ShopApiClient
 {
     const API_END_POINT_STAGE = 'http://ant-core-staging-s-api1.wavecloud.de/api';
-    const API_END_POINT_LIVE  = 'http://ant-shop-api1.wavecloud.de/api';
+    const API_END_POINT_LIVE  = 'http://ant-shop-api-lb1.antevortenet.de/api';
 
     /**
      * Guzzle client that is needed to execute API requests.
