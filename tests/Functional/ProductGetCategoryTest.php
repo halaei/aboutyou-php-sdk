@@ -9,7 +9,7 @@ namespace Collins\ShopApi\Test\Functional;
 use Collins\ShopApi;
 use Collins\ShopApi\Model\Product;
 
-class ProductGetCategoryTest extends ShopApiTest
+class ProductGetCategoryTestAbstract extends AbstractShopApiTest
 {
     /** @var Product */
     private $product;
@@ -17,13 +17,15 @@ class ProductGetCategoryTest extends ShopApiTest
     /** @var ShopApi */
     private $shopApi;
 
+    public function setup()
+    {
+        $this->shopApi = $this->getShopApiWithResultFile('category.json');
+    }
+
     public function getProduct($filname)
     {
         $json = $this->getJsonObjectFromFile('product/' . $filname);
         $product = new ShopApi\Model\Product($json);
-
-        $shopApi = $this->getShopApiWithResultFile('category.json');
-        Product::setShopApi($shopApi);
 
         return $product;
     }

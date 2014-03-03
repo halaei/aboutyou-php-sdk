@@ -9,7 +9,7 @@ namespace Collins\ShopApi\Test\Functional;
 use Collins\ShopApi;
 use Collins\ShopApi\Model\Basket;
 
-class BasketTest extends ShopApiTest
+class BasketTestAbstract extends AbstractShopApiTest
 {
     private $sessionId = null;
 

@@ -18,6 +18,11 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function __construct($shopApi)
     {
+        ShopApi\Model\Autocomplete::setShopApi($shopApi);
+        ShopApi\Model\BasketItem::setShopApi($shopApi);
+        ShopApi\Model\Category::setShopApi($shopApi);
+        ShopApi\Model\CategoriesResult::setShopApi($shopApi);
+        ShopApi\Model\CategoryTree::setShopApi($shopApi);
         ShopApi\Model\Image::setShopApi($shopApi);
         ShopApi\Model\Product::setShopApi($shopApi);
         ShopApi\Model\FacetGroupSet::setShopApi($shopApi);
@@ -52,6 +57,14 @@ class DefaultModelFactory implements ModelFactoryInterface
     public function createCategoriesResult($json, $queryParams)
     {
         return new ShopApi\Model\CategoriesResult($json, $queryParams['ids']);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createCategory(\stdClass $json, $parent = null)
+    {
+        return new ShopApi\Model\Category($json, $parent);
     }
 
     /**

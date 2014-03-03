@@ -9,7 +9,7 @@ namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi;
 
-class FactoryTest extends ShopApiTest
+class FactoryTestAbstract extends AbstractShopApiTest
 {
     public function testGetFactory()
     {

@@ -9,7 +9,7 @@ namespace Collins\ShopApi\Test\Functional;
 use Collins\ShopApi;
 use Collins\ShopApi\Model\Product;
 
-class ProductFacetsTest extends ShopApiTest
+class ProductFacetsTest extends AbstractShopApiTest
 {
     /** @var Product */
     private $product;
@@ -19,10 +19,10 @@ class ProductFacetsTest extends ShopApiTest
 
     public function setup()
     {
+        $this->shopApi = $this->getShopApiWithResultFile('facets-for-product.json');
+
         $json = $this->getJsonObjectFromFile('product/product-with-attributes.json');
         $this->product = new ShopApi\Model\Product($json);
-
-        $this->shopApi = $this->getShopApiWithResultFile('facets-for-product.json');
     }
 
     public function testGetBrandWorkaround()

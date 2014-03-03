@@ -7,7 +7,7 @@
 namespace Collins\ShopApi\Model;
 
 
-class CategoryTree implements \IteratorAggregate, \Countable
+class CategoryTree extends AbstractModel implements \IteratorAggregate, \Countable
 {
     /** @var Category[] */
     protected $allCategories;
@@ -22,15 +22,12 @@ class CategoryTree implements \IteratorAggregate, \Countable
         $this->fromJson($jsonObject);
     }
 
-    public function createCategory($jsonCategory)
-    {
-        return new Category($jsonCategory, null);
-    }
-
     public function fromJson($jsonObject)
     {
+        $factory = $this->getModelFactory();
+
         foreach ($jsonObject as $jsonCategory) {
-            $category = $this->createCategory($jsonCategory);
+            $category = $factory->createCategory($jsonCategory);
             $this->allCategories[] = $category;
             if ($category->isActive()) {
                 $this->activeCategories[] = $category;

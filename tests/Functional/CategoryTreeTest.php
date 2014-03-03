@@ -9,7 +9,7 @@ namespace Collins\ShopApi\Test\Functional;
 use Collins\ShopApi;
 use Collins\ShopApi\Model\Category;
 
-class CategoryTreeTest extends ShopApiTest
+class CategoryTreeTestAbstract extends AbstractShopApiTest
 {
      /**
      *

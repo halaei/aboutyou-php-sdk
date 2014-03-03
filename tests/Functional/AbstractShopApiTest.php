@@ -10,7 +10,7 @@ use Collins\ShopApi;
 use Guzzle\Http\Message\Response;
 use Guzzle\Service\Client;
 
-abstract class ShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
+abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
 {
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|Client

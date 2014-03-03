@@ -14,9 +14,9 @@ use Collins\ShopApi\Criteria\ProductSearchCriteria;
  * Class SearchCriteriaTest
  * @package Collins\ShopApi\Test\Functional
  *
- * @see tests/unit/ShopApi/Criteria/ProductSearchCriteriaTest.php
+ * @see tests/unit/ShopApi/Criteria/ProductSearchCriteriaTestAbstract.php
  */
-class ProductSearchCriteriaTest extends ShopApiTest
+class ProductSearchCriteriaTestAbstract extends AbstractShopApiTest
 {
     public function testGetSearchCriteria()
     {

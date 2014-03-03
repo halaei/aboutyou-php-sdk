@@ -91,8 +91,10 @@ class Product extends AbstractModel
         $this->defaultImage   = isset($jsonObject->default_image) ? new Image($jsonObject->default_image) : null;
         $this->defaultVariant = isset($jsonObject->default_variant) ? new Variant($jsonObject->default_variant) : null;
 
+        $factory = $this->getModelFactory();
+
         $this->variants     = self::parseVariants($jsonObject);
-        $this->styles       = self::parseStyles($jsonObject);
+        $this->styles       = self::parseStyles($jsonObject, $factory);
         $this->categoryIds  = self::parseCategoryIds($jsonObject);
         $this->facetIds     = self::parseFacetIds($jsonObject);
     }
@@ -109,12 +111,12 @@ class Product extends AbstractModel
         return $variants;
     }
 
-    protected static function parseStyles($jsonObject)
+    protected static function parseStyles($jsonObject, ShopApi\Factory\ModelFactoryInterface $factory)
     {
         $styles = [];
         if (!empty($jsonObject->styles)) {
             foreach ($jsonObject->styles as $style) {
-                $styles[] = new Product($style);
+                $styles[] = $factory->createProduct($style);
             }
         }
 

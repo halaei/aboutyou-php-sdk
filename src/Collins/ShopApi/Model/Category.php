@@ -7,7 +7,7 @@
 namespace Collins\ShopApi\Model;
 
 
-class Category
+class Category extends AbstractModel
 {
     const ALL = false;
     const ACTIVE_ONLY = true;
@@ -48,17 +48,6 @@ class Category
         $this->fromJson($jsonObject);
     }
 
-    /**
-     * @param object        $jsonCategory  json as object tree
-     * @param Category|null $parent
-     *
-     * @return Category
-     */
-    public function createCategory($jsonCategory, $parent = null)
-    {
-        return new Category($jsonCategory, $parent);
-    }
-
     public function fromJson($jsonObject)
     {
         $this->parentId = $jsonObject->parent;
@@ -68,8 +57,10 @@ class Category
         $this->position = $jsonObject->position;
 
         if (isset($jsonObject->sub_categories)) {
+            $factory = $this->getModelFactory();
+
             foreach ($jsonObject->sub_categories as $jsonSubCategory) {
-                $category = $this->createCategory($jsonSubCategory, $this);
+                $category = $factory->createCategory($jsonSubCategory, $this);
                 $this->allSubCategories[] = $category;
                 if ($category->isActive) {
                     $this->activeSubCategories[] = $category;

@@ -4,7 +4,7 @@ namespace Collins\ShopApi\Model;
 /**
  *
  */
-class BasketItem
+class BasketItem extends AbstractModel
 {
     /**
      * @var object
@@ -29,18 +29,6 @@ class BasketItem
     public function __construct($jsonObject)
     {
         $this->jsonObject = $jsonObject;
-    }
-
-    /**
-     * Create product model from json object.
-     *
-     * @param object $jsonProduct The product data.
-     *
-     * @return Product
-     */
-    protected function createProduct($jsonProduct)
-    {
-        return new Product($jsonProduct);
     }
 
     /**
@@ -112,7 +100,7 @@ class BasketItem
     public function getProduct()
     {
         if (!$this->product) {
-            $this->product = $this->createProduct($this->jsonObject->product);
+            $this->product = $this->getModelFactory()->createProduct($this->jsonObject->product);
         }
 
         return $this->product;
