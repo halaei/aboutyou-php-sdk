@@ -26,6 +26,13 @@ interface ModelFactoryInterface extends ResultFactoryInterface
     /**
      * @param \stdClass $json
      *
+     * @return \Collins\ShopApi\Model\Image
+     */
+    public function createImage(\stdClass $json);
+
+    /**
+     * @param \stdClass $json
+     *
      * @return \Collins\ShopApi\Model\Product
      */
     public function createProduct(\stdClass $json);

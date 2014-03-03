@@ -26,6 +26,7 @@ class DefaultModelFactory implements ModelFactoryInterface
         ShopApi\Model\Image::setShopApi($shopApi);
         ShopApi\Model\Product::setShopApi($shopApi);
         ShopApi\Model\FacetGroupSet::setShopApi($shopApi);
+        ShopApi\Model\Variant::setShopApi($shopApi);
 
         $this->shopApi = $shopApi;
     }
@@ -98,9 +99,20 @@ class DefaultModelFactory implements ModelFactoryInterface
         return $facets;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function createFacetsList($json)
     {
         return $this->createFacetList($json->facet);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createImage(\stdClass $json)
+    {
+        return new ShopApi\Model\Image($json);
     }
 
     /**

@@ -79,6 +79,8 @@ class Product extends AbstractModel
         $this->id   = $jsonObject->id;
         $this->name = $jsonObject->name;
 
+        $factory = $this->getModelFactory();
+
         $this->isSale            = isset($jsonObject->sale) ? $jsonObject->sale : false;
         $this->descriptionShort  = isset($jsonObject->description_short) ? $jsonObject->description_short : '';
         $this->descriptionLong   = isset($jsonObject->description_long) ? $jsonObject->description_long : '';
@@ -88,23 +90,21 @@ class Product extends AbstractModel
         $this->minPrice         = isset($jsonObject->min_price) ? $jsonObject->min_price : null;
         $this->maxPrice         = isset($jsonObject->max_price) ? $jsonObject->max_price : null;
 
-        $this->defaultImage   = isset($jsonObject->default_image) ? new Image($jsonObject->default_image) : null;
-        $this->defaultVariant = isset($jsonObject->default_variant) ? new Variant($jsonObject->default_variant) : null;
+        $this->defaultImage   = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
+        $this->defaultVariant = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant) : null;
 
-        $factory = $this->getModelFactory();
-
-        $this->variants     = self::parseVariants($jsonObject);
+        $this->variants     = self::parseVariants($jsonObject, $factory);
         $this->styles       = self::parseStyles($jsonObject, $factory);
         $this->categoryIds  = self::parseCategoryIds($jsonObject);
         $this->facetIds     = self::parseFacetIds($jsonObject);
     }
 
-    protected static function parseVariants($jsonObject)
+    protected static function parseVariants($jsonObject, ShopApi\Factory\ModelFactoryInterface $factory)
     {
         $variants = [];
         if (!empty($jsonObject->variants)) {
             foreach ($jsonObject->variants as $variant) {
-                $variants[$variant->id] = new Variant($variant);
+                $variants[$variant->id] = $factory->createVariant($variant);
             }
         }
 

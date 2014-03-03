@@ -7,9 +7,16 @@
 namespace Collins\ShopApi\Test\Unit\Model;
 
 use Collins\ShopApi\Model\Variant;
+use Collins\ShopApi;
 
 class VariantTest extends AbstractModelTest
 {
+    public function setup()
+    {
+        // setup DefaultModelFactory
+        new ShopApi('app id', 'app token');
+    }
+
     public function testFromJson()
     {
         $jsonObject = $this->getJsonObject('variant.json');

@@ -7,7 +7,7 @@
 namespace Collins\ShopApi\Model;
 
 
-class Variant
+class Variant extends AbstractModel
 {
     protected $jsonObject;
 
@@ -49,8 +49,10 @@ class Variant
         if ($this->images === null) {
             $this->images = [];
             if (!empty($this->jsonObject->images)) {
+                $factory = $this->getModelFactory();
+
                 foreach ($this->jsonObject->images as $image) {
-                    $this->images[] = new Image($image);
+                    $this->images[] = $factory->createImage($image);
                 }
             }
             unset($this->jsonObject->images); // free memory
