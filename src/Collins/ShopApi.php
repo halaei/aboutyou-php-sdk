@@ -7,6 +7,7 @@ use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Criteria\CriteriaInterface;
 use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
+use Collins\ShopApi\Factory\ResultFactoryInterface;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
@@ -345,17 +346,17 @@ class ShopApi
     }
 
     /**
-     * @param ModelFactoryInterface $modelFactory
+     * @param ResultFactoryInterface $modelFactory
      */
-    public function setModelFactory(ModelFactoryInterface $modelFactory)
+    public function setResultFactory(ResultFactoryInterface $modelFactory)
     {
         $this->modelFactory = $modelFactory;
     }
 
     /**
-     * @return ModelFactoryInterface
+     * @return ResultFactoryInterface
      */
-    public function getModelFactory()
+    public function getResultFactory()
     {
         return $this->modelFactory;
     }
