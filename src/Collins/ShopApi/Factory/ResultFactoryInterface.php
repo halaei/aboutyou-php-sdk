@@ -17,6 +17,8 @@ interface ResultFactoryInterface
 
     public function createCategoryTree($json);
 
+    public function createFacetsList($json);
+
     public function createFacetList($json);
 
     public function createProductsResult($json);

@@ -76,13 +76,18 @@ class DefaultModelFactory implements ModelFactoryInterface
     public function createFacetList($json)
     {
         $facets = [];
-        foreach ($json->facet as $jsonFacet) {
+        foreach ($json as $jsonFacet) {
             $facet = $this->createFacet($jsonFacet);
             $key   = $facet->getUniqueKey();
             $facets[$key] = $facet;
         }
 
         return $facets;
+    }
+
+    public function createFacetsList($json)
+    {
+        return $this->createFacetList($json->facet);
     }
 
     /**

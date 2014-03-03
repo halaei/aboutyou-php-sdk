@@ -64,7 +64,7 @@ class Query extends QueryBuilder
         'basket_add'     => 'createBasket',
         'category'       => 'createCategoriesResult',
         'category_tree'  => 'createCategoryTree',
-        'facets'         => 'createFacetList',
+        'facets'         => 'createFacetsList',
         'facet'          => 'createFacetList',
         'products'       => 'createProductsResult',
         'product_search' => 'createProductSearchResult',
