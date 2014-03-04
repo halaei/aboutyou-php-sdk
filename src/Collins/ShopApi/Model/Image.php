@@ -67,7 +67,7 @@ class Image extends AbstractModel
     /**
      * @return integer
      */
-    public function getFilesize()
+    public function getFileSize()
     {
         return $this->filesize;
     }
