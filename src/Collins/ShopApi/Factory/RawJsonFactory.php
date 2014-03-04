@@ -52,6 +52,11 @@ class RawJsonFactory implements ResultFactoryInterface
         return $json;
     }
 
+    public function createProductsEansResult($json)
+    {
+        return $json;
+    }
+
     public function createProductSearchResult($json)
     {
         return $json;

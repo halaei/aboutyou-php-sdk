@@ -67,6 +67,7 @@ class Query extends QueryBuilder
         'facets'         => 'createFacetsList',
         'facet'          => 'createFacetList',
         'products'       => 'createProductsResult',
+        'products_eans'  => 'createProductsEansResult',
         'product_search' => 'createProductSearchResult',
         'suggest'        => 'createSuggest',
         'get_order'      => 'createOrder',
