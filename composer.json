@@ -1,0 +1,53 @@
+{
+    "name": "collins/shop-sdk",
+    "version": "0.2",
+    "description": "Shop API SDK",
+    "license": "proprietary",
+    "type": "library",
+
+    "authors": [
+        {
+            "name": "Christian Kilb",
+            "email": "christian.kilb@antevorte.org"
+        },
+        {
+            "name": "Nils Dröge",
+            "email": "nils.droege@antevorte.org"
+        },
+        {
+            "name": "DevCenter",
+            "homepage": "https://devcenter.mary-paul.de/"
+        }
+    ],
+
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git@codebasehq.com:antevorte/devcenter/cache.git"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "collins/cache": "dev-master",
+        "psr/log": "1.0.*",
+        "guzzle/guzzle": "~3.7"
+    },
+    "suggest" : {
+        "monolog/monolog" : ".",
+        "ext-zlib" : "Allows handling gzip compressed responses.",
+        "lib-curl" : "Allows using cURL as a request backend.",
+        "lib-openssl" : "Allows handling SSL requests when not using cURL."
+    },
+    "require-dev": {
+        "monolog/monolog": "1.*",
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Collins\\": "src/"
+        },
+        "psr-4": {
+            "Collins\\ShopApi\\Test\\": "tests/"
+        }
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "hash": "hash1",
+    "image": {
+        "width": 1400,
+        "height": 2000
+    },
+    "ext": ".jpg",
+    "mime": "image/jpeg",
+    "size": 12345678,
+    "tags": ["tag1", "tag2"]
+}
