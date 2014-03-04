@@ -201,6 +201,26 @@ class QueryBuilder
         return $this;
     }
 
+    /**
+     * @param string[] $eans
+     * @param array $fields
+     *
+     * @return $this
+     */
+    public function fetchProductsByEans(
+        array $eans,
+        array $fields = []
+    ) {
+        $this->query[] = [
+            'products_eans' => array(
+                'eans' => $eans,
+                'fields' => $fields
+            )
+        ];
+
+        return $this;
+    }
+
    /**
      * @param string|int $id
      *

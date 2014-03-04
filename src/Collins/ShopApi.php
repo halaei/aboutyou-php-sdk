@@ -24,7 +24,8 @@ use Psr\Log\LoggerInterface;
  */
 class ShopApi
 {
-    const DEFAULT_BASE_IMAGE_URL = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file/';
+    const IMAGE_URL_STAGE = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file/';
+    const IMAGE_URL_LIVE = 'http://cdn.mary-paul.de/file/';
 
     /** @var ShopApiClient */
     protected $shopApiClient;
@@ -43,17 +44,23 @@ class ShopApi
     /**
      * @param string $appId
      * @param string $appPassword
-     * @param string $apiEndPoint
+     * @param string $apiEndPoint Constants::API_ENVIRONMENT_LIVE for live environment, Constants::API_ENVIRONMENT_STAGE for staging
      * @param CacheInterface $cache
      * @param LoggerInterface $logger
      */
-    public function __construct($appId, $appPassword, $apiEndPoint = 'stage', CacheInterface $cache = null, LoggerInterface $logger = null)
+    public function __construct($appId, $appPassword, $apiEndPoint = Constants::API_ENVIRONMENT_LIVE, CacheInterface $cache = null, LoggerInterface $logger = null)
     {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $cache, $logger);
 
         $this->modelFactory = new DefaultModelFactory($this);
 
-        $this->baseImageUrl = self::DEFAULT_BASE_IMAGE_URL;
+        $this->baseImageUrl = self::IMAGE_URL_LIVE;
+        switch($apiEndPoint) {
+            case Constants::API_ENVIRONMENT_STAGE:
+                $this->baseImageUrl = self::IMAGE_URL_STAGE;
+                break;
+        }
+
 
         $this->logger = $logger;
         $this->appId  = $appId;
@@ -213,7 +220,7 @@ class ShopApi
         $query = $this->getQuery()->fetchBasket($sessionId);
 
         return $query->executeSingle();
-     }
+    }
 
     /**
      * Add product variant to basket.
@@ -343,6 +350,29 @@ class ShopApi
         }
 
         return $result;
+    }
+
+    /**
+     * @param integer[] $eans
+     * @param string[] $fields
+     *
+     * @return ProductsResult
+     *
+     * @throws ShopApi\Exception\MalformedJsonException
+     * @throws ShopApi\Exception\UnexpectedResultException
+     */
+    public function fetchProductsByEans(
+        array $eans,
+        array $fields = []
+    ) {
+        // we allow to pass a single ID instead of an array
+        settype($eans, 'array');
+
+        $query = $this->getQuery()
+            ->fetchProductsByEans($eans, $fields)
+        ;
+
+        return $query->executeSingle();
     }
 
     /**

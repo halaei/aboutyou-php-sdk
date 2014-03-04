@@ -1,4 +1,4 @@
-# Ingore common cruft
+/index.php
 .DS_STORE
 coverage
 test

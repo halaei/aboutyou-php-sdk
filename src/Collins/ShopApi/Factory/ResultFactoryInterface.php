@@ -23,6 +23,8 @@ interface ResultFactoryInterface
 
     public function createProductsResult($json);
 
+    public function createProductsEansResult($json);
+
     public function createProductSearchResult($json);
 
     public function createSuggest($json);
