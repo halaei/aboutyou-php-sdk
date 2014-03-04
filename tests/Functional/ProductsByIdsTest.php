@@ -8,7 +8,7 @@ namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi;
 
-class GetProductsTestAbstract extends AbstractShopApiTest
+class ProductsByTest extends AbstractShopApiTest
 {
     public function testFetchProducts()
     {

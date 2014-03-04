@@ -439,6 +439,23 @@ class Product extends AbstractModel
     }
 
     /**
+     * @param string $ean
+     *
+     * @return Variant[]
+     */
+    public function getVariantsByEan($ean)
+    {
+        $variants = [];
+        foreach ($this->variants as $variant) {
+            if ($variant->getEan() === $ean) {
+                $variants[] = $variant;
+            }
+        }
+
+        return $variants;
+    }
+
+    /**
      * This returns the first variant, which matches exactly the given facet group set
      *
      * @param FacetGroupSet $facetGroupSet

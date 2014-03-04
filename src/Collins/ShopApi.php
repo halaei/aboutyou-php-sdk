@@ -346,6 +346,29 @@ class ShopApi
     }
 
     /**
+     * @param integer[] $eans
+     * @param string[] $fields
+     *
+     * @return ProductsResult
+     *
+     * @throws ShopApi\Exception\MalformedJsonException
+     * @throws ShopApi\Exception\UnexpectedResultException
+     */
+    public function fetchProductsByEans(
+        array $eans,
+        array $fields = []
+    ) {
+        // we allow to pass a single ID instead of an array
+        settype($eans, 'array');
+
+        $query = $this->getQuery()
+            ->fetchProductsByEans($eans, $fields)
+        ;
+
+        return $query->executeSingle();
+    }
+
+    /**
      * @param ResultFactoryInterface $modelFactory
      */
     public function setResultFactory(ResultFactoryInterface $modelFactory)

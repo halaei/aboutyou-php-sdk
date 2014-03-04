@@ -31,6 +31,9 @@ class DefaultModelFactory implements ModelFactoryInterface
         $this->shopApi = $shopApi;
     }
 
+    /**
+     * @return ShopApi
+     */
     protected function getShopApi()
     {
         return $this->shopApi;
@@ -129,6 +132,14 @@ class DefaultModelFactory implements ModelFactoryInterface
     public function createProductsResult($json)
     {
         return new ShopApi\Model\ProductsResult($json);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createProductsEansResult($json)
+    {
+        return new ShopApi\Model\ProductsEansResult($json);
     }
 
     /**
