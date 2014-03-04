@@ -148,15 +148,10 @@ class ShopApi
      */
     public function setBaseImageUrl($baseImageUrl = null)
     {
-<<<<<<< HEAD
-        if (!$baseImageUrl) {
-            $baseImageUrl = 'http://cdn.mary-paul.de/file/';
-=======
         if ($baseImageUrl === null) {
             $this->baseImageUrl = self::DEFAULT_BASE_IMAGE_URL;
         } else if (is_string($baseImageUrl)) {
             $this->baseImageUrl = rtrim($baseImageUrl, '/') . '/';
->>>>>>> 6370ae08dcd3da1a29279b901cf8b7d2fed874be
         } else {
             $this->baseImageUrl = '';
         }
@@ -167,12 +162,7 @@ class ShopApi
      */
     public function getBaseImageUrl()
     {
-<<<<<<< HEAD
-        $this->imageUrlTemplate = $imageUrlTemplate
-            ?: 'http://cdn.mary-paul.de/file/{{hash}}?width={{width}}&height={{height}}';
-=======
         return $this->baseImageUrl;
->>>>>>> 6370ae08dcd3da1a29279b901cf8b7d2fed874be
     }
 
     /**
@@ -223,7 +213,7 @@ class ShopApi
         $query = $this->getQuery()->fetchBasket($sessionId);
 
         return $query->executeSingle();
-     }
+    }
 
     /**
      * Add product variant to basket.
@@ -438,73 +428,9 @@ class ShopApi
      */
     public function fetchOrder($orderId)
     {
-<<<<<<< HEAD
-        // we allow to pass a single ID instead of an array
-        if (!is_array($ids)) {
-            $ids = array($ids);
-        }
-
-        $data = array(
-            'live_variant' => array(
-                'ids' => $ids
-            )
-        );
-        return new Results\LiveVariantResult($this->request($data), $this);
-    }
-
-    /**
-     * Returns the result of a product search API request.
-     * Use this method to search for products you don't know the ID of.
-     * If you already know the ID, e.g. on a product detail page, use
-     * Collins::getProducts() instead.
-     *
-     * @param int $user_session_id free to choose ID of the current website visitor.
-     * This field is required for tracking reasons.
-     * @param array $filter contains data to filter products for
-     * @param array $result contains data for reducing the result
-     *
-     * @return \Collins\ShopApi\Results\ProductSearchResult
-     */
-    public function getProductSearch(
-        $user_session_id,
-        array $filter = array(),
-        array $result = array(
-            'fields' => array(
-                'id',
-                'name',
-                'active',
-                'brand_id',
-                'description_long',
-                'description_short',
-                'default_variant',
-                'variants',
-                'min_price',
-                'max_price',
-                'sale',
-                'default_image',
-                'attributes_merged',
-                'categories'
-            )
-        )
-    ) {
-        $data = array(
-            'product_search' => array(
-                'session_id' => (string)$user_session_id
-            )
-        );
-
-        if (count($filter) > 0) {
-            $data['product_search']['filter'] = $filter;
-        }
-
-        if (count($result) > 0) {
-            $data['product_search']['result'] = $result;
-        }
-=======
         $query = $this->getQuery()
             ->fetchOrder($orderId)
         ;
->>>>>>> 6370ae08dcd3da1a29279b901cf8b7d2fed874be
 
         return $query->executeSingle();
     }
