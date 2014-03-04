@@ -95,7 +95,7 @@ class ShopApiClient
                 $this->apiEndPoint = self::API_END_POINT_STAGE;
                 break;
             case 'live':
-                $this->apiEndPoint = self::API_END_POINT_STAGE;
+                $this->apiEndPoint = self::API_END_POINT_LIVE;
                 break;
             default:
                 $this->apiEndPoint = $apiEndPoint;
@@ -239,4 +239,4 @@ class ShopApiClient
         return $response;
     }
 
-} 
+}
