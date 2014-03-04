@@ -23,4 +23,11 @@
         </exclude>
     </groups>
 
+    <filter>
+        <blacklist>
+            <directory suffix=".php">vendor</directory>
+            <directory suffix=".php">src/Result</directory>
+            <file>src/CollinsApi.php</file>
+        </blacklist>
+    </filter>
 </phpunit>

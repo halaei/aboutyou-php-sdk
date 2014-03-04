@@ -7,55 +7,32 @@
 namespace Collins\ShopApi\Model;
 
 
-class ProductsResult implements \IteratorAggregate
+class ProductsResult extends AbstractProductsResult
 {
-    /** @var Product[] */
-    protected $products;
+    protected $productsNotFound = [];
 
-    /** @var string */
-    protected $pageHash;
-
-    public function __construct($jsonObject)
+    public function fromJson(\stdClass $jsonObject)
     {
-        $this->products = [];
-        $this->fromJson($jsonObject);
-    }
+        $this->pageHash = isset($jsonObject->pageHash) ? $jsonObject->pageHash : null;
 
-    public function createProduct($jsonProduct)
-    {
-        return new Product($jsonProduct);
-    }
+        $factory = $this->getModelFactory();
 
-    public function fromJson($jsonObject)
-    {
-        $this->pageHash = $jsonObject->pageHash;
-
-        foreach ($jsonObject->ids as $key => $jsonProduct) {
-            $this->products[$key] = $this->createProduct($jsonProduct);
+        if (isset($jsonObject->ids)) {
+            foreach ($jsonObject->ids as $key => $jsonProduct) {
+                if (isset($jsonProduct->error_code)) {
+                    $this->productsNotFound[] = $key;
+                    continue;
+                }
+                $this->products[$key] = $factory->createProduct($jsonProduct);
+            }
         }
     }
 
     /**
-     * @return string
+     * @return array of product ids
      */
-    public function getPageHash()
+    public function getProductsNotFound()
     {
-        return $this->pageHash;
-    }
-
-    /**
-     * @return Product[]
-     */
-    public function getProducts()
-    {
-        return $this->products;
-    }
-
-    /**
-     * allows foreach iteration over the products
-     * @return Iterator
-     */
-    public function getIterator() {
-        return new \ArrayIterator($this->products);
+        return $this->productsNotFound;
     }
 }

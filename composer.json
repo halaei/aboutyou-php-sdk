@@ -26,9 +26,8 @@
             "url": "git@codebasehq.com:antevorte/devcenter/cache.git"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.4",
         "collins/cache": "dev-master",
         "psr/log": "1.0.*",
         "guzzle/guzzle": "~3.7"
@@ -48,7 +47,7 @@
             "Collins\\": "src/"
         },
         "psr-4": {
-            "Collins\\ShopApi\\Test\\Functional\\": "tests/functional/"
+            "Collins\\ShopApi\\Test\\": "tests/"
         }
     }
 }
