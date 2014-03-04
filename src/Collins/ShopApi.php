@@ -24,8 +24,6 @@ use Psr\Log\LoggerInterface;
  */
 class ShopApi
 {
-    const DEFAULT_BASE_IMAGE_URL = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file/';
-
     /** @var ShopApiClient */
     protected $shopApiClient;
 
