@@ -265,7 +265,7 @@ class Product extends AbstractModel
      *
      * @return Category|null
      */
-    public function getMainCategory()
+    public function getCategory()
     {
         $category = $this->getFirstActiveCategory();
         if ($category === null) {
@@ -276,28 +276,114 @@ class Product extends AbstractModel
     }
 
     /**
+     * Returns array of deepest categories. E.g. of the product is in the category
+     * Damen > Schuhe > Absatzschuhe and Damen > Schuhe > Stiefelleten then
+     * [Absatzschuhe, Stiefelleten] will be returned
+     *
+     * @return Category[]
+     */
+    public function getDeepestCategories() {
+        $categoryIds = $this->getCategoryIds();
+        $categories = $this->getCategories();
+
+        // keep only ids of deepest categories
+        foreach($categories as $category) {
+            if($category->getParentId()) {
+                $key = array_search($category->getParentId(), $categoryIds);
+                if($key !== false) {
+                    unset($categoryIds[$key]);
+                }
+            }
+        }
+
+        // find categories by ids
+        $deepestCategories = [];
+
+        foreach($categories as $category) {
+            if(in_array($category->getId(), $categoryIds)) {
+                $deepestCategories[] = $category;
+            }
+        }
+
+        return $deepestCategories;
+    }
+
+    /**
+     * Returns array of deepest active categories. E.g. of the product is in the category
+     * Damen > Schuhe > Absatzschuhe and Damen > Schuhe > Stiefelleten then
+     * [Absatzschuhe, Stiefelleten] will be returned
+     *
+     * @return Category[]
+     */
+    public function getDeepestActiveCategories() {
+        $categoryIds = $this->getCategoryIds();
+        $categories = $this->getCategories();
+
+        // remove inactive categories
+        foreach($categories as $key => $category) {
+            if(!$category->isActive()) {
+                unset($categories[$key]);
+            }
+        }
+
+        $categories = array_values($categories);
+
+        // keep only ids of deepest categories
+        foreach($categories as $category) {
+            if($category->getParentId()) {
+                $key = array_search($category->getParentId(), $categoryIds);
+                if($key !== false) {
+                    unset($categoryIds[$key]);
+                }
+            }
+        }
+
+        // find categories by ids
+        $deepestCategories = [];
+
+        foreach($categories as $category) {
+            if(in_array($category->getId(), $categoryIds)) {
+                $deepestCategories[] = $category;
+            }
+        }
+
+        return $deepestCategories;
+    }
+
+    /**
+     * Returns the first active category found for this product.
+     * Deepest categories will be searched first.
+     *
+     * @see getDeepestActiveCategories
      * @return Category|null
      */
     public function getFirstActiveCategory()
     {
-        $categories = $this->getCategories();
-        foreach ($categories as $category) {
-            if ($category->isActive()) {
-                return $category;
-            }
+        $categories = $this->getDeepestActiveCategories();
+
+        if(count($categories)) {
+            return array_values($categories)[0];
         }
 
         return null;
     }
 
     /**
+     * Returns the first active or inactive category found for this product.
+     * Deepest categories will be searched first.
+     *
+     * @see getDeepestActiveCategories
      * @return Category|null
      */
     public function getFirstCategory()
     {
-        $categories = $this->getCategories();
+        $categories = $this->getDeepestCategories();
 
-        return count($categories) ? reset($categories) : null;
+        if(count($categories)) {
+            return array_values($categories)[0];
+        }
+
+        return null;
     }
 
     /**
