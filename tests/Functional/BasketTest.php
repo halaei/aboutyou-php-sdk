@@ -31,6 +31,37 @@ class BasketTestAbstract extends AbstractShopApiTest
 
         $basket = $shopApi->fetchBasket($this->sessionId);
         $this->checkBasket($basket);
+        $this->assertTrue($basket->hasErrors());
+
+        $items = $basket->getItems();
+        $this->assertCount(2, $items);
+
+        $this->assertEquals('identifier1', $items[0]->getId());
+        $this->assertFalse($items[0]->hasErrors());
+        $this->assertEquals(19.0, $items[0]->getTax());
+        $this->assertEquals(400, $items[0]->getPrice());
+        $this->assertEquals(390, $items[0]->getNet());
+        $this->assertEquals(10, $items[0]->getVat());
+        $this->assertEquals(123, $items[0]->getProduct()->getId());
+        $this->assertEquals(1543435, $items[0]->getVariant()->getId());
+        $this->assertNull($items[0]->getAdditionalData());
+        $this->assertNull($items[0]->getDescription());
+
+        $this->assertEquals('identifier3', $items[2]->getId());
+        $subItems = $items[2]->getItems();
+        $this->assertFalse($subItems[0]->hasErrors());
+        $this->assertEquals(19.0, $subItems[0]->getTax());
+        $this->assertEquals(600, $subItems[0]->getPrice());
+        $this->assertEquals(590, $subItems[0]->getNet());
+        $this->assertEquals(10, $subItems[0]->getVat());
+        $this->assertEquals(123, $subItems[0]->getProduct()->getId());
+        $this->assertEquals(12312121, $subItems[0]->getVariant()->getId());
+        $this->assertNotNull($subItems[0]->getAdditionalData());
+        $this->assertEquals('engravingssens', $subItems[0]->getDescription());
+        $this->assertEquals(['stuff'], $subItems[0]->getCustomData());
+
+//        $this->assertEquals('identifier2', $items[1]->getId());
+//        $this->assertTrue($items[1]->hasErrors());
 
         return $basket;
     }
@@ -97,18 +128,18 @@ class BasketTestAbstract extends AbstractShopApiTest
         $this->assertInternalType('int', $basket->getTotalVariants());
 
         foreach ($basket->getItems() as $item) {
-            $this->assertInstanceOf('Collins\ShopApi\Model\BasketItemInterface', $item);
-            if ($item instanceof ShopApi\Model\BasketItem) {
-                $this->assertInstanceOf('Collins\ShopApi\Model\BasketItem', $item);
+            $this->assertInstanceOf('Collins\ShopApi\Model\Basket\BasketItemInterface', $item);
+            if ($item instanceof Basket\BasketItem) {
+                $this->assertInstanceOf('Collins\ShopApi\Model\Basket\BasketItem', $item);
                 $this->checkBasketVariantItem($item);
             } else {
-                $this->assertInstanceOf('Collins\ShopApi\Model\BasketSet', $item);
+                $this->assertInstanceOf('Collins\ShopApi\Model\Basket\BasketSet', $item);
                 $this->checkBasketSet($item);
             }
         }
     }
 
-    private function checkBasketVariantItem(ShopApi\Model\BasketVariantItem $item)
+    private function checkBasketVariantItem(Basket\BasketVariantItem $item)
     {
         $this->assertInternalType('int', $item->getPrice());
         $this->assertInternalType('float', $item->getTax());
@@ -119,7 +150,7 @@ class BasketTestAbstract extends AbstractShopApiTest
 
     }
 
-    private function checkBasketSet(ShopApi\Model\BasketSet $set)
+    private function checkBasketSet(Basket\BasketSet $set)
     {
         foreach ($set->getItems() as $item) {
             $this->checkBasketVariantItem($item);

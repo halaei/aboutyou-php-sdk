@@ -2,6 +2,9 @@
 namespace Collins\ShopApi\Model;
 
 use Collins\ShopApi\Factory\ModelFactoryInterface;
+use Collins\ShopApi\Model\Basket\BasketVariantItem;
+use Collins\ShopApi\Model\Basket\BasketSet;
+use Collins\ShopApi\Model\Basket\BasketItem;
 
 /**
  *
@@ -103,7 +106,7 @@ class Basket
     /**
      * Get all basket items.
      *
-     * @return BasketVariantItem[]
+     * @return BasketItem[]|BasketSet[]
      */
     public function getItems()
     {

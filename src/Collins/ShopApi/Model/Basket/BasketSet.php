@@ -4,13 +4,15 @@
  * (c) Antevorte GmbH & Co KG
  */
 
-namespace Collins\ShopApi\Model;
+namespace Collins\ShopApi\Model\Basket;
 
 use Collins\ShopApi\Factory\ModelFactoryInterface;
+use Collins\ShopApi\Model\ResultErrorTrait;
 
 class BasketSet implements BasketItemInterface
 {
     use ResultErrorTrait;
+    use AddionalDataTrait;
 
     /** @var string */
     protected $id;
@@ -24,6 +26,9 @@ class BasketSet implements BasketItemInterface
     public function __construct(\stdClass $jsonObject, ModelFactoryInterface $factory, $products)
     {
         $this->id = $jsonObject->id;
+        if (isset($jsonObject->additional_data)) {
+            $this->additionalData = $jsonObject->additional_data;
+        }
 
         $this->parseErrorResult($jsonObject);
 

@@ -1,5 +1,9 @@
 <?php
-namespace Collins\ShopApi\Model;
+namespace Collins\ShopApi\Model\Basket;
+
+use Collins\ShopApi\Model\Variant;
+use Collins\ShopApi\Model\Product;
+use Collins\ShopApi\Model\ResultErrorTrait;
 
 /**
  *
@@ -7,6 +11,7 @@ namespace Collins\ShopApi\Model;
 class BasketVariantItem
 {
     use ResultErrorTrait;
+    use AddionalDataTrait;
 
     /**
      * @var object
@@ -27,9 +32,14 @@ class BasketVariantItem
      * Constructor.
      *
      * @param object $jsonObject The basket data.
+     * @param Product[] $products
      */
     public function __construct($jsonObject, array $products)
     {
+        if (isset($jsonObject->additional_data)) {
+            $this->additionalData = $jsonObject->additional_data;
+        }
+
         $this->parseErrorResult($jsonObject);
 
         $this->jsonObject = $jsonObject;

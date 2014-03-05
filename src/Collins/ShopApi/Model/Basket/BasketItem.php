@@ -4,7 +4,7 @@
  * (c) Antevorte GmbH & Co KG
  */
 
-namespace Collins\ShopApi\Model;
+namespace Collins\ShopApi\Model\Basket;
 
 class BasketItem extends BasketVariantItem implements BasketItemInterface
 {
@@ -18,6 +18,6 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
 
     public function getId()
     {
-        return $this->getId();
+        return $this->id;
     }
 }

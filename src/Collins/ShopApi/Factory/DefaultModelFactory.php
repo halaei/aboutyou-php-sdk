@@ -59,7 +59,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createBasketItem(\stdClass $json, array $products)
     {
-        return new ShopApi\Model\BasketItem($json, $products);
+        return new ShopApi\Model\Basket\BasketItem($json, $products);
     }
 
     /**
@@ -67,7 +67,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createBasketSet(\stdClass $json, array $products)
     {
-        return new ShopApi\Model\BasketSet($json, $this, $products);
+        return new ShopApi\Model\Basket\BasketSet($json, $this, $products);
     }
 
     /**
@@ -75,7 +75,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createBasketSetItem(\stdClass $json, array $products)
     {
-        return new ShopApi\Model\BasketVariantItem($json, $products);
+        return new ShopApi\Model\Basket\BasketVariantItem($json, $products);
     }
 
     /**

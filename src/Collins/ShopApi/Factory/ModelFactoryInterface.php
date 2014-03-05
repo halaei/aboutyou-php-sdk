@@ -12,7 +12,7 @@ interface ModelFactoryInterface extends ResultFactoryInterface
      * @param \stdClass $json
      * @param array $products
      *
-     * @return \Collins\ShopApi\Model\BasketItem
+     * @return \Collins\ShopApi\Model\Basket\BasketItem
      */
     public function createBasketItem(\stdClass $json, array $products);
 
@@ -20,7 +20,7 @@ interface ModelFactoryInterface extends ResultFactoryInterface
      * @param \stdClass $json
      * @param array $products
      *
-     * @return \Collins\ShopApi\Model\BasketSet
+     * @return \Collins\ShopApi\Model\Basket\BasketSet
      */
     public function createBasketSet(\stdClass $json, array $products);
 
@@ -28,7 +28,7 @@ interface ModelFactoryInterface extends ResultFactoryInterface
      * @param \stdClass $json
      * @param array $products
      *
-     * @return \Collins\ShopApi\Model\BasketVariantItem
+     * @return \Collins\ShopApi\Model\Basket\BasketVariantItem
      */
     public function createBasketSetItem(\stdClass $json, array $products);
 
