@@ -432,17 +432,44 @@ class Product extends AbstractModel
 
     /**
      * Returns all FacetGroups, which matches the current facet group set
+     * for example:
+     * [['color'] => 'rot'] =>
      *
-     * TODO: implement me
+     * @param FacetGroupSet $selectedFacetGroupSet
      *
-     * @param integer $groupId
-     *
-     * @param FacetGroupSet $facetGroupSet
+     * @return FacetGroup[]
      */
-    public function getSelectableFacetGroups($groupId, FacetGroupSet $facetGroupSet)
+    public function getSelectableFacetGroups(FacetGroupSet $selectedFacetGroupSet)
     {
-        $this->getFacetGroups($groupId);
+        /** @var FacetGroup[] $allGroups */
+        $allGroups = [];
+        $selectedGroupIds = $selectedFacetGroupSet->getGroupIds();
+
+        foreach ($this->getVariants() as $variant) {
+            $facetGroupSet = $variant->getFacetGroupSet();
+            if (!$facetGroupSet->contains($selectedFacetGroupSet)) {
+                continue;
+            }
+
+            $ids = $facetGroupSet->getGroupIds();
+
+            foreach ($ids as $groupId) {
+                if (in_array($groupId, $selectedGroupIds)) continue;
+
+                $group  = $facetGroupSet->getGroup($groupId);
+                $facets = $group->getFacets();
+                if (empty($facets)) continue;
+
+                if (!isset($allGroups[$groupId])) {
+                    $allGroups[$groupId] = new FacetGroup($group->getId(), $group->getName());
+                }
+                $allGroups[$groupId]->addFacets($facets);
+            }
+        }
+
+        return array_values($allGroups);
     }
+
 
     /**
      * @return Image|null
