@@ -16,7 +16,7 @@ curl -sS https://getcomposer.org/installer | php
         "repositories": [
             {
                 "type": "git",
-                "url": "git@codebasehq.com:antevorte/public-sdks-2/php-shop-sdk.git"
+                "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-shop-sdk.git"
             }
         ],
         "require": {
