@@ -26,7 +26,8 @@ class BasketTestAbstract extends AbstractShopApiTest
      */
     public function testBasket()
     {
-        $shopApi = $this->getShopApiWithResultFile('result/basket1.json');
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing"}}]';
+        $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
 
         $basket = $shopApi->fetchBasket($this->sessionId);
         $this->checkBasket($basket);
@@ -39,13 +40,16 @@ class BasketTestAbstract extends AbstractShopApiTest
      */
     public function testAddToBasket()
     {
-        $shopApi = $this->getShopApiWithResultFile('result/basket1.json');
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item1","variant_id":123}]}}]';
+        $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
 
         // add one item to basket
         $productVariantId = 123;
         $basket = $shopApi->addToBasket($this->sessionId, $productVariantId, 'item1');
         $this->checkBasket($basket);
 
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item2","variant_id":123}]}}]';
+        $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
         // add more of one item to basket
         $productVariantId = 123;
         $basket = $shopApi->addToBasket($this->sessionId, $productVariantId, 'item2');
@@ -57,9 +61,9 @@ class BasketTestAbstract extends AbstractShopApiTest
      */
     public function testRemoveFromBasket()
     {
-//        $this->markTestIncomplete('');
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"delete":"item3"}]}}]';
 
-        $shopApi = $this->getShopApiWithResultFile('result/basket1.json');
+        $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
 
         // remove all of one item from basket
         $basket = $shopApi->removeFromBasket($this->sessionId, 'item3');
@@ -72,8 +76,9 @@ class BasketTestAbstract extends AbstractShopApiTest
     public function testUpdateBasket(Basket $basket)
     {
 //        $this->markTestIncomplete('');
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing"}}]';
 
-        $shopApi = $this->getShopApiWithResultFile('result/basket1.json');
+        $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
 
         $basket = $shopApi->updateBasket($this->sessionId, $basket);
         $this->checkBasket($basket);

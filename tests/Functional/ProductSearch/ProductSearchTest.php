@@ -48,7 +48,7 @@ class ProductSearchTestAbstract extends AbstractShopApiTest
     public function testProductSearchFilterObject()
     {
         // This is the imported part of this test!!
-        $expectedRequestBody = '["categories": [123]]';
+        $expectedRequestBody = '[{"product_search":{"session_id":"1234","filter":{"categories":[123]}}}]';
 
         $shopApi = $this->getShopApiWithResult($this->getDummyResult(), $expectedRequestBody);
 

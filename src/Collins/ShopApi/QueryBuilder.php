@@ -100,7 +100,7 @@ class QueryBuilder
                 'session_id' => $sessionId,
                 'order_lines' => [
                     [
-                        'delete' => (int)$basketItemId
+                        'delete' => $basketItemId
                     ]
                 ]
             ]
@@ -111,11 +111,15 @@ class QueryBuilder
 
     public function updateBasket($sessionId, Basket $basket)
     {
+        $basketQuery = ['session_id'  => $sessionId];
+
+        $orderLines = $basket->getOrderLinesArray();
+        if (!empty($orderLines)) {
+            $basketQuery['order_lines'] = $orderLines;
+        }
+
         $this->query[] = [
-            'basket' => [
-                'session_id'  => $sessionId,
-                'order_lines' => $basket->getOrderLinesArray()
-            ]
+            'basket' => $basketQuery
         ];
 
         return $this;
