@@ -41,6 +41,9 @@ class Product extends AbstractModel
     /** @var array */
     protected $categoryIds;
 
+    /** @var array */
+    protected $categoryIdPaths;
+
     /** @var integer[] */
     protected $facetIds;
 
@@ -90,12 +93,13 @@ class Product extends AbstractModel
         $this->minPrice         = isset($jsonObject->min_price) ? $jsonObject->min_price : null;
         $this->maxPrice         = isset($jsonObject->max_price) ? $jsonObject->max_price : null;
 
-        $this->defaultImage   = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
-        $this->defaultVariant = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant) : null;
+        $this->defaultImage     = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
+        $this->defaultVariant   = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant) : null;
 
-        $this->variants     = self::parseVariants($jsonObject, $factory);
-        $this->styles       = self::parseStyles($jsonObject, $factory);
-        $this->categoryIds  = self::parseCategoryIds($jsonObject);
+        $this->variants         = self::parseVariants($jsonObject, $factory);
+        $this->styles           = self::parseStyles($jsonObject, $factory);
+        $this->categoryIdPaths  = self::parseCategoryIdPaths($jsonObject);
+
         $this->facetIds     = self::parseFacetIds($jsonObject);
     }
 
@@ -123,18 +127,18 @@ class Product extends AbstractModel
         return $styles;
     }
 
-    protected static function parseCategoryIds($jsonObject)
+    protected static function parseCategoryIdPaths($jsonObject)
     {
-        $cIds = [];
-        foreach (get_object_vars($jsonObject) as $name => $subIds) {
-            if (strpos($name, 'categories') !== 0) {
-                continue;
+        $paths = [];
+
+        foreach (get_object_vars($jsonObject) as $name => $categoryPaths) {
+            if (strpos($name, 'categories') === 0) {
+                $paths = $categoryPaths;
+                break;
             }
-            // flatten array
-            $cIds = call_user_func_array('array_merge', $subIds);
         }
 
-        return $cIds;
+        return $paths;
     }
 
     protected static function parseFacetIds($jsonObject)
@@ -283,29 +287,24 @@ class Product extends AbstractModel
      * @return Category[]
      */
     public function getDeepestCategories() {
-        $categoryIds = $this->getCategoryIds();
         $categories = $this->getCategories();
-
-        // keep only ids of deepest categories
-        foreach($categories as $category) {
-            if($category->getParentId()) {
-                $key = array_search($category->getParentId(), $categoryIds);
-                if($key !== false) {
-                    unset($categoryIds[$key]);
-                }
-            }
-        }
-
-        // find categories by ids
         $deepestCategories = [];
+        $c = 0;
+        while(count($categories) && $c<100) {
+            $c++;
+            $category = array_shift($categories);
 
-        foreach($categories as $category) {
-            if(in_array($category->getId(), $categoryIds)) {
-                $deepestCategories[] = $category;
+            $subCategories = $category->getSubCategories();
+
+            if(!count($subCategories) && !isset($deepestCategories[$category->getId()])) {
+                $deepestCategories[$category->getId()] = $category;
+            }
+            else {
+                $categories = array_merge($categories, $subCategories);
             }
         }
 
-        return $deepestCategories;
+        return array_values($deepestCategories);
     }
 
     /**
@@ -316,38 +315,26 @@ class Product extends AbstractModel
      * @return Category[]
      */
     public function getDeepestActiveCategories() {
-        $categoryIds = $this->getCategoryIds();
         $categories = $this->getCategories();
+        $deepestCategories = [];
+        $c = 0;
+        while(count($categories) && $c<100) {
+            $c++;
+            $category = array_shift($categories);
 
-        // remove inactive categories
-        foreach($categories as $key => $category) {
-            if(!$category->isActive()) {
-                unset($categories[$key]);
-            }
-        }
+            if($category->isActive()) {
+                $subCategories = $category->getSubCategories(Category::ACTIVE_ONLY);
 
-        $categories = array_values($categories);
-
-        // keep only ids of deepest categories
-        foreach($categories as $category) {
-            if($category->getParentId()) {
-                $key = array_search($category->getParentId(), $categoryIds);
-                if($key !== false) {
-                    unset($categoryIds[$key]);
+                if(!count($subCategories) && !isset($deepestCategories[$category->getId()])) {
+                    $deepestCategories[$category->getId()] = $category;
+                }
+                else {
+                    $categories = array_merge($categories, $subCategories);
                 }
             }
         }
 
-        // find categories by ids
-        $deepestCategories = [];
-
-        foreach($categories as $category) {
-            if(in_array($category->getId(), $categoryIds)) {
-                $deepestCategories[] = $category;
-            }
-        }
-
-        return $deepestCategories;
+        return array_values($deepestCategories);
     }
 
     /**
@@ -386,21 +373,25 @@ class Product extends AbstractModel
         return null;
     }
 
+
     /**
      * @return Category[]
      */
     public function getCategories()
     {
-        if ($this->categories) {
-            return $this->categories;
-        }
+        if (!$this->categories) {
+            // put all category ids in an array to fetch by ids
+            $flattened = [];
+            foreach($this->categoryIdPaths as $path) {
+                foreach($path as $categoryId) {
+                    $flattened[] = $categoryId;
+                }
+            }
 
-        $ids = $this->getCategoryIds();
-        if (empty($ids)) {
-            $this->categories = [];
-        } else {
-            $api = $this->getShopApi();
-            $this->categories = $api->fetchCategoriesByIds($ids)->getCategories();
+            // fetch all necessary categories from API
+            $flattenCategories = $this->getShopApi()->fetchCategoriesByIds($flattened)->getCategories();
+
+            $this->categories = Category::buildTree($flattenCategories);
         }
 
         return $this->categories;
