@@ -33,6 +33,14 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
         $this->ids = $ids;
     }
 
+    /**
+     * @return boolean
+     */
+    public function isEmpty()
+    {
+        return empty($this->ids);
+    }
+
     public function getIds()
     {
         return $this->ids;
@@ -120,7 +128,7 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
     public function getGroup($groupId)
     {
         $groups = $this->getGroups();
-        if( isset($groups[$groupId]) ) {
+        if (isset($groups[$groupId])) {
             return $groups[$groupId];
         }
 
@@ -205,5 +213,13 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
         }
 
         return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGroupIds()
+    {
+        return array_keys($this->ids);
     }
 }
