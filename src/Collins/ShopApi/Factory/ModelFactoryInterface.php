@@ -10,6 +10,7 @@ interface ModelFactoryInterface extends ResultFactoryInterface
 {
     /**
      * @param \stdClass $json
+     * @param array $products
      *
      * @return \Collins\ShopApi\Model\BasketItem
      */
@@ -17,6 +18,7 @@ interface ModelFactoryInterface extends ResultFactoryInterface
 
     /**
      * @param \stdClass $json
+     * @param array $products
      *
      * @return \Collins\ShopApi\Model\BasketSet
      */
@@ -24,6 +26,7 @@ interface ModelFactoryInterface extends ResultFactoryInterface
 
     /**
      * @param \stdClass $json
+     * @param array $products
      *
      * @return \Collins\ShopApi\Model\BasketVariantItem
      */
