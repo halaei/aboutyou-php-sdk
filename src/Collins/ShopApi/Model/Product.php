@@ -38,8 +38,6 @@ class Product extends AbstractModel
     /** @var integer */
     protected $brandId;
 
-    /** @var array */
-    protected $categoryIds;
 
     /** @var array */
     protected $categoryIdPaths;
@@ -230,6 +228,11 @@ class Product extends AbstractModel
         return $this->facetGroups;
     }
 
+    public function getCategoryIdPaths()
+    {
+        return $this->categoryIdPaths;
+    }
+
     /**
      * This is a low level method.
      *
@@ -254,14 +257,6 @@ class Product extends AbstractModel
     public function getFacetIds()
     {
         return $this->facetIds;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCategoryIds()
-    {
-        return $this->categoryIds;
     }
 
     /**

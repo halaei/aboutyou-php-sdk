@@ -78,11 +78,12 @@ class ProductsByTest extends AbstractShopApiTest
         $this->assertFalse($p123->isSale());
         $this->assertEquals('description long 1', $p123->getDescriptionLong());
         $this->assertEquals('description short 1', $p123->getDescriptionShort());
-        $c123Ids = $p123->getCategoryIds();
-        $this->assertCount(5, $c123Ids);
-        $this->assertEquals(19080, $c123Ids[0]);
-        $this->assertEquals(123, $c123Ids[1]);
-        $this->assertEquals(19084, $c123Ids[3]);
+        $c123Ids = $p123->getCategoryIdPaths();
+        $this->assertCount(4, $c123Ids);
+
+        $this->assertEquals(19080, $c123Ids[0][0]);
+        $this->assertEquals(123, $c123Ids[0][1]);
+        $this->assertEquals(19084, $c123Ids[2][0]);
 
         $this->assertNull($p123->getDefaultVariant());
 
