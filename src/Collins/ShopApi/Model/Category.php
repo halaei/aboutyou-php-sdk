@@ -114,6 +114,19 @@ class Category extends AbstractModel
      */
     public function getParent()
     {
+        if($this->parent) {
+            return $this->parent;
+        }
+
+        if(!$this->getParentId()) {
+            return null;
+        }
+
+        $parents = $this->getShopApi()->fetchCategoriesByIds([$this->getParentId()])->getCategories();
+        if(count($parents)) {
+            $this->parent = array_values($parents)[0];
+        }
+
         return $this->parent;
     }
 
@@ -140,5 +153,97 @@ class Category extends AbstractModel
         $breadcrumb[] = $this;
 
         return $breadcrumb;
+    }
+
+    /**
+     * Sets the parent category of this category
+     * @return void
+     */
+    protected function setParent(Category $parent)
+    {
+        $this->parent = $parent;
+    }
+
+    protected function addChild(Category $child)
+    {
+        $this->allSubCategories[] = $child;
+
+        if($child->isActive()) {
+            $this->activeSubCategories[] = $child;
+        }
+    }
+
+    protected function setSubCategories($categories)
+    {
+        $this->allSubCategories = $categories;
+
+        foreach($categories as $category) {
+            if($category->isActive()) {
+                $this->activeSubCategories[] = $category;
+            }
+        }
+    }
+
+    /**
+     * Builds a return a category tree array
+     *
+     * @param Category[] categories
+     * @return array
+     */
+    public static function buildTree($categories)
+    {
+        $tree = [];
+        foreach($categories as $category) {
+            if(!self::addToTree($category, $tree)) {
+                $tree[] = $category;
+            }
+        }
+
+        return $tree;
+    }
+
+    /**
+     * Used to add a single category in a category tree array
+     *
+     * @param Category $category
+     * @param array $tree
+     * @return bool true if category could be added
+     */
+    protected static function addToTree($category, &$tree) {
+        $added = false;
+
+        foreach($tree as $key => $cat) {
+
+            // is parent?
+            if($cat->getId() == $category->getParentId()) {
+                $category->setParent($cat);
+                $cat->addChild($category);
+
+                $tree[$key] = $cat;
+                return true;
+            }
+
+            // is child?
+            if($cat->getParentId() == $category->getId()) {
+                $added = true;
+
+                $cat->setParent($category);
+                $category->addChild($cat);
+
+                $tree[$key] = $category;
+                return true;
+            }
+
+            // check children
+            $subCategories = $cat->getSubCategories();
+
+            if(count($subCategories) && self::addToTree($category, $subCategories)) {
+                $cat->setSubCategories($subCategories);
+                $tree[$key] = $cat;
+                return true;
+            }
+        }
+
+        return false;
     }
 }

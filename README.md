@@ -16,11 +16,11 @@ curl -sS https://getcomposer.org/installer | php
         "repositories": [
             {
                 "type": "git",
-                "url": "git@codebasehq.com:antevorte/frontend-api-sdks/shop-sdk.git"
+                "url": "git@codebasehq.com:antevorte/public-sdks-2/php-shop-sdk.git"
             }
         ],
         "require": {
-            "collins/shop-sdk": "dev-development"
+            "collins/shop-sdk": "dev-master"
         }
     }
 ```

@@ -77,7 +77,7 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
     public function testGetMainCategory()
     {
         $product = $this->getProduct('product-with-categories.json');
-        $category = $product->getMainCategory();
+        $category = $product->getCategory();
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
         $this->assertEquals(16080, $category->getId());
     }
@@ -85,7 +85,7 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
     public function testGetCategoryNull()
     {
         $product  = $this->getProduct('product-with-attributes.json');
-        $category = $product->getMainCategory();
+        $category = $product->getCategory();
         $this->assertNull($category);
     }
 }
