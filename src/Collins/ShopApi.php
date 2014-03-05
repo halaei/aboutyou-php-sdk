@@ -8,6 +8,7 @@ use Collins\ShopApi\Criteria\CriteriaInterface;
 use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Factory\ResultFactoryInterface;
+use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
@@ -220,14 +221,14 @@ class ShopApi
      *
      * @param string $sessionId        Free to choose ID of the current website visitor.
      * @param int    $productVariantId ID of product variant.
-     * @param int    $amount           Amount of items to add.
+     * @param string $basketItemId  ID of single item or set in the basket
      *
      * @return \Collins\ShopApi\Model\Basket
      */
-    public function addToBasket($sessionId, $productVariantId, $amount = 1)
+    public function addToBasket($sessionId, $productVariantId, $basketItemId)
     {
         $query = $this->getQuery()
-            ->addToBasket($sessionId, $productVariantId, $amount)
+            ->addToBasket($sessionId, $productVariantId, $basketItemId)
         ;
 
         return $query->executeSingle();
@@ -236,33 +237,30 @@ class ShopApi
     /**
      * Remove product variant from basket.
      *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param int    $productVariantId ID of product variant.
+     * @param string $sessionId     Free to choose ID of the current website visitor.
+     * @param string $basketItemId  ID of single item or set in the basket
      *
      * @return \Collins\ShopApi\Model\Basket
      */
-    public function removeFromBasket($sessionId, $productVariantId)
+    public function removeFromBasket($sessionId, $basketItemId)
     {
         $query = $this->getQuery()
-            ->removeFromBasket($sessionId, $productVariantId)
+            ->removeFromBasket($sessionId, $basketItemId)
         ;
 
         return $query->executeSingle();
     }
 
     /**
-     * Update amount product variant in basket.
-     *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param int    $productVariantId ID of product variant.
-     * @param int    $amount           Amount to set.
+     * @param string $sessionId
+     * @param Basket $basket
      *
      * @return \Collins\ShopApi\Model\Basket
      */
-    public function updateBasketAmount($sessionId, $productVariantId, $amount)
+    public function updateBasket($sessionId, Basket $basket)
     {
         $query = $this->getQuery()
-            ->updateBasketAmount($sessionId, $productVariantId, $amount)
+            ->updateBasket($sessionId, $basket)
         ;
 
         return $query->executeSingle();

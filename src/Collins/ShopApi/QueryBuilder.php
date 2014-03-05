@@ -9,6 +9,7 @@ namespace Collins\ShopApi;
 
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Exception\InvalidParameterException;
+use Collins\ShopApi\Model\Basket;
 
 class QueryBuilder
 {
@@ -65,23 +66,22 @@ class QueryBuilder
     /**
      * @param string $sessionId        Free to choose ID of the current website visitor.
      * @param int    $productVariantId ID of product variant.
-     * @param int    $amount           Amount of items to add.
+     * @param string $basketItemId  ID of single item or set in the basket
      *
      * @return $this
      */
-    public function addToBasket($sessionId, $productVariantId)
+    public function addToBasket($sessionId, $productVariantId, $basketItemId)
     {
         $this->query[] = [
-            'basket' => array(
+            'basket' => [
                 'session_id' => $sessionId,
-                'product_variant' => array(
-                    array(
-                        'id' => (int)$productVariantId,
-                        'command' => 'add',
-                        'amount' => (int)$amount,
-                    ),
-                ),
-            )
+                'order_lines' => [
+                    [
+                        'id' => $basketItemId,
+                        'variant_id' => (int)$productVariantId
+                    ]
+                ]
+            ]
         ];
 
         return $this;
@@ -89,48 +89,33 @@ class QueryBuilder
 
     /**
      * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param int    $productVariantId ID of product variant.
+     * @param string $basketItemId  ID of single item or set in the basket
      *
      * @return $this
      */
-    public function removeFromBasket($sessionId, $productVariantId)
+    public function removeFromBasket($sessionId, $basketItemId)
     {
         $this->query[] = [
-            'basket' => array(
+            'basket' => [
                 'session_id' => $sessionId,
-                'product_variant' => array(
-                    array(
-                        'id' => (int)$productVariantId,
-                        'command' => 'set',
-                        'amount' => 0,
-                    ),
-                ),
-            )
+                'order_lines' => [
+                    [
+                        'delete' => (int)$basketItemId
+                    ]
+                ]
+            ]
         ];
 
         return $this;
     }
 
-    /**
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param int    $productVariantId ID of product variant.
-     * @param int    $amount           Amount to set.
-     *
-     * @return $this
-     */
-    public function updateBasketAmount($sessionId, $productVariantId, $amount)
+    public function updateBasket($sessionId, Basket $basket)
     {
         $this->query[] = [
-            'basket_add' => array(
-                'session_id' => $sessionId,
-                'product_variant' => array(
-                    array(
-                        'id' => (int)$productVariantId,
-                        'command' => 'set',
-                        'amount' => (int)$amount,
-                    ),
-                ),
-            )
+            'basket' => [
+                'session_id'  => $sessionId,
+                'order_lines' => $basket->getOrderLinesArray()
+            ]
         ];
 
         return $this;

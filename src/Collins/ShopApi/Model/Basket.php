@@ -34,18 +34,6 @@ class Basket
     }
 
     /**
-     * Create basket item from json object.
-     *
-     * @param object $jsonItem
-     *
-     * @return BasketVariantItem
-     */
-    protected function createBasketItem($jsonItem)
-    {
-        return new BasketVariantItem($jsonItem);
-    }
-
-    /**
      * Get the total price.
      *
      * @return integer
@@ -124,6 +112,17 @@ class Basket
         }
 
         return $this->items;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOrderLinesArray()
+    {
+        $orderLines = [
+        ];
+
+        return $orderLines;
     }
 
     protected function parseItems()

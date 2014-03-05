@@ -30,6 +30,8 @@ class BasketTestAbstract extends AbstractShopApiTest
 
         $basket = $shopApi->fetchBasket($this->sessionId);
         $this->checkBasket($basket);
+
+        return $basket;
     }
 
     /**
@@ -37,8 +39,6 @@ class BasketTestAbstract extends AbstractShopApiTest
      */
     public function testAddToBasket()
     {
-        $this->markTestIncomplete('');
-
         $shopApi = $this->getShopApiWithResultFile('result/basket1.json');
 
         // add one item to basket
@@ -57,28 +57,25 @@ class BasketTestAbstract extends AbstractShopApiTest
      */
     public function testRemoveFromBasket()
     {
-        $this->markTestIncomplete('');
+//        $this->markTestIncomplete('');
 
         $shopApi = $this->getShopApiWithResultFile('result/basket1.json');
 
         // remove all of one item from basket
-        $productVariantId = 123;
-        $basket = $shopApi->removeFromBasket($this->sessionId, $productVariantId, 'item3');
+        $basket = $shopApi->removeFromBasket($this->sessionId, 'item3');
         $this->checkBasket($basket);
     }
 
     /**
-     *
+     * @depends testBasket
      */
-    public function testUpdateBasketAmounts()
+    public function testUpdateBasket(Basket $basket)
     {
-        $this->markTestIncomplete('');
+//        $this->markTestIncomplete('');
 
-        $shopApi = $this->getShopApiWithResultFile('basket-add.json');
+        $shopApi = $this->getShopApiWithResultFile('result/basket1.json');
 
-        $productVariantId = 123;
-        $amount = 2;
-        $basket = $shopApi->updateBasketAmount($this->sessionId, $productVariantId, $amount);
+        $basket = $shopApi->updateBasket($this->sessionId, $basket);
         $this->checkBasket($basket);
     }
 
