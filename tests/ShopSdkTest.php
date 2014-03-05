@@ -11,7 +11,6 @@ class ShopSdkTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\Autocomplete');
-        $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\BasketItem');
         $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\Category');
         $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\CategoriesResult');
         $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\CategoryTree');

@@ -6,7 +6,6 @@
 
 namespace Collins\ShopApi\Model;
 
-
 class Order
 {
     /** @var string */
@@ -15,10 +14,10 @@ class Order
     /** @var Basket */
     protected $basket;
 
-    public function __construct($json)
+    public function __construct($id, Basket $basket)
     {
-        $this->id     = $json->order_id;
-        $this->basket = new Basket($json->basket);
+        $this->id     = $id;
+        $this->basket = $basket;
     }
 
     /**

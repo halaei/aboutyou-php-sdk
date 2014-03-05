@@ -19,7 +19,6 @@ class DefaultModelFactory implements ModelFactoryInterface
     public function __construct($shopApi)
     {
         ShopApi\Model\Autocomplete::setShopApi($shopApi);
-        ShopApi\Model\BasketItem::setShopApi($shopApi);
         ShopApi\Model\Category::setShopApi($shopApi);
         ShopApi\Model\CategoriesResult::setShopApi($shopApi);
         ShopApi\Model\CategoryTree::setShopApi($shopApi);
@@ -52,7 +51,31 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createBasket($json)
     {
-        return new ShopApi\Model\Basket($json);
+        return new ShopApi\Model\Basket($json, $this);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createBasketItem(\stdClass $json, array $products)
+    {
+        return new ShopApi\Model\BasketItem($json, $products);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createBasketSet(\stdClass $json, array $products)
+    {
+        return new ShopApi\Model\BasketSet($json, $this, $products);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createBasketSetItem(\stdClass $json, array $products)
+    {
+        return new ShopApi\Model\BasketVariantItem($json, $products);
     }
 
     /**
@@ -171,7 +194,9 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createOrder($json)
     {
-        return new ShopApi\Model\Order($json);
+        $basket = $this->createBasket($json->basket);
+
+        return new ShopApi\Model\Order($json->order_id, $basket);
     }
 
     /**

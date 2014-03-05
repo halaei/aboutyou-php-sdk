@@ -51,10 +51,10 @@ class QueryBuilder
      *
      * @return $this
      */
-    public function fetchBasket($sessionId)
+    public function  fetchBasket($sessionId)
     {
         $this->query[] = [
-            'basket_get' => [
+            'basket' => [
                 'session_id' => $sessionId
             ]
         ];
@@ -69,10 +69,10 @@ class QueryBuilder
      *
      * @return $this
      */
-    public function addToBasket($sessionId, $productVariantId, $amount = 1)
+    public function addToBasket($sessionId, $productVariantId)
     {
         $this->query[] = [
-            'basket_add' => array(
+            'basket' => array(
                 'session_id' => $sessionId,
                 'product_variant' => array(
                     array(
@@ -96,7 +96,7 @@ class QueryBuilder
     public function removeFromBasket($sessionId, $productVariantId)
     {
         $this->query[] = [
-            'basket_add' => array(
+            'basket' => array(
                 'session_id' => $sessionId,
                 'product_variant' => array(
                     array(

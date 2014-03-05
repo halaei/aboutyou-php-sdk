@@ -1,29 +1,36 @@
 <?php
 namespace Collins\ShopApi\Model;
 
+use Collins\ShopApi\Factory\ModelFactoryInterface;
+
 /**
  *
  */
 class Basket
 {
-    /**
-     * @var object
-     */
+    /** @var object */
     protected $jsonObject = null;
 
-    /**
-     * @var BasketItem[]
-     */
-    private $items = array();
+    /** @var ModelFactoryInterface */
+    protected $factory;
+
+    /** @var AbstractBasketItem[] */
+    private $items = [];
+
+    private $errors = [];
+
+    /** @var integer */
+    protected $uniqueVariantCount;
 
     /**
      * Constructor.
      *
      * @param object $jsonObject The basket data.
      */
-    public function __construct($jsonObject)
+    public function __construct($jsonObject, ModelFactoryInterface $factory)
     {
         $this->jsonObject = $jsonObject;
+        $this->factory    = $factory;
     }
 
     /**
@@ -31,11 +38,11 @@ class Basket
      *
      * @param object $jsonItem
      *
-     * @return BasketItem
+     * @return BasketVariantItem
      */
     protected function createBasketItem($jsonItem)
     {
-        return new BasketItem($jsonItem);
+        return new BasketVariantItem($jsonItem);
     }
 
     /**
@@ -75,7 +82,11 @@ class Basket
      */
     public function getTotalAmount()
     {
-        return $this->jsonObject->amount_variants;
+        if (!$this->items) {
+            $this->parseItems();
+        }
+
+        return count($this->items);
     }
 
     /**
@@ -85,24 +96,64 @@ class Basket
      */
     public function getTotalVariants()
     {
-        return $this->jsonObject->total_variants;
+        if (!$this->items) {
+            $this->parseItems();
+        }
+
+        return $this->uniqueVariantCount;
+    }
+
+    public function hasErrors()
+    {
+        if (!$this->items) {
+            $this->parseItems();
+        }
+
+        return count($this->errors) > 0;
     }
 
     /**
      * Get all basket items.
      *
-     * @return BasketItem[]
+     * @return BasketVariantItem[]
      */
     public function getItems()
     {
-        if( !$this->items ) {
-            foreach ($this->jsonObject->product_variant as $jsonItem) {
-                if( isset($this->jsonObject->products->{$jsonItem->product_id}) ) {
-                    $jsonItem->product = $this->jsonObject->products->{$jsonItem->product_id};
-                    $this->items[] = $this->createBasketItem($jsonItem);
-                }
+        if (!$this->items) {
+            $this->parseItems();
+        }
+
+        return $this->items;
+    }
+
+    protected function parseItems()
+    {
+        $factory = $this->factory;
+
+        $products = [];
+        foreach ($this->jsonObject->products as $productId => $jsonProduct) {
+            $products[$productId] = $factory->createProduct($jsonProduct);
+        }
+        unset($this->jsonObject->products);
+
+        $vids = [];
+        foreach ($this->jsonObject->order_lines as $index => $jsonItem) {
+            if (isset($jsonItem->set_items)) {
+                $item = $factory->createBasketSet($jsonItem, $products);
+            } else {
+                $item = $factory->createBasketItem($jsonItem, $products);
+                $vids[] = $jsonItem->variant_id;
+            }
+
+            if ($item->hasErrors()) {
+                $this->errors[$index] = $item;
+            } else {
+                $this->items[$index] = $item;
             }
         }
-        return $this->items;
+        unset($this->jsonObject->order_lines);
+
+        array_unique($vids);
+        $this->uniqueVariantCount = count($vids);
     }
 }

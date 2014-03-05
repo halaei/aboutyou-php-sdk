@@ -60,8 +60,7 @@ class Query extends QueryBuilder
 
     protected $mapping = [
         'autocompletion' => 'createAutocomplete',
-        'basket_get'     => 'createBasket',
-        'basket_add'     => 'createBasket',
+        'basket'         => 'createBasket',
         'category'       => 'createCategoriesResult',
         'category_tree'  => 'createCategoryTree',
         'facets'         => 'createFacetsList',

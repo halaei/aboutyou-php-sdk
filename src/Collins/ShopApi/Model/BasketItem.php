@@ -1,122 +1,23 @@
 <?php
+/**
+ * @auther nils.droege@antevorte.org
+ * (c) Antevorte GmbH & Co KG
+ */
+
 namespace Collins\ShopApi\Model;
 
-/**
- *
- */
-class BasketItem extends AbstractModel
+class BasketItem extends BasketVariantItem implements BasketItemInterface
 {
-    /**
-     * @var object
-     */
-    protected $jsonObject = null;
+    protected $id;
 
-    /**
-     * @var Product
-     */
-    private $product = null;
-
-    /**
-     * @var Variant
-     */
-    private $variant = null;
-
-    /**
-     * Constructor.
-     *
-     * @param object $jsonObject The basket data.
-     */
-    public function __construct($jsonObject)
+    public function __construct(\stdClass $jsonObject, $products)
     {
-        $this->jsonObject = $jsonObject;
+        $this->id = $jsonObject->id;
+        parent::__construct($jsonObject, $products);
     }
 
-    /**
-     * Get the total price.
-     *
-     * @return integer
-     */
-    public function getTotalPrice()
+    public function getId()
     {
-        return $this->jsonObject->total_price;
-    }
-
-    /**
-     * Get the unit price.
-     *
-     * @return integer
-     */
-    public function getUnitPrice()
-    {
-        return $this->jsonObject->unit_price;
-    }
-
-    /**
-     * Get the amount of items.
-     *
-     * @return integer
-     */
-    public function getAmount()
-    {
-        return $this->jsonObject->amount;
-    }
-
-    /**
-     * Get the tax.
-     *
-     * @return integer
-     */
-    public function getTax()
-    {
-        return $this->jsonObject->tax;
-    }
-
-    /**
-     * Get the tax.
-     *
-     * @return integer
-     */
-    public function getVat()
-    {
-        return $this->jsonObject->total_vat;
-    }
-
-
-    /**
-     * Get the variant old price in euro cents.
-     *
-     * @return integer
-     */
-    public function getOldPrice()
-    {
-        return $this->getVariant()->getOldPrice();
-    }
-
-    /**
-     * Get the product.
-     *
-     * @return Product
-     */
-    public function getProduct()
-    {
-        if (!$this->product) {
-            $this->product = $this->getModelFactory()->createProduct($this->jsonObject->product);
-        }
-
-        return $this->product;
-    }
-
-    /**
-     * Get the product variant.
-     *
-     * @return Variant
-     */
-    public function getVariant()
-    {
-        if (!$this->variant) {
-            $this->variant = $this->getProduct()->getVariantById($this->jsonObject->id);
-        }
-
-        return $this->variant;
+        return $this->getId();
     }
 }
