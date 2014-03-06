@@ -228,7 +228,7 @@ class Product extends AbstractModel
         return $this->facetGroups;
     }
 
-    public function getCategoryIdPaths()
+    public function getCategoryIdHierachies()
     {
         return $this->categoryIdPaths;
     }
