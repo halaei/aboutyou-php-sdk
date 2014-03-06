@@ -275,15 +275,15 @@ class Product extends AbstractModel
     }
 
     /**
-     * Returns array of deepest categories. E.g. of the product is in the category
+     * Returns array of categories without subcategories. E.g. of the product is in the category
      * Damen > Schuhe > Absatzschuhe and Damen > Schuhe > Stiefelleten then
      * [Absatzschuhe, Stiefelleten] will be returned
      *
      * @return Category[]
      */
-    public function getDeepestCategories() {
+    public function getLeafCategories() {
         $categories = $this->getCategories();
-        $deepestCategories = [];
+        $leafCategories = [];
         $c = 0;
         while(count($categories) && $c<100) {
             $c++;
@@ -291,27 +291,27 @@ class Product extends AbstractModel
 
             $subCategories = $category->getSubCategories();
 
-            if(!count($subCategories) && !isset($deepestCategories[$category->getId()])) {
-                $deepestCategories[$category->getId()] = $category;
+            if(!count($subCategories) && !isset($leafCategories[$category->getId()])) {
+                $leafCategories[$category->getId()] = $category;
             }
             else {
                 $categories = array_merge($categories, $subCategories);
             }
         }
 
-        return array_values($deepestCategories);
+        return array_values($leafCategories);
     }
 
     /**
-     * Returns array of deepest active categories. E.g. of the product is in the category
+     * Returns array of active categories that don't have any active subcategories. E.g. of the product is in the category
      * Damen > Schuhe > Absatzschuhe and Damen > Schuhe > Stiefelleten then
      * [Absatzschuhe, Stiefelleten] will be returned
      *
      * @return Category[]
      */
-    public function getDeepestActiveCategories() {
+    public function getActiveLeafCategories() {
         $categories = $this->getCategories();
-        $deepestCategories = [];
+        $leafCategories = [];
         $c = 0;
         while(count($categories) && $c<100) {
             $c++;
@@ -320,8 +320,8 @@ class Product extends AbstractModel
             if($category->isActive()) {
                 $subCategories = $category->getSubCategories(Category::ACTIVE_ONLY);
 
-                if(!count($subCategories) && !isset($deepestCategories[$category->getId()])) {
-                    $deepestCategories[$category->getId()] = $category;
+                if(!count($subCategories) && !isset($leafCategories[$category->getId()])) {
+                    $leafCategories[$category->getId()] = $category;
                 }
                 else {
                     $categories = array_merge($categories, $subCategories);
@@ -329,19 +329,19 @@ class Product extends AbstractModel
             }
         }
 
-        return array_values($deepestCategories);
+        return array_values($leafCategories);
     }
 
     /**
      * Returns the first active category found for this product.
-     * Deepest categories will be searched first.
+     * Leaf categories will be searched first.
      *
-     * @see getDeepestActiveCategories
+     * @see getActiveLeafCategories
      * @return Category|null
      */
     public function getFirstActiveCategory()
     {
-        $categories = $this->getDeepestActiveCategories();
+        $categories = $this->getActiveLeafCategories();
 
         if(count($categories)) {
             return array_values($categories)[0];
@@ -352,14 +352,14 @@ class Product extends AbstractModel
 
     /**
      * Returns the first active or inactive category found for this product.
-     * Deepest categories will be searched first.
+     * Leaf categories will be searched first.
      *
-     * @see getDeepestActiveCategories
+     * @see getActiveLeafCategories
      * @return Category|null
      */
     public function getFirstCategory()
     {
-        $categories = $this->getDeepestCategories();
+        $categories = $this->getLeafCategories();
 
         if(count($categories)) {
             return array_values($categories)[0];
