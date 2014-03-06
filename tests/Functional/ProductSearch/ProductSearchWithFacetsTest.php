@@ -54,6 +54,10 @@ class ProductSearchWithFacetsTestAbstract extends AbstractShopApiTest
         $this->assertEquals(null, $priceRanges[5]->getMax());
         $this->assertEquals(0, $priceRanges[5]->getMean());
         $this->assertEquals(0, $priceRanges[5]->getSum());
+
+        $this->assertEquals(399, $productSearchResult->getMinPrice());
+        $this->assertEquals(59900, $priceRanges[2]->getMax());
+        $this->assertEquals(59900, $productSearchResult->getMaxPrice());
     }
 
     public function testProductSearchWithFacetResult()
