@@ -54,6 +54,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
 
     /**
      * Creates a new instance of this class and returns it.
+     *
+     * @param $sessionId
+     *
      * @return ProductSearchCriteria
      */
     public static function create($sessionId)
@@ -167,6 +170,8 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     /**
      * @param string $type
      * @param string $direction
+     *
+     * @return $this
      */
     public function sortBy($type, $direction = self::SORT_ASC)
     {
@@ -181,6 +186,8 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     /**
      * @param integer $limit
      * @param integer $offset
+     *
+     * @return $this
      */
     public function setLimit($limit, $offset = 0)
     {
@@ -348,6 +355,14 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         $this->sessionId = $sessionId;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSessionId()
+    {
+        return $this->sessionId;
     }
 
     /**

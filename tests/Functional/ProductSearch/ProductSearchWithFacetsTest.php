@@ -12,7 +12,7 @@ class ProductSearchWithFacetsTestAbstract extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFile('result-product-search-with-facets.json');
 
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('1234'));
+        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
 
         $saleFacet = $productSearchResult->getSaleCounts();
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\ProductSearchResult\\SaleCounts', $saleFacet);
@@ -26,7 +26,7 @@ class ProductSearchWithFacetsTestAbstract extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFile('result-product-search-with-facets.json');
 
         // get all available products
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('1234'));
+        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
         $priceRanges = $productSearchResult->getPriceRanges();
         $this->assertInternalType('array', $priceRanges);
         $this->assertCount(6, $priceRanges);
