@@ -158,33 +158,50 @@ class ProductFacetsTest extends AbstractShopApiTest
     wenn rot,L      =>   [baumwolle]
     wenn blau,XL    =>   []
     */
-    public function testGetSelectableFacetGroups()
+    /**
+     * @param $ids
+     * @param $expectedValues
+     * @dataProvider selectableFacetGroupsProvider
+     */
+    public function testGetSelectableFacetGroups($ids, $expectedValues)
     {
         $this->getShopApiWithResultFile('facets-for-product-variant-facets.json');
 
         $json = $this->getJsonObjectFromFile('product/product-variant-facets.json');
         $product = new ShopApi\Model\Product($json);
 
-        $facetGroupSet = new ShopApi\Model\FacetGroupSet([]);
-        $groups = $product->getSelectableFacetGroups($facetGroupSet);
-        $this->assertCount(4, $groups);
-        $this->assertEquals('0:264', $groups[0]->getUniqueKey());
-        $this->assertEquals('1:1001,1002,1003', $groups[1]->getUniqueKey());
-        $this->assertEquals('2:2001,2002,2003', $groups[2]->getUniqueKey());
-        $this->assertEquals('3:3001,3002', $groups[3]->getUniqueKey());
 
-        $facetGroupSet = new ShopApi\Model\FacetGroupSet(["1"=>[1001]]);
+        $facetGroupSet = new ShopApi\Model\FacetGroupSet($ids);
         $groups = $product->getSelectableFacetGroups($facetGroupSet);
-        $this->assertCount(3, $groups);
-        $this->assertEquals('0:264', $groups[0]->getUniqueKey());
-        $this->assertEquals('2:2001,2002,2003', $groups[1]->getUniqueKey());
-        $this->assertEquals('3:3001,3002', $groups[2]->getUniqueKey());
+        $this->assertCount(count($expectedValues), $groups);
+        foreach ($expectedValues as $index => $expected) {
+            $this->assertEquals($expected, $groups[$index]->getUniqueKey());
+        }
+    }
 
-        $facetGroupSet = new ShopApi\Model\FacetGroupSet(["2"=>[2003]]);
-        $groups = $product->getSelectableFacetGroups($facetGroupSet);
-        $this->assertCount(3, $groups);
-        $this->assertEquals('0:264', $groups[0]->getUniqueKey());
-        $this->assertEquals('1:1001', $groups[1]->getUniqueKey());
-        $this->assertEquals('3:3001,3002', $groups[2]->getUniqueKey());
+    public function selectableFacetGroupsProvider()
+    {
+        // array of [<ids array>, <expected group keys array>]
+        return [
+            // wenn []         =>       [rot,blau,gelb], [M,L,XL], [metall,baumwolle]
+            [[],                        ['0:264', '1:1001,1002,1003', '2:2001,2002,2003', '3:3001,3002']],
+
+            // wenn XL         =>       [rot],      [metall,baumwolle]
+            [["2"=>[2003]],             ['0:264', '1:1001', '3:3001,3002']],
+            // wenn L          =>       [rot,blau], [baumwolle]
+            [["2"=>[2002]],             ['0:264', '1:1001,1002', '3:3001']],
+            // wenn M          =>       [rot,gelb], [baumwolle]
+            [["2"=>[2001]],             ['0:264', '1:1001,1003', '3:3001']],
+
+            // wenn rot        =>       [M,L,XL],   [metall,baumwolle]
+            [["1"=>[1001]],             ['0:264', '2:2001,2002,2003', '3:3001,3002']],
+
+            // wenn rot,XL     =>       [metall,baumwolle]
+            [["1"=>[1001],"2"=>[2003]], ['0:264', '3:3001,3002']],
+            // wenn rot,L      =>       [baumwolle]
+            [["1"=>[1001],"2"=>[2002]], ['0:264', '3:3001']],
+            // wenn blau,XL    =>       []
+            [["1"=>[1002],"2"=>[2003]], []],
+        ];
     }
 }
