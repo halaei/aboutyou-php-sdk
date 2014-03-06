@@ -80,8 +80,6 @@ class Product extends AbstractModel
         $this->id   = $jsonObject->id;
         $this->name = $jsonObject->name;
 
-        $factory = $this->getModelFactory();
-
         $this->isSale            = isset($jsonObject->sale) ? $jsonObject->sale : false;
         $this->descriptionShort  = isset($jsonObject->description_short) ? $jsonObject->description_short : '';
         $this->descriptionLong   = isset($jsonObject->description_long) ? $jsonObject->description_long : '';
@@ -91,11 +89,15 @@ class Product extends AbstractModel
         $this->minPrice         = isset($jsonObject->min_price) ? $jsonObject->min_price : null;
         $this->maxPrice         = isset($jsonObject->max_price) ? $jsonObject->max_price : null;
 
-        $this->defaultImage     = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
-        $this->defaultVariant   = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant) : null;
+        if (isset($jsonObject->default_image) || isset($jsonObject->default_variant) || isset($jsonObject->variants) || !empty($jsonObject->styles)) {
+            $factory = $this->getModelFactory();
 
-        $this->variants         = self::parseVariants($jsonObject, $factory);
-        $this->styles           = self::parseStyles($jsonObject, $factory);
+            $this->defaultImage     = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
+            $this->defaultVariant   = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant) : null;
+
+            $this->variants         = self::parseVariants($jsonObject, $factory);
+            $this->styles           = self::parseStyles($jsonObject, $factory);
+        }
         $this->categoryIdPaths  = self::parseCategoryIdPaths($jsonObject);
 
         $this->facetIds     = self::parseFacetIds($jsonObject);
@@ -213,6 +215,10 @@ class Product extends AbstractModel
 
     protected function generateFacetGroupSet()
     {
+        if (empty($this->facetIds)) {
+            throw new ShopApi\Exception\RuntimeException('To use this method, you must add the field ProductFields::ATTRIBUTES_MERGED to the "product search" or "products by ids"');
+        }
+
         $this->facetGroups = new FacetGroupSet($this->facetIds);
     }
 

@@ -14,7 +14,7 @@ class ProductsByTest extends AbstractShopApiTest
     {
         $productIds = array(123, 456);
 
-        $shopApi = $this->getShopApiWithResultFile('products.json');
+        $shopApi = $this->getShopApiWithResultFile('result/products.json');
 
         $productResult = $shopApi->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
@@ -65,7 +65,7 @@ class ProductsByTest extends AbstractShopApiTest
     {
         $productIds = array(123, 456);
 
-        $shopApi = $this->getShopApiWithResultFile('products-full.json');
+        $shopApi = $this->getShopApiWithResultFile('result/products-full.json');
 
         $productResult = $shopApi->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
@@ -113,7 +113,7 @@ class ProductsByTest extends AbstractShopApiTest
     {
         $productIds = array(220430);
 
-        $shopApi = $this->getShopApiWithResultFile('products-with-styles.json');
+        $shopApi = $this->getShopApiWithResultFile('result/products-with-styles.json');
 
         $productResult = $shopApi->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
@@ -137,7 +137,7 @@ class ProductsByTest extends AbstractShopApiTest
 
         $productIds = array(123);
 
-        $shopApi = $this->getShopApiWithResultFile('products.json');
+        $shopApi = $this->getShopApiWithResultFile('result/products.json');
 
         $productResult = $shopApi->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
@@ -199,7 +199,7 @@ EOS;
 
         $productIds = array(123);
 
-        $shopApi = $this->getShopApiWithResultFile('products-full.json');
+        $shopApi = $this->getShopApiWithResultFile('result/products-full.json');
 
         $productResult = $shopApi->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();

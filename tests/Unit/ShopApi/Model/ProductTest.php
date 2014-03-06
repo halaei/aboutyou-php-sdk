@@ -10,6 +10,12 @@ use Collins\ShopApi\Model\Product;
 
 class ProductTest extends AbstractModelTest
 {
+    public function testConstructor()
+    {
+        $json = json_decode('{"id":1,"name":"Product"}');
+        new Product($json);
+    }
+
     /**
      * @expectedException \Collins\ShopApi\Exception\MalformedJsonException
      */
@@ -17,6 +23,16 @@ class ProductTest extends AbstractModelTest
     {
         $json = json_decode('{"id":1,"but":"now name attribute"}');
         new Product($json);
+    }
+
+    /**
+     * @expectedException \Collins\ShopApi\Exception\RuntimeException
+     */
+    public function testGetBrandRuntimeException()
+    {
+        $json = json_decode('{"id":1,"name":"Product"}');
+        $product = new Product($json);
+        $product->getBrand();
     }
 }
  
