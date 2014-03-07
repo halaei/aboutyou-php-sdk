@@ -27,6 +27,7 @@ class OrderTestAbstract extends AbstractShopApiTest
             "abcabcabc",
             "http://somedomain.com/url"
         );
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\InitiateOrder', $initiateOrder);
         $this->assertEquals(
             'http://ant-web1.wavecloud.de/?user_token=34f9b86d-c899-4703-b85a-3c4971601b59&app_token=10268cc8-2025-4285-8e17-bc3160865824',
             $initiateOrder->getUrl()
