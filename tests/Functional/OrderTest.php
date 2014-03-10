@@ -59,8 +59,46 @@ class OrderTestAbstract extends AbstractShopApiTest
         $this->markTestIncomplete('implement me');
     }
 
-    public function testInitiateOrderFailed()
+    public function testInitiateOrderFailedWithEmptyBasket()
     {
-        $this->markTestIncomplete('implement me');
+        $shopApi = $this->getShopApiWithResult('[
+            {
+                "initiate_order": {
+                    "error_ident": "440db3b3-75c4-4223-b5cf-e57d37616239",
+                    "error_message": [
+                        "Basket is empty: abcabcabc"
+                    ],
+                    "error_code": 400
+                }
+            }
+        ]');
+        $initiateOrder = $shopApi->initiateOrder(
+            "abcabcabc",
+            "http://somedomain.com/url"
+        );
+        $this->markTestIncomplete('implement behavior');
+
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\InitiateOrder', $initiateOrder);
+    }
+
+    public function testInitiateOrderFailedWithError()
+    {
+        $response = <<<EOS
+        [{
+            "initiate_order": {
+                "error_message": [ "success_url: u'/checkout/success' does not match '^http(s|)://'" ],
+                "error_code": 400
+            }
+        }]
+EOS;
+
+        $shopApi = $this->getShopApiWithResult($response);
+        $initiateOrder = $shopApi->initiateOrder(
+            "abcabcabc",
+            "/somedomain.com/url"
+        );
+        $this->markTestIncomplete('implent be');
+
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\InitiateOrder', $initiateOrder);
     }
 }
