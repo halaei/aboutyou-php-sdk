@@ -1,122 +1,47 @@
 <?php
 namespace Collins\ShopApi\Model;
 
-/**
- *
- */
 class BasketItem extends AbstractModel
 {
-    /**
-     * @var object
-     */
-    protected $jsonObject = null;
-
-    /**
-     * @var Product
-     */
-    private $product = null;
-
-    /**
-     * @var Variant
-     */
-    private $variant = null;
-
-    /**
-     * Constructor.
-     *
-     * @param object $jsonObject The basket data.
-     */
-    public function __construct($jsonObject)
+    protected $variantId;
+    protected $additionalData;
+    protected $id;
+    
+    public function __construct($variantId, array $additionalData = array(), $id = null)
     {
-        $this->jsonObject = $jsonObject;
+        $this->variantId = intval($variantId);
+        $this->additionalData = $this->setAdditionalData($additionalData);
+        $this->id = $id ? $id : uniqid();
     }
-
-    /**
-     * Get the total price.
-     *
-     * @return integer
-     */
-    public function getTotalPrice()
+    
+    public function getVariantId()
     {
-        return $this->jsonObject->total_price;
+        return $this->variantId;
     }
-
-    /**
-     * Get the unit price.
-     *
-     * @return integer
-     */
-    public function getUnitPrice()
+    
+    public function setVariantId($variantId)
     {
-        return $this->jsonObject->unit_price;
+        $this->variantId = intval($variantId);
     }
-
-    /**
-     * Get the amount of items.
-     *
-     * @return integer
-     */
-    public function getAmount()
+    
+    public function getAdditionalData()
     {
-        return $this->jsonObject->amount;
+        return $this->additionalData;
     }
-
-    /**
-     * Get the tax.
-     *
-     * @return integer
-     */
-    public function getTax()
+    
+    public function setAdditionalData(array $additionalData)
     {
-        return $this->jsonObject->tax;
-    }
-
-    /**
-     * Get the tax.
-     *
-     * @return integer
-     */
-    public function getVat()
-    {
-        return $this->jsonObject->total_vat;
-    }
-
-
-    /**
-     * Get the variant old price in euro cents.
-     *
-     * @return integer
-     */
-    public function getOldPrice()
-    {
-        return $this->getVariant()->getOldPrice();
-    }
-
-    /**
-     * Get the product.
-     *
-     * @return Product
-     */
-    public function getProduct()
-    {
-        if (!$this->product) {
-            $this->product = $this->getModelFactory()->createProduct($this->jsonObject->product);
+        if(count($additionalData) && !isset($additionalData['description'])) {
+            throw new \Collins\ShopApi\Exception\InvalidParameterException('If $additionalData is not empty, key "description" must exist.');
         }
-
-        return $this->product;
-    }
-
-    /**
-     * Get the product variant.
-     *
-     * @return Variant
-     */
-    public function getVariant()
-    {
-        if (!$this->variant) {
-            $this->variant = $this->getProduct()->getVariantById($this->jsonObject->id);
+        elseif(isset($additionalData['image_url']) && !is_string($additionalData['imageUrl'])) {
+            throw new \Collins\ShopApi\Exception\InvalidParameterException('If $additionalData["image_url"] is set, it must be a string.');
         }
-
-        return $this->variant;
+        $this->additionalData = $additionalData;
+    }
+    
+    public function getId()
+    {
+        return $this->id;
     }
 }

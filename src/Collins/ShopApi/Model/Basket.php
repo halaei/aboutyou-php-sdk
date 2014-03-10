@@ -14,7 +14,15 @@ class Basket
     /**
      * @var BasketItem[]
      */
-    private $items = array();
+    protected $items = array();
+    
+    
+    /**
+     *
+     * @var Product[]
+     */
+    protected $products = array();
+    
 
     /**
      * Constructor.
@@ -25,19 +33,6 @@ class Basket
     {
         $this->jsonObject = $jsonObject;
     }
-
-    /**
-     * Create basket item from json object.
-     *
-     * @param object $jsonItem
-     *
-     * @return BasketItem
-     */
-    protected function createBasketItem($jsonItem)
-    {
-        return new BasketItem($jsonItem);
-    }
-
     /**
      * Get the total price.
      *
@@ -95,14 +90,28 @@ class Basket
      */
     public function getItems()
     {
-        if( !$this->items ) {
-            foreach ($this->jsonObject->product_variant as $jsonItem) {
-                if( isset($this->jsonObject->products->{$jsonItem->product_id}) ) {
-                    $jsonItem->product = $this->jsonObject->products->{$jsonItem->product_id};
-                    $this->items[] = $this->createBasketItem($jsonItem);
+        if(!$this->items) {
+            foreach($this->jsonObject->order_lines as $orderLine) {
+                if(isset($orderLine->set_items)) { // is it a set of variants?
+                    $this->items[] = new BasketSet($orderLine, $this);
+                }
+                else { // or a variant?
+                    $this->items[] = new BasketVariant($orderLine, $this);
                 }
             }
         }
+        
         return $this->items;
+    }
+    
+    public function getProducts()
+    {
+        if(!$this->products) {
+            foreach($this->jsonObject->products as $product) {
+                $this->products[$product->id] = new Product($product);
+            }
+        }
+        
+        return $this->products;
     }
 }

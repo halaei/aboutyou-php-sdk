@@ -56,7 +56,7 @@ class QueryBuilder
         $this->checkSessionId($sessionId);
 
         $this->query[] = [
-            'basket_get' => [
+            'basket' => [
                 'session_id' => $sessionId
             ]
         ];
@@ -71,20 +71,79 @@ class QueryBuilder
      *
      * @return $this
      */
-    public function addToBasket($sessionId, $productVariantId, $amount = 1)
+    public function addItemsToBasket($sessionId, array $items)
     {
         $this->checkSessionId($sessionId);
+        
+        $orderLines = array();
+        
+       
+        foreach($items as $item) {
+            $orderLine = array(
+                'id' => $item->getId(),
+                'variant_id' => $item->getVariantId(),
+            );
+            
+            if($item->getAdditionalData()) {
+                $orderLine['additional_data'] = $item->getAdditionalData();
+            }
+            
+            $orderLines[] = $orderLine;
+        }
+        
+        $this->query[] = [
+            'basket' => array(
+                'session_id' => $sessionId,
+                'order_lines' => $orderLines
+            )
+        ];
+
+        return $this;
+    }
+    
+    /**
+     * @param string $sessionId        Free to choose ID of the current website visitor.
+     * @param Model\BasketItemSet[]    $itemSets
+     * @param int    $amount           Amount of items to add.
+     *
+     * @return $this
+     */
+    public function addItemSetsToBasket($sessionId, array $itemSets)
+    {
+        $this->checkSessionId($sessionId);
+        
+        $orderLines = array();
+        
+        foreach($itemSets as $itemSet) {
+            $orderLine = array(
+                'id' => $itemSet->getId(),
+                'set_items' => array()
+            );
+            
+            if($itemSet->getAdditionalData()) {
+                $orderLine['additional_data'] = $itemSet->getAdditionalData();
+            }
+            
+            
+            foreach($itemSet->getItems() as $item) {
+                $entry = array(
+                    'variant_id' => $item->getVariantId(),
+                );
+                
+                if($item->getAdditionalData()) {
+                    $entry['additional_data'] = $item->getAdditionalData();
+                }
+                
+                $orderLine['set_items'][] = $entry;
+            }
+            
+            $orderLines[] = $orderLine;
+        }
 
         $this->query[] = [
-            'basket_add' => array(
+            'basket' => array(
                 'session_id' => $sessionId,
-                'product_variant' => array(
-                    array(
-                        'id' => (int)$productVariantId,
-                        'command' => 'add',
-                        'amount' => (int)$amount,
-                    ),
-                ),
+                'order_lines' => $orderLines
             )
         ];
 
@@ -97,20 +156,20 @@ class QueryBuilder
      *
      * @return $this
      */
-    public function removeFromBasket($sessionId, $productVariantId)
+    public function removeFromBasket($sessionId, $ids)
     {
         $this->checkSessionId($sessionId);
 
+        $orderLines = array();
+        
+        foreach($ids as $id) {
+            $orderLines[] = array('delete' => $id);
+        }
+        
         $this->query[] = [
-            'basket_add' => array(
+            'basket' => array(
                 'session_id' => $sessionId,
-                'product_variant' => array(
-                    array(
-                        'id' => (int)$productVariantId,
-                        'command' => 'set',
-                        'amount' => 0,
-                    ),
-                ),
+                'order_lines' => $orderLines
             )
         ];
 

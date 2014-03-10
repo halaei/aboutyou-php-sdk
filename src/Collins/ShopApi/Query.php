@@ -41,6 +41,7 @@ class Query extends QueryBuilder
         $queryString = $this->getQueryString();
 
         $response   = $this->client->request($queryString);
+
         $jsonResponse = json_decode($response->getBody(true));
 
         return $this->parseResult($jsonResponse);
@@ -54,14 +55,12 @@ class Query extends QueryBuilder
     public function executeSingle()
     {
         $result = $this->execute();
-
         return reset($result);
     }
 
     protected $mapping = [
         'autocompletion' => 'createAutocomplete',
-        'basket_get'     => 'createBasket',
-        'basket_add'     => 'createBasket',
+        'basket'         => 'createBasket',
         'category'       => 'createCategoriesResult',
         'category_tree'  => 'createCategoryTree',
         'facets'         => 'createFacetsList',
