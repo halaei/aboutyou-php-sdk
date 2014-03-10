@@ -6,37 +6,12 @@
 
 namespace Collins\ShopApi\Model;
 
-trait ResultErrorTrait
+class ResultError
 {
-    /** @var string */
-    protected $errorIdent;
+    use ResultErrorTrait;
 
-    /** @var integer */
-    protected $errorCode;
-
-    /** @var string */
-    protected $errorMessage;
-
-    protected function parseErrorResult(\stdClass $jsonObject)
+    public function __construct(\stdClass $jsonObject)
     {
-        $this->error    = isset($jsonObject->error_code) ? $jsonObject->error_code : 0;
-        $this->errorCode    = isset($jsonObject->error_code) ? $jsonObject->error_code : 0;
-        $this->errorMessage = isset($jsonObject->error_message) ? $jsonObject->error_message : null;
+        $this->parseErrorResult($jsonObject);
     }
-
-    /**
-     * @return int
-     */
-    public function getErrorCode()
-    {
-        return $this->errorCode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getErrorMessage()
-    {
-        return $this->errorMessage;
-    }
-} 
+}

@@ -81,4 +81,9 @@ class RawJsonFactory implements ResultFactoryInterface
     {
         return $json;
     }
+
+    public function preHandleError($json, $resultKey, $isMultiRequest)
+    {
+        return false;
+    }
 }

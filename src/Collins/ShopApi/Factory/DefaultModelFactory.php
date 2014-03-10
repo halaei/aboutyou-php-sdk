@@ -287,4 +287,17 @@ class DefaultModelFactory implements ModelFactoryInterface
     {
 
     }
+
+    public function preHandleError($json, $resultKey, $isMultiRequest)
+    {
+        if ($resultKey === 'basket') {
+            return false;
+        }
+
+        if ($isMultiRequest) {
+            return new ShopApi\Model\ResultError($json);
+        }
+
+        throw new ShopApi\Exception\ResultErrorException($json);
+    }
 }

@@ -43,7 +43,7 @@ class Query extends QueryBuilder
         $response   = $this->client->request($queryString);
         $jsonResponse = json_decode($response->getBody(true));
 
-        return $this->parseResult($jsonResponse);
+        return $this->parseResult($jsonResponse, count($this->query) > 1);
     }
 
     /**
@@ -83,7 +83,7 @@ class Query extends QueryBuilder
      *
      * @throws UnexpectedResultException
      */
-    protected function parseResult($jsonResponse)
+    protected function parseResult($jsonResponse, $isMultiRequest=true)
     {
         if ($jsonResponse === false ||
             !is_array($jsonResponse) ||
@@ -103,18 +103,20 @@ class Query extends QueryBuilder
             if ($resultKey !== $queryKey) {
                 throw new UnexpectedResultException('result ' . $queryKey . ' expected, but '. $resultKey . ' given on position ' . $index);
             }
-
-            if (isset($jsonObject->error_code)) {
-                // TODO: Log error
-                $results[$resultKey] = null;
-                continue;
-            }
-
             if (!isset($this->mapping[$resultKey])) {
                 throw new UnexpectedResultException('internal error, '. $resultKey . ' is unknown result');
             }
 
             $factory = $this->factory;
+
+            if (isset($jsonObject->error_code)) {
+                $result = $factory->preHandleError($jsonObject, $resultKey, $isMultiRequest);
+                if ($result !== false) {
+                    $results[$resultKey] = $result;
+                    continue;
+                }
+            }
+
             $method  = $this->mapping[$resultKey];
             $results[$resultKey] = $factory->$method($jsonObject, $currentQuery[$queryKey]);
         }
