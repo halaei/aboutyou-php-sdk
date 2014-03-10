@@ -93,7 +93,7 @@ class Basket
         if(!$this->items) {
             foreach($this->jsonObject->order_lines as $orderLine) {
                 if(isset($orderLine->set_items)) { // is it a set of variants?
-                    $this->items[] = new BasketSet($orderLine, $this);
+                    $this->items[] = new BasketVariantSet($orderLine, $this);
                 }
                 else { // or a variant?
                     $this->items[] = new BasketVariant($orderLine, $this);

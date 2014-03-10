@@ -1,6 +1,6 @@
 <?php
 namespace Collins\ShopApi\Model;
-class BasketSet extends BasketObject implements BasketObjectInterface
+class BasketVariantSet extends BasketObject implements BasketObjectInterface
 {
     protected $items = null;
     
