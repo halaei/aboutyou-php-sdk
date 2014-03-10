@@ -6,48 +6,10 @@
 
 namespace Collins\ShopApi\Model;
 
-
-class InitiateOrder
+trait ResultErrorTrait
 {
     /** @var string */
-    protected $url;
-
-    /** @var string */
-    protected $userToken;
-
-    /** @var string */
-    protected $appToken;
-
-    public function __construct($json)
-    {
-        $this->url = $json->url;
-        $this->userToken = $json->user_token;
-        $this->appToken = $json->app_token;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserToken()
-    {
-        return $this->userToken;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAppToken()
-    {
-        return $this->appToken;
-    }
+    protected $errorIdent;
 
     /** @var integer */
     protected $errorCode;
@@ -57,6 +19,7 @@ class InitiateOrder
 
     protected function parseErrorResult(\stdClass $jsonObject)
     {
+        $this->error    = isset($jsonObject->error_code) ? $jsonObject->error_code : 0;
         $this->errorCode    = isset($jsonObject->error_code) ? $jsonObject->error_code : 0;
         $this->errorMessage = isset($jsonObject->error_message) ? $jsonObject->error_message : null;
     }
@@ -76,4 +39,4 @@ class InitiateOrder
     {
         return $this->errorMessage;
     }
-}
+} 

@@ -52,8 +52,10 @@ class QueryBuilder
      *
      * @return $this
      */
-    public function  fetchBasket($sessionId)
+    public function fetchBasket($sessionId)
     {
+        $this->checkSessionId($sessionId);
+
         $this->query[] = [
             'basket' => [
                 'session_id' => $sessionId
@@ -72,6 +74,8 @@ class QueryBuilder
      */
     public function addToBasket($sessionId, $productVariantId, $basketItemId)
     {
+        $this->checkSessionId($sessionId);
+
         $this->query[] = [
             'basket' => [
                 'session_id' => $sessionId,
@@ -95,6 +99,8 @@ class QueryBuilder
      */
     public function removeFromBasket($sessionId, $basketItemId)
     {
+        $this->checkSessionId($sessionId);
+
         $this->query[] = [
             'basket' => [
                 'session_id' => $sessionId,
@@ -111,6 +117,8 @@ class QueryBuilder
 
     public function updateBasket($sessionId, Basket $basket)
     {
+        $this->checkSessionId($sessionId);
+
         $basketQuery = ['session_id'  => $sessionId];
 
         $orderLines = $basket->getOrderLinesArray();
@@ -236,6 +244,8 @@ class QueryBuilder
      */
     public function initiateOrder($sessionId, $successUrl, $cancelUrl, $errorUrl)
     {
+        $this->checkSessionId($sessionId);
+
         $args = [];
         $args['session_id'] = $sessionId;
         $args['success_url'] = $successUrl;
@@ -247,15 +257,14 @@ class QueryBuilder
     }
 
     /**
-     * @param string $userSessionId
-     * @param array|CriteriaInterface $filter
-     * @param array $result
+     * @param ProductSearchCriteria $criteria
      *
      * @return $this
      */
-    public function fetchProductSearch(
-        ProductSearchCriteria $criteria
-    ) {
+    public function fetchProductSearch(ProductSearchCriteria $criteria)
+    {
+        $this->checkSessionId($criteria->getSessionId());
+
         $this->query[] = [
             'product_search' => $criteria->toArray()
         ];
@@ -339,4 +348,18 @@ class QueryBuilder
         return json_encode($this->query);
     }
 
+    /**
+     * @param $sessionId
+     *
+     * @throws Exception\InvalidParameterException
+     */
+    protected function checkSessionId($sessionId)
+    {
+        if (!is_string($sessionId)) {
+            throw new InvalidParameterException('The session id must be a string');
+        }
+        if (!isset($sessionId[4])) {
+            throw new InvalidParameterException('The session id must have at least 5 characters');
+        }
+    }
 }

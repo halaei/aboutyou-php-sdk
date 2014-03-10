@@ -30,12 +30,15 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
         return $product;
     }
 
-    public function testGetCategoryIds()
+    public function testGetCategoryIdHierachies()
     {
         $json = $this->getJsonObjectFromFile('product/product-with-categories.json');
         $product = new ShopApi\Model\Product($json);
 
-        $this->assertEquals([19080,123,16080,19084,19097], $product->getCategoryIds());
+        $this->assertEquals(
+            [[19080,123],[19000],[16080],[19084],[19097]],
+            $product->getCategoryIdHierachies()
+        );
     }
 
     public function testGetCategoryIdsEmpty()
@@ -43,7 +46,7 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
         $json = $this->getJsonObjectFromFile('product/product-with-attributes.json');
         $product = new ShopApi\Model\Product($json);
 
-        $this->assertEquals([], $product->getCategoryIds());
+        $this->assertEquals([], $product->getCategoryIdHierachies());
     }
 
     public function testGetCategories()
@@ -52,9 +55,8 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
         $categories = $product->getCategories();
         $this->assertInternalType('array', $categories);
         $this->assertCount(4, $categories);
-        foreach ($categories as $id => $category) {
+        foreach ($categories as $category) {
             $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
-            $this->assertEquals($id, $category->getId());
         }
     }
 
@@ -74,10 +76,10 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
         $this->assertEquals(16080, $category->getId());
     }
 
-    public function testGetMainCategory()
+    public function testGetCategory()
     {
         $product = $this->getProduct('product-with-categories.json');
-        $category = $product->getMainCategory();
+        $category = $product->getCategory();
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
         $this->assertEquals(16080, $category->getId());
     }
@@ -85,7 +87,7 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
     public function testGetCategoryNull()
     {
         $product  = $this->getProduct('product-with-attributes.json');
-        $category = $product->getMainCategory();
+        $category = $product->getCategory();
         $this->assertNull($category);
     }
 }

@@ -6,6 +6,9 @@
 
 namespace Collins\ShopApi\Test;
 
+/**
+ * @backupStaticAttributes disabled
+ */
 class ShopSdkTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
@@ -20,6 +23,14 @@ class ShopSdkTest extends \PHPUnit_Framework_TestCase
         $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\Variant');
     }
 
+    /**
+     * Dummy method to avoid warning "no tests found"
+     */
+    public function testDummy()
+    {
+        $this->assertEquals(1,1);
+    }
+
     protected function resetAbstractModelShopApi($className)
     {
         $class = new \ReflectionClass($className);
@@ -27,4 +38,4 @@ class ShopSdkTest extends \PHPUnit_Framework_TestCase
         $property->setAccessible(true);
         $property->setValue(null);
     }
-} 
+}

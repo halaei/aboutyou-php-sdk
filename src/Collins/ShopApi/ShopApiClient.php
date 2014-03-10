@@ -17,6 +17,8 @@ use Psr\Log\NullLogger;
 
 class ShopApiClient
 {
+    const DEFAULT_BASE_IMAGE_URL = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file/';
+
     const API_END_POINT_STAGE = 'http://ant-core-staging-s-api1.wavecloud.de/api';
     const API_END_POINT_LIVE  = 'http://ant-shop-api-lb1.antevortenet.de/api';
 
@@ -95,7 +97,7 @@ class ShopApiClient
                 $this->apiEndPoint = self::API_END_POINT_STAGE;
                 break;
             case 'live':
-                $this->apiEndPoint = self::API_END_POINT_STAGE;
+                $this->apiEndPoint = self::API_END_POINT_LIVE;
                 break;
             default:
                 $this->apiEndPoint = $apiEndPoint;
@@ -239,4 +241,4 @@ class ShopApiClient
         return $response;
     }
 
-} 
+}

@@ -23,7 +23,7 @@
     "repositories": [
         {
             "type": "git",
-            "url": "git@codebasehq.com:antevorte/devcenter/cache.git"
+            "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-shop-cache.git"
         }
     ],
     "require": {

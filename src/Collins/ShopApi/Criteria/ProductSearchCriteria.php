@@ -24,6 +24,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     const SORT_DESC = 'desc';
 
     const FACETS_ALL = '_all';
+    const FACETS_UNLIMITED = -1;
 
     const FILTER_SALE          = 'sale';
     const FILTER_CATEGORY_IDS  = 'categories';
@@ -53,6 +54,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
 
     /**
      * Creates a new instance of this class and returns it.
+     *
+     * @param $sessionId
+     *
      * @return ProductSearchCriteria
      */
     public static function create($sessionId)
@@ -166,6 +170,8 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     /**
      * @param string $type
      * @param string $direction
+     *
+     * @return $this
      */
     public function sortBy($type, $direction = self::SORT_ASC)
     {
@@ -180,6 +186,8 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     /**
      * @param integer $limit
      * @param integer $offset
+     *
+     * @return $this
      */
     public function setLimit($limit, $offset = 0)
     {
@@ -279,8 +287,8 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         if (!is_long($limit)) {
             throw new InvalidParameterException('limit must be an integer');
         }
-        if ($limit < 0) {
-            throw new InvalidParameterException('limit must be positive');
+        if ($limit < -1) {
+            throw new InvalidParameterException('limit must be positive or -1 for unlimited facets');
         }
     }
 
@@ -347,6 +355,14 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         $this->sessionId = $sessionId;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSessionId()
+    {
+        return $this->sessionId;
     }
 
     /**

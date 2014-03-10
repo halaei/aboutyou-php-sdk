@@ -47,7 +47,7 @@ class FactoryTestAbstract extends AbstractShopApiTest
         $facet = $factory->createFacetList($json);
         $this->assertInternalType('array', $facet);
 
-        $json = $this->getJsonObjectFromFile('products-full.json');
+        $json = $this->getJsonObjectFromFile('result/products-full.json');
         $facet = $factory->createProductsResult($json);
         $this->assertInternalType('array', $facet);
     }
