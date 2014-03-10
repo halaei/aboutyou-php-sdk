@@ -116,6 +116,51 @@ class BasketTestAbstract extends AbstractShopApiTest
 
         $basket = $shopApi->updateBasket($this->sessionId, $basket);
         $this->checkBasket($basket);
+
+        $basket->deleteItem('item3');
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"delete":"item3"}]}}]';
+        $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
+        $shopApi->updateBasket($this->sessionId, $basket);
+
+        $basket = new Basket(json_decode('{"products":[], "order_line":[]}'), $shopApi->getResultFactory());
+        $basket->updateItem('item1', 123);
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item1","variant_id":123,"additional_data":null}]}}]';
+        $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
+        $shopApi->updateBasket($this->sessionId, $basket);
+
+        $updatedItem4 = <<<EOS
+        {
+            "id": "identifier4",
+            "additional_data": {"description": "Wudnersch\u00f6n und s 2o"},
+            "set_items": [
+                {
+                    "variant_id": 12312121
+                },
+                {
+                    "variant_id": 66666,
+                    "additional_data": {
+                        "description": "engravingssens",
+                        "internal_infos":["stuff"]
+                    }
+                }
+            ]
+        }
+EOS;
+        $updatedItem4 = json_encode(json_decode($updatedItem4)); // reformat
+
+        $basket = new Basket(json_decode('{"products":[], "order_line":[]}'), $shopApi->getResultFactory());
+        $basket->updateItemSet(
+            'identifier4',
+            [
+                [12312121],
+                [66666, ['description' => 'engravingssens', 'internal_infos' => ['stuff']]]
+            ],
+            ['description' => 'Wudnerschön und s 2o']
+        );
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":['. $updatedItem4 .']}}]';
+        $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
+        $shopApi->updateBasket($this->sessionId, $basket);
+
     }
 
     /**
