@@ -77,7 +77,6 @@ class QueryBuilder
         
         $orderLines = array();
         
-       
         foreach($items as $item) {
             $orderLine = array(
                 'id' => $item->getId(),

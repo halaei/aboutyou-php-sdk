@@ -75,8 +75,8 @@ class BasketItemSet
     public function __construct(array $basketItems, array $additionalData = array(), $id = null)
     {
         
-        $this->id = $this->setId($id);
-        $this->additionalData = $this->setAdditionalData($additionalData);
+        $this->setId($id);
+        $this->setAdditionalData($additionalData);
         
         foreach($basketItems as $basketItem) {
             $this->addBasketItem($basketItem);

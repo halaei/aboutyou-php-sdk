@@ -20,4 +20,17 @@ interface BasketObjectInterface
      */
     public function isVariant();
     
+    
+    /**
+     * Returns true if the current instance and the instance passed by argument
+     * can be considered as equal.
+     */
+    public function isEqual(BasketObject $basketObject);
+    
+     /**
+     * Returnes an unique key for this object.
+      * 
+      * @return string unique key
+     */
+    public function getUniqueKey();
 } 

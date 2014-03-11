@@ -67,4 +67,29 @@ class BasketVariant extends BasketObject implements BasketObjectInterface
     {
         return $this->additionalData;
     }
+    
+    /**
+     * Returns true if all the properties but the ID match.
+     * 
+     * @param \Collins\ShopApi\Model\BasketVariant $basketVariant BasketVariant to compare with
+     */
+    public function isEqual(BasketObject $basketVariant)
+    {
+        return $this->getUniqueKey() == $basketVariant->getUniqueKey();
+    }
+    
+    public function getUniqueKey()
+    {
+        $properties = array(
+            'variant_id',
+            'additionalData'
+        );
+        
+        $key = '';
+        foreach($properties as $property) {
+            $key .= json_encode($this->$property);
+        }
+        
+        return md5($key);
+    }
 }

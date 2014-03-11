@@ -64,7 +64,7 @@ class BasketItem extends AbstractModel
     {
         $this->variantId = intval($variantId);
         $this->additionalData = $this->setAdditionalData($additionalData);
-        $this->id = $this->setId($id);
+        $this->setId($id);
     }
     
     /**
