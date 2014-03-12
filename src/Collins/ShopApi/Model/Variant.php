@@ -223,4 +223,20 @@ class Variant extends AbstractModel
         return $groups->getGroup($groupId);
     }
 
+    /**
+     * @return string
+     */
+    public function getFirstActiveDate()
+    {
+        return $this->jsonObject->first_active_date;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstSaleDate()
+    {
+        return $this->jsonObject->first_sale_date;
+    }
+
 }

@@ -19,7 +19,7 @@ class DefaultModelFactory implements ModelFactoryInterface
     public function __construct($shopApi)
     {
         ShopApi\Model\Autocomplete::setShopApi($shopApi);
-        ShopApi\Model\BasketItem::setShopApi($shopApi);
+        ShopApi\Model\BasketObject::setShopApi($shopApi);
         ShopApi\Model\Category::setShopApi($shopApi);
         ShopApi\Model\CategoriesResult::setShopApi($shopApi);
         ShopApi\Model\CategoryTree::setShopApi($shopApi);

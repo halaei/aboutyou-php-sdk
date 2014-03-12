@@ -41,6 +41,7 @@ class Query extends QueryBuilder
         $queryString = $this->getQueryString();
 
         $response   = $this->client->request($queryString);
+
         $jsonResponse = json_decode($response->getBody(true));
 
         return $this->parseResult($jsonResponse);
@@ -54,14 +55,12 @@ class Query extends QueryBuilder
     public function executeSingle()
     {
         $result = $this->execute();
-
         return reset($result);
     }
 
     protected $mapping = [
         'autocompletion' => 'createAutocomplete',
-        'basket_get'     => 'createBasket',
-        'basket_add'     => 'createBasket',
+        'basket'         => 'createBasket',
         'category'       => 'createCategoriesResult',
         'category_tree'  => 'createCategoryTree',
         'facets'         => 'createFacetsList',
@@ -106,9 +105,21 @@ class Query extends QueryBuilder
             }
 
             if (isset($jsonObject->error_code)) {
-                // TODO: Log error
-                $results[$resultKey] = null;
-                continue;
+                $resultKeyClass = preg_replace('/[^a-z]+/i', '', $resultKey); 
+                $resultKeyClass = ucfirst(strtolower($resultKeyClass));
+                $resultKeyClass .= 'ResultException';
+                
+                $namespace = 'Collins\\ShopApi\\Exception\\';
+                $class = $namespace.'ResultException';
+                if(class_exists($namespace.$resultKeyClass)) {
+                    $class = $namespace.$resultKeyClass;
+                }
+                $message = isset($jsonObject->error_message) ? implode(', ',$jsonObject->error_message) : '';
+                $message .= PHP_EOL.PHP_EOL;
+                $message .= 'Query was: '.json_encode($this->query);
+                $message = trim($message);
+                    
+                throw new $class($message, $jsonObject->error_code);
             }
 
             if (!isset($this->mapping[$resultKey])) {

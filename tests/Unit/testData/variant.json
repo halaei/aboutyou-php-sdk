@@ -49,5 +49,7 @@
     },
     "retail_price": 3995,
     "id": 5145543,
-    "quantity": 5
+    "quantity": 5,
+    "first_active_date": "2014-02-14 18:09:38",
+    "first_sale_date": "2014-02-14 18:09:38"
 }
