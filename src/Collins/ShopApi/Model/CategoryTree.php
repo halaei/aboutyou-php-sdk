@@ -17,8 +17,8 @@ class CategoryTree extends AbstractModel implements \IteratorAggregate, \Countab
 
     public function __construct($jsonObject)
     {
-        $this->allCategories = [];
-        $this->activeCategories = [];
+        $this->allCategories = array();
+        $this->activeCategories = array();
         $this->fromJson($jsonObject);
     }
 

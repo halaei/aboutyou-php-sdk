@@ -7,9 +7,9 @@ namespace Collins\ShopApi\Model;
 class CategoriesResult extends AbstractModel implements \IteratorAggregate, \ArrayAccess, \Countable
 {
     /** @var Category[] */
-    protected $categories = [];
+    protected $categories = array();
 
-    protected $categoriesNotFound = [];
+    protected $categoriesNotFound = array();
 
     public function __construct($jsonObject, $orderByIds = null)
     {

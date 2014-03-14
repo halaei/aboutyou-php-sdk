@@ -12,7 +12,7 @@ class FacetsTestAbstract extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFile('facets-206.json');
 
-        $facets = $shopApi->fetchFacets([206]);
+        $facets = $shopApi->fetchFacets(array(206));
         $this->assertInternalType('array', $facets);
 
         $count = 0;
@@ -41,6 +41,6 @@ class FacetsTestAbstract extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFile('facets-206.json');
 
-        $shopApi->fetchFacets([]);
+        $shopApi->fetchFacets(array());
     }
 }

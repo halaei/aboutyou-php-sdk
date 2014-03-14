@@ -41,7 +41,7 @@ class ProductSearchResult extends AbstractModel
 
     public function __construct($jsonObject)
     {
-        $this->products = [];
+        $this->products = array();
         $this->fromJson($jsonObject);
     }
 

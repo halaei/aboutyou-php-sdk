@@ -33,7 +33,7 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
         $this->assertEquals('{"session_id":"my","result":{"limit":11,"offset":12}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
-            ->boostProducts([1,2,3]);
+            ->boostProducts(array(1,2,3));
         $this->assertEquals('{"session_id":"my","result":{"boost":[1,2,3]}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
@@ -72,58 +72,58 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
         $this->assertEquals('{"session_id":"my","result":{"facets":{"0":{"limit":4},"206":{"limit":5}}}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
-            ->selectProductFields([ProductFields::BRAND, ProductFields::IS_ACTIVE]);
+            ->selectProductFields(array(ProductFields::BRAND, ProductFields::IS_ACTIVE));
         $this->assertEquals('{"session_id":"my","result":{"fields":["brand_id","active"]}}', json_encode($criteria->toArray()));
 
         $criteria = new ProductSearchCriteria('12345');
-        $this->assertEquals(['session_id' => '12345'], $criteria->toArray());
+        $this->assertEquals(array('session_id' => '12345'), $criteria->toArray());
 
         $criteria = ProductSearchCriteria::create('12345')
             ->filterBySale(false);
 
-        $this->assertEquals(['session_id' => '12345', 'filter' => ['sale' => false]], $criteria->toArray());
+        $this->assertEquals(array('session_id' => '12345', 'filter' => array('sale' => false)), $criteria->toArray());
 
         $criteria = ProductSearchCriteria::create('12345')
-            ->filterByCategoryIds([123, 456]);
-        $this->assertEquals(['session_id' => '12345', 'filter' => ['categories' => [123, 456]]], $criteria->toArray());
+            ->filterByCategoryIds(array(123, 456));
+        $this->assertEquals(array('session_id' => '12345', 'filter' => array('categories' => array(123, 456))), $criteria->toArray());
         $this->assertEquals('{"session_id":"12345","filter":{"categories":[123,456]}}', json_encode($criteria->toArray()));
 
         $criteria = ProductSearchCriteria::create('12345')
             ->filterByPriceRange(123);
-        $this->assertEquals(['session_id' => '12345', 'filter' => ['prices' => ['from' => 123]]], $criteria->toArray());
+        $this->assertEquals(array('session_id' => '12345', 'filter' => array('prices' => array('from' => 123))), $criteria->toArray());
         $criteria = ProductSearchCriteria::create('12345')
             ->filterByPriceRange(0, 123);
-        $this->assertEquals(['session_id' => '12345', 'filter' => ['prices' => ['to' => 123]]], $criteria->toArray());
+        $this->assertEquals(array('session_id' => '12345', 'filter' => array('prices' => array('to' => 123))), $criteria->toArray());
         $criteria = ProductSearchCriteria::create('12345')
             ->filterByPriceRange(123, 456);
-        $this->assertEquals(['session_id' => '12345', 'filter' => ['prices' => ['from' => 123, 'to' => 456]]], $criteria->toArray());
+        $this->assertEquals(array('session_id' => '12345', 'filter' => array('prices' => array('from' => 123, 'to' => 456))), $criteria->toArray());
         $this->assertEquals('{"session_id":"12345","filter":{"prices":{"from":123,"to":456}}}', json_encode($criteria->toArray()));
 
         $criteria = ProductSearchCriteria::create('12345')
             ->filterByPriceRange(-1);
-        $this->assertEquals(['session_id' => '12345', 'filter' => ['prices' => []]], $criteria->toArray());
+        $this->assertEquals(array('session_id' => '12345', 'filter' => array('prices' => array())), $criteria->toArray());
         $criteria = ProductSearchCriteria::create('12345')
             ->filterByPriceRange(123, -1);
-        $this->assertEquals(['session_id' => '12345', 'filter' => ['prices' => ['from' => 123]]], $criteria->toArray());
+        $this->assertEquals(array('session_id' => '12345', 'filter' => array('prices' => array('from' => 123))), $criteria->toArray());
 
         $criteria = ProductSearchCriteria::create('12345')
             ->filterBySearchword('word1 word2');
-        $this->assertEquals(['session_id' => '12345', 'filter' => ['searchword' => 'word1 word2']], $criteria->toArray());
+        $this->assertEquals(array('session_id' => '12345', 'filter' => array('searchword' => 'word1 word2')), $criteria->toArray());
 
         $criteria = ProductSearchCriteria::create('12345')
             ->filterBySearchword('word')
             ->filterBySale(null);
-        $this->assertEquals(['session_id' => '12345', 'filter' => ['searchword' => 'word', 'sale' => null]], $criteria->toArray());
+        $this->assertEquals(array('session_id' => '12345', 'filter' => array('searchword' => 'word', 'sale' => null)), $criteria->toArray());
     }
 
     public function testAddAttributes()
     {
         $criteria = ProductSearchCriteria::create('12345')
-            ->filterByFacetIds([0 => [264]]);
+            ->filterByFacetIds(array(0 => array(264)));
         $this->assertEquals('{"session_id":"12345","filter":{"facets":{"0":[264]}}}', json_encode($criteria->toArray()));
 
         $criteria = ProductSearchCriteria::create('12345')
-            ->filterByFacetGroupSet(new FacetGroupSet([0 => [264]]));
+            ->filterByFacetGroupSet(new FacetGroupSet(array(0 => array(264))));
         $this->assertEquals('{"session_id":"12345","filter":{"facets":{"0":[264]}}}', json_encode($criteria->toArray()));
 
         $facetGroup = new FacetGroup(0, 'brand');
