@@ -111,7 +111,7 @@ class ProductFacetsTest extends AbstractShopApiTest
         $json = $this->getJsonObjectFromFile('product/product-full.json');
         $product = new ShopApi\Model\Product($json);
 
-        $facetGroupSet = new ShopApi\Model\FacetGroupSet([206 => [2402]]);
+        $facetGroupSet = new ShopApi\Model\FacetGroupSet(array(206 => array(2402)));
         $variant = $product->getVariantByFacets($facetGroupSet);
         $this->assertNull($variant);
 
@@ -182,26 +182,26 @@ class ProductFacetsTest extends AbstractShopApiTest
     public function selectableFacetGroupsProvider()
     {
         // array of [<ids array>, <expected group keys array>]
-        return [
-            // wenn []         =>       [rot,blau,gelb], [M,L,XL], [metall,baumwolle]
-            [[],                        ['0:264', '1:1001,1002,1003', '2:2001,2002,2003', '3:3001,3002']],
+        return array(
+            // wenn array()         =>       array(rot,blau,gelb), array(M,L,XL), array(metall,baumwolle)
+            array(array(),                        array('0:264', '1:1001,1002,1003', '2:2001,2002,2003', '3:3001,3002')),
 
-            // wenn XL         =>       [rot],      [metall,baumwolle]
-            [["2"=>[2003]],             ['0:264', '1:1001', '3:3001,3002']],
-            // wenn L          =>       [rot,blau], [baumwolle]
-            [["2"=>[2002]],             ['0:264', '1:1001,1002', '3:3001']],
-            // wenn M          =>       [rot,gelb], [baumwolle]
-            [["2"=>[2001]],             ['0:264', '1:1001,1003', '3:3001']],
+            // wenn XL         =>       array(rot),      array(metall,baumwolle)
+            array(array("2"=>array(2003)),             array('0:264', '1:1001', '3:3001,3002')),
+            // wenn L          =>       array(rot,blau), array(baumwolle)
+            array(array("2"=>array(2002)),             array('0:264', '1:1001,1002', '3:3001')),
+            // wenn M          =>       array(rot,gelb), array(baumwolle)
+            array(array("2"=>array(2001)),             array('0:264', '1:1001,1003', '3:3001')),
 
-            // wenn rot        =>       [M,L,XL],   [metall,baumwolle]
-            [["1"=>[1001]],             ['0:264', '2:2001,2002,2003', '3:3001,3002']],
+            // wenn rot        =>       array(M,L,XL),   array(metall,baumwolle)
+            array(array("1"=>array(1001)),             array('0:264', '2:2001,2002,2003', '3:3001,3002')),
 
-            // wenn rot,XL     =>       [metall,baumwolle]
-            [["1"=>[1001],"2"=>[2003]], ['0:264', '3:3001,3002']],
-            // wenn rot,L      =>       [baumwolle]
-            [["1"=>[1001],"2"=>[2002]], ['0:264', '3:3001']],
-            // wenn blau,XL    =>       []
-            [["1"=>[1002],"2"=>[2003]], []],
-        ];
+            // wenn rot,XL     =>       array(metall,baumwolle)
+            array(array("1"=>array(1001),"2"=>array(2003)), array('0:264', '3:3001,3002')),
+            // wenn rot,L      =>       array(baumwolle)
+            array(array("1"=>array(1001),"2"=>array(2002)), array('0:264', '3:3001')),
+            // wenn blau,XL    =>       array()
+            array(array("1"=>array(1002),"2"=>array(2003)), array()),
+        );
     }
 }

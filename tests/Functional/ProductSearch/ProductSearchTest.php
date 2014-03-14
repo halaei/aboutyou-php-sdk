@@ -54,9 +54,9 @@ class ProductSearchTestAbstract extends AbstractShopApiTest
 
         // search products by filter
         $criteria = $shopApi->getProductSearchCriteria('12345');
-        $criteria->filterByCategoryIds([
+        $criteria->filterByCategoryIds(array(
             123
-        ]);
+        ));
         $products = $shopApi->fetchProductSearch($criteria);
         $this->checkProductSearchResult($products);
     }

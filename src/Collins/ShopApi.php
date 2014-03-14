@@ -284,7 +284,7 @@ class ShopApi
      */
     public function addItemSetToBasket($sessionId, ShopApi\Model\BasketItemSet $itemSet)
     {
-        return $this->addItemSetsToBasket($sessionId, [$itemSet]);
+        return $this->addItemSetsToBasket($sessionId, array($itemSet));
     }
 
     /**
@@ -361,7 +361,7 @@ class ShopApi
      */
     public function fetchProductsByIds(
         array $ids,
-        array $fields = []
+        array $fields = array()
     ) {
         // we allow to pass a single ID instead of an array
         settype($ids, 'array');
@@ -391,7 +391,7 @@ class ShopApi
      */
     public function fetchProductsByEans(
         array $eans,
-        array $fields = []
+        array $fields = array()
     ) {
         // we allow to pass a single ID instead of an array
         settype($eans, 'array');

@@ -183,7 +183,7 @@ EOS;
         ;
         $shopApi->setLogger($logger);
 
-        $productResult = $shopApi->fetchProductsByIds([1, 123]);
+        $productResult = $shopApi->fetchProductsByIds(array(1, 123));
         $products = $productResult->getProducts();
         $this->assertCount(1, $products);
         $product = reset($products);

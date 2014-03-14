@@ -35,7 +35,7 @@ class Query extends QueryBuilder
     public function execute()
     {
         if (empty($this->query)) {
-            return [];
+            return array();
         }
 
         $queryString = $this->getQueryString();
@@ -58,7 +58,7 @@ class Query extends QueryBuilder
         return reset($result);
     }
 
-    protected $mapping = [
+    protected $mapping = array(
         'autocompletion' => 'createAutocomplete',
         'basket'         => 'createBasket',
         'category'       => 'createCategoriesResult',
@@ -72,7 +72,7 @@ class Query extends QueryBuilder
         'get_order'      => 'createOrder',
         'initiate_order' => 'initiateOrder',
         'child_apps'     => 'createChildApps'
-    ];
+    );
 
     /**
      * returns an array of parsed results
@@ -92,7 +92,7 @@ class Query extends QueryBuilder
             throw new UnexpectedResultException();
         }
 
-        $results = [];
+        $results = array();
 
         foreach ($jsonResponse as $index => $responseObject) {
             $currentQuery   = $this->query[$index];

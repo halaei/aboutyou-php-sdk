@@ -105,7 +105,7 @@ class Product extends AbstractModel
 
     protected static function parseVariants($jsonObject, ShopApi\Factory\ModelFactoryInterface $factory)
     {
-        $variants = [];
+        $variants = array();
         if (!empty($jsonObject->variants)) {
             foreach ($jsonObject->variants as $variant) {
                 $variants[$variant->id] = $factory->createVariant($variant);
@@ -117,7 +117,7 @@ class Product extends AbstractModel
 
     protected static function parseStyles($jsonObject, ShopApi\Factory\ModelFactoryInterface $factory)
     {
-        $styles = [];
+        $styles = array();
         if (!empty($jsonObject->styles)) {
             foreach ($jsonObject->styles as $style) {
                 $styles[] = $factory->createProduct($style);
@@ -129,7 +129,7 @@ class Product extends AbstractModel
 
     protected static function parseCategoryIdPaths($jsonObject)
     {
-        $paths = [];
+        $paths = array();
 
         foreach (get_object_vars($jsonObject) as $name => $categoryPaths) {
             if (strpos($name, 'categories') === 0) {
@@ -143,7 +143,7 @@ class Product extends AbstractModel
 
     protected static function parseFacetIds($jsonObject)
     {
-        $ids = [];
+        $ids = array();
         if (!empty($jsonObject->attributes_merged)) {
             foreach ($jsonObject->attributes_merged as $group => $facetIds) {
                 $gid = substr($group, 11); // rm prefix "attributes"
@@ -289,7 +289,7 @@ class Product extends AbstractModel
      */
     public function getLeafCategories() {
         $categories = $this->getCategories();
-        $leafCategories = [];
+        $leafCategories = array();
         $c = 0;
         while(count($categories) && $c<100) {
             $c++;
@@ -317,7 +317,7 @@ class Product extends AbstractModel
      */
     public function getActiveLeafCategories() {
         $categories = $this->getCategories();
-        $leafCategories = [];
+        $leafCategories = array();
         $c = 0;
         while(count($categories) && $c<100) {
             $c++;
@@ -350,7 +350,8 @@ class Product extends AbstractModel
         $categories = $this->getActiveLeafCategories();
 
         if(count($categories)) {
-            return array_values($categories)[0];
+            $array_categories = array_values($categories);
+            return $array_categories[0];
         }
 
         return null;
@@ -368,7 +369,8 @@ class Product extends AbstractModel
         $categories = $this->getLeafCategories();
 
         if(count($categories)) {
-            return array_values($categories)[0];
+            $array_categories = array_values($categories);
+            return $array_categories[0];
         }
 
         return null;
@@ -382,7 +384,7 @@ class Product extends AbstractModel
     {
         if (!$this->categories) {
             // put all category ids in an array to fetch by ids
-            $flattened = [];
+            $flattened = array();
             foreach($this->categoryIdPaths as $path) {
                 foreach($path as $categoryId) {
                     $flattened[] = $categoryId;
@@ -411,7 +413,7 @@ class Product extends AbstractModel
         if ($group) {
             return $group->getFacets();
         }
-        return [];
+        return array();
     }
 
     /**
@@ -423,7 +425,7 @@ class Product extends AbstractModel
      */
     public function getFacetGroups($groupId)
     {
-        $allGroups = [];
+        $allGroups = array();
         foreach ($this->getVariants() as $variant) {
             $groups = $variant->getFacetGroupSet()->getGroups();
             foreach ($groups as $group) {
@@ -448,7 +450,7 @@ class Product extends AbstractModel
     public function getSelectableFacetGroups(FacetGroupSet $selectedFacetGroupSet)
     {
         /** @var FacetGroup[] $allGroups */
-        $allGroups = [];
+        $allGroups = array();
         $selectedGroupIds = $selectedFacetGroupSet->getGroupIds();
 
         foreach ($this->getVariants() as $variant) {
@@ -550,7 +552,7 @@ class Product extends AbstractModel
      */
     public function getVariantsByEan($ean)
     {
-        $variants = [];
+        $variants = array();
         foreach ($this->variants as $variant) {
             if ($variant->getEan() === $ean) {
                 $variants[] = $variant;
@@ -589,7 +591,7 @@ class Product extends AbstractModel
      */
     public function getVariantsByFacetId($facetId, $groupId)
     {
-        $variants = [];
+        $variants = array();
         $facet = new Facet($facetId, '', '', $groupId, '');
         foreach ($this->variants as $variant) {
             if ($variant->getFacetGroupSet()->contains($facet)) {

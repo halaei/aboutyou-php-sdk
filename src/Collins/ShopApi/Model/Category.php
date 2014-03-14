@@ -42,8 +42,8 @@ class Category extends AbstractModel
      */
     public function __construct($jsonObject, $parent = null)
     {
-        $this->allSubCategories = [];
-        $this->activeSubCategories = [];
+        $this->allSubCategories = array();
+        $this->activeSubCategories = array();
         $this->parent = $parent;
         $this->fromJson($jsonObject);
     }
@@ -122,9 +122,10 @@ class Category extends AbstractModel
             return null;
         }
 
-        $parents = $this->getShopApi()->fetchCategoriesByIds([$this->getParentId()])->getCategories();
+        $parents = $this->getShopApi()->fetchCategoriesByIds(array($this->getParentId()))->getCategories();
         if(count($parents)) {
-            $this->parent = array_values($parents)[0];
+            $array_parents = array_values($parents); 
+            $this->parent = $array_parents[0];
         }
 
         return $this->parent;
@@ -149,7 +150,7 @@ class Category extends AbstractModel
      */
     public function getBreadcrumb()
     {
-        $breadcrumb = $this->parent ? $this->parent->getBreadcrumb() : [];
+        $breadcrumb = $this->parent ? $this->parent->getBreadcrumb() : array();
         $breadcrumb[] = $this;
 
         return $breadcrumb;
@@ -192,7 +193,7 @@ class Category extends AbstractModel
      */
     public static function buildTree($categories)
     {
-        $tree = [];
+        $tree = array();
         foreach($categories as $category) {
             if(!self::addToTree($category, $tree)) {
                 $tree[] = $category;
