@@ -267,8 +267,14 @@ class ShopApi
     public function addItemToBasket($sessionId, ShopApi\Model\BasketItem $item, $amount = 1)
     {
         $items = array();
+        $idPrefix = $item->getId();
+        
         for($i=0; $i<$amount; $i++) {
-            $items[] = $item;
+            $id = $idPrefix.'-'.substr(str_shuffle(md5(mt_rand())),0,10);
+            
+            $clone = clone $item;
+            $clone->setId($id);
+            $items[] = $clone;
         }
         
         return $this->addItemsToBasket($sessionId, $items);
