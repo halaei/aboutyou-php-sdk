@@ -32,7 +32,7 @@ class ProductSearchCriteriaTestAbstract extends AbstractShopApiTest
         $this->assertEquals('{"session_id":"my session","result":{"limit":10,"offset":0}}', json_encode($criteria->toArray()));
 
         $criteria = $shopApi->getProductSearchCriteria('my session')
-            ->selectProductFields([ProductFields::DEFAULT_IMAGE,  ProductFields::DEFAULT_VARIANT])
+            ->selectProductFields(array(ProductFields::DEFAULT_IMAGE,  ProductFields::DEFAULT_VARIANT))
             ->sortBy(ProductSearchCriteria::SORT_TYPE_PRICE, ProductSearchCriteria::SORT_DESC)
             ->setLimit(40)
             ->selectCategories(true)

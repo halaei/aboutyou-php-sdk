@@ -12,10 +12,10 @@ class FacetTestAbstract extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFile('fetch-facet.json');
 
-        $facets = $shopApi->fetchFacet([
-            ["id" => 1234, "group_id" => 0 ],
-            ["id" => 1234, "group_id" => 0 ]
-        ]);
+        $facets = $shopApi->fetchFacet(array(
+            array("id" => 1234, "group_id" => 0 ),
+            array("id" => 1234, "group_id" => 0 )
+        ));
         $this->assertInternalType('array', $facets);
 
         foreach ($facets as $facet) {
@@ -36,6 +36,6 @@ class FacetTestAbstract extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFile('fetch-facet.json');
 
-        $shopApi->fetchFacets([]);
+        $shopApi->fetchFacets(array());
     }
 }

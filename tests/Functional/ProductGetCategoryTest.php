@@ -36,7 +36,7 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
         $product = new ShopApi\Model\Product($json);
 
         $this->assertEquals(
-            [[19080,123],[19000],[16080],[19084],[19097]],
+            array(array(19080,123),array(19000),array(16080),array(19084),array(19097)),
             $product->getCategoryIdHierachies()
         );
     }
@@ -46,7 +46,7 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
         $json = $this->getJsonObjectFromFile('product/product-with-attributes.json');
         $product = new ShopApi\Model\Product($json);
 
-        $this->assertEquals([], $product->getCategoryIdHierachies());
+        $this->assertEquals(array(), $product->getCategoryIdHierachies());
     }
 
     public function testGetCategories()

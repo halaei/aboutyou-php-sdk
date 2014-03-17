@@ -17,7 +17,7 @@ abstract class AbstractProductsResult extends AbstractModel implements \Iterator
 
     public function __construct(\stdClass $jsonObject)
     {
-        $this->products = [];
+        $this->products = array();
         $this->fromJson($jsonObject);
     }
 

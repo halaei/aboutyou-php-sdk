@@ -47,7 +47,7 @@ class Variant extends AbstractModel
     {
         // parse lazy
         if ($this->images === null) {
-            $this->images = [];
+            $this->images = array();
             if (!empty($this->jsonObject->images)) {
                 $factory = $this->getModelFactory();
 
@@ -182,7 +182,7 @@ class Variant extends AbstractModel
 
     protected static function parseFacetIds($jsonObject)
     {
-        $ids = [];
+        $ids = array();
         if (!empty($jsonObject->attributes)) {
             foreach ($jsonObject->attributes as $group => $aIds) {
                 $gid = substr($group, 11); // rm prefix "attributs_"

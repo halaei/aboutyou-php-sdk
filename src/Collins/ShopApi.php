@@ -267,8 +267,14 @@ class ShopApi
     public function addItemToBasket($sessionId, ShopApi\Model\BasketItem $item, $amount = 1)
     {
         $items = array();
+        $idPrefix = $item->getId();
+        
         for($i=0; $i<$amount; $i++) {
-            $items[] = $item;
+            $id = $idPrefix.'-'.substr(str_shuffle(md5(mt_rand())),0,10);
+            
+            $clone = clone $item;
+            $clone->setId($id);
+            $items[] = $clone;
         }
         
         return $this->addItemsToBasket($sessionId, $items);
@@ -284,7 +290,7 @@ class ShopApi
      */
     public function addItemSetToBasket($sessionId, ShopApi\Model\BasketItemSet $itemSet)
     {
-        return $this->addItemSetsToBasket($sessionId, [$itemSet]);
+        return $this->addItemSetsToBasket($sessionId, array($itemSet));
     }
 
     /**
@@ -361,7 +367,7 @@ class ShopApi
      */
     public function fetchProductsByIds(
         array $ids,
-        array $fields = []
+        array $fields = array()
     ) {
         // we allow to pass a single ID instead of an array
         settype($ids, 'array');
@@ -391,7 +397,7 @@ class ShopApi
      */
     public function fetchProductsByEans(
         array $eans,
-        array $fields = []
+        array $fields = array()
     ) {
         // we allow to pass a single ID instead of an array
         settype($eans, 'array');

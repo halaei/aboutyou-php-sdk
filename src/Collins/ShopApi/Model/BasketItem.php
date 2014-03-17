@@ -63,7 +63,7 @@ class BasketItem extends AbstractModel
     public function __construct($variantId, array $additionalData = array(), $id = null)
     {
         $this->variantId = intval($variantId);
-        $this->additionalData = $this->setAdditionalData($additionalData);
+        $this->setAdditionalData($additionalData);
         $this->setId($id);
     }
     
