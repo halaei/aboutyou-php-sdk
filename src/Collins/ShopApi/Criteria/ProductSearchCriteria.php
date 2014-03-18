@@ -72,7 +72,13 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      */
     public function filterBy($key, $value)
     {
-        $this->filter[$key] = $value;
+        if (!isset($this->filter[$key]) || !is_array($this->filter[$key])) {
+            $this->filter[$key] = $value;
+        } else {
+            $filters = array_values($this->filter[$key]);
+            $additionalFilters = array_values($value);
+            $this->filter[$key] = array_merge($filters, $additionalFilters);
+        }
 
         return $this;
     }

@@ -46,33 +46,20 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
         return $this->ids;
     }
 
-    protected function genLazyGroups()
+    public function getGroups()
     {
-        $groups = array();
-        foreach ($this->ids as $groupId => $facetIds) {
-            $group = new FacetGroup($groupId, null);
-            foreach ($facetIds as $facetId) {
-                $facet = new Facet($facetId, null, null, $groupId, null);
-                $group->addFacet($facet);
-            }
-            $groups[$groupId] = $group;
+        if ($this->groups == null) {
+            $this->fetch();
         }
-
-        return $groups;
-    }
-
-    public function getLazyGroups()
-    {
-        if ($this->facets !== null) {
-            return $this->groups;
-        } else {
-            return $this->genLazyGroups();
-        }
+        
+        return $this->groups;
     }
 
     protected function fetch()
     {
-        if ($this->facets !== null) return;
+        if ($this->facets !== null) {
+            return;
+        }
 
         $shopApi = $this->getShopApi();
 
@@ -105,21 +92,6 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
             }
         }
     }
-
-    /**
-     * @return FacetGroup[]
-     */
-    public function getGroups()
-    {
-        $this->fetch();
-
-        if ($this->groups === null) {
-            $this->fetch();
-        }
-
-        return $this->groups;
-    }
-
     /**
      * @param $groupId
      *
