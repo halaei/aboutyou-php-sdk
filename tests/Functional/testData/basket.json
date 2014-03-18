@@ -748,7 +748,7 @@
                     "total_net": 3361,
                     "total_vat": 638,
                     "variant_id": 4719964,
-                    "id": "53283f6598a12-09b4c663f4",
+                    "id": "id1",
                     "additional_data": {
                         "date": "2014-03-18",
                         "foo": "bar",
@@ -762,7 +762,7 @@
                     "total_net": 3361,
                     "total_vat": 638,
                     "variant_id": 4719964,
-                    "id": "53283f6598a12-c6769e229a",
+                    "id": "id2",
                     "additional_data": {
                         "date": "2014-03-18",
                         "foo": "bar",
@@ -776,7 +776,7 @@
                     "total_net": 3361,
                     "total_vat": 638,
                     "variant_id": 4719964,
-                    "id": "53283f6598a12-029b1530bf",
+                    "id": "id3",
                     "additional_data": {
                         "date": "2014-03-18",
                         "foo": "bar",
