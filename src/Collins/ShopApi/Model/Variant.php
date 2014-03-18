@@ -173,9 +173,14 @@ class Variant extends AbstractModel
     }
 
     /**
-     * @return interger
+     * Returns the quantity of still existing units of this variant.
+     * Please mind, that this quantity doesn't need to be up to date.
+     * You should check via live_variant for the real quantity before
+     * adding a product into the cart.
+     * 
+     * @return int
      */
-    public function getMaxQuantity()
+    public function getQuantity()
     {
         return $this->jsonObject->quantity;
     }
