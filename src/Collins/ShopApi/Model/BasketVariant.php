@@ -85,7 +85,7 @@ class BasketVariant extends BasketObject implements BasketObjectInterface
     {
         $properties = array(
             'variant_id',
-            'additionalData'
+            'additional_data'
         );
         
         $key = '';
