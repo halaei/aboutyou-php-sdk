@@ -7,7 +7,7 @@
 namespace Collins\ShopApi\Test\Functional;
 
 
-class OrderTestAbstract extends AbstractShopApiTest
+class OrderTest extends AbstractShopApiTest
 {
     public function testFetchOrder()
     {
@@ -61,6 +61,7 @@ class OrderTestAbstract extends AbstractShopApiTest
 
     public function testInitiateOrderFailedWithEmptyBasket()
     {
+        $this->markTestIncomplete('implement behavior');
         $shopApi = $this->getShopApiWithResult('[
             {
                 "initiate_order": {
@@ -76,13 +77,13 @@ class OrderTestAbstract extends AbstractShopApiTest
             "abcabcabc",
             "http://somedomain.com/url"
         );
-        $this->markTestIncomplete('implement behavior');
 
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\InitiateOrder', $initiateOrder);
     }
 
     public function testInitiateOrderFailedWithError()
     {
+        $this->markTestIncomplete('implent be');
         $response = <<<EOS
         [{
             "initiate_order": {
@@ -97,7 +98,6 @@ EOS;
             "abcabcabc",
             "/somedomain.com/url"
         );
-        $this->markTestIncomplete('implent be');
 
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\InitiateOrder', $initiateOrder);
     }
