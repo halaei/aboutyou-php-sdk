@@ -47,7 +47,7 @@ class Variant extends AbstractModel
     {
         // parse lazy
         if ($this->images === null) {
-            $this->images = [];
+            $this->images = array();
             if (!empty($this->jsonObject->images)) {
                 $factory = $this->getModelFactory();
 
@@ -182,7 +182,7 @@ class Variant extends AbstractModel
 
     protected static function parseFacetIds($jsonObject)
     {
-        $ids = [];
+        $ids = array();
         if (!empty($jsonObject->attributes)) {
             foreach ($jsonObject->attributes as $group => $aIds) {
                 $gid = substr($group, 11); // rm prefix "attributs_"
@@ -221,6 +221,22 @@ class Variant extends AbstractModel
         $groups = $this->getFacetGroupSet();
 
         return $groups->getGroup($groupId);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstActiveDate()
+    {
+        return $this->jsonObject->first_active_date;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstSaleDate()
+    {
+        return $this->jsonObject->first_sale_date;
     }
 
 }

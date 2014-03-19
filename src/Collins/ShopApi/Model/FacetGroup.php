@@ -26,7 +26,7 @@ class FacetGroup implements FacetUniqueKeyInterface, FacetGetGroupInterface
     {
         $this->id = $id;
         $this->name = $name;
-        $this->facets = [];
+        $this->facets = array();
     }
 
     /**
@@ -108,9 +108,9 @@ class FacetGroup implements FacetUniqueKeyInterface, FacetGetGroupInterface
 
     public function getIds()
     {
-        return [
+        return array(
             $this->id => array_keys($this->facets)
-        ];
+        );
     }
 
 

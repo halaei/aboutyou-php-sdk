@@ -31,7 +31,8 @@ class CategoryTestAbstract extends AbstractShopApiTest
         $this->assertCount(1, $breadcrumb);
         $this->assertEquals(200, $breadcrumb[0]->getId());
 
-        $breadcrumb = $this->category->getSubCategories()[0]->getBreadcrumb();
+        $subcategories = $this->category->getSubCategories();
+        $breadcrumb = $subcategories[0]->getBreadcrumb();
         $this->assertCount(2, $breadcrumb);
         $this->assertEquals(200, $breadcrumb[0]->getId());
         $this->assertEquals(210, $breadcrumb[1]->getId());

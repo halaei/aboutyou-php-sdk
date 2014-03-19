@@ -224,36 +224,87 @@ class ShopApi
     }
 
     /**
-     * Add product variant to basket.
+     * Add product variants into the basket.
      *
      * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param int    $productVariantId ID of product variant.
-     * @param string $basketItemId  ID of single item or set in the basket
+     * @param ShopApi\Model\BasketItem[] $items
      *
      * @return \Collins\ShopApi\Model\Basket
      */
-    public function addToBasket($sessionId, $productVariantId, $basketItemId)
+    public function addItemsToBasket($sessionId, array $items)
+    {
+        $query = $this->getQuery()->addItemsToBasket($sessionId, $items);
+        return $query->executeSingle();
+    }
+
+
+    /**
+     * Adds sets of item sets into the basket.
+     *
+     * @param string $sessionId        Free to choose ID of the current website visitor.
+     * @param ShopApi\Model\BasketItemSet[] array of sets of basket items
+     *
+     * @return \Collins\ShopApi\Model\Basket
+     */
+    public function addItemSetsToBasket($sessionId, $itemSets)
     {
         $query = $this->getQuery()
-            ->addToBasket($sessionId, $productVariantId, $basketItemId)
+            ->addItemSetsToBasket($sessionId, $itemSets)
         ;
 
         return $query->executeSingle();
     }
 
     /**
-     * Remove product variant from basket.
+     * Adds a single item into the basket.
+     * You can specifiy an amount. Please mind, that an amount > 1 will result in #amount basket positions.
+     * So if you read out the basket again later, it's your job to merge the positions again.
      *
-     * @param string $sessionId     Free to choose ID of the current website visitor.
-     * @param string $basketItemId  ID of single item or set in the basket
+     * @param type $sessionId
+     * @param \Collins\ShopApi\Model\BasketItem $item
+     * @param type $amount
+     * @return type
+     */
+    public function addItemToBasket($sessionId, ShopApi\Model\BasketItem $item, $amount = 1)
+    {
+        $items = array();
+        $idPrefix = $item->getId();
+
+        for($i=0; $i<$amount; $i++) {
+            $id = $idPrefix.'-'.substr(str_shuffle(md5(mt_rand())),0,10);
+
+            $clone = clone $item;
+            $clone->setId($id);
+            $items[] = $clone;
+        }
+
+        return $this->addItemsToBasket($sessionId, $items);
+    }
+
+    /**
+     * Adds set of product variants into the basket.
+     *
+     * @param string $sessionId        Free to choose ID of the current website visitor.
+     * @param ShopApi\Model\BasketItemSet[] array of sets of basket items
      *
      * @return \Collins\ShopApi\Model\Basket
      */
-    public function removeFromBasket($sessionId, $basketItemId)
+    public function addItemSetToBasket($sessionId, ShopApi\Model\BasketItemSet $itemSet)
     {
-        $query = $this->getQuery()
-            ->removeFromBasket($sessionId, $basketItemId)
-        ;
+        return $this->addItemSetsToBasket($sessionId, array($itemSet));
+    }
+
+    /**
+     * Remove basket item.
+     *
+     * @param string $sessionId        Free to choose ID of the current website visitor.
+     * @param int[] $ids array of basket item ids to delete
+     *
+     * @return \Collins\ShopApi\Model\Basket
+     */
+    public function removeFromBasket($sessionId, $ids)
+    {
+        $query = $this->getQuery()->removeFromBasket($sessionId, $ids);
 
         return $query->executeSingle();
     }
@@ -331,7 +382,7 @@ class ShopApi
      */
     public function fetchProductsByIds(
         array $ids,
-        array $fields = []
+        array $fields = array()
     ) {
         // we allow to pass a single ID instead of an array
         settype($ids, 'array');
@@ -361,7 +412,7 @@ class ShopApi
      */
     public function fetchProductsByEans(
         array $eans,
-        array $fields = []
+        array $fields = array()
     ) {
         // we allow to pass a single ID instead of an array
         settype($eans, 'array');
@@ -455,7 +506,7 @@ class ShopApi
         $errorUrl = NULL
     ) {
         $query = $this->getQuery()
-            ->InitiateOrder($sessionId, $successUrl, $cancelUrl, $errorUrl)
+            ->initiateOrder($sessionId, $successUrl, $cancelUrl, $errorUrl)
         ;
 
         return $query->executeSingle();

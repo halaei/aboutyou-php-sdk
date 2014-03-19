@@ -16,8 +16,10 @@ class Basket
     /** @var object */
     protected $jsonObject = null;
 
-    /** @var ModelFactoryInterface */
-    protected $factory;
+    /**
+     * @var BasketItem[]
+     */
+    private $items = array();
 
     /** @var AbstractBasketItem[] */
     private $items = [];
@@ -37,7 +39,7 @@ class Basket
         $this->jsonObject = $jsonObject;
         $this->factory    = $factory;
     }
-
+    
     /**
      * Get the total price.
      *
@@ -117,6 +119,41 @@ class Basket
         }
 
         return $this->items;
+    }
+    
+    public function getProducts()
+    {
+        if(!$this->products) {
+            foreach($this->jsonObject->products as $product) {
+                $this->products[$product->id] = new Product($product);
+            }
+        }
+        
+        return $this->products;
+    }
+    
+    public function getItemsMerged()
+    {
+        $items = $this->getItems();
+        $itemsMerged = array();
+        while(count($items)) {
+            $item = array_shift($items);
+            $amount = 1;
+            foreach($items as $key => $item2) {
+                if($item->isEqual($item2)) {
+                    $amount++;
+                    unset($items[$key]);
+                }
+            }
+            
+            $itemsMerged[] = array(
+                'item' => $item,
+                'price' => $item->getTotalPrice()*$amount,
+                'amount' => $amount
+            );
+        }
+        
+        return $itemsMerged;
     }
 
     /**

@@ -14,7 +14,7 @@ class ProductsByEansTest extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFile('result/products_eans.json');
 
-        $productResult = $shopApi->fetchProductsByEans(['dummy ean']);
+        $productResult = $shopApi->fetchProductsByEans(array('dummy ean'));
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\ProductsEansResult', $productResult);
         $products = $productResult->getProducts();
 

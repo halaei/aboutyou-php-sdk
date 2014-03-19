@@ -35,12 +35,13 @@ class Query extends QueryBuilder
     public function execute()
     {
         if (empty($this->query)) {
-            return [];
+            return array();
         }
 
         $queryString = $this->getQueryString();
 
         $response   = $this->client->request($queryString);
+
         $jsonResponse = json_decode($response->getBody(true));
 
         return $this->parseResult($jsonResponse, count($this->query) > 1);
@@ -58,7 +59,7 @@ class Query extends QueryBuilder
         return reset($result);
     }
 
-    protected $mapping = [
+    protected $mapping = array(
         'autocompletion' => 'createAutocomplete',
         'basket'         => 'createBasket',
         'category'       => 'createCategoriesResult',
@@ -72,7 +73,7 @@ class Query extends QueryBuilder
         'get_order'      => 'createOrder',
         'initiate_order' => 'initiateOrder',
         'child_apps'     => 'createChildApps'
-    ];
+    );
 
     /**
      * returns an array of parsed results
@@ -92,7 +93,7 @@ class Query extends QueryBuilder
             throw new UnexpectedResultException();
         }
 
-        $results = [];
+        $results = array();
 
         foreach ($jsonResponse as $index => $responseObject) {
             $currentQuery   = $this->query[$index];
@@ -106,6 +107,24 @@ class Query extends QueryBuilder
             if (!isset($this->mapping[$resultKey])) {
                 throw new UnexpectedResultException('internal error, '. $resultKey . ' is unknown result');
             }
+
+//            if (isset($jsonObject->error_code)) {
+//                $resultKeyClass = preg_replace('/[^a-z]+/i', '', $resultKey);
+//                $resultKeyClass = ucfirst(strtolower($resultKeyClass));
+//                $resultKeyClass .= 'ResultException';
+//
+//                $namespace = 'Collins\\ShopApi\\Exception\\';
+//                $class = $namespace.'ResultException';
+//                if(class_exists($namespace.$resultKeyClass)) {
+//                    $class = $namespace.$resultKeyClass;
+//                }
+//                $message = isset($jsonObject->error_message) ? implode(', ',$jsonObject->error_message) : '';
+//                $message .= PHP_EOL.PHP_EOL;
+//                $message .= 'Query was: '.json_encode($this->query);
+//                $message = trim($message);
+//
+//                throw new $class($message, $jsonObject->error_code);
+//            }
 
             $factory = $this->factory;
 

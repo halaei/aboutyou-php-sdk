@@ -9,7 +9,7 @@ namespace Collins\ShopApi\Model;
 
 class ProductsResult extends AbstractProductsResult
 {
-    protected $productsNotFound = [];
+    protected $productsNotFound = array();
 
     public function fromJson(\stdClass $jsonObject)
     {
