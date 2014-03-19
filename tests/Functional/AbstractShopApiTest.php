@@ -55,11 +55,11 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
         return $jsonString;
     }
 
-    protected function getShopApiWithResultFile($filepath)
+    protected function getShopApiWithResultFile($filepath, $exceptedRequestBody = null)
     {
         $jsonString = $this->getJsonStringFromFile($filepath);
 
-        return $this->getShopApiWithResult($jsonString);
+        return $this->getShopApiWithResult($jsonString, $exceptedRequestBody);
     }
 
 
@@ -68,9 +68,9 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
      *
      * @return ShopApi
      */
-    protected function getShopApiWithResult($jsonString)
+    protected function getShopApiWithResult($jsonString, $exceptedRequestBody = null)
     {
-        $client = $this->getGuzzleClient($jsonString);
+        $client = $this->getGuzzleClient($jsonString, $exceptedRequestBody);
 
         $shopApi = new ShopApi('id', 'token');
 

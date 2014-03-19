@@ -269,9 +269,9 @@ class ShopApi
         $items = array();
         $idPrefix = $item->getId();
         
-        for($i=0; $i<$amount; $i++) {
-            $id = $idPrefix.'-'.substr(str_shuffle(md5(mt_rand())),0,10);
-            
+        for ($i=0; $i<$amount; $i++) {
+            $id = $i== 0 ? $idPrefix : ($idPrefix.'-'.($i+1));
+
             $clone = clone $item;
             $clone->setId($id);
             $items[] = $clone;

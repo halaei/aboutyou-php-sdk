@@ -48,7 +48,7 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
 
     protected function genLazyGroups()
     {
-        $groups = array();
+        $groups = [];
         foreach ($this->ids as $groupId => $facetIds) {
             $group = new FacetGroup($groupId, null);
             foreach ($facetIds as $facetId) {
@@ -79,8 +79,8 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
         $groupIds = array_keys($this->ids);
         $allFacets = $shopApi->fetchFacets($groupIds);
 
-        $this->facets = array();
-        $this->groups = array();
+        $this->facets = [];
+        $this->groups = [];
 
         foreach ($this->ids as $groupId => $facetIds) {
 

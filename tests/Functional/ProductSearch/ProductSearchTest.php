@@ -6,7 +6,7 @@ use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
 
-class ProductSearchTestAbstract extends AbstractShopApiTest
+class ProductSearchTest extends AbstractShopApiTest
 {
     public function testProductSearch()
     {
@@ -48,7 +48,7 @@ class ProductSearchTestAbstract extends AbstractShopApiTest
     public function testProductSearchFilterObject()
     {
         // This is the imported part of this test!!
-        $expectedRequestBody = '["categories": [123]]';
+        $expectedRequestBody = '[{"product_search":{"session_id":"12345","filter":{"categories":[123]}}}]';
 
         $shopApi = $this->getShopApiWithResult($this->getDummyResult(), $expectedRequestBody);
 

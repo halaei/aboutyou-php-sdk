@@ -74,7 +74,6 @@ class BasketItemSet
      */
     public function __construct(array $basketItems, array $additionalData = array(), $id = null)
     {
-        
         $this->setId($id);
         $this->setAdditionalData($additionalData);
         
