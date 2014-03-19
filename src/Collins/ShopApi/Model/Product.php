@@ -270,17 +270,16 @@ class Product extends AbstractModel
 
     /**
      * Returns the first active category and, if non active, then it return the first category
-     
+
      * @param bool $activeOnly return only categories that are active
      * @return Category|null
      */
-    public function getCategory($active = true)
+    public function getCategory($activeOnly = true)
     {
-        $categories = $this->getLeafCategories($active);
+        $categories = $this->getLeafCategories($activeOnly);
 
-        if(count($categories)) {
-            return array_values($categories)[0];
-
+        if (count($categories)) {
+            return reset($categories);
         }
 
         return null;
@@ -294,27 +293,25 @@ class Product extends AbstractModel
      * @param bool $activeOnly return only categories that are active
      * @return Category[]
      */
-    public function getLeafCategories($activeOnly = true) {
+    public function getLeafCategories($activeOnly = true)
+    {
+        // TODO: refactor me
         $categories = $this->getCategories($activeOnly);
         
-        $leafCategories = [];
+        $leafCategories = array();
 
-        $c = 0;
-        while(count($categories) && $c<100) {
-            $c++;
+        while (count($categories)) {
             $category = array_shift($categories);
             
             if($category->isActive() || ! $activeOnly) {
                 $subCategories = $category->getSubCategories();
 
-                if(!count($subCategories) && !isset($leafCategories[$category->getId()])) {
+                if (!count($subCategories) && !isset($leafCategories[$category->getId()])) {
                     $leafCategories[$category->getId()] = $category;
-                }
-                else {
+                } else {
                     $categories = array_merge($categories, $subCategories);
                 }
-            } 
-            
+            }
         }
 
         return array_values($leafCategories);
@@ -326,6 +323,7 @@ class Product extends AbstractModel
      */
     public function getCategories($activeOnly = true)
     {
+        // TODO: refactor me
         if (!$this->categories) {
             // put all category ids in an array to fetch by ids
             $flattened = array();
@@ -337,7 +335,7 @@ class Product extends AbstractModel
 
             // fetch all necessary categories from API
             $flattenCategories = $this->getShopApi()->fetchCategoriesByIds($flattened)->getCategories();
-            $flattenActiveCategories = [];
+            $flattenActiveCategories = array();
             
             foreach($flattenCategories as $category) {
                 if($category->isActive()) {

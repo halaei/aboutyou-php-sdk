@@ -16,18 +16,19 @@ class Basket
     /** @var object */
     protected $jsonObject = null;
 
-    /**
-     * @var BasketItem[]
-     */
-    private $items = array();
+    /** @var ModelFactoryInterface */
+    protected $factory;
 
     /** @var AbstractBasketItem[] */
-    private $items = [];
+    private $items = array();
 
-    private $errors = [];
+    private $errors = array();
 
     /** @var integer */
     protected $uniqueVariantCount;
+
+    /** @var Product[] */
+    protected $products;
 
     /**
      * Constructor.
@@ -39,7 +40,7 @@ class Basket
         $this->jsonObject = $jsonObject;
         $this->factory    = $factory;
     }
-    
+
     /**
      * Get the total price.
      *
@@ -120,13 +121,11 @@ class Basket
 
         return $this->items;
     }
-    
+
     public function getProducts()
     {
-        if(!$this->products) {
-            foreach($this->jsonObject->products as $product) {
-                $this->products[$product->id] = new Product($product);
-            }
+        if (!$this->products) {
+            $this->parseItems();
         }
         
         return $this->products;
@@ -162,10 +161,10 @@ class Basket
      */
     public function getOrderLinesArray()
     {
-        $orderLines = [];
+        $orderLines = array();
 
         foreach ($this->deletedItems as $itemId) {
-            $orderLines[] = ['delete' => $itemId];
+            $orderLines[] = array('delete' => $itemId);
         }
 
         foreach ($this->updatedItems as $item) {
@@ -179,13 +178,14 @@ class Basket
     {
         $factory = $this->factory;
 
-        $products = [];
+        $products = array();
         foreach ($this->jsonObject->products as $productId => $jsonProduct) {
             $products[$productId] = $factory->createProduct($jsonProduct);
         }
         unset($this->jsonObject->products);
+        $this->products = $products;
 
-        $vids = [];
+        $vids = array();
         foreach ($this->jsonObject->order_lines as $index => $jsonItem) {
             if (isset($jsonItem->set_items)) {
                 $item = $factory->createBasketSet($jsonItem, $products);
@@ -213,9 +213,9 @@ class Basket
      */
 
     /** @var array */
-    protected $deletedItems = [];
+    protected $deletedItems = array();
     /** @var array */
-    protected $updatedItems = [];
+    protected $updatedItems = array();
 
     /**
      * @param $itemId
@@ -238,11 +238,11 @@ class Basket
     {
         $this->checkAdditionData($additionalData);
 
-        $this->updatedItems[$itemId] = [
+        $this->updatedItems[$itemId] = array(
             'id' => $itemId,
             'variant_id' => $variantId,
             'additional_data' => $additionalData
-        ];
+        );
 
         return $this;
     }
@@ -268,11 +268,11 @@ class Basket
     {
         $this->checkAdditionData($additionalData);
 
-        $itemSet = [];
+        $itemSet = array();
         foreach ($subItems as $subItem) {
-            $item = [
+            $item = array(
                 'variant_id' => $subItem[0]
-            ];
+            );
             if (isset($subItem[1])) {
                 $this->checkAdditionData($subItem[1]);
                 $item['additional_data'] = $subItem[1];
@@ -280,11 +280,11 @@ class Basket
             $itemSet[] = $item;
         }
 
-        $this->updatedItems[$itemId] = [
+        $this->updatedItems[$itemId] = array(
             'id' => $itemId,
             'additional_data' => $additionalData,
             'set_items' => $itemSet,
-        ];
+        );
 
         return $this;
     }

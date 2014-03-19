@@ -100,7 +100,7 @@ class BasketTestAbstract extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
 
         // remove all of one item from basket
-        $basket = $shopApi->removeFromBasket($this->sessionId, 'item3');
+        $basket = $shopApi->removeItemsFromBasket($this->sessionId, array('item3'));
         $this->checkBasket($basket);
     }
 

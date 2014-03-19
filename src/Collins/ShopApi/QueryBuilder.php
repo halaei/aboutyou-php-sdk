@@ -114,7 +114,7 @@ class QueryBuilder
 
         $orderLines = array();
 
-        foreach($itemSets as $itemSet) {
+        foreach ($itemSets as $itemSet) {
             $orderLine = array(
                 'id' => $itemSet->getId(),
                 'set_items' => array()
@@ -177,18 +177,18 @@ class QueryBuilder
     }
 
     /**
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param int    $productVariantId ID of product variant.
+     * @param string   $sessionId   Free to choose ID of the current website visitor.
+     * @param string[] $itemIds     array of basket item ids to delete, this can be sets or single items
      *
      * @return $this
      */
-    public function removeFromBasket($sessionId, $ids)
+    public function removeFromBasket($sessionId, $itemIds)
     {
         $this->checkSessionId($sessionId);
 
         $orderLines = array();
         
-        foreach($ids as $id) {
+        foreach ($itemIds as $id) {
             $orderLines[] = array('delete' => $id);
         }
         
@@ -197,6 +197,30 @@ class QueryBuilder
                 'session_id' => $sessionId,
                 'order_lines' => $orderLines
             )
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param string $sessionId
+     * @param Basket $basket
+     *
+     * @return $this
+     */
+    public function updateBasket($sessionId, Basket $basket)
+    {
+        $this->checkSessionId($sessionId);
+
+        $basketQuery = array('session_id'  => $sessionId);
+
+        $orderLines = $basket->getOrderLinesArray();
+        if (!empty($orderLines)) {
+            $basketQuery['order_lines'] = $orderLines;
+        }
+
+        $this->query[] = array(
+            'basket' => $basketQuery
         );
 
         return $this;

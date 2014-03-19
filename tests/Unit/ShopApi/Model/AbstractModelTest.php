@@ -17,4 +17,4 @@ abstract class AbstractModelTest extends \Collins\ShopApi\Test\ShopSdkTest
 
         return json_decode($jsonString);
     }
-} 
+}

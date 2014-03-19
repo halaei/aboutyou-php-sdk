@@ -224,32 +224,18 @@ class ShopApi
     }
 
     /**
-     * Add product variants into the basket.
+     * Add product variant to basket.
      *
      * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param ShopApi\Model\BasketItem[] $items
+     * @param int    $productVariantId ID of product variant.
+     * @param string $basketItemId  ID of single item or set in the basket
      *
      * @return \Collins\ShopApi\Model\Basket
      */
-    public function addItemsToBasket($sessionId, array $items)
-    {
-        $query = $this->getQuery()->addItemsToBasket($sessionId, $items);
-        return $query->executeSingle();
-    }
-
-
-    /**
-     * Adds sets of item sets into the basket.
-     *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param ShopApi\Model\BasketItemSet[] array of sets of basket items
-     *
-     * @return \Collins\ShopApi\Model\Basket
-     */
-    public function addItemSetsToBasket($sessionId, $itemSets)
+    public function addToBasket($sessionId, $productVariantId, $basketItemId)
     {
         $query = $this->getQuery()
-            ->addItemSetsToBasket($sessionId, $itemSets)
+            ->addToBasket($sessionId, $productVariantId, $basketItemId)
         ;
 
         return $query->executeSingle();
@@ -257,54 +243,44 @@ class ShopApi
 
     /**
      * Adds a single item into the basket.
-     * You can specifiy an amount. Please mind, that an amount > 1 will result in #amount basket positions.
+     * You can specify an amount. Please mind, that an amount > 1 will result in #amount basket positions.
      * So if you read out the basket again later, it's your job to merge the positions again.
      *
-     * @param type $sessionId
+     * @param string $sessionId
      * @param \Collins\ShopApi\Model\BasketItem $item
-     * @param type $amount
-     * @return type
+     * @param int $amount
+     *
+     * @return $this
      */
     public function addItemToBasket($sessionId, ShopApi\Model\BasketItem $item, $amount = 1)
     {
+        $basket = new Basket(null, null);
         $items = array();
         $idPrefix = $item->getId();
 
-        for($i=0; $i<$amount; $i++) {
+        for ($i=0; $i<$amount; $i++) {
             $id = $idPrefix.'-'.substr(str_shuffle(md5(mt_rand())),0,10);
 
             $clone = clone $item;
             $clone->setId($id);
             $items[] = $clone;
         }
+        $query = $this->getQuery()->addItemsToBasket($sessionId, $items);
 
-        return $this->addItemsToBasket($sessionId, $items);
-    }
-
-    /**
-     * Adds set of product variants into the basket.
-     *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param ShopApi\Model\BasketItemSet[] array of sets of basket items
-     *
-     * @return \Collins\ShopApi\Model\Basket
-     */
-    public function addItemSetToBasket($sessionId, ShopApi\Model\BasketItemSet $itemSet)
-    {
-        return $this->addItemSetsToBasket($sessionId, array($itemSet));
+        return $query->executeSingle();
     }
 
     /**
      * Remove basket item.
      *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param int[] $ids array of basket item ids to delete
+     * @param string $sessionId     Free to choose ID of the current website visitor.
+     * @param string[] $itemIds     array of basket item ids to delete, this can be sets or single items
      *
      * @return \Collins\ShopApi\Model\Basket
      */
-    public function removeFromBasket($sessionId, $ids)
+    public function removeItemsFromBasket($sessionId, $itemIds)
     {
-        $query = $this->getQuery()->removeFromBasket($sessionId, $ids);
+        $query = $this->getQuery()->removeFromBasket($sessionId, $itemIds);
 
         return $query->executeSingle();
     }

@@ -195,7 +195,9 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createOrder($json)
     {
-        return new ShopApi\Model\Order($json);
+        $basket = $this->createBasket($json->basket);
+
+        return new ShopApi\Model\Order($json->order_id, $basket);
     }
 
     /**
