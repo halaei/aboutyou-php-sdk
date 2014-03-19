@@ -2,121 +2,148 @@
 namespace Collins\ShopApi\Model;
 
 /**
+ * BasketItem is a class used for adding a variant item into the basket
  *
- */
+ * If you want to add a variant into a basket, you need to create an instance
+ * of a BasketItem. The BasketItem represents a variant by it's variantId.
+ * It can contain $additionalData that will be transmitted to the merchant untouched.
+ * 
+ * Example usage:
+ * $variantId = $variant->getId(); // $variant is instance of \Collins\ShopApi\Model\Variant
+ * $basketItem = new BasketItem($variantId);
+ * $basketItem->setId('my-personal-identifier');
+ * $basketItem->setAdditionalData(['description' => 'jeans with engraving "for you"', 'engraving_text' => 'for you']);
+ * $shopApi->addItemToBasket(session_id(), $basketItem);
+ *
+ * @author  Christian Kilb <christian.kilb@antevorte.org>
+ * @see     \Collins\ShopApi\Model\Variant
+*/
 class BasketItem extends AbstractModel
 {
     /**
-     * @var object
+     * @var int $variantId ID of the Variant
      */
-    protected $jsonObject = null;
-
+    protected $variantId;
+    
     /**
-     * @var Product
+     * Additional data are transmitted to the merchant untouched.
+     * If set (array not empty), a key "description" must exist. This description
+     * must be a string that describes the variant. If you want to pass a different image URL,
+     * you can add a key "image_url" to the $additionalData that contains the URL to the image.
+     * 
+     * @var array $additionalData additional data for this variant
      */
-    private $product = null;
-
+    protected $additionalData;
+    
     /**
-     * @var Variant
+     * The ID of this basket item. You can choose this ID by yourself to identify
+     * your item later.
+     * If you don't pass any ID ($id = null), uniquid() will be used.
+     * 
+     * @var string $id ID of this basket item
      */
-    private $variant = null;
-
+    protected $id;
+    
     /**
-     * Constructor.
-     *
-     * @param object $jsonObject The basket data.
+     * 
+     * @param int $variantId ID of the variant
+     * @param array $additionalData additional data for this variant
+     * 
+     * Additional data are transmitted to the merchant untouched.
+     * If set (array not empty), a key "description" must exist. This description
+     * must be a string that describes the variant. If you want to pass a different image URL,
+     * you can add a key "image_url" to the $additionalData that contains the URL to the image.
+     * 
+     * @param string $id ID of the basket item.
+     * 
+     * You can choose this ID by yourself to identify
+     * your item later.
+     * If you don't pass any ID ($id = null), uniquid() will be used.
      */
-    public function __construct($jsonObject)
+    public function __construct($variantId, array $additionalData = array(), $id = null)
     {
-        $this->jsonObject = $jsonObject;
+        $this->variantId = intval($variantId);
+        $this->setAdditionalData($additionalData);
+        $this->setId($id);
     }
-
+    
     /**
-     * Get the total price.
-     *
-     * @return integer
+     * Returns the variant ID of this basket item.
+     * 
+     * @return int
      */
-    public function getTotalPrice()
+    public function getVariantId()
     {
-        return $this->jsonObject->total_price;
+        return $this->variantId;
     }
-
+    
     /**
-     * Get the unit price.
-     *
-     * @return integer
+     * Sets the variant ID of this basket item.
+     * 
+     * @return int $variant ID of the variant
      */
-    public function getUnitPrice()
+    public function setVariantId($variantId)
     {
-        return $this->jsonObject->unit_price;
+        $this->variantId = intval($variantId);
     }
-
+    
     /**
-     * Get the amount of items.
-     *
-     * @return integer
+     * Sets the variant ID of this basket item.
+     * 
+     * @return int $variant ID of the variant
      */
-    public function getAmount()
+    public function getAdditionalData()
     {
-        return $this->jsonObject->amount;
+        return $this->additionalData;
     }
-
-    /**
-     * Get the tax.
-     *
-     * @return integer
+    
+    
+    /** @param array $additionalData additional data for this variant
+     * 
+     * Additional data are transmitted to the merchant untouched.
+     * If set (array not empty), a key "description" must exist. This description
+     * must be a string that describes the variant. If you want to pass a different image URL,
+     * you can add a key "image_url" to the $additionalData that contains the URL to the image.
+     * 
+     * @param array $additionalData
+     * @throws \Collins\ShopApi\Exception\InvalidParameterException
      */
-    public function getTax()
+    public function setAdditionalData(array $additionalData)
     {
-        return $this->jsonObject->tax;
-    }
-
-    /**
-     * Get the tax.
-     *
-     * @return integer
-     */
-    public function getVat()
-    {
-        return $this->jsonObject->total_vat;
-    }
-
-
-    /**
-     * Get the variant old price in euro cents.
-     *
-     * @return integer
-     */
-    public function getOldPrice()
-    {
-        return $this->getVariant()->getOldPrice();
-    }
-
-    /**
-     * Get the product.
-     *
-     * @return Product
-     */
-    public function getProduct()
-    {
-        if (!$this->product) {
-            $this->product = $this->getModelFactory()->createProduct($this->jsonObject->product);
+        if(count($additionalData) && !isset($additionalData['description'])) {
+            throw new \Collins\ShopApi\Exception\InvalidParameterException('If $additionalData is not empty, key "description" must exist.');
         }
-
-        return $this->product;
-    }
-
-    /**
-     * Get the product variant.
-     *
-     * @return Variant
-     */
-    public function getVariant()
-    {
-        if (!$this->variant) {
-            $this->variant = $this->getProduct()->getVariantById($this->jsonObject->id);
+        elseif(isset($additionalData['image_url']) && !is_string($additionalData['imageUrl'])) {
+            throw new \Collins\ShopApi\Exception\InvalidParameterException('If $additionalData["image_url"] is set, it must be a string.');
         }
-
-        return $this->variant;
+        $this->additionalData = $additionalData;
+    }
+    
+    /**
+     * Returns the ID of this basket item.
+     * 
+     * The ID of this basket item. You can choose this ID by yourself to identify
+     * your item later.
+     * If you don't pass any ID ($id = null), uniquid() will be used.
+     * 
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+    
+    /**
+     * Sets the ID of this basket item.
+     * 
+     * The ID of this basket item. You can choose this ID by yourself to identify
+     * your item later.
+     * If you don't pass any ID ($id = null), uniquid() will be used.
+     * 
+     * @param string $id ID of this basket item
+     */
+    public function setId($id)
+    {
+        $this->id = $id ? $id : uniqid();
     }
 }

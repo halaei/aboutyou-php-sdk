@@ -12,7 +12,7 @@ class ProductSearchWithFacetsTestAbstract extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFile('result-product-search-with-facets.json');
 
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('1234'));
+        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
 
         $saleFacet = $productSearchResult->getSaleCounts();
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\ProductSearchResult\\SaleCounts', $saleFacet);
@@ -26,7 +26,7 @@ class ProductSearchWithFacetsTestAbstract extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFile('result-product-search-with-facets.json');
 
         // get all available products
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('1234'));
+        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
         $priceRanges = $productSearchResult->getPriceRanges();
         $this->assertInternalType('array', $priceRanges);
         $this->assertCount(6, $priceRanges);
@@ -54,6 +54,10 @@ class ProductSearchWithFacetsTestAbstract extends AbstractShopApiTest
         $this->assertEquals(null, $priceRanges[5]->getMax());
         $this->assertEquals(0, $priceRanges[5]->getMean());
         $this->assertEquals(0, $priceRanges[5]->getSum());
+
+        $this->assertEquals(399, $productSearchResult->getMinPrice());
+        $this->assertEquals(59900, $priceRanges[2]->getMax());
+        $this->assertEquals(59900, $productSearchResult->getMaxPrice());
     }
 
     public function testProductSearchWithFacetResult()

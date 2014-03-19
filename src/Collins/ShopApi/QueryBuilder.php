@@ -17,7 +17,7 @@ class QueryBuilder
 
     public function __construct()
     {
-        $this->query = [];
+        $this->query = array();
     }
 
     /**
@@ -35,13 +35,13 @@ class QueryBuilder
             Constants::TYPE_CATEGORIES
         )
     ) {
-        $this->query[] = [
+        $this->query[] = array(
             'autocompletion' => array(
                 'searchword' => $searchword,
                 'types' => $types,
                 'limit' => $limit
             )
-        ];
+        );
 
         return $this;
     }
@@ -53,11 +53,13 @@ class QueryBuilder
      */
     public function fetchBasket($sessionId)
     {
-        $this->query[] = [
-            'basket_get' => [
+        $this->checkSessionId($sessionId);
+
+        $this->query[] = array(
+            'basket' => array(
                 'session_id' => $sessionId
-            ]
-        ];
+            )
+        );
 
         return $this;
     }
@@ -69,20 +71,80 @@ class QueryBuilder
      *
      * @return $this
      */
-    public function addToBasket($sessionId, $productVariantId, $amount = 1)
+    public function addItemsToBasket($sessionId, array $items)
     {
-        $this->query[] = [
-            'basket_add' => array(
+        $this->checkSessionId($sessionId);
+        
+        $orderLines = array();
+        
+        foreach($items as $item) {
+            $orderLine = array(
+                'id' => $item->getId(),
+                'variant_id' => $item->getVariantId(),
+            );
+            
+            if($item->getAdditionalData()) {
+                $orderLine['additional_data'] = $item->getAdditionalData();
+            }
+            
+            $orderLines[] = $orderLine;
+        }
+        
+        $this->query[] = array(
+            'basket' => array(
                 'session_id' => $sessionId,
-                'product_variant' => array(
-                    array(
-                        'id' => (int)$productVariantId,
-                        'command' => 'add',
-                        'amount' => (int)$amount,
-                    ),
-                ),
+                'order_lines' => $orderLines
             )
-        ];
+        );
+
+        return $this;
+    }
+    
+    /**
+     * @param string $sessionId        Free to choose ID of the current website visitor.
+     * @param Model\BasketItemSet[]    $itemSets
+     * @param int    $amount           Amount of items to add.
+     *
+     * @return $this
+     */
+    public function addItemSetsToBasket($sessionId, array $itemSets)
+    {
+        $this->checkSessionId($sessionId);
+        
+        $orderLines = array();
+        
+        foreach($itemSets as $itemSet) {
+            $orderLine = array(
+                'id' => $itemSet->getId(),
+                'set_items' => array()
+            );
+            
+            if($itemSet->getAdditionalData()) {
+                $orderLine['additional_data'] = $itemSet->getAdditionalData();
+            }
+            
+            
+            foreach($itemSet->getItems() as $item) {
+                $entry = array(
+                    'variant_id' => $item->getVariantId(),
+                );
+                
+                if($item->getAdditionalData()) {
+                    $entry['additional_data'] = $item->getAdditionalData();
+                }
+                
+                $orderLine['set_items'][] = $entry;
+            }
+            
+            $orderLines[] = $orderLine;
+        }
+
+        $this->query[] = array(
+            'basket' => array(
+                'session_id' => $sessionId,
+                'order_lines' => $orderLines
+            )
+        );
 
         return $this;
     }
@@ -93,20 +155,22 @@ class QueryBuilder
      *
      * @return $this
      */
-    public function removeFromBasket($sessionId, $productVariantId)
+    public function removeFromBasket($sessionId, $ids)
     {
-        $this->query[] = [
-            'basket_add' => array(
+        $this->checkSessionId($sessionId);
+
+        $orderLines = array();
+        
+        foreach($ids as $id) {
+            $orderLines[] = array('delete' => $id);
+        }
+        
+        $this->query[] = array(
+            'basket' => array(
                 'session_id' => $sessionId,
-                'product_variant' => array(
-                    array(
-                        'id' => (int)$productVariantId,
-                        'command' => 'set',
-                        'amount' => 0,
-                    ),
-                ),
+                'order_lines' => $orderLines
             )
-        ];
+        );
 
         return $this;
     }
@@ -120,7 +184,9 @@ class QueryBuilder
      */
     public function updateBasketAmount($sessionId, $productVariantId, $amount)
     {
-        $this->query[] = [
+        $this->checkSessionId($sessionId);
+
+        $this->query[] = array(
             'basket_add' => array(
                 'session_id' => $sessionId,
                 'product_variant' => array(
@@ -131,7 +197,7 @@ class QueryBuilder
                     ),
                 ),
             )
-        ];
+        );
 
         return $this;
     }
@@ -148,11 +214,11 @@ class QueryBuilder
 
         $ids = array_map('intval', $ids);
 
-        $this->query[] = [
+        $this->query[] = array(
             'category' => array(
                 'ids' => $ids
             )
-        ];
+        );
 
         return $this;
     }
@@ -165,13 +231,13 @@ class QueryBuilder
     public function fetchCategoryTree($maxDepth = -1)
     {
         if ($maxDepth >= 0) {
-            $params = ['max_depth' => $maxDepth];
+            $params = array('max_depth' => $maxDepth);
         } else {
             $params = new \stdClass();
         }
-        $this->query[] = [
+        $this->query[] = array(
             'category_tree' => $params,
-        ];
+        );
 
         return $this;
     }
@@ -184,19 +250,19 @@ class QueryBuilder
      */
     public function fetchProductsByIds(
         array $ids,
-        array $fields = []
+        array $fields = array()
     ) {
         // we allow to pass a single ID instead of an array
         settype($ids, 'array');
 
         $ids = array_map('intval', $ids);
 
-        $this->query[] = [
+        $this->query[] = array(
             'products' => array(
                 'ids' => $ids,
                 'fields' => $fields
             )
-        ];
+        );
 
         return $this;
     }
@@ -209,14 +275,14 @@ class QueryBuilder
      */
     public function fetchProductsByEans(
         array $eans,
-        array $fields = []
+        array $fields = array()
     ) {
-        $this->query[] = [
+        $this->query[] = array(
             'products_eans' => array(
                 'eans' => $eans,
                 'fields' => $fields
             )
-        ];
+        );
 
         return $this;
     }
@@ -228,11 +294,11 @@ class QueryBuilder
      */
     public function fetchOrder($orderId)
     {
-        $this->query[] = [
-            'get_order' => [
+        $this->query[] = array(
+            'get_order' => array(
                 'order_id' => $orderId
-            ]
-        ];
+            )
+        );
 
         return $this;
     }
@@ -247,29 +313,30 @@ class QueryBuilder
      */
     public function initiateOrder($sessionId, $successUrl, $cancelUrl, $errorUrl)
     {
-        $args = [];
+        $this->checkSessionId($sessionId);
+
+        $args = array();
         $args['session_id'] = $sessionId;
         $args['success_url'] = $successUrl;
         if ($cancelUrl) $args['cancel_url'] = $cancelUrl;
         if ($errorUrl) $args['error_url'] = $errorUrl;
-        $this->query[] = [ 'initiate_order' => $args ];
+        $this->query[] = array( 'initiate_order' => $args );
 
         return $this;
     }
 
     /**
-     * @param string $userSessionId
-     * @param array|CriteriaInterface $filter
-     * @param array $result
+     * @param ProductSearchCriteria $criteria
      *
      * @return $this
      */
-    public function fetchProductSearch(
-        ProductSearchCriteria $criteria
-    ) {
-        $this->query[] = [
+    public function fetchProductSearch(ProductSearchCriteria $criteria)
+    {
+        $this->checkSessionId($criteria->getSessionId());
+
+        $this->query[] = array(
             'product_search' => $criteria->toArray()
-        ];
+        );
 
         return $this;
     }
@@ -289,11 +356,11 @@ class QueryBuilder
 
         $groupIds = array_map('intval', $groupIds);
 
-        $this->query[] = [
+        $this->query[] = array(
             'facets' => array(
                 'group_ids' => $groupIds
             )
-        ];
+        );
 
         return $this;
     }
@@ -311,7 +378,7 @@ class QueryBuilder
             throw new InvalidParameterException('no params given');
         }
 
-        $this->query[] = ['facet' => $params];
+        $this->query[] = array('facet' => $params);
 
         return $this;
     }
@@ -323,11 +390,11 @@ class QueryBuilder
      */
     public function fetchSuggest($searchword)
     {
-        $this->query[] = [
+        $this->query[] = array(
             'suggest' => array(
                 'searchword' => $searchword
             )
-        ];
+        );
 
         return $this;
     }
@@ -337,7 +404,7 @@ class QueryBuilder
      */
     public function fetchChildApps()
     {
-        $this->query[] = ['child_apps' => NULL ];
+        $this->query[] = array('child_apps' => NULL );
 
         return $this;
     }
@@ -350,4 +417,18 @@ class QueryBuilder
         return json_encode($this->query);
     }
 
+    /**
+     * @param $sessionId
+     *
+     * @throws Exception\InvalidParameterException
+     */
+    protected function checkSessionId($sessionId)
+    {
+        if (!is_string($sessionId)) {
+            throw new InvalidParameterException('The session id must be a string');
+        }
+        if (!isset($sessionId[4])) {
+            throw new InvalidParameterException('The session id must have at least 5 characters');
+        }
+    }
 }

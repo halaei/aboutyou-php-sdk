@@ -14,7 +14,7 @@ class ProductsByTest extends AbstractShopApiTest
     {
         $productIds = array(123, 456);
 
-        $shopApi = $this->getShopApiWithResultFile('products.json');
+        $shopApi = $this->getShopApiWithResultFile('result/products.json');
 
         $productResult = $shopApi->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
@@ -65,7 +65,7 @@ class ProductsByTest extends AbstractShopApiTest
     {
         $productIds = array(123, 456);
 
-        $shopApi = $this->getShopApiWithResultFile('products-full.json');
+        $shopApi = $this->getShopApiWithResultFile('result/products-full.json');
 
         $productResult = $shopApi->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
@@ -78,7 +78,7 @@ class ProductsByTest extends AbstractShopApiTest
         $this->assertFalse($p123->isSale());
         $this->assertEquals('description long 1', $p123->getDescriptionLong());
         $this->assertEquals('description short 1', $p123->getDescriptionShort());
-        $c123Ids = $p123->getCategoryIdPaths();
+        $c123Ids = $p123->getCategoryIdHierachies();
         $this->assertCount(4, $c123Ids);
 
         $this->assertEquals(19080, $c123Ids[0][0]);
@@ -113,7 +113,7 @@ class ProductsByTest extends AbstractShopApiTest
     {
         $productIds = array(220430);
 
-        $shopApi = $this->getShopApiWithResultFile('products-with-styles.json');
+        $shopApi = $this->getShopApiWithResultFile('result/products-with-styles.json');
 
         $productResult = $shopApi->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
@@ -137,7 +137,7 @@ class ProductsByTest extends AbstractShopApiTest
 
         $productIds = array(123);
 
-        $shopApi = $this->getShopApiWithResultFile('products.json');
+        $shopApi = $this->getShopApiWithResultFile('result/products.json');
 
         $productResult = $shopApi->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
@@ -183,7 +183,7 @@ EOS;
         ;
         $shopApi->setLogger($logger);
 
-        $productResult = $shopApi->fetchProductsByIds([1, 123]);
+        $productResult = $shopApi->fetchProductsByIds(array(1, 123));
         $products = $productResult->getProducts();
         $this->assertCount(1, $products);
         $product = reset($products);
@@ -199,7 +199,7 @@ EOS;
 
         $productIds = array(123);
 
-        $shopApi = $this->getShopApiWithResultFile('products-full.json');
+        $shopApi = $this->getShopApiWithResultFile('result/products-full.json');
 
         $productResult = $shopApi->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();

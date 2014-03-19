@@ -6,6 +6,9 @@
 
 namespace Collins\ShopApi\Test;
 
+/**
+ * @backupStaticAttributes disabled
+ */
 class ShopSdkTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()

@@ -39,7 +39,24 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $expected = '[{"category_tree":{}}]';
 
         $this->assertEquals($expected, $query->getQueryString());
+    }
 
+    /**
+     * @expectedException \Collins\ShopApi\Exception\InvalidParameterException
+     * @expectedExceptionMessage The session id must be a string
+     */
+    public function testFetchBasketThrowsInvalidParameterException()
+    {
+        $this->queryBuilder->fetchBasket(123456789);
+    }
+
+    /**
+     * @expectedException \Collins\ShopApi\Exception\InvalidParameterException
+     * @expectedExceptionMessage The session id must have at least 5 characters
+     */
+    public function testFetchBasketThrowsInvalidParameterException2()
+    {
+        $this->queryBuilder->fetchBasket('1234');
     }
 }
  

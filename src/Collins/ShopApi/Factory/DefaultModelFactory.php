@@ -19,7 +19,7 @@ class DefaultModelFactory implements ModelFactoryInterface
     public function __construct($shopApi)
     {
         ShopApi\Model\Autocomplete::setShopApi($shopApi);
-        ShopApi\Model\BasketItem::setShopApi($shopApi);
+        ShopApi\Model\BasketObject::setShopApi($shopApi);
         ShopApi\Model\Category::setShopApi($shopApi);
         ShopApi\Model\CategoriesResult::setShopApi($shopApi);
         ShopApi\Model\CategoryTree::setShopApi($shopApi);
@@ -92,7 +92,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createFacetList($json)
     {
-        $facets = [];
+        $facets = array();
         foreach ($json as $jsonFacet) {
             $facet = $this->createFacet($jsonFacet);
             $key   = $facet->getUniqueKey();
@@ -187,7 +187,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createChildApps($json)
     {
-        $apps = [];
+        $apps = array();
         foreach ($json->child_apps as $jsonApp) {
             $app = $this->createApp($jsonApp);
             $key   = $app->getId();
@@ -210,7 +210,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createFacetsCounts(\stdClass $jsonObject)
     {
-        $termFacets = [];
+        $termFacets = array();
         foreach ($jsonObject as $key => $jsonResultFacet) {
             $facets = $this->getTermFacets($jsonResultFacet->terms);
 
@@ -222,12 +222,12 @@ class DefaultModelFactory implements ModelFactoryInterface
 
     protected function getTermFacets(array $jsonTerms)
     {
-        return [];
+        return array();
 
         $api    = $this->getShopApi();
 
         foreach ($jsonTerms as $jsonTerm) {
-            $ids[] = ['id' => (int)$jsonTerm->term, 'group_id' => 0];
+            $ids[] = array('id' => (int)$jsonTerm->term, 'group_id' => 0);
         }
         $facets = $api->fetchFacet($ids);
 
@@ -239,7 +239,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createPriceRanges(\stdClass $jsonObject)
     {
-        $priceRanges = [];
+        $priceRanges = array();
         foreach ($jsonObject->ranges as $range) {
             $priceRanges[] = new ShopApi\Model\ProductSearchResult\PriceRange($range);
         }

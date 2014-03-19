@@ -6,14 +6,14 @@ use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
 
-class ProductSearchTestAbstract extends AbstractShopApiTest
+class ProductSearchTest extends AbstractShopApiTest
 {
     public function testProductSearch()
     {
         $shopApi = $this->getShopApiWithResultFile('product_search.json');
 
         // get all available products
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('1234'));
+        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
         $this->checkProductSearchResult($productSearchResult);
     }
 
@@ -22,7 +22,7 @@ class ProductSearchTestAbstract extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFile('product_search.json');
 
         // search products and sort
-        $criteria = $shopApi->getProductSearchCriteria('1234')
+        $criteria = $shopApi->getProductSearchCriteria('12345')
             ->sortBy(
                 ProductSearchCriteria::SORT_TYPE_MOST_VIEWED
             )
@@ -48,15 +48,15 @@ class ProductSearchTestAbstract extends AbstractShopApiTest
     public function testProductSearchFilterObject()
     {
         // This is the imported part of this test!!
-        $expectedRequestBody = '["categories": [123]]';
+        $expectedRequestBody = '[{"product_search":{"session_id":"12345","filter":{"categories":[123]}}}]';
 
         $shopApi = $this->getShopApiWithResult($this->getDummyResult(), $expectedRequestBody);
 
         // search products by filter
-        $criteria = $shopApi->getProductSearchCriteria('1234');
-        $criteria->filterByCategoryIds([
+        $criteria = $shopApi->getProductSearchCriteria('12345');
+        $criteria->filterByCategoryIds(array(
             123
-        ]);
+        ));
         $products = $shopApi->fetchProductSearch($criteria);
         $this->checkProductSearchResult($products);
     }
@@ -69,7 +69,7 @@ class ProductSearchTestAbstract extends AbstractShopApiTest
             'limit' => 20,
             'offset' => 21,
         );
-        $criteria = $shopApi->getProductSearchCriteria('1234')
+        $criteria = $shopApi->getProductSearchCriteria('12345')
             ->setLimit($pagination['limit'], $pagination['offset'])
         ;
         $products = $shopApi->fetchProductSearch($criteria);

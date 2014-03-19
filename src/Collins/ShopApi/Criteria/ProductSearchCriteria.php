@@ -24,6 +24,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     const SORT_DESC = 'desc';
 
     const FACETS_ALL = '_all';
+    const FACETS_UNLIMITED = -1;
 
     const FILTER_SALE          = 'sale';
     const FILTER_CATEGORY_IDS  = 'categories';
@@ -32,7 +33,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     const FILTER_ATTRIBUTES    = 'facets';
 
     /** @var array */
-    protected $filter = [];
+    protected $filter = array();
 
 
     /** @var array */
@@ -48,11 +49,14 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     public function __construct($sessionId)
     {
         $this->sessionId = $sessionId;
-        $this->result    = [];
+        $this->result    = array();
     }
 
     /**
      * Creates a new instance of this class and returns it.
+     *
+     * @param $sessionId
+     *
      * @return ProductSearchCriteria
      */
     public static function create($sessionId)
@@ -68,7 +72,13 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      */
     public function filterBy($key, $value)
     {
-        $this->filter[$key] = $value;
+        if (!isset($this->filter[$key]) || !is_array($this->filter[$key])) {
+            $this->filter[$key] = $value;
+        } else {
+            $filters = array_values($this->filter[$key]);
+            $additionalFilters = array_values($value);
+            $this->filter[$key] = array_merge($filters, $additionalFilters);
+        }
 
         return $this;
     }
@@ -152,7 +162,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         settype($from, 'int');
         settype($to, 'int');
 
-        $price = [];
+        $price = array();
         if ($from > 0) {
             $price['from'] = $from;
         }
@@ -166,13 +176,15 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     /**
      * @param string $type
      * @param string $direction
+     *
+     * @return $this
      */
     public function sortBy($type, $direction = self::SORT_ASC)
     {
-        $this->result['sort'] = [
+        $this->result['sort'] = array(
             'by'        => $type,
             'direction' => $direction,
-        ];
+        );
 
         return $this;
     }
@@ -180,6 +192,8 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     /**
      * @param integer $limit
      * @param integer $offset
+     *
+     * @return $this
      */
     public function setLimit($limit, $offset = 0)
     {
@@ -244,7 +258,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         }
 
         if (!isset($this->result['facets']->{$groupId})) {
-            $this->result['facets']->{$groupId} = ['limit' => $limit];
+            $this->result['facets']->{$groupId} = array('limit' => $limit);
         }
 
         return $this;
@@ -269,7 +283,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     public function selectAllFacets($limit)
     {
         $this->checkFacetLimit($limit);
-        $this->result['facets'] = [self::FACETS_ALL => ['limit' => $limit]];
+        $this->result['facets'] = array(self::FACETS_ALL => array('limit' => $limit));
 
         return $this;
     }
@@ -279,8 +293,8 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         if (!is_long($limit)) {
             throw new InvalidParameterException('limit must be an integer');
         }
-        if ($limit < 0) {
-            throw new InvalidParameterException('limit must be positive');
+        if ($limit < -1) {
+            throw new InvalidParameterException('limit must be positive or -1 for unlimited facets');
         }
     }
 
@@ -350,13 +364,21 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     }
 
     /**
+     * @return string
+     */
+    public function getSessionId()
+    {
+        return $this->sessionId;
+    }
+
+    /**
      * @return array
      */
     public function toArray()
     {
-        $params = [
+        $params = array(
             'session_id' => $this->sessionId
-        ];
+        );
 
         if (!empty($this->result)) {
             $params['result'] = $this->result;

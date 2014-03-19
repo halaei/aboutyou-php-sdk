@@ -65,6 +65,9 @@ class Product extends AbstractModel
 
     /** @var Category[] */
     protected $categories;
+    
+    /** @var Category[] */
+    protected $activeCategories;
 
     public function __construct($jsonObject)
     {
@@ -80,8 +83,6 @@ class Product extends AbstractModel
         $this->id   = $jsonObject->id;
         $this->name = $jsonObject->name;
 
-        $factory = $this->getModelFactory();
-
         $this->isSale            = isset($jsonObject->sale) ? $jsonObject->sale : false;
         $this->descriptionShort  = isset($jsonObject->description_short) ? $jsonObject->description_short : '';
         $this->descriptionLong   = isset($jsonObject->description_long) ? $jsonObject->description_long : '';
@@ -91,11 +92,15 @@ class Product extends AbstractModel
         $this->minPrice         = isset($jsonObject->min_price) ? $jsonObject->min_price : null;
         $this->maxPrice         = isset($jsonObject->max_price) ? $jsonObject->max_price : null;
 
-        $this->defaultImage     = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
-        $this->defaultVariant   = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant) : null;
+        if (isset($jsonObject->default_image) || isset($jsonObject->default_variant) || isset($jsonObject->variants) || !empty($jsonObject->styles)) {
+            $factory = $this->getModelFactory();
 
-        $this->variants         = self::parseVariants($jsonObject, $factory);
-        $this->styles           = self::parseStyles($jsonObject, $factory);
+            $this->defaultImage     = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
+            $this->defaultVariant   = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant) : null;
+
+            $this->variants         = self::parseVariants($jsonObject, $factory);
+            $this->styles           = self::parseStyles($jsonObject, $factory);
+        }
         $this->categoryIdPaths  = self::parseCategoryIdPaths($jsonObject);
 
         $this->facetIds     = self::parseFacetIds($jsonObject);
@@ -103,7 +108,7 @@ class Product extends AbstractModel
 
     protected static function parseVariants($jsonObject, ShopApi\Factory\ModelFactoryInterface $factory)
     {
-        $variants = [];
+        $variants = array();
         if (!empty($jsonObject->variants)) {
             foreach ($jsonObject->variants as $variant) {
                 $variants[$variant->id] = $factory->createVariant($variant);
@@ -115,7 +120,7 @@ class Product extends AbstractModel
 
     protected static function parseStyles($jsonObject, ShopApi\Factory\ModelFactoryInterface $factory)
     {
-        $styles = [];
+        $styles = array();
         if (!empty($jsonObject->styles)) {
             foreach ($jsonObject->styles as $style) {
                 $styles[] = $factory->createProduct($style);
@@ -127,7 +132,7 @@ class Product extends AbstractModel
 
     protected static function parseCategoryIdPaths($jsonObject)
     {
-        $paths = [];
+        $paths = array();
 
         foreach (get_object_vars($jsonObject) as $name => $categoryPaths) {
             if (strpos($name, 'categories') === 0) {
@@ -141,7 +146,7 @@ class Product extends AbstractModel
 
     protected static function parseFacetIds($jsonObject)
     {
-        $ids = [];
+        $ids = array();
         if (!empty($jsonObject->attributes_merged)) {
             foreach ($jsonObject->attributes_merged as $group => $facetIds) {
                 $gid = substr($group, 11); // rm prefix "attributes"
@@ -213,6 +218,10 @@ class Product extends AbstractModel
 
     protected function generateFacetGroupSet()
     {
+        if (empty($this->facetIds)) {
+            throw new ShopApi\Exception\RuntimeException('To use this method, you must add the field ProductFields::ATTRIBUTES_MERGED to the "product search" or "products by ids"');
+        }
+
         $this->facetGroups = new FacetGroupSet($this->facetIds);
     }
 
@@ -228,7 +237,7 @@ class Product extends AbstractModel
         return $this->facetGroups;
     }
 
-    public function getCategoryIdPaths()
+    public function getCategoryIdHierachies()
     {
         return $this->categoryIdPaths;
     }
@@ -261,122 +270,65 @@ class Product extends AbstractModel
 
     /**
      * Returns the first active category and, if non active, then it return the first category
-     *
+     
+     * @param bool $activeOnly return only categories that are active
      * @return Category|null
      */
-    public function getCategory()
+    public function getCategory($active = true)
     {
-        $category = $this->getFirstActiveCategory();
-        if ($category === null) {
-            $category = $this->getFirstCategory();
+        $categories = $this->getLeafCategories($active);
+
+        if(count($categories)) {
+            return array_values($categories)[0];
+
         }
 
-        return $category;
+        return null;
     }
 
     /**
-     * Returns array of deepest categories. E.g. of the product is in the category
+     * Returns array of categories without subcategories. E.g. of the product is in the category
      * Damen > Schuhe > Absatzschuhe and Damen > Schuhe > Stiefelleten then
      * [Absatzschuhe, Stiefelleten] will be returned
      *
+     * @param bool $activeOnly return only categories that are active
      * @return Category[]
      */
-    public function getDeepestCategories() {
-        $categories = $this->getCategories();
-        $deepestCategories = [];
+    public function getLeafCategories($activeOnly = true) {
+        $categories = $this->getCategories($activeOnly);
+        
+        $leafCategories = [];
+
         $c = 0;
         while(count($categories) && $c<100) {
             $c++;
             $category = array_shift($categories);
+            
+            if($category->isActive() || ! $activeOnly) {
+                $subCategories = $category->getSubCategories();
 
-            $subCategories = $category->getSubCategories();
-
-            if(!count($subCategories) && !isset($deepestCategories[$category->getId()])) {
-                $deepestCategories[$category->getId()] = $category;
-            }
-            else {
-                $categories = array_merge($categories, $subCategories);
-            }
-        }
-
-        return array_values($deepestCategories);
-    }
-
-    /**
-     * Returns array of deepest active categories. E.g. of the product is in the category
-     * Damen > Schuhe > Absatzschuhe and Damen > Schuhe > Stiefelleten then
-     * [Absatzschuhe, Stiefelleten] will be returned
-     *
-     * @return Category[]
-     */
-    public function getDeepestActiveCategories() {
-        $categories = $this->getCategories();
-        $deepestCategories = [];
-        $c = 0;
-        while(count($categories) && $c<100) {
-            $c++;
-            $category = array_shift($categories);
-
-            if($category->isActive()) {
-                $subCategories = $category->getSubCategories(Category::ACTIVE_ONLY);
-
-                if(!count($subCategories) && !isset($deepestCategories[$category->getId()])) {
-                    $deepestCategories[$category->getId()] = $category;
+                if(!count($subCategories) && !isset($leafCategories[$category->getId()])) {
+                    $leafCategories[$category->getId()] = $category;
                 }
                 else {
                     $categories = array_merge($categories, $subCategories);
                 }
-            }
+            } 
+            
         }
 
-        return array_values($deepestCategories);
+        return array_values($leafCategories);
     }
 
     /**
-     * Returns the first active category found for this product.
-     * Deepest categories will be searched first.
-     *
-     * @see getDeepestActiveCategories
-     * @return Category|null
-     */
-    public function getFirstActiveCategory()
-    {
-        $categories = $this->getDeepestActiveCategories();
-
-        if(count($categories)) {
-            return array_values($categories)[0];
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns the first active or inactive category found for this product.
-     * Deepest categories will be searched first.
-     *
-     * @see getDeepestActiveCategories
-     * @return Category|null
-     */
-    public function getFirstCategory()
-    {
-        $categories = $this->getDeepestCategories();
-
-        if(count($categories)) {
-            return array_values($categories)[0];
-        }
-
-        return null;
-    }
-
-
-    /**
+     * @param bool $activeOnly  return only active categories
      * @return Category[]
      */
-    public function getCategories()
+    public function getCategories($activeOnly = true)
     {
         if (!$this->categories) {
             // put all category ids in an array to fetch by ids
-            $flattened = [];
+            $flattened = array();
             foreach($this->categoryIdPaths as $path) {
                 foreach($path as $categoryId) {
                     $flattened[] = $categoryId;
@@ -385,8 +337,20 @@ class Product extends AbstractModel
 
             // fetch all necessary categories from API
             $flattenCategories = $this->getShopApi()->fetchCategoriesByIds($flattened)->getCategories();
+            $flattenActiveCategories = [];
+            
+            foreach($flattenCategories as $category) {
+                if($category->isActive()) {
+                    $flattenActiveCategories[] = clone $category;
+                }
+            }
 
             $this->categories = Category::buildTree($flattenCategories);
+            $this->activeCategories = Category::buildTree($flattenActiveCategories);
+        }
+        
+        if($activeOnly) {
+            return $this->activeCategories;
         }
 
         return $this->categories;
@@ -405,7 +369,7 @@ class Product extends AbstractModel
         if ($group) {
             return $group->getFacets();
         }
-        return [];
+        return array();
     }
 
     /**
@@ -417,7 +381,7 @@ class Product extends AbstractModel
      */
     public function getFacetGroups($groupId)
     {
-        $allGroups = [];
+        $allGroups = array();
         foreach ($this->getVariants() as $variant) {
             $groups = $variant->getFacetGroupSet()->getGroups();
             foreach ($groups as $group) {
@@ -442,7 +406,7 @@ class Product extends AbstractModel
     public function getSelectableFacetGroups(FacetGroupSet $selectedFacetGroupSet)
     {
         /** @var FacetGroup[] $allGroups */
-        $allGroups = [];
+        $allGroups = array();
         $selectedGroupIds = $selectedFacetGroupSet->getGroupIds();
 
         foreach ($this->getVariants() as $variant) {
@@ -544,7 +508,7 @@ class Product extends AbstractModel
      */
     public function getVariantsByEan($ean)
     {
-        $variants = [];
+        $variants = array();
         foreach ($this->variants as $variant) {
             if ($variant->getEan() === $ean) {
                 $variants[] = $variant;
@@ -583,7 +547,7 @@ class Product extends AbstractModel
      */
     public function getVariantsByFacetId($facetId, $groupId)
     {
-        $variants = [];
+        $variants = array();
         $facet = new Facet($facetId, '', '', $groupId, '');
         foreach ($this->variants as $variant) {
             if ($variant->getFacetGroupSet()->contains($facet)) {

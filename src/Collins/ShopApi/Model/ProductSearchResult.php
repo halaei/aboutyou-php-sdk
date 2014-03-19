@@ -24,7 +24,7 @@ class ProductSearchResult extends AbstractModel
     /** @var SaleCounts */
     protected $saleCounts;
 
-    /** @var PriceRange */
+    /** @var PriceRange[] */
     protected $priceRanges;
 
     /** @var FacetCounts[] */
@@ -41,7 +41,7 @@ class ProductSearchResult extends AbstractModel
 
     public function __construct($jsonObject)
     {
-        $this->products = [];
+        $this->products = array();
         $this->fromJson($jsonObject);
     }
 
@@ -120,6 +120,35 @@ class ProductSearchResult extends AbstractModel
     public function getPriceRanges()
     {
         return $this->priceRanges;
+    }
+
+    /**
+     * Returns the min price in euro cent or null, if the price range was not requested/selected
+     *
+     * @return integer|null
+     */
+    public function getMinPrice()
+    {
+        if (empty($this->priceRanges)) return null;
+
+        return $this->priceRanges[0]->getMin();
+    }
+
+    /**
+     * Returns the max price in euro cent, if the price range was not requested/selected
+     *
+     * @return integer|null
+     */
+    public function getMaxPrice()
+    {
+        if (empty($this->priceRanges)) return null;
+
+        foreach ($this->priceRanges as $priceRange) {
+            if (!$priceRange->getMax()) break;
+            $maxPrice = $priceRange->getMax();
+        }
+
+        return $maxPrice;
     }
 
     /**

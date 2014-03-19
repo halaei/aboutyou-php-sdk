@@ -47,7 +47,7 @@ class Variant extends AbstractModel
     {
         // parse lazy
         if ($this->images === null) {
-            $this->images = [];
+            $this->images = array();
             if (!empty($this->jsonObject->images)) {
                 $factory = $this->getModelFactory();
 
@@ -173,16 +173,21 @@ class Variant extends AbstractModel
     }
 
     /**
-     * @return interger
+     * Returns the quantity of still existing units of this variant.
+     * Please mind, that this quantity doesn't need to be up to date.
+     * You should check via live_variant for the real quantity before
+     * adding a product into the cart.
+     * 
+     * @return int
      */
-    public function getMaxQuantity()
+    public function getQuantity()
     {
         return $this->jsonObject->quantity;
     }
 
     protected static function parseFacetIds($jsonObject)
     {
-        $ids = [];
+        $ids = array();
         if (!empty($jsonObject->attributes)) {
             foreach ($jsonObject->attributes as $group => $aIds) {
                 $gid = substr($group, 11); // rm prefix "attributs_"
@@ -221,6 +226,22 @@ class Variant extends AbstractModel
         $groups = $this->getFacetGroupSet();
 
         return $groups->getGroup($groupId);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstActiveDate()
+    {
+        return $this->jsonObject->first_active_date;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstSaleDate()
+    {
+        return $this->jsonObject->first_sale_date;
     }
 
 }

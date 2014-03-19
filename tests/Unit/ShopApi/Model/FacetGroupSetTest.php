@@ -12,16 +12,16 @@ class FacetGroupSetTest extends AbstractModelTest
 {
     public function testGetUniqueKey()
     {
-        $facetGroupSet1 = new FacetGroupSet([4 => [3,2]]);
-        $facetGroupSet2 = new FacetGroupSet([4 => [2,3]]);
+        $facetGroupSet1 = new FacetGroupSet(array(4 => array(3,2)));
+        $facetGroupSet2 = new FacetGroupSet(array(4 => array(2,3)));
 
         $this->assertEquals(
             $facetGroupSet1->getUniqueKey(),
             $facetGroupSet2->getUniqueKey()
         );
 
-        $facetGroupSet1 = new FacetGroupSet([1=>[2],3=>[4]]);
-        $facetGroupSet2 = new FacetGroupSet([3=>[4],1=>[2]]);
+        $facetGroupSet1 = new FacetGroupSet(array(1=>array(2),3=>array(4)));
+        $facetGroupSet2 = new FacetGroupSet(array(3=>array(4),1=>array(2)));
 
         $this->assertEquals(
             $facetGroupSet1->getUniqueKey(),
@@ -31,7 +31,7 @@ class FacetGroupSetTest extends AbstractModelTest
 
     public function testGetLazyGroups()
     {
-        $facetGroupSet = new FacetGroupSet([1=>[2],3=>[4]]);
+        $facetGroupSet = new FacetGroupSet(array(1=>array(2),3=>array(4)));
         $groups = $facetGroupSet->getLazyGroups();
 
         $this->assertCount(2, $groups);
@@ -52,20 +52,20 @@ class FacetGroupSetTest extends AbstractModelTest
 
     public function containsTrueProvider()
     {
-        return [
-            [
-                [4 => [3,2]],
-                [4 => [2,3]]
-            ],
-            [
-                [4 => [3,2], 5 => [6]],
-                [4 => [2,3]]
-            ],
-            [
-                [4 => [3,2], 5 => [6]],
-                [5 => [6]]
-            ],
-        ];
+        return array(
+            array(
+                array(4 => array(3,2)),
+                array(4 => array(2,3))
+            ),
+            array(
+                array(4 => array(3,2), 5 => array(6)),
+                array(4 => array(2,3))
+            ),
+            array(
+                array(4 => array(3,2), 5 => array(6)),
+                array(5 => array(6))
+            ),
+        );
     }
 
     /**
@@ -73,28 +73,28 @@ class FacetGroupSetTest extends AbstractModelTest
      */
     public function testContainsFalse($a1, $a2)
     {
-        $facetGroupSet1 = new FacetGroupSet([4 => [3,2]]);
-        $facetGroupSet2 = new FacetGroupSet([4 => [2]]);
+        $facetGroupSet1 = new FacetGroupSet(array(4 => array(3,2)));
+        $facetGroupSet2 = new FacetGroupSet(array(4 => array(2)));
 
         $this->assertFalse($facetGroupSet1->contains($facetGroupSet2));
     }
 
     public function containsFalseProvider()
     {
-        return [
-            [
-                [4 => [3,2]],
-                [4 => [2]]
-            ],
-            [
-                [4 => [3,2], 5 => [6]],
-                [3 => [2,3]]
-            ],
-            [
-                [4 => [3,2], 5 => [6]],
-                [5 => [7]]
-            ],
-        ];
+        return array(
+            array(
+                array(4 => array(3,2)),
+                array(4 => array(2))
+            ),
+            array(
+                array(4 => array(3,2), 5 => array(6)),
+                array(3 => array(2,3))
+            ),
+            array(
+                array(4 => array(3,2), 5 => array(6)),
+                array(5 => array(7))
+            ),
+        );
     }
 }
  
