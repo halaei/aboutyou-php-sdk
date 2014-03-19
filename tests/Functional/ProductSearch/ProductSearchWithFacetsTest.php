@@ -68,6 +68,19 @@ class ProductSearchWithFacetsTestAbstract extends AbstractShopApiTest
     public function testProductSearchWithCategoriesResult()
     {
         $this->markTestIncomplete('Is not implemented yet');
+        $shopApi = $this->getShopApiWithResultFile('result-product-search-with-facets.json');
+
+        // get all available products
+        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $categories = $productSearchResult->getCategories();
+        $this->assertInternalType('array', $categories);
+        $this->assertCount(6, $categories);
+
+        foreach ($categories as $category) {
+            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+            $this->assertGreaterThan(0, $category->getProductCount());
+        }
+
     }
 
     /***************************************************/

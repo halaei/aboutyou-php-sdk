@@ -36,6 +36,9 @@ class Category extends AbstractModel
     /** @var Category[] */
     protected $activeSubCategories;
 
+    /** @var integer */
+    protected $productCount;
+
     /**
      * @param object        $jsonObject  json as object tree
      * @param Category|null $parent
@@ -107,6 +110,22 @@ class Category extends AbstractModel
     public function getPosition()
     {
         return $this->position;
+    }
+
+    /**
+     * @param integer $productCount
+     */
+    public function setProductCount($productCount)
+    {
+        $this->productCount = $productCount;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getProductCount()
+    {
+        return $this->productCount;
     }
 
     /**

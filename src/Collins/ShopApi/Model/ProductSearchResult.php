@@ -158,4 +158,12 @@ class ProductSearchResult extends AbstractModel
     {
         return $this->saleCounts;
     }
+
+    /**
+     * @return Category[]
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
 }

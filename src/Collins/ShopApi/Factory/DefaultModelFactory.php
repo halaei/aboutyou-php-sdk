@@ -258,8 +258,24 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function createCategoriesFacets(array $jsonObject)
+    public function createCategoriesFacets(array $jsonArray)
     {
+        // put all category ids in an array to fetch by ids
+        $flattenedIds = array();
+        $counts = array();
+        foreach($jsonArray as $item) {
+            $categoryId = $item['term'];
+            $flattenedIds[] = $categoryId;
+            $counts[$categoryId] = $item['count'];
+        }
 
+        // fetch all necessary categories from API
+        $flattenCategories = $this->getShopApi()->fetchCategoriesByIds($flattenedIds)->getCategories();
+
+        foreach($flattenCategories as $category) {
+            $category->setProductCount($counts[$category->getId()]);
+        }
+
+        return ShopApi\Model\Category::buildTree($flattenCategories);
     }
 }
