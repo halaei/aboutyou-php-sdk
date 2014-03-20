@@ -318,10 +318,10 @@ class ShopApi
      *
      * @return \Collins\ShopApi\Model\CategoriesResult
      */
-    public function fetchCategoriesByIds($ids)
+    public function fetchCategoriesByIds($ids = null)
     {
         // we allow to pass a single ID instead of an array
-        if (!is_array($ids)) {
+        if ($ids !== null && !is_array($ids)) {
             $ids = array($ids);
         }
 

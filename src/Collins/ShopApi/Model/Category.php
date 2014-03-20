@@ -179,12 +179,12 @@ class Category extends AbstractModel
      * Sets the parent category of this category
      * @return void
      */
-    protected function setParent(Category $parent)
+    public function setParent(Category $parent)
     {
         $this->parent = $parent;
     }
 
-    protected function addChild(Category $child)
+    public function addChild(Category $child)
     {
         $this->allSubCategories[] = $child;
 
@@ -193,7 +193,7 @@ class Category extends AbstractModel
         }
     }
 
-    protected function setSubCategories($categories)
+    public function setSubCategories($categories)
     {
         $this->allSubCategories = $categories;
 

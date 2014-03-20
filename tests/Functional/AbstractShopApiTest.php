@@ -21,10 +21,20 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
             ->disableOriginalConstructor()
             ->getMock();
 
-        $response = new Response('200 OK', null, $jsonString ?: '');
-        $request->expects($this->any())
-            ->method('send')
-            ->will($this->returnValue($response));
+        if (is_array($jsonString)) {
+            $responses = array();
+            foreach ($jsonString as $json) {
+                $responses[] = new Response('200 OK', null, $json ?: '');
+            }
+            $request->expects($this->any())
+                ->method('send')
+                ->will(call_user_func_array(array($this, 'onConsecutiveCalls'), $responses));
+        } else {
+            $response = new Response('200 OK', null, $jsonString ?: '');
+            $request->expects($this->any())
+                ->method('send')
+                ->will($this->returnValue($response));
+        }
 
         if ($exceptedRequestBody) {
             $request->expects($this->any())
@@ -62,6 +72,15 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
         return $this->getShopApiWithResult($jsonString, $exceptedRequestBody);
     }
 
+    protected function getShopApiWithResultFiles($filepaths, $exceptedRequestBody = null)
+    {
+        $jsonStrings = array();
+        foreach ($filepaths as $filepath) {
+            $jsonStrings[] = $this->getJsonStringFromFile($filepath);
+        }
+
+        return $this->getShopApiWithResult($jsonStrings, $exceptedRequestBody);
+    }
 
     /**
      * @param $jsonString

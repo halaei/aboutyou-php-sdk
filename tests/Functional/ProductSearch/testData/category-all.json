@@ -1,0 +1,3604 @@
+[
+    {
+        "category": {
+            "16077": {
+                "active": true,
+                "position": 1,
+                "name": "Damen",
+                "parent": 0,
+                "id": 16077
+            },
+            "16078": {
+                "active": true,
+                "position": 1,
+                "name": "Bekleidung",
+                "parent": 16077,
+                "id": 16078
+            },
+            "16079": {
+                "active": true,
+                "position": 1,
+                "name": "Oberteile",
+                "parent": 16078,
+                "id": 16079
+            },
+            "16080": {
+                "active": true,
+                "position": 2,
+                "name": "Blusen & Tuniken",
+                "parent": 16079,
+                "id": 16080
+            },
+            "16081": {
+                "active": true,
+                "position": 1,
+                "name": "Kurzarm",
+                "parent": 16080,
+                "id": 16081
+            },
+            "16082": {
+                "active": true,
+                "position": 2,
+                "name": "Langarm",
+                "parent": 16080,
+                "id": 16082
+            },
+            "16083": {
+                "active": true,
+                "position": 3,
+                "name": "Blusenbodies",
+                "parent": 16080,
+                "id": 16083
+            },
+            "16084": {
+                "active": true,
+                "position": 4,
+                "name": "Leichte Tuniken & Blusen",
+                "parent": 16080,
+                "id": 16084
+            },
+            "16085": {
+                "active": true,
+                "position": 5,
+                "name": "Elegante Blusen",
+                "parent": 16080,
+                "id": 16085
+            },
+            "16086": {
+                "active": true,
+                "position": 6,
+                "name": "Lange Tuniken",
+                "parent": 16080,
+                "id": 16086
+            },
+            "16087": {
+                "active": true,
+                "position": 7,
+                "name": "Hemdblusen",
+                "parent": 16080,
+                "id": 16087
+            },
+            "16088": {
+                "active": true,
+                "position": 8,
+                "name": "Verspielte Blusen",
+                "parent": 16080,
+                "id": 16088
+            },
+            "16089": {
+                "active": true,
+                "position": 9,
+                "name": "Karierte Blusen",
+                "parent": 16080,
+                "id": 16089
+            },
+            "16090": {
+                "active": true,
+                "position": 3,
+                "name": "Pullover & Sweatshirts",
+                "parent": 16079,
+                "id": 16090
+            },
+            "16091": {
+                "active": true,
+                "position": 1,
+                "name": "Rollkragenpullover",
+                "parent": 16090,
+                "id": 16091
+            },
+            "16092": {
+                "active": true,
+                "position": 2,
+                "name": "Sweatshirts",
+                "parent": 16090,
+                "id": 16092
+            },
+            "16093": {
+                "active": true,
+                "position": 3,
+                "name": "Sweatjacken",
+                "parent": 16090,
+                "id": 16093
+            },
+            "16094": {
+                "active": true,
+                "position": 4,
+                "name": "Pullunder",
+                "parent": 16090,
+                "id": 16094
+            },
+            "16095": {
+                "active": false,
+                "position": 5,
+                "name": "Mit Kapuze",
+                "parent": 16090,
+                "id": 16095
+            },
+            "16096": {
+                "active": true,
+                "position": 6,
+                "name": "Oversize",
+                "parent": 16090,
+                "id": 16096
+            },
+            "16097": {
+                "active": false,
+                "position": 7,
+                "name": "3/4 Arm",
+                "parent": 16090,
+                "id": 16097
+            },
+            "16098": {
+                "active": true,
+                "position": 4,
+                "name": "Strick",
+                "parent": 16079,
+                "id": 16098
+            },
+            "16099": {
+                "active": true,
+                "position": 4,
+                "name": "Grobstrick",
+                "parent": 16098,
+                "id": 16099
+            },
+            "16100": {
+                "active": true,
+                "position": 5,
+                "name": "Feinstrick",
+                "parent": 16098,
+                "id": 16100
+            },
+            "16101": {
+                "active": true,
+                "position": 3,
+                "name": "Cardigans",
+                "parent": 16098,
+                "id": 16101
+            },
+            "16104": {
+                "active": true,
+                "position": 5,
+                "name": "Shirts & Tops",
+                "parent": 16079,
+                "id": 16104
+            },
+            "16105": {
+                "active": true,
+                "position": 1,
+                "name": "T-Shirts",
+                "parent": 16104,
+                "id": 16105
+            },
+            "16106": {
+                "active": true,
+                "position": 7,
+                "name": "Bandeautops",
+                "parent": 16104,
+                "id": 16106
+            },
+            "16107": {
+                "active": true,
+                "position": 6,
+                "name": "Sportliche Tops",
+                "parent": 16104,
+                "id": 16107
+            },
+            "16108": {
+                "active": true,
+                "position": 4,
+                "name": "Longtops",
+                "parent": 16104,
+                "id": 16108
+            },
+            "16109": {
+                "active": true,
+                "position": 5,
+                "name": "Longshirts",
+                "parent": 16104,
+                "id": 16109
+            },
+            "16110": {
+                "active": true,
+                "position": 9,
+                "name": "Elegante Tops",
+                "parent": 16104,
+                "id": 16110
+            },
+            "16111": {
+                "active": true,
+                "position": 8,
+                "name": "Spaghettitops",
+                "parent": 16104,
+                "id": 16111
+            },
+            "16112": {
+                "active": true,
+                "position": 3,
+                "name": "Hosen",
+                "parent": 16078,
+                "id": 16112
+            },
+            "16113": {
+                "active": true,
+                "position": 2,
+                "name": "Jeans",
+                "parent": 16078,
+                "id": 16113
+            },
+            "16114": {
+                "active": true,
+                "position": 1,
+                "name": "Skinny Jeans",
+                "parent": 16113,
+                "id": 16114
+            },
+            "16115": {
+                "active": true,
+                "position": 2,
+                "name": "Bootcut",
+                "parent": 16113,
+                "id": 16115
+            },
+            "16116": {
+                "active": true,
+                "position": 3,
+                "name": "Boyfriend",
+                "parent": 16113,
+                "id": 16116
+            },
+            "16117": {
+                "active": true,
+                "position": 4,
+                "name": "Jeggings",
+                "parent": 16113,
+                "id": 16117
+            },
+            "16119": {
+                "active": true,
+                "position": 1,
+                "name": "Stoffhosen & Leggings",
+                "parent": 16112,
+                "id": 16119
+            },
+            "16120": {
+                "active": true,
+                "position": 1,
+                "name": "Stoffhosen",
+                "parent": 16119,
+                "id": 16120
+            },
+            "16121": {
+                "active": true,
+                "position": 2,
+                "name": "Leggings",
+                "parent": 16119,
+                "id": 16121
+            },
+            "16122": {
+                "active": true,
+                "position": 3,
+                "name": "Caprihosen",
+                "parent": 16119,
+                "id": 16122
+            },
+            "16123": {
+                "active": true,
+                "position": 4,
+                "name": "Chinos",
+                "parent": 16119,
+                "id": 16123
+            },
+            "16124": {
+                "active": true,
+                "position": 5,
+                "name": "Sweatpants",
+                "parent": 16119,
+                "id": 16124
+            },
+            "16125": {
+                "active": true,
+                "position": 6,
+                "name": "Cargohosen",
+                "parent": 16119,
+                "id": 16125
+            },
+            "16126": {
+                "active": true,
+                "position": 2,
+                "name": "Kurze Hosen",
+                "parent": 16112,
+                "id": 16126
+            },
+            "16127": {
+                "active": true,
+                "position": 1,
+                "name": "Shorts",
+                "parent": 16126,
+                "id": 16127
+            },
+            "16128": {
+                "active": true,
+                "position": 2,
+                "name": "3/4 Länge",
+                "parent": 16126,
+                "id": 16128
+            },
+            "16129": {
+                "active": true,
+                "position": 3,
+                "name": "7/8 Länge",
+                "parent": 16126,
+                "id": 16129
+            },
+            "16130": {
+                "active": true,
+                "position": 4,
+                "name": "Bermudas",
+                "parent": 16126,
+                "id": 16130
+            },
+            "16131": {
+                "active": true,
+                "position": 4,
+                "name": "Kleider",
+                "parent": 16078,
+                "id": 16131
+            },
+            "16132": {
+                "active": true,
+                "position": 1,
+                "name": "Anlass & Abendkleider",
+                "parent": 16131,
+                "id": 16132
+            },
+            "16133": {
+                "active": true,
+                "position": 1,
+                "name": "Cocktailkleider",
+                "parent": 16132,
+                "id": 16133
+            },
+            "16134": {
+                "active": true,
+                "position": 2,
+                "name": "Spitzenkleider",
+                "parent": 16132,
+                "id": 16134
+            },
+            "16135": {
+                "active": true,
+                "position": 3,
+                "name": "Abendkleider",
+                "parent": 16132,
+                "id": 16135
+            },
+            "16137": {
+                "active": true,
+                "position": 4,
+                "name": "Dirndl",
+                "parent": 16132,
+                "id": 16137
+            },
+            "16138": {
+                "active": true,
+                "position": 2,
+                "name": "Minikleider",
+                "parent": 16131,
+                "id": 16138
+            },
+            "16139": {
+                "active": false,
+                "position": 1,
+                "name": "Figurbetont",
+                "parent": 16138,
+                "id": 16139
+            },
+            "16140": {
+                "active": false,
+                "position": 2,
+                "name": "Gemustert",
+                "parent": 16138,
+                "id": 16140
+            },
+            "16141": {
+                "active": false,
+                "position": 3,
+                "name": "Schlicht",
+                "parent": 16138,
+                "id": 16141
+            },
+            "16142": {
+                "active": false,
+                "position": 4,
+                "name": "Langarm",
+                "parent": 16138,
+                "id": 16142
+            },
+            "16143": {
+                "active": false,
+                "position": 5,
+                "name": "Kurzarm",
+                "parent": 16138,
+                "id": 16143
+            },
+            "16144": {
+                "active": false,
+                "position": 6,
+                "name": "Trägerlos",
+                "parent": 16138,
+                "id": 16144
+            },
+            "16145": {
+                "active": false,
+                "position": 7,
+                "name": "Ausgestellt",
+                "parent": 16138,
+                "id": 16145
+            },
+            "16146": {
+                "active": true,
+                "position": 3,
+                "name": "Alltagskleider",
+                "parent": 16131,
+                "id": 16146
+            },
+            "16147": {
+                "active": true,
+                "position": 1,
+                "name": "Jerseykleider",
+                "parent": 16146,
+                "id": 16147
+            },
+            "16148": {
+                "active": true,
+                "position": 2,
+                "name": "Etuikleider",
+                "parent": 16146,
+                "id": 16148
+            },
+            "16149": {
+                "active": true,
+                "position": 3,
+                "name": "Wickelkleider",
+                "parent": 16146,
+                "id": 16149
+            },
+            "16150": {
+                "active": true,
+                "position": 4,
+                "name": "Trägerkleider",
+                "parent": 16146,
+                "id": 16150
+            },
+            "16151": {
+                "active": true,
+                "position": 5,
+                "name": "Strickkleider",
+                "parent": 16146,
+                "id": 16151
+            },
+            "16152": {
+                "active": true,
+                "position": 6,
+                "name": "Vokuhilakleider",
+                "parent": 16146,
+                "id": 16152
+            },
+            "16153": {
+                "active": true,
+                "position": 7,
+                "name": "Bandeaukleider",
+                "parent": 16146,
+                "id": 16153
+            },
+            "16154": {
+                "active": true,
+                "position": 8,
+                "name": "Bürokleider",
+                "parent": 16146,
+                "id": 16154
+            },
+            "16155": {
+                "active": true,
+                "position": 9,
+                "name": "Maxikleider",
+                "parent": 16146,
+                "id": 16155
+            },
+            "16156": {
+                "active": true,
+                "position": 5,
+                "name": "Röcke",
+                "parent": 16078,
+                "id": 16156
+            },
+            "16157": {
+                "active": true,
+                "position": 1,
+                "name": "Miniröcke",
+                "parent": 16156,
+                "id": 16157
+            },
+            "16158": {
+                "active": true,
+                "position": 2,
+                "name": "Bleistiftröcke",
+                "parent": 16156,
+                "id": 16158
+            },
+            "16159": {
+                "active": true,
+                "position": 3,
+                "name": "Jerseyröcke",
+                "parent": 16156,
+                "id": 16159
+            },
+            "16160": {
+                "active": true,
+                "position": 4,
+                "name": "Schößchenröcke",
+                "parent": 16156,
+                "id": 16160
+            },
+            "16161": {
+                "active": true,
+                "position": 5,
+                "name": "Jeansröcke",
+                "parent": 16156,
+                "id": 16161
+            },
+            "16162": {
+                "active": true,
+                "position": 6,
+                "name": "Maxiröcke",
+                "parent": 16156,
+                "id": 16162
+            },
+            "16163": {
+                "active": true,
+                "position": 7,
+                "name": "Lederröcke",
+                "parent": 16156,
+                "id": 16163
+            },
+            "16164": {
+                "active": true,
+                "position": 8,
+                "name": "Faltenröcke",
+                "parent": 16156,
+                "id": 16164
+            },
+            "16165": {
+                "active": true,
+                "position": 4,
+                "name": "Jacken & Mäntel",
+                "parent": 16078,
+                "id": 16165
+            },
+            "16166": {
+                "active": true,
+                "position": 6,
+                "name": "Jacken",
+                "parent": 16078,
+                "id": 16166
+            },
+            "16167": {
+                "active": true,
+                "position": 1,
+                "name": "Sportliche Jacken",
+                "parent": 16166,
+                "id": 16167
+            },
+            "16168": {
+                "active": true,
+                "position": 2,
+                "name": "Stepp & Daunenjacken",
+                "parent": 16166,
+                "id": 16168
+            },
+            "16169": {
+                "active": true,
+                "position": 3,
+                "name": "Parkas",
+                "parent": 16166,
+                "id": 16169
+            },
+            "16170": {
+                "active": true,
+                "position": 4,
+                "name": "Leder & Bikerjacken",
+                "parent": 16166,
+                "id": 16170
+            },
+            "16171": {
+                "active": true,
+                "position": 5,
+                "name": "Schicke Jacken",
+                "parent": 16166,
+                "id": 16171
+            },
+            "16172": {
+                "active": true,
+                "position": 6,
+                "name": "Jeansjacken",
+                "parent": 16166,
+                "id": 16172
+            },
+            "16173": {
+                "active": true,
+                "position": 7,
+                "name": "Outdoorjacken",
+                "parent": 16166,
+                "id": 16173
+            },
+            "16174": {
+                "active": true,
+                "position": 7,
+                "name": "Mäntel",
+                "parent": 16078,
+                "id": 16174
+            },
+            "16175": {
+                "active": true,
+                "position": 1,
+                "name": "Trenchcoats",
+                "parent": 16174,
+                "id": 16175
+            },
+            "16176": {
+                "active": true,
+                "position": 2,
+                "name": "Stepp & Daunenmäntel",
+                "parent": 16174,
+                "id": 16176
+            },
+            "16177": {
+                "active": true,
+                "position": 3,
+                "name": "Wollmäntel",
+                "parent": 16174,
+                "id": 16177
+            },
+            "16178": {
+                "active": true,
+                "position": 9,
+                "name": "Boleros",
+                "parent": 16166,
+                "id": 16178
+            },
+            "16179": {
+                "active": true,
+                "position": 10,
+                "name": "Westen",
+                "parent": 16166,
+                "id": 16179
+            },
+            "16180": {
+                "active": true,
+                "position": 1,
+                "name": "Strickwesten",
+                "parent": 16179,
+                "id": 16180
+            },
+            "16181": {
+                "active": true,
+                "position": 2,
+                "name": "Stepp & Daunenwesten",
+                "parent": 16179,
+                "id": 16181
+            },
+            "16182": {
+                "active": true,
+                "position": 8,
+                "name": "Overalls & Jumpsuits",
+                "parent": 16078,
+                "id": 16182
+            },
+            "16183": {
+                "active": true,
+                "position": 9,
+                "name": "Anzüge",
+                "parent": 16078,
+                "id": 16183
+            },
+            "16185": {
+                "active": true,
+                "position": 2,
+                "name": "Schuhe",
+                "parent": 16077,
+                "id": 16185
+            },
+            "16186": {
+                "active": true,
+                "position": 1,
+                "name": "Absatzschuhe",
+                "parent": 16185,
+                "id": 16186
+            },
+            "16187": {
+                "active": true,
+                "position": 1,
+                "name": "Sandaletten",
+                "parent": 16186,
+                "id": 16187
+            },
+            "16188": {
+                "active": true,
+                "position": 2,
+                "name": "Pumps",
+                "parent": 16186,
+                "id": 16188
+            },
+            "16189": {
+                "active": true,
+                "position": 3,
+                "name": "High Heels",
+                "parent": 16186,
+                "id": 16189
+            },
+            "16190": {
+                "active": true,
+                "position": 4,
+                "name": "Peeptoes",
+                "parent": 16186,
+                "id": 16190
+            },
+            "16191": {
+                "active": true,
+                "position": 5,
+                "name": "Keilabsatz",
+                "parent": 16186,
+                "id": 16191
+            },
+            "16192": {
+                "active": true,
+                "position": 6,
+                "name": "Blockabsatz",
+                "parent": 16186,
+                "id": 16192
+            },
+            "16193": {
+                "active": true,
+                "position": 3,
+                "name": "Stiefel",
+                "parent": 16185,
+                "id": 16193
+            },
+            "16194": {
+                "active": true,
+                "position": 1,
+                "name": "Boots",
+                "parent": 18019,
+                "id": 16194
+            },
+            "16199": {
+                "active": true,
+                "position": 5,
+                "name": "Ballerina & Slipper",
+                "parent": 16185,
+                "id": 16199
+            },
+            "16200": {
+                "active": true,
+                "position": 1,
+                "name": "Ballerinas",
+                "parent": 16199,
+                "id": 16200
+            },
+            "16201": {
+                "active": true,
+                "position": 2,
+                "name": "Slipper",
+                "parent": 16199,
+                "id": 16201
+            },
+            "16202": {
+                "active": true,
+                "position": 3,
+                "name": "Espandrilles",
+                "parent": 16199,
+                "id": 16202
+            },
+            "16203": {
+                "active": true,
+                "position": 4,
+                "name": "Mokassins",
+                "parent": 16199,
+                "id": 16203
+            },
+            "16204": {
+                "active": true,
+                "position": 5,
+                "name": "Pantoletten",
+                "parent": 16199,
+                "id": 16204
+            },
+            "16205": {
+                "active": true,
+                "position": 6,
+                "name": "Clogs",
+                "parent": 16199,
+                "id": 16205
+            },
+            "16206": {
+                "active": true,
+                "position": 6,
+                "name": "Sandalen",
+                "parent": 16185,
+                "id": 16206
+            },
+            "16207": {
+                "active": true,
+                "position": 1,
+                "name": "Zehentrenner",
+                "parent": 16206,
+                "id": 16207
+            },
+            "16209": {
+                "active": true,
+                "position": 4,
+                "name": "Schnürschuhe",
+                "parent": 16185,
+                "id": 16209
+            },
+            "16210": {
+                "active": true,
+                "position": 1,
+                "name": "Sneaker",
+                "parent": 16209,
+                "id": 16210
+            },
+            "16211": {
+                "active": true,
+                "position": 2,
+                "name": "Halbschuhe",
+                "parent": 16209,
+                "id": 16211
+            },
+            "16212": {
+                "active": true,
+                "position": 3,
+                "name": "Schnürer",
+                "parent": 16209,
+                "id": 16212
+            },
+            "16213": {
+                "active": true,
+                "position": 4,
+                "name": "Outdoorschuhe",
+                "parent": 16209,
+                "id": 16213
+            },
+            "16214": {
+                "active": true,
+                "position": 5,
+                "name": "Freizeitschuhe",
+                "parent": 16209,
+                "id": 16214
+            },
+            "16215": {
+                "active": true,
+                "position": 7,
+                "name": "Sportschuhe",
+                "parent": 16185,
+                "id": 16215
+            },
+            "16216": {
+                "active": true,
+                "position": 1,
+                "name": "Running",
+                "parent": 16215,
+                "id": 16216
+            },
+            "16217": {
+                "active": true,
+                "position": 2,
+                "name": "Fitness",
+                "parent": 16215,
+                "id": 16217
+            },
+            "16218": {
+                "active": true,
+                "position": 3,
+                "name": "Allrounder",
+                "parent": 16215,
+                "id": 16218
+            },
+            "16219": {
+                "active": true,
+                "position": 3,
+                "name": "Taschen",
+                "parent": 16077,
+                "id": 16219
+            },
+            "16220": {
+                "active": true,
+                "position": 1,
+                "name": "Handtaschen",
+                "parent": 16219,
+                "id": 16220
+            },
+            "16221": {
+                "active": true,
+                "position": 1,
+                "name": "Shopper",
+                "parent": 16220,
+                "id": 16221
+            },
+            "16222": {
+                "active": true,
+                "position": 2,
+                "name": "Henkeltaschen",
+                "parent": 16220,
+                "id": 16222
+            },
+            "16223": {
+                "active": true,
+                "position": 3,
+                "name": "Clutches & Abendtaschen",
+                "parent": 16220,
+                "id": 16223
+            },
+            "16224": {
+                "active": true,
+                "position": 2,
+                "name": "Umhängetaschen",
+                "parent": 16219,
+                "id": 16224
+            },
+            "16225": {
+                "active": true,
+                "position": 3,
+                "name": "Funktionstaschen",
+                "parent": 16219,
+                "id": 16225
+            },
+            "16226": {
+                "active": true,
+                "position": 1,
+                "name": "Businesstaschen",
+                "parent": 16225,
+                "id": 16226
+            },
+            "16227": {
+                "active": false,
+                "position": 2,
+                "name": "Reisetaschen",
+                "parent": 16225,
+                "id": 16227
+            },
+            "16228": {
+                "active": true,
+                "position": 3,
+                "name": "Sporttaschen",
+                "parent": 16225,
+                "id": 16228
+            },
+            "16229": {
+                "active": true,
+                "position": 4,
+                "name": "Rucksäcke",
+                "parent": 16219,
+                "id": 16229
+            },
+            "16230": {
+                "active": true,
+                "position": 4,
+                "name": "Accessoires",
+                "parent": 16077,
+                "id": 16230
+            },
+            "16231": {
+                "active": true,
+                "position": 1,
+                "name": "Tücher & Schals",
+                "parent": 16230,
+                "id": 16231
+            },
+            "16232": {
+                "active": true,
+                "position": 1,
+                "name": "Schals",
+                "parent": 16231,
+                "id": 16232
+            },
+            "16233": {
+                "active": true,
+                "position": 3,
+                "name": "Tücher",
+                "parent": 16231,
+                "id": 16233
+            },
+            "16234": {
+                "active": true,
+                "position": 4,
+                "name": "Pareos",
+                "parent": 16231,
+                "id": 16234
+            },
+            "16235": {
+                "active": true,
+                "position": 2,
+                "name": "Gürtel",
+                "parent": 16230,
+                "id": 16235
+            },
+            "16236": {
+                "active": true,
+                "position": 1,
+                "name": "Breite Gürtel",
+                "parent": 16235,
+                "id": 16236
+            },
+            "16237": {
+                "active": true,
+                "position": 3,
+                "name": "Nietengürtel",
+                "parent": 16235,
+                "id": 16237
+            },
+            "16238": {
+                "active": false,
+                "position": 4,
+                "name": "Taillengürtel",
+                "parent": 16235,
+                "id": 16238
+            },
+            "16239": {
+                "active": true,
+                "position": 5,
+                "name": "Schmale Gürtel",
+                "parent": 16235,
+                "id": 16239
+            },
+            "16240": {
+                "active": true,
+                "position": 3,
+                "name": "Mützen & Hüte",
+                "parent": 16230,
+                "id": 16240
+            },
+            "16241": {
+                "active": false,
+                "position": 1,
+                "name": "Hüte",
+                "parent": 16240,
+                "id": 16241
+            },
+            "16242": {
+                "active": true,
+                "position": 2,
+                "name": "Mützen",
+                "parent": 16240,
+                "id": 16242
+            },
+            "16243": {
+                "active": true,
+                "position": 3,
+                "name": "Strickmützen",
+                "parent": 16240,
+                "id": 16243
+            },
+            "16244": {
+                "active": true,
+                "position": 4,
+                "name": "Beanies",
+                "parent": 16240,
+                "id": 16244
+            },
+            "16245": {
+                "active": true,
+                "position": 5,
+                "name": "Caps",
+                "parent": 16240,
+                "id": 16245
+            },
+            "16246": {
+                "active": true,
+                "position": 4,
+                "name": "Handschuhe",
+                "parent": 16230,
+                "id": 16246
+            },
+            "16247": {
+                "active": true,
+                "position": 1,
+                "name": "Fingerhandschuhe",
+                "parent": 16246,
+                "id": 16247
+            },
+            "16248": {
+                "active": true,
+                "position": 2,
+                "name": "Fäustlinge",
+                "parent": 16246,
+                "id": 16248
+            },
+            "16249": {
+                "active": true,
+                "position": 5,
+                "name": "Wäsche & Bademode",
+                "parent": 16077,
+                "id": 16249
+            },
+            "16250": {
+                "active": true,
+                "position": 1,
+                "name": "Badeanzüge",
+                "parent": 16249,
+                "id": 16250
+            },
+            "16251": {
+                "active": true,
+                "position": 1,
+                "name": "Tankinis",
+                "parent": 16250,
+                "id": 16251
+            },
+            "16252": {
+                "active": true,
+                "position": 2,
+                "name": "Bikinis",
+                "parent": 16249,
+                "id": 16252
+            },
+            "16253": {
+                "active": true,
+                "position": 1,
+                "name": "Mixkinis",
+                "parent": 16252,
+                "id": 16253
+            },
+            "16254": {
+                "active": true,
+                "position": 3,
+                "name": "Wäsche & Dessous",
+                "parent": 16249,
+                "id": 16254
+            },
+            "16255": {
+                "active": true,
+                "position": 1,
+                "name": "Dessous & Reizwäsche",
+                "parent": 16254,
+                "id": 16255
+            },
+            "16256": {
+                "active": true,
+                "position": 2,
+                "name": "Bodies",
+                "parent": 16254,
+                "id": 16256
+            },
+            "16257": {
+                "active": true,
+                "position": 3,
+                "name": "BH's",
+                "parent": 16254,
+                "id": 16257
+            },
+            "16258": {
+                "active": true,
+                "position": 4,
+                "name": "Unterteile",
+                "parent": 16254,
+                "id": 16258
+            },
+            "16259": {
+                "active": true,
+                "position": 5,
+                "name": "Strümpfe",
+                "parent": 16254,
+                "id": 16259
+            },
+            "16260": {
+                "active": true,
+                "position": 4,
+                "name": "Nacht & Homewear",
+                "parent": 16249,
+                "id": 16260
+            },
+            "16261": {
+                "active": true,
+                "position": 1,
+                "name": "Bademäntel",
+                "parent": 16260,
+                "id": 16261
+            },
+            "16262": {
+                "active": true,
+                "position": 2,
+                "name": "Nachtwäsche",
+                "parent": 16260,
+                "id": 16262
+            },
+            "16263": {
+                "active": true,
+                "position": 3,
+                "name": "Homewear",
+                "parent": 16260,
+                "id": 16263
+            },
+            "16264": {
+                "active": true,
+                "position": 5,
+                "name": "Shapewear",
+                "parent": 16249,
+                "id": 16264
+            },
+            "16265": {
+                "active": true,
+                "position": 6,
+                "name": "Sport",
+                "parent": 16077,
+                "id": 16265
+            },
+            "16266": {
+                "active": true,
+                "position": 1,
+                "name": "Sportoberteile",
+                "parent": 16265,
+                "id": 16266
+            },
+            "16267": {
+                "active": true,
+                "position": 1,
+                "name": "Shirts & Tops",
+                "parent": 16266,
+                "id": 16267
+            },
+            "16268": {
+                "active": true,
+                "position": 2,
+                "name": "Sport-BH's",
+                "parent": 16266,
+                "id": 16268
+            },
+            "16269": {
+                "active": true,
+                "position": 3,
+                "name": "Jacken",
+                "parent": 16266,
+                "id": 16269
+            },
+            "16270": {
+                "active": true,
+                "position": 2,
+                "name": "Sporthosen",
+                "parent": 16265,
+                "id": 16270
+            },
+            "16271": {
+                "active": true,
+                "position": 1,
+                "name": "Enge Hosen",
+                "parent": 16270,
+                "id": 16271
+            },
+            "16272": {
+                "active": true,
+                "position": 2,
+                "name": "Shorts",
+                "parent": 16270,
+                "id": 16272
+            },
+            "16273": {
+                "active": true,
+                "position": 3,
+                "name": "Bequeme Hosen",
+                "parent": 16270,
+                "id": 16273
+            },
+            "16274": {
+                "active": true,
+                "position": 4,
+                "name": "Outdoorhosen",
+                "parent": 16270,
+                "id": 16274
+            },
+            "16275": {
+                "active": true,
+                "position": 3,
+                "name": "Sportschuhe",
+                "parent": 16265,
+                "id": 16275
+            },
+            "16276": {
+                "active": true,
+                "position": 1,
+                "name": "Running",
+                "parent": 16275,
+                "id": 16276
+            },
+            "16277": {
+                "active": true,
+                "position": 2,
+                "name": "Fitness",
+                "parent": 16275,
+                "id": 16277
+            },
+            "16278": {
+                "active": true,
+                "position": 3,
+                "name": "Allrounder",
+                "parent": 16275,
+                "id": 16278
+            },
+            "16279": {
+                "active": false,
+                "position": 4,
+                "name": "Funktionswäsche",
+                "parent": 16265,
+                "id": 16279
+            },
+            "16280": {
+                "active": true,
+                "position": 5,
+                "name": "Trainingsanzüge",
+                "parent": 16265,
+                "id": 16280
+            },
+            "16281": {
+                "active": true,
+                "position": 6,
+                "name": "Accessoires",
+                "parent": 16265,
+                "id": 16281
+            },
+            "16282": {
+                "active": true,
+                "position": 2,
+                "name": "Herren",
+                "parent": 0,
+                "id": 16282
+            },
+            "16283": {
+                "active": true,
+                "position": 1,
+                "name": "Bekleidung",
+                "parent": 16282,
+                "id": 16283
+            },
+            "16284": {
+                "active": true,
+                "position": 1,
+                "name": "Oberteile",
+                "parent": 16283,
+                "id": 16284
+            },
+            "16285": {
+                "active": true,
+                "position": 1,
+                "name": "Hemden",
+                "parent": 16284,
+                "id": 16285
+            },
+            "16286": {
+                "active": true,
+                "position": 1,
+                "name": "Langarm",
+                "parent": 16285,
+                "id": 16286
+            },
+            "16287": {
+                "active": true,
+                "position": 2,
+                "name": "Kurzarm",
+                "parent": 16285,
+                "id": 16287
+            },
+            "16288": {
+                "active": true,
+                "position": 2,
+                "name": "Shirts",
+                "parent": 16284,
+                "id": 16288
+            },
+            "16289": {
+                "active": true,
+                "position": 1,
+                "name": "T-Shirts",
+                "parent": 16288,
+                "id": 16289
+            },
+            "16290": {
+                "active": true,
+                "position": 2,
+                "name": "Poloshirts",
+                "parent": 16288,
+                "id": 16290
+            },
+            "16291": {
+                "active": true,
+                "position": 3,
+                "name": "Longsleeves",
+                "parent": 16288,
+                "id": 16291
+            },
+            "16292": {
+                "active": true,
+                "position": 4,
+                "name": "V-Ausschnitt",
+                "parent": 16288,
+                "id": 16292
+            },
+            "16293": {
+                "active": true,
+                "position": 5,
+                "name": "Printshirts",
+                "parent": 16288,
+                "id": 16293
+            },
+            "16294": {
+                "active": true,
+                "position": 6,
+                "name": "Muskelshirts",
+                "parent": 16288,
+                "id": 16294
+            },
+            "16295": {
+                "active": true,
+                "position": 3,
+                "name": "Pullover & Sweatshirts",
+                "parent": 16284,
+                "id": 16295
+            },
+            "16296": {
+                "active": true,
+                "position": 1,
+                "name": "Sweatshirts",
+                "parent": 16295,
+                "id": 16296
+            },
+            "16297": {
+                "active": true,
+                "position": 2,
+                "name": "Sweatjacken",
+                "parent": 16295,
+                "id": 16297
+            },
+            "16298": {
+                "active": true,
+                "position": 3,
+                "name": "Pullover",
+                "parent": 16295,
+                "id": 16298
+            },
+            "16299": {
+                "active": true,
+                "position": 4,
+                "name": "Strick",
+                "parent": 16284,
+                "id": 16299
+            },
+            "16300": {
+                "active": true,
+                "position": 1,
+                "name": "Strickpullover",
+                "parent": 16299,
+                "id": 16300
+            },
+            "16301": {
+                "active": true,
+                "position": 2,
+                "name": "Strickjacken",
+                "parent": 16299,
+                "id": 16301
+            },
+            "16302": {
+                "active": false,
+                "position": 3,
+                "name": "Mit Kapuze",
+                "parent": 16299,
+                "id": 16302
+            },
+            "16303": {
+                "active": true,
+                "position": 4,
+                "name": "Mit Knöpfen",
+                "parent": 16299,
+                "id": 16303
+            },
+            "16304": {
+                "active": true,
+                "position": 2,
+                "name": "Jacken & Mäntel",
+                "parent": 16283,
+                "id": 16304
+            },
+            "16305": {
+                "active": true,
+                "position": 2,
+                "name": "Jacken",
+                "parent": 16283,
+                "id": 16305
+            },
+            "16306": {
+                "active": true,
+                "position": 3,
+                "name": "Mäntel",
+                "parent": 16283,
+                "id": 16306
+            },
+            "16308": {
+                "active": true,
+                "position": 4,
+                "name": "Fleece & Softshelljacken",
+                "parent": 16305,
+                "id": 16308
+            },
+            "16309": {
+                "active": true,
+                "position": 5,
+                "name": "Funktions & Outdoorjacken",
+                "parent": 16305,
+                "id": 16309
+            },
+            "16310": {
+                "active": true,
+                "position": 4,
+                "name": "Westen",
+                "parent": 16283,
+                "id": 16310
+            },
+            "16311": {
+                "active": true,
+                "position": 6,
+                "name": "Hosen & Shorts",
+                "parent": 16283,
+                "id": 16311
+            },
+            "16312": {
+                "active": true,
+                "position": 1,
+                "name": "Jeans",
+                "parent": 16311,
+                "id": 16312
+            },
+            "16313": {
+                "active": true,
+                "position": 2,
+                "name": "Stoffhosen",
+                "parent": 16311,
+                "id": 16313
+            },
+            "16314": {
+                "active": true,
+                "position": 3,
+                "name": "Shorts",
+                "parent": 16311,
+                "id": 16314
+            },
+            "16315": {
+                "active": true,
+                "position": 7,
+                "name": "Anzüge",
+                "parent": 16283,
+                "id": 16315
+            },
+            "16316": {
+                "active": true,
+                "position": 8,
+                "name": "Sakkos",
+                "parent": 16283,
+                "id": 16316
+            },
+            "16317": {
+                "active": true,
+                "position": 2,
+                "name": "Schuhe",
+                "parent": 16282,
+                "id": 16317
+            },
+            "16318": {
+                "active": true,
+                "position": 1,
+                "name": "Sneaker",
+                "parent": 16317,
+                "id": 16318
+            },
+            "16319": {
+                "active": true,
+                "position": 2,
+                "name": "Schnürschuhe",
+                "parent": 16317,
+                "id": 16319
+            },
+            "16320": {
+                "active": true,
+                "position": 1,
+                "name": "Boots",
+                "parent": 16319,
+                "id": 16320
+            },
+            "16321": {
+                "active": true,
+                "position": 2,
+                "name": "Anzugschuhe",
+                "parent": 16319,
+                "id": 16321
+            },
+            "16322": {
+                "active": true,
+                "position": 3,
+                "name": "Outdoor",
+                "parent": 16319,
+                "id": 16322
+            },
+            "16323": {
+                "active": true,
+                "position": 3,
+                "name": "Slipper",
+                "parent": 16317,
+                "id": 16323
+            },
+            "16324": {
+                "active": true,
+                "position": 4,
+                "name": "Sandalen",
+                "parent": 16317,
+                "id": 16324
+            },
+            "16325": {
+                "active": true,
+                "position": 5,
+                "name": "Sportschuhe",
+                "parent": 16317,
+                "id": 16325
+            },
+            "16326": {
+                "active": true,
+                "position": 1,
+                "name": "Fitness",
+                "parent": 16325,
+                "id": 16326
+            },
+            "16327": {
+                "active": true,
+                "position": 2,
+                "name": "Running",
+                "parent": 16325,
+                "id": 16327
+            },
+            "16328": {
+                "active": true,
+                "position": 3,
+                "name": "Outdoor",
+                "parent": 16325,
+                "id": 16328
+            },
+            "16329": {
+                "active": true,
+                "position": 3,
+                "name": "Taschen",
+                "parent": 16282,
+                "id": 16329
+            },
+            "16330": {
+                "active": true,
+                "position": 1,
+                "name": "Umhängetaschen",
+                "parent": 16329,
+                "id": 16330
+            },
+            "16331": {
+                "active": true,
+                "position": 2,
+                "name": "Sporttaschen",
+                "parent": 16329,
+                "id": 16331
+            },
+            "16332": {
+                "active": true,
+                "position": 3,
+                "name": "Businesstaschen",
+                "parent": 16329,
+                "id": 16332
+            },
+            "16333": {
+                "active": true,
+                "position": 4,
+                "name": "Rucksäcke",
+                "parent": 16329,
+                "id": 16333
+            },
+            "16334": {
+                "active": true,
+                "position": 4,
+                "name": "Accessoires",
+                "parent": 16282,
+                "id": 16334
+            },
+            "16335": {
+                "active": true,
+                "position": 1,
+                "name": "Tücher & Schals",
+                "parent": 16334,
+                "id": 16335
+            },
+            "16336": {
+                "active": true,
+                "position": 1,
+                "name": "Schals",
+                "parent": 16335,
+                "id": 16336
+            },
+            "16337": {
+                "active": false,
+                "position": 2,
+                "name": "Schlauchschals",
+                "parent": 16335,
+                "id": 16337
+            },
+            "16338": {
+                "active": false,
+                "position": 3,
+                "name": "Tücher",
+                "parent": 16335,
+                "id": 16338
+            },
+            "16339": {
+                "active": false,
+                "position": 4,
+                "name": "Einstecktücher",
+                "parent": 16335,
+                "id": 16339
+            },
+            "16340": {
+                "active": true,
+                "position": 2,
+                "name": "Gürtel",
+                "parent": 16334,
+                "id": 16340
+            },
+            "16341": {
+                "active": false,
+                "position": 1,
+                "name": "Breite Gürtel",
+                "parent": 16340,
+                "id": 16341
+            },
+            "16342": {
+                "active": true,
+                "position": 2,
+                "name": "Nietengürtel",
+                "parent": 16340,
+                "id": 16342
+            },
+            "16343": {
+                "active": false,
+                "position": 3,
+                "name": "Schmale Gürtel",
+                "parent": 16340,
+                "id": 16343
+            },
+            "16344": {
+                "active": true,
+                "position": 4,
+                "name": "Stoffgürtel",
+                "parent": 16340,
+                "id": 16344
+            },
+            "16345": {
+                "active": true,
+                "position": 3,
+                "name": "Mützen & Hüte",
+                "parent": 16334,
+                "id": 16345
+            },
+            "16346": {
+                "active": true,
+                "position": 1,
+                "name": "Mützen",
+                "parent": 16345,
+                "id": 16346
+            },
+            "16347": {
+                "active": true,
+                "position": 2,
+                "name": "Hüte",
+                "parent": 16345,
+                "id": 16347
+            },
+            "16348": {
+                "active": true,
+                "position": 3,
+                "name": "Caps",
+                "parent": 16345,
+                "id": 16348
+            },
+            "16349": {
+                "active": true,
+                "position": 4,
+                "name": "Handschuhe",
+                "parent": 16334,
+                "id": 16349
+            },
+            "16350": {
+                "active": true,
+                "position": 1,
+                "name": "Fingerhandschuhe",
+                "parent": 16349,
+                "id": 16350
+            },
+            "16351": {
+                "active": false,
+                "position": 2,
+                "name": "Fäustlinge",
+                "parent": 16349,
+                "id": 16351
+            },
+            "16352": {
+                "active": true,
+                "position": 5,
+                "name": "Wäsche & Bademode",
+                "parent": 16282,
+                "id": 16352
+            },
+            "16353": {
+                "active": true,
+                "position": 1,
+                "name": "Bademode",
+                "parent": 16352,
+                "id": 16353
+            },
+            "16354": {
+                "active": true,
+                "position": 1,
+                "name": "Shorts",
+                "parent": 16353,
+                "id": 16354
+            },
+            "16355": {
+                "active": true,
+                "position": 2,
+                "name": "Boardshorts",
+                "parent": 16353,
+                "id": 16355
+            },
+            "16356": {
+                "active": true,
+                "position": 3,
+                "name": "Badehosen",
+                "parent": 16353,
+                "id": 16356
+            },
+            "16357": {
+                "active": true,
+                "position": 2,
+                "name": "Wäsche & Socken",
+                "parent": 16352,
+                "id": 16357
+            },
+            "16358": {
+                "active": false,
+                "position": 1,
+                "name": "Bademäntel",
+                "parent": 16357,
+                "id": 16358
+            },
+            "16359": {
+                "active": true,
+                "position": 3,
+                "name": "Nachtwäsche",
+                "parent": 16357,
+                "id": 16359
+            },
+            "16360": {
+                "active": true,
+                "position": 4,
+                "name": "Shirts & Unterhemden",
+                "parent": 16357,
+                "id": 16360
+            },
+            "16361": {
+                "active": true,
+                "position": 3,
+                "name": "Unterwäsche",
+                "parent": 16352,
+                "id": 16361
+            },
+            "16362": {
+                "active": true,
+                "position": 1,
+                "name": "Boxershorts",
+                "parent": 16361,
+                "id": 16362
+            },
+            "16363": {
+                "active": true,
+                "position": 2,
+                "name": "Slips",
+                "parent": 16361,
+                "id": 16363
+            },
+            "16364": {
+                "active": false,
+                "position": 4,
+                "name": "Funktionswäsche",
+                "parent": 16352,
+                "id": 16364
+            },
+            "16365": {
+                "active": true,
+                "position": 6,
+                "name": "Sport",
+                "parent": 16282,
+                "id": 16365
+            },
+            "16366": {
+                "active": true,
+                "position": 1,
+                "name": "Sportoberteile",
+                "parent": 16365,
+                "id": 16366
+            },
+            "16367": {
+                "active": true,
+                "position": 1,
+                "name": "Shirts & Tops",
+                "parent": 16366,
+                "id": 16367
+            },
+            "16368": {
+                "active": true,
+                "position": 2,
+                "name": "Jacken & Westen",
+                "parent": 16366,
+                "id": 16368
+            },
+            "16369": {
+                "active": true,
+                "position": 2,
+                "name": "Sporthosen",
+                "parent": 16365,
+                "id": 16369
+            },
+            "16370": {
+                "active": true,
+                "position": 3,
+                "name": "Trainingsanzüge",
+                "parent": 16365,
+                "id": 16370
+            },
+            "16371": {
+                "active": true,
+                "position": 4,
+                "name": "Sportschuhe",
+                "parent": 16365,
+                "id": 16371
+            },
+            "16372": {
+                "active": true,
+                "position": 1,
+                "name": "Fitness",
+                "parent": 16371,
+                "id": 16372
+            },
+            "16373": {
+                "active": true,
+                "position": 2,
+                "name": "Running",
+                "parent": 16371,
+                "id": 16373
+            },
+            "16374": {
+                "active": true,
+                "position": 3,
+                "name": "Outdoor",
+                "parent": 16371,
+                "id": 16374
+            },
+            "16375": {
+                "active": true,
+                "position": 5,
+                "name": "Accessoires",
+                "parent": 16365,
+                "id": 16375
+            },
+            "16376": {
+                "active": true,
+                "position": 1,
+                "name": "Handschuhe",
+                "parent": 16375,
+                "id": 16376
+            },
+            "16377": {
+                "active": true,
+                "position": 2,
+                "name": "Rucksäcke & Taschen",
+                "parent": 16375,
+                "id": 16377
+            },
+            "16378": {
+                "active": false,
+                "position": 2,
+                "name": "Helme",
+                "parent": 16375,
+                "id": 16378
+            },
+            "16379": {
+                "active": false,
+                "position": 3,
+                "name": "Landing Pages",
+                "parent": 0,
+                "id": 16379
+            },
+            "16380": {
+                "active": false,
+                "position": 1,
+                "name": "LP Hosen",
+                "parent": 16379,
+                "id": 16380
+            },
+            "16381": {
+                "active": false,
+                "position": 1,
+                "name": "Jeans",
+                "parent": 16380,
+                "id": 16381
+            },
+            "16382": {
+                "active": false,
+                "position": 1,
+                "name": "SkinnyJeans",
+                "parent": 16381,
+                "id": 16382
+            },
+            "16383": {
+                "active": false,
+                "position": 2,
+                "name": "Bootcut",
+                "parent": 16381,
+                "id": 16383
+            },
+            "16384": {
+                "active": false,
+                "position": 3,
+                "name": "Boyfriend",
+                "parent": 16381,
+                "id": 16384
+            },
+            "16385": {
+                "active": false,
+                "position": 4,
+                "name": "Jeggings",
+                "parent": 16381,
+                "id": 16385
+            },
+            "16386": {
+                "active": false,
+                "position": 5,
+                "name": "HighWaist",
+                "parent": 16381,
+                "id": 16386
+            },
+            "16387": {
+                "active": false,
+                "position": 2,
+                "name": "Hosen",
+                "parent": 16380,
+                "id": 16387
+            },
+            "16388": {
+                "active": false,
+                "position": 1,
+                "name": "Stoffhosen",
+                "parent": 16387,
+                "id": 16388
+            },
+            "16389": {
+                "active": false,
+                "position": 2,
+                "name": "Caprihosen",
+                "parent": 16387,
+                "id": 16389
+            },
+            "16390": {
+                "active": false,
+                "position": 3,
+                "name": "Chinos",
+                "parent": 16387,
+                "id": 16390
+            },
+            "16391": {
+                "active": false,
+                "position": 4,
+                "name": "Sweatpants",
+                "parent": 16387,
+                "id": 16391
+            },
+            "16392": {
+                "active": false,
+                "position": 5,
+                "name": "Cargohosen",
+                "parent": 16387,
+                "id": 16392
+            },
+            "16393": {
+                "active": false,
+                "position": 3,
+                "name": "Leggings",
+                "parent": 16380,
+                "id": 16393
+            },
+            "16394": {
+                "active": false,
+                "position": 4,
+                "name": "Kurze Hosen",
+                "parent": 16380,
+                "id": 16394
+            },
+            "16395": {
+                "active": false,
+                "position": 1,
+                "name": "Shorts",
+                "parent": 16394,
+                "id": 16395
+            },
+            "16396": {
+                "active": false,
+                "position": 2,
+                "name": "3/4 Länge",
+                "parent": 16394,
+                "id": 16396
+            },
+            "16397": {
+                "active": false,
+                "position": 3,
+                "name": "7/8 Länge",
+                "parent": 16394,
+                "id": 16397
+            },
+            "16398": {
+                "active": false,
+                "position": 4,
+                "name": "Bermudas",
+                "parent": 16394,
+                "id": 16398
+            },
+            "16399": {
+                "active": false,
+                "position": 2,
+                "name": "LP Schuhe",
+                "parent": 16379,
+                "id": 16399
+            },
+            "16400": {
+                "active": false,
+                "position": 1,
+                "name": "Absatzschuhe",
+                "parent": 16399,
+                "id": 16400
+            },
+            "16401": {
+                "active": false,
+                "position": 1,
+                "name": "Sandaletten",
+                "parent": 16400,
+                "id": 16401
+            },
+            "16402": {
+                "active": false,
+                "position": 2,
+                "name": "Pumps",
+                "parent": 16400,
+                "id": 16402
+            },
+            "16403": {
+                "active": false,
+                "position": 3,
+                "name": "High Heels",
+                "parent": 16400,
+                "id": 16403
+            },
+            "16404": {
+                "active": false,
+                "position": 4,
+                "name": "Peeptoes",
+                "parent": 16400,
+                "id": 16404
+            },
+            "16405": {
+                "active": false,
+                "position": 5,
+                "name": "Keilabsatz",
+                "parent": 16400,
+                "id": 16405
+            },
+            "16406": {
+                "active": false,
+                "position": 6,
+                "name": "Blockabsatz",
+                "parent": 16400,
+                "id": 16406
+            },
+            "16407": {
+                "active": false,
+                "position": 2,
+                "name": "Stiefel & Stiefeletten",
+                "parent": 16399,
+                "id": 16407
+            },
+            "16408": {
+                "active": true,
+                "position": 1,
+                "name": "Boots",
+                "parent": 16407,
+                "id": 16408
+            },
+            "16409": {
+                "active": false,
+                "position": 2,
+                "name": "Stiefel ohne Absatz",
+                "parent": 16407,
+                "id": 16409
+            },
+            "16410": {
+                "active": false,
+                "position": 3,
+                "name": "Stiefel mit Absatz",
+                "parent": 16407,
+                "id": 16410
+            },
+            "16411": {
+                "active": false,
+                "position": 4,
+                "name": "Stiefeletten ohne Absatz",
+                "parent": 16407,
+                "id": 16411
+            },
+            "16412": {
+                "active": false,
+                "position": 5,
+                "name": "Stiefeletten mit Absatz",
+                "parent": 16407,
+                "id": 16412
+            },
+            "16413": {
+                "active": false,
+                "position": 3,
+                "name": "Ballerina & Slipper",
+                "parent": 16399,
+                "id": 16413
+            },
+            "16414": {
+                "active": false,
+                "position": 1,
+                "name": "Ballerinas",
+                "parent": 16413,
+                "id": 16414
+            },
+            "16415": {
+                "active": false,
+                "position": 2,
+                "name": "Slipper",
+                "parent": 16413,
+                "id": 16415
+            },
+            "16416": {
+                "active": false,
+                "position": 3,
+                "name": "Espandrilles",
+                "parent": 16413,
+                "id": 16416
+            },
+            "16417": {
+                "active": false,
+                "position": 4,
+                "name": "Mokassins",
+                "parent": 16413,
+                "id": 16417
+            },
+            "16418": {
+                "active": false,
+                "position": 5,
+                "name": "Pantoletten",
+                "parent": 16413,
+                "id": 16418
+            },
+            "16419": {
+                "active": false,
+                "position": 6,
+                "name": "Clogs",
+                "parent": 16413,
+                "id": 16419
+            },
+            "16420": {
+                "active": false,
+                "position": 7,
+                "name": "Sandalen",
+                "parent": 16413,
+                "id": 16420
+            },
+            "16421": {
+                "active": false,
+                "position": 1,
+                "name": "Zehentrenner",
+                "parent": 16420,
+                "id": 16421
+            },
+            "16422": {
+                "active": false,
+                "position": 2,
+                "name": "Badeschuhe",
+                "parent": 16420,
+                "id": 16422
+            },
+            "16423": {
+                "active": false,
+                "position": 4,
+                "name": "Schnürschuhe",
+                "parent": 16399,
+                "id": 16423
+            },
+            "16424": {
+                "active": false,
+                "position": 1,
+                "name": "Sneaker",
+                "parent": 16423,
+                "id": 16424
+            },
+            "16425": {
+                "active": false,
+                "position": 2,
+                "name": "Halbschuhe",
+                "parent": 16423,
+                "id": 16425
+            },
+            "16426": {
+                "active": false,
+                "position": 3,
+                "name": "Schnürer",
+                "parent": 16423,
+                "id": 16426
+            },
+            "16427": {
+                "active": false,
+                "position": 4,
+                "name": "Outdoorschuhe",
+                "parent": 16423,
+                "id": 16427
+            },
+            "16428": {
+                "active": false,
+                "position": 5,
+                "name": "Freizeitschuhe",
+                "parent": 16423,
+                "id": 16428
+            },
+            "16429": {
+                "active": false,
+                "position": 6,
+                "name": "Sportschuhe",
+                "parent": 16423,
+                "id": 16429
+            },
+            "16430": {
+                "active": false,
+                "position": 1,
+                "name": "Running",
+                "parent": 16429,
+                "id": 16430
+            },
+            "16431": {
+                "active": false,
+                "position": 2,
+                "name": "Fitness",
+                "parent": 16429,
+                "id": 16431
+            },
+            "16432": {
+                "active": false,
+                "position": 3,
+                "name": "Allrounder",
+                "parent": 16429,
+                "id": 16432
+            },
+            "16433": {
+                "active": false,
+                "position": 3,
+                "name": "LP Kleider",
+                "parent": 16379,
+                "id": 16433
+            },
+            "16434": {
+                "active": false,
+                "position": 1,
+                "name": "Minikleider",
+                "parent": 16433,
+                "id": 16434
+            },
+            "16435": {
+                "active": false,
+                "position": 1,
+                "name": "Figurbetont",
+                "parent": 16434,
+                "id": 16435
+            },
+            "16436": {
+                "active": false,
+                "position": 2,
+                "name": "Gemustert",
+                "parent": 16434,
+                "id": 16436
+            },
+            "16437": {
+                "active": false,
+                "position": 3,
+                "name": "Schlicht",
+                "parent": 16434,
+                "id": 16437
+            },
+            "16438": {
+                "active": false,
+                "position": 4,
+                "name": "Langarm",
+                "parent": 16434,
+                "id": 16438
+            },
+            "16439": {
+                "active": false,
+                "position": 5,
+                "name": "Kurzarm",
+                "parent": 16434,
+                "id": 16439
+            },
+            "16440": {
+                "active": false,
+                "position": 6,
+                "name": "Trägerlos",
+                "parent": 16434,
+                "id": 16440
+            },
+            "16441": {
+                "active": false,
+                "position": 7,
+                "name": "Ausgestellt",
+                "parent": 16434,
+                "id": 16441
+            },
+            "16442": {
+                "active": false,
+                "position": 2,
+                "name": "Anlass & Abendkleider",
+                "parent": 16433,
+                "id": 16442
+            },
+            "16443": {
+                "active": false,
+                "position": 1,
+                "name": "Cocktailkleider",
+                "parent": 16442,
+                "id": 16443
+            },
+            "16444": {
+                "active": false,
+                "position": 2,
+                "name": "Spitzenkleider",
+                "parent": 16442,
+                "id": 16444
+            },
+            "16445": {
+                "active": false,
+                "position": 3,
+                "name": "Abendkleider",
+                "parent": 16442,
+                "id": 16445
+            },
+            "16446": {
+                "active": false,
+                "position": 4,
+                "name": "Ausgestellt",
+                "parent": 16442,
+                "id": 16446
+            },
+            "16447": {
+                "active": false,
+                "position": 5,
+                "name": "Dirndl",
+                "parent": 16442,
+                "id": 16447
+            },
+            "16448": {
+                "active": false,
+                "position": 3,
+                "name": "Alltagskleider",
+                "parent": 16433,
+                "id": 16448
+            },
+            "16449": {
+                "active": false,
+                "position": 1,
+                "name": "Jerseykleider",
+                "parent": 16448,
+                "id": 16449
+            },
+            "16450": {
+                "active": false,
+                "position": 2,
+                "name": "Etuikleider",
+                "parent": 16448,
+                "id": 16450
+            },
+            "16451": {
+                "active": false,
+                "position": 3,
+                "name": "Wickelkleider",
+                "parent": 16448,
+                "id": 16451
+            },
+            "16452": {
+                "active": false,
+                "position": 4,
+                "name": "Gemustert",
+                "parent": 16448,
+                "id": 16452
+            },
+            "16453": {
+                "active": false,
+                "position": 5,
+                "name": "Strickkleider",
+                "parent": 16448,
+                "id": 16453
+            },
+            "16454": {
+                "active": false,
+                "position": 6,
+                "name": "Kleider mit langem Arm",
+                "parent": 16448,
+                "id": 16454
+            },
+            "16455": {
+                "active": false,
+                "position": 7,
+                "name": "Shirtkleider",
+                "parent": 16448,
+                "id": 16455
+            },
+            "16456": {
+                "active": false,
+                "position": 8,
+                "name": "Bürokleider",
+                "parent": 16448,
+                "id": 16456
+            },
+            "16457": {
+                "active": false,
+                "position": 9,
+                "name": "Maxikleider",
+                "parent": 16448,
+                "id": 16457
+            },
+            "16458": {
+                "active": false,
+                "position": 4,
+                "name": "Röcke",
+                "parent": 16433,
+                "id": 16458
+            },
+            "16459": {
+                "active": false,
+                "position": 1,
+                "name": "Miniröcke",
+                "parent": 16458,
+                "id": 16459
+            },
+            "16460": {
+                "active": false,
+                "position": 2,
+                "name": "Bleistiftröcke",
+                "parent": 16458,
+                "id": 16460
+            },
+            "16461": {
+                "active": false,
+                "position": 3,
+                "name": "Jerseyröcke",
+                "parent": 16458,
+                "id": 16461
+            },
+            "16462": {
+                "active": false,
+                "position": 4,
+                "name": "Gemusterte Röcke",
+                "parent": 16458,
+                "id": 16462
+            },
+            "16463": {
+                "active": false,
+                "position": 5,
+                "name": "Jeansröcke",
+                "parent": 16458,
+                "id": 16463
+            },
+            "16464": {
+                "active": false,
+                "position": 6,
+                "name": "Maxiröcke",
+                "parent": 16458,
+                "id": 16464
+            },
+            "16465": {
+                "active": false,
+                "position": 7,
+                "name": "Lederröcke",
+                "parent": 16458,
+                "id": 16465
+            },
+            "16466": {
+                "active": false,
+                "position": 8,
+                "name": "Faltenröcke",
+                "parent": 16458,
+                "id": 16466
+            },
+            "16467": {
+                "active": false,
+                "position": 4,
+                "name": "LP Pullover / Oberteile",
+                "parent": 16379,
+                "id": 16467
+            },
+            "16468": {
+                "active": false,
+                "position": 1,
+                "name": "Tops/Tshirt",
+                "parent": 16467,
+                "id": 16468
+            },
+            "16469": {
+                "active": false,
+                "position": 1,
+                "name": "T-Shirts",
+                "parent": 16468,
+                "id": 16469
+            },
+            "16470": {
+                "active": false,
+                "position": 2,
+                "name": "Bandeautops",
+                "parent": 16468,
+                "id": 16470
+            },
+            "16471": {
+                "active": false,
+                "position": 3,
+                "name": "Ärmellose Tops",
+                "parent": 16468,
+                "id": 16471
+            },
+            "16472": {
+                "active": false,
+                "position": 4,
+                "name": "Longtops",
+                "parent": 16468,
+                "id": 16472
+            },
+            "16473": {
+                "active": false,
+                "position": 5,
+                "name": "Longsleeves",
+                "parent": 16468,
+                "id": 16473
+            },
+            "16474": {
+                "active": false,
+                "position": 6,
+                "name": "Stretchtops",
+                "parent": 16468,
+                "id": 16474
+            },
+            "16475": {
+                "active": false,
+                "position": 7,
+                "name": "Spaghettitops",
+                "parent": 16468,
+                "id": 16475
+            },
+            "16476": {
+                "active": false,
+                "position": 2,
+                "name": "Blusen/Tuniken",
+                "parent": 16467,
+                "id": 16476
+            },
+            "16477": {
+                "active": false,
+                "position": 1,
+                "name": "Kurzarm",
+                "parent": 16476,
+                "id": 16477
+            },
+            "16478": {
+                "active": false,
+                "position": 2,
+                "name": "Langarm",
+                "parent": 16476,
+                "id": 16478
+            },
+            "16479": {
+                "active": false,
+                "position": 3,
+                "name": "Blusenbodies",
+                "parent": 16476,
+                "id": 16479
+            },
+            "16480": {
+                "active": false,
+                "position": 4,
+                "name": "Leichte Blusen und Tuniken",
+                "parent": 16476,
+                "id": 16480
+            },
+            "16481": {
+                "active": false,
+                "position": 5,
+                "name": "Gemusterte Blusen",
+                "parent": 16476,
+                "id": 16481
+            },
+            "16482": {
+                "active": false,
+                "position": 6,
+                "name": "Lange Tuniken",
+                "parent": 16476,
+                "id": 16482
+            },
+            "16483": {
+                "active": false,
+                "position": 7,
+                "name": "Blusen mit Kragen",
+                "parent": 16476,
+                "id": 16483
+            },
+            "16484": {
+                "active": false,
+                "position": 8,
+                "name": "Jeanshemden",
+                "parent": 16476,
+                "id": 16484
+            },
+            "16485": {
+                "active": false,
+                "position": 9,
+                "name": "Karierte Blusen",
+                "parent": 16476,
+                "id": 16485
+            },
+            "16486": {
+                "active": false,
+                "position": 3,
+                "name": "Pullover & Sweatshirts",
+                "parent": 16467,
+                "id": 16486
+            },
+            "16487": {
+                "active": false,
+                "position": 1,
+                "name": "Rollkragenpullover",
+                "parent": 16486,
+                "id": 16487
+            },
+            "16488": {
+                "active": false,
+                "position": 2,
+                "name": "Strickpullover",
+                "parent": 16486,
+                "id": 16488
+            },
+            "16489": {
+                "active": false,
+                "position": 3,
+                "name": "Sweatshirts",
+                "parent": 16486,
+                "id": 16489
+            },
+            "16490": {
+                "active": false,
+                "position": 4,
+                "name": "Sweatjacken",
+                "parent": 16486,
+                "id": 16490
+            },
+            "16491": {
+                "active": false,
+                "position": 5,
+                "name": "Pullunder",
+                "parent": 16486,
+                "id": 16491
+            },
+            "16492": {
+                "active": false,
+                "position": 6,
+                "name": "Mit Kapuze",
+                "parent": 16486,
+                "id": 16492
+            },
+            "16493": {
+                "active": false,
+                "position": 7,
+                "name": "Oversize",
+                "parent": 16486,
+                "id": 16493
+            },
+            "16494": {
+                "active": false,
+                "position": 8,
+                "name": "3/4 Arm",
+                "parent": 16486,
+                "id": 16494
+            },
+            "16495": {
+                "active": false,
+                "position": 4,
+                "name": "Strickjacken",
+                "parent": 16467,
+                "id": 16495
+            },
+            "16496": {
+                "active": false,
+                "position": 1,
+                "name": "Grobstrick",
+                "parent": 16495,
+                "id": 16496
+            },
+            "16497": {
+                "active": false,
+                "position": 2,
+                "name": "Feinstrick",
+                "parent": 16495,
+                "id": 16497
+            },
+            "16498": {
+                "active": false,
+                "position": 3,
+                "name": "Cardigan",
+                "parent": 16495,
+                "id": 16498
+            },
+            "16499": {
+                "active": false,
+                "position": 4,
+                "name": "Kurze Strickjacken",
+                "parent": 16495,
+                "id": 16499
+            },
+            "16500": {
+                "active": false,
+                "position": 5,
+                "name": "Mit Kapuze",
+                "parent": 16495,
+                "id": 16500
+            },
+            "16501": {
+                "active": false,
+                "position": 5,
+                "name": "LP Jacken",
+                "parent": 16379,
+                "id": 16501
+            },
+            "16502": {
+                "active": false,
+                "position": 1,
+                "name": "Winterjacken & Mäntel",
+                "parent": 16501,
+                "id": 16502
+            },
+            "16503": {
+                "active": false,
+                "position": 1,
+                "name": "Winterjacken",
+                "parent": 16502,
+                "id": 16503
+            },
+            "16504": {
+                "active": false,
+                "position": 2,
+                "name": "Kurzmäntel",
+                "parent": 16502,
+                "id": 16504
+            },
+            "16505": {
+                "active": false,
+                "position": 3,
+                "name": "Langmäntel",
+                "parent": 16502,
+                "id": 16505
+            },
+            "16506": {
+                "active": false,
+                "position": 4,
+                "name": "Woll & Stoffjacken",
+                "parent": 16502,
+                "id": 16506
+            },
+            "16507": {
+                "active": false,
+                "position": 5,
+                "name": "Leder & Bikerjacken",
+                "parent": 16502,
+                "id": 16507
+            },
+            "16508": {
+                "active": false,
+                "position": 6,
+                "name": "Ohne Kapuze",
+                "parent": 16502,
+                "id": 16508
+            },
+            "16509": {
+                "active": false,
+                "position": 2,
+                "name": "Stepp & Daunenjacken",
+                "parent": 16501,
+                "id": 16509
+            },
+            "16510": {
+                "active": false,
+                "position": 1,
+                "name": "Steppjacken",
+                "parent": 16509,
+                "id": 16510
+            },
+            "16511": {
+                "active": false,
+                "position": 2,
+                "name": "Daunenjacken",
+                "parent": 16509,
+                "id": 16511
+            },
+            "16512": {
+                "active": false,
+                "position": 3,
+                "name": "Daunen & Steppmäntel",
+                "parent": 16509,
+                "id": 16512
+            },
+            "16513": {
+                "active": false,
+                "position": 4,
+                "name": "Mit Kapuze",
+                "parent": 16509,
+                "id": 16513
+            },
+            "16514": {
+                "active": false,
+                "position": 5,
+                "name": "Ohne Kapuze",
+                "parent": 16509,
+                "id": 16514
+            },
+            "16515": {
+                "active": false,
+                "position": 3,
+                "name": "Funktionsjacken",
+                "parent": 16501,
+                "id": 16515
+            },
+            "16516": {
+                "active": false,
+                "position": 1,
+                "name": "Softshelljacken",
+                "parent": 16515,
+                "id": 16516
+            },
+            "16517": {
+                "active": false,
+                "position": 2,
+                "name": "Outdoorjacken",
+                "parent": 16515,
+                "id": 16517
+            },
+            "16518": {
+                "active": false,
+                "position": 3,
+                "name": "Fleecejacken",
+                "parent": 16515,
+                "id": 16518
+            },
+            "16519": {
+                "active": false,
+                "position": 4,
+                "name": "Mit Kapuze",
+                "parent": 16515,
+                "id": 16519
+            },
+            "16520": {
+                "active": false,
+                "position": 5,
+                "name": "Funktionsmäntel",
+                "parent": 16515,
+                "id": 16520
+            },
+            "16521": {
+                "active": false,
+                "position": 4,
+                "name": "Strickjacken",
+                "parent": 16501,
+                "id": 16521
+            },
+            "16522": {
+                "active": false,
+                "position": 1,
+                "name": "Grobstrick",
+                "parent": 16521,
+                "id": 16522
+            },
+            "16523": {
+                "active": false,
+                "position": 2,
+                "name": "Feinstrick",
+                "parent": 16521,
+                "id": 16523
+            },
+            "16524": {
+                "active": false,
+                "position": 3,
+                "name": "Cardigan",
+                "parent": 16521,
+                "id": 16524
+            },
+            "16525": {
+                "active": false,
+                "position": 4,
+                "name": "Kurze Strickjacken",
+                "parent": 16521,
+                "id": 16525
+            },
+            "16526": {
+                "active": false,
+                "position": 5,
+                "name": "Mit Kapuze",
+                "parent": 16521,
+                "id": 16526
+            },
+            "16527": {
+                "active": false,
+                "position": 6,
+                "name": "Ohne Kapuze",
+                "parent": 16521,
+                "id": 16527
+            },
+            "16528": {
+                "active": false,
+                "position": 6,
+                "name": "LP Herren",
+                "parent": 16379,
+                "id": 16528
+            },
+            "16529": {
+                "active": false,
+                "position": 1,
+                "name": "Sweatshirts & Pullover",
+                "parent": 16528,
+                "id": 16529
+            },
+            "16530": {
+                "active": false,
+                "position": 1,
+                "name": "Sweatshirts",
+                "parent": 16529,
+                "id": 16530
+            },
+            "16531": {
+                "active": false,
+                "position": 2,
+                "name": "Sweatjacken",
+                "parent": 16529,
+                "id": 16531
+            },
+            "16532": {
+                "active": false,
+                "position": 3,
+                "name": "Pullover",
+                "parent": 16529,
+                "id": 16532
+            },
+            "16533": {
+                "active": false,
+                "position": 2,
+                "name": "Strickjacken & Pullover",
+                "parent": 16528,
+                "id": 16533
+            },
+            "16534": {
+                "active": false,
+                "position": 1,
+                "name": "Strickpullover",
+                "parent": 16533,
+                "id": 16534
+            },
+            "16535": {
+                "active": false,
+                "position": 2,
+                "name": "Strickjacken",
+                "parent": 16533,
+                "id": 16535
+            },
+            "16536": {
+                "active": false,
+                "position": 3,
+                "name": "Strickjacken mit Reißverschluss",
+                "parent": 16533,
+                "id": 16536
+            },
+            "16537": {
+                "active": false,
+                "position": 4,
+                "name": "Strickjacken mit Knöpfen",
+                "parent": 16533,
+                "id": 16537
+            },
+            "16538": {
+                "active": false,
+                "position": 3,
+                "name": "Shirts & Hemden",
+                "parent": 16528,
+                "id": 16538
+            },
+            "16539": {
+                "active": false,
+                "position": 1,
+                "name": "T-Shirts",
+                "parent": 16538,
+                "id": 16539
+            },
+            "16540": {
+                "active": false,
+                "position": 2,
+                "name": "Hemden Langarm",
+                "parent": 16538,
+                "id": 16540
+            },
+            "16541": {
+                "active": false,
+                "position": 3,
+                "name": "Hemden Kurzarm",
+                "parent": 16538,
+                "id": 16541
+            },
+            "16542": {
+                "active": false,
+                "position": 4,
+                "name": "Poloshirts",
+                "parent": 16538,
+                "id": 16542
+            },
+            "16543": {
+                "active": false,
+                "position": 5,
+                "name": "Longsleeves",
+                "parent": 16538,
+                "id": 16543
+            },
+            "16544": {
+                "active": false,
+                "position": 6,
+                "name": "V-Neck-Ausschnitt",
+                "parent": 16538,
+                "id": 16544
+            },
+            "16545": {
+                "active": false,
+                "position": 7,
+                "name": "T-Shirts ohne Logodruck",
+                "parent": 16538,
+                "id": 16545
+            },
+            "16546": {
+                "active": false,
+                "position": 8,
+                "name": "Muskelshirts",
+                "parent": 16538,
+                "id": 16546
+            },
+            "16547": {
+                "active": false,
+                "position": 4,
+                "name": "Jacken & Parka",
+                "parent": 16528,
+                "id": 16547
+            },
+            "16548": {
+                "active": false,
+                "position": 1,
+                "name": "Jacken",
+                "parent": 16547,
+                "id": 16548
+            },
+            "16549": {
+                "active": false,
+                "position": 2,
+                "name": "Mäntel / Parkas",
+                "parent": 16547,
+                "id": 16549
+            },
+            "16550": {
+                "active": false,
+                "position": 3,
+                "name": "Westen",
+                "parent": 16547,
+                "id": 16550
+            },
+            "16551": {
+                "active": false,
+                "position": 4,
+                "name": "Stepp & Daunenjacken",
+                "parent": 16547,
+                "id": 16551
+            },
+            "16552": {
+                "active": false,
+                "position": 5,
+                "name": "Fleece & Softshelljacken",
+                "parent": 16547,
+                "id": 16552
+            },
+            "16553": {
+                "active": false,
+                "position": 6,
+                "name": "Funktions und Outdoorjacken",
+                "parent": 16547,
+                "id": 16553
+            },
+            "16554": {
+                "active": true,
+                "position": 8,
+                "name": "Blazer",
+                "parent": 16166,
+                "id": 16554
+            },
+            "18014": {
+                "active": true,
+                "position": 1,
+                "name": "Strickjacken",
+                "parent": 16098,
+                "id": 18014
+            },
+            "18015": {
+                "active": true,
+                "position": 2,
+                "name": "Strickpullover",
+                "parent": 16098,
+                "id": 18015
+            },
+            "18016": {
+                "active": true,
+                "position": 2,
+                "name": "Tops",
+                "parent": 16104,
+                "id": 18016
+            },
+            "18017": {
+                "active": true,
+                "position": 3,
+                "name": "Longsleeves",
+                "parent": 16104,
+                "id": 18017
+            },
+            "18018": {
+                "active": false,
+                "position": 4,
+                "name": "Kurzmäntel",
+                "parent": 16174,
+                "id": 18018
+            },
+            "18019": {
+                "active": true,
+                "position": 2,
+                "name": "Stiefeletten",
+                "parent": 16185,
+                "id": 18019
+            },
+            "18020": {
+                "active": true,
+                "position": 3,
+                "name": "Snowboots",
+                "parent": 16193,
+                "id": 18020
+            },
+            "18021": {
+                "active": true,
+                "position": 1,
+                "name": "Plateaustiefel",
+                "parent": 16193,
+                "id": 18021
+            },
+            "18022": {
+                "active": true,
+                "position": 2,
+                "name": "Overknee",
+                "parent": 16193,
+                "id": 18022
+            },
+            "18023": {
+                "active": true,
+                "position": 5,
+                "name": "Plateaustiefeletten",
+                "parent": 18019,
+                "id": 18023
+            },
+            "18024": {
+                "active": true,
+                "position": 2,
+                "name": "Ankle Boots",
+                "parent": 18019,
+                "id": 18024
+            },
+            "18025": {
+                "active": true,
+                "position": 3,
+                "name": "Schnürstiefeletten",
+                "parent": 18019,
+                "id": 18025
+            },
+            "18026": {
+                "active": true,
+                "position": 4,
+                "name": "Keilstiefeletten",
+                "parent": 18019,
+                "id": 18026
+            },
+            "18027": {
+                "active": false,
+                "position": 1,
+                "name": "Bikerboots",
+                "parent": 16194,
+                "id": 18027
+            },
+            "18028": {
+                "active": true,
+                "position": 2,
+                "name": "Chelsea Boots",
+                "parent": 16194,
+                "id": 18028
+            },
+            "18029": {
+                "active": true,
+                "position": 2,
+                "name": "Schlauchschals",
+                "parent": 16231,
+                "id": 18029
+            },
+            "18030": {
+                "active": false,
+                "position": 2,
+                "name": "Flechtgürtel",
+                "parent": 16235,
+                "id": 18030
+            },
+            "18031": {
+                "active": true,
+                "position": 1,
+                "name": "Leichte Jacken",
+                "parent": 16305,
+                "id": 18031
+            },
+            "18032": {
+                "active": true,
+                "position": 3,
+                "name": "Stepp- und Daunenjacken",
+                "parent": 16305,
+                "id": 18032
+            },
+            "18033": {
+                "active": true,
+                "position": 2,
+                "name": "Lederjacken",
+                "parent": 16305,
+                "id": 18033
+            },
+            "18034": {
+                "active": false,
+                "position": 1,
+                "name": "Stepp & Daunenmäntel",
+                "parent": 16306,
+                "id": 18034
+            },
+            "18035": {
+                "active": true,
+                "position": 2,
+                "name": "Kurzmäntel",
+                "parent": 16306,
+                "id": 18035
+            },
+            "18036": {
+                "active": true,
+                "position": 3,
+                "name": "Dufflecoats",
+                "parent": 16306,
+                "id": 18036
+            },
+            "18037": {
+                "active": true,
+                "position": 4,
+                "name": "Parka",
+                "parent": 16306,
+                "id": 18037
+            },
+            "18038": {
+                "active": true,
+                "position": 5,
+                "name": "Trenchcoats",
+                "parent": 16306,
+                "id": 18038
+            },
+            "18039": {
+                "active": true,
+                "position": 6,
+                "name": "Wollmäntel",
+                "parent": 16306,
+                "id": 18039
+            },
+            "18040": {
+                "active": false,
+                "position": 1,
+                "name": "Bootcut",
+                "parent": 16312,
+                "id": 18040
+            },
+            "18041": {
+                "active": false,
+                "position": 2,
+                "name": "Slim Leg",
+                "parent": 16312,
+                "id": 18041
+            },
+            "18042": {
+                "active": false,
+                "position": 3,
+                "name": "Straight Leg",
+                "parent": 16312,
+                "id": 18042
+            },
+            "18043": {
+                "active": false,
+                "position": 4,
+                "name": "Loose Fit",
+                "parent": 16312,
+                "id": 18043
+            },
+            "18044": {
+                "active": false,
+                "position": 2,
+                "name": "Socken und Strümpfe",
+                "parent": 16357,
+                "id": 18044
+            },
+            "19519": {
+                "active": true,
+                "position": 10,
+                "name": "Sommerkleider",
+                "parent": 16146,
+                "id": 19519
+            },
+            "19520": {
+                "active": true,
+                "position": 1,
+                "name": "Sweatblazer",
+                "parent": 16554,
+                "id": 19520
+            },
+            "19521": {
+                "active": true,
+                "position": 2,
+                "name": "Klassische Blazer",
+                "parent": 16554,
+                "id": 19521
+            },
+            "19523": {
+                "active": true,
+                "position": 3,
+                "name": "Lederblazer",
+                "parent": 16554,
+                "id": 19523
+            },
+            "19524": {
+                "active": true,
+                "position": 4,
+                "name": "Kurzblazer",
+                "parent": 16554,
+                "id": 19524
+            },
+            "19525": {
+                "active": true,
+                "position": 2,
+                "name": "Riemchensandalen",
+                "parent": 16206,
+                "id": 19525
+            },
+            "19526": {
+                "active": true,
+                "position": 3,
+                "name": "Römersandalen",
+                "parent": 16206,
+                "id": 19526
+            },
+            "19527": {
+                "active": true,
+                "position": 4,
+                "name": "Schaftsandalen",
+                "parent": 16206,
+                "id": 19527
+            },
+            "19528": {
+                "active": true,
+                "position": 4,
+                "name": "Blockabsatz",
+                "parent": 16193,
+                "id": 19528
+            },
+            "19529": {
+                "active": true,
+                "position": 5,
+                "name": "Schnürstiefel",
+                "parent": 16193,
+                "id": 19529
+            },
+            "19530": {
+                "active": true,
+                "position": 6,
+                "name": "Keilstiefel",
+                "parent": 16193,
+                "id": 19530
+            },
+            "19531": {
+                "active": true,
+                "position": 7,
+                "name": "Lederstiefel",
+                "parent": 16193,
+                "id": 19531
+            },
+            "19683": {
+                "active": false,
+                "position": 4,
+                "name": "TestCategory",
+                "parent": 0,
+                "id": 19683
+            },
+            "19684": {
+                "active": false,
+                "position": 5,
+                "name": "AnotherTest",
+                "parent": 0,
+                "id": 19684
+            },
+            "23882": {
+                "active": false,
+                "position": 1,
+                "name": "Frühlingslooks",
+                "parent": 16079,
+                "id": 23882
+            },
+            "23915": {
+                "active": false,
+                "position": 5,
+                "name": "Shorts",
+                "parent": 16113,
+                "id": 23915
+            }
+        }
+    }
+]
