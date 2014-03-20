@@ -166,4 +166,19 @@ class ProductSearchResult extends AbstractModel
     {
         return $this->categories;
     }
+
+    /**
+     * @return Category[]
+     */
+    public function getCategoryTree()
+    {
+        $topLevelCategories = array();
+        foreach ($this->categories as $category) {
+            if ($category->getParent() === null) {
+                $topLevelCategories[] = $category;
+            }
+        }
+
+        return $topLevelCategories;
+    }
 }

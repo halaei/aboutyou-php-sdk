@@ -95,6 +95,17 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
         $subCategories = $damenCategory->getSubCategories();
         $this->assertCount(6, $subCategories);
         $this->assertEquals($damenCategory, $subCategories[0]->getParent());
+//
+//
+//        $tree = $productSearchResult->getCategoryTree();
+//        $this->assertInternalType('array', $tree);
+//        $this->assertCount(3, $tree);
+//
+//        foreach ($tree as $category) {
+//            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+//            $this->assertNull(0, $category->getParent());
+//            $this->assertNotCount(0, $category->getSubCategories());
+//        }
     }
 
     /***************************************************/
