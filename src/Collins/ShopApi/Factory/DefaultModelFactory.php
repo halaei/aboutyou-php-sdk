@@ -220,14 +220,17 @@ class DefaultModelFactory implements ModelFactoryInterface
         return $termFacets;
     }
 
-    protected function getTermFacets(array $jsonTerms)
+    protected function getTermFacets(array $facets)
     {
         return array();
 
         $api    = $this->getShopApi();
+        $counts = array();
 
-        foreach ($jsonTerms as $jsonTerm) {
-            $ids[] = array('id' => (int)$jsonTerm->term, 'group_id' => 0);
+        foreach ($jsonTerms as $groudId => $jsonTerm) {
+            $id = (int)$jsonTerm->term;
+            $ids[] = array('id' => $id, 'group_id' => (int)$groudId);
+            $counts[$groudId][$id] = $jsonTerm->count;
         }
         $facets = $api->fetchFacet($ids);
 

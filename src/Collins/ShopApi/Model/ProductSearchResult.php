@@ -95,6 +95,7 @@ class ProductSearchResult extends AbstractModel
         }
 
         $this->facets = $factory->createFacetsCounts($jsonObject);
+        unset($jsonObject->facets);
     }
 
 
