@@ -72,13 +72,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      */
     public function filterBy($key, $value)
     {
-        if (!isset($this->filter[$key]) || !is_array($this->filter[$key])) {
-            $this->filter[$key] = $value;
-        } else {
-            $filters = array_values($this->filter[$key]);
-            $additionalFilters = array_values($value);
-            $this->filter[$key] = array_merge($filters, $additionalFilters);
-        }
+        $this->filter[$key] = $value;
 
         return $this;
     }
@@ -111,44 +105,65 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     }
 
     /**
-     * @param array $categoryIds array of integer
+     * @param array   $categoryIds array of integer
+     * @param boolean $append, if true the category ids will added to current filter
      *
      * @return ProductSearchCriteria
      */
-    public function filterByCategoryIds(array $categoryIds)
+    public function filterByCategoryIds(array $categoryIds, $append = false)
     {
+        if ($append && isset($this->filter[self::FILTER_CATEGORY_IDS])) {
+            $categoryIds = array_merge($this->filter[self::FILTER_CATEGORY_IDS], $categoryIds);
+        }
+        $categoryIds = array_unique($categoryIds);
+
         return $this->filterBy(self::FILTER_CATEGORY_IDS, $categoryIds);
     }
 
     /**
      * @param array $attributes  array of array with group id and attribute ids
      *   for example [0 => [264]]: search for products with the brand "TOM TAILER"
+     * @param boolean $append, if true the category ids will added to current filter
      *
      * @return ProductSearchFilter
      */
-    public function filterByFacetIds(array $attributes)
+    public function filterByFacetIds(array $attributes, $append = false)
     {
-        return $this->filterBy(self::FILTER_ATTRIBUTES, (object)$attributes);
+        if ($append && isset($this->filter[self::FILTER_ATTRIBUTES])) {
+            $merged = $this->filter[self::FILTER_ATTRIBUTES];
+            foreach ($attributes as $groupId => $facetIds) {
+                if (isset($merged[$groupId])) {
+                    $merged[$groupId] = array_unique(array_merge($merged[$groupId], $facetIds));
+                } else {
+                    $merged[$groupId] = $facetIds;
+                }
+            }
+            $attributes = $merged;
+        }
+
+        return $this->filterBy(self::FILTER_ATTRIBUTES, $attributes);
     }
 
     /**
      * @param FacetGroup $facetGroup
+     * @param boolean $append, if true the category ids will added to current filter
      *
      * @return ProductSearchCriteria
      */
-    public function filterByFacetGroup(FacetGroup $facetGroup)
+    public function filterByFacetGroup(FacetGroup $facetGroup, $append = false)
     {
-        return $this->filterBy(self::FILTER_ATTRIBUTES, (object)$facetGroup->getIds());
+        return $this->filterByFacetIds($facetGroup->getIds(), $append);
     }
 
     /**
      * @param FacetGroupSet $facetGroupSet
+     * @param boolean $append, if true the category ids will added to current filter
      *
      * @return ProductSearchCriteria
      */
-    public function filterByFacetGroupSet(FacetGroupSet $facetGroupSet)
+    public function filterByFacetGroupSet(FacetGroupSet $facetGroupSet, $append = false)
     {
-        return $this->filterBy(self::FILTER_ATTRIBUTES, (object)$facetGroupSet->getIds());
+        return $this->filterByFacetIds($facetGroupSet->getIds(), $append);
     }
 
     /**
@@ -384,7 +399,11 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
             $params['result'] = $this->result;
         }
         if ($this->filter) {
-            $params['filter'] = $this->filter;
+            $filter = $this->filter;
+            if (isset($filter[self::FILTER_ATTRIBUTES])) {
+                $filter[self::FILTER_ATTRIBUTES] = (object)$filter[self::FILTER_ATTRIBUTES];
+            }
+            $params['filter'] = $filter;
         }
 
         return $params;
