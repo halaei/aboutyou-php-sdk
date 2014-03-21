@@ -78,6 +78,20 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     }
 
     /**
+     * @param string $key
+     *
+     * @return null|mixed
+     */
+    public function getFilter($key)
+    {
+        return
+            isset($this->filter[$key]) ?
+            $this->filter[$key] :
+            null
+        ;
+    }
+
+    /**
      * @param boolean|null $sale
      *    true => only sale products
      *    false => no sale products
@@ -95,6 +109,14 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     }
 
     /**
+     * @return boolean|null
+     */
+    public function getSaleFilter()
+    {
+        return $this->getFilter(self::FILTER_SALE);
+    }
+
+    /**
      * @param string $searchword
      *
      * @return ProductSearchCriteria
@@ -105,8 +127,16 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     }
 
     /**
-     * @param array   $categoryIds array of integer
-     * @param boolean $append, if true the category ids will added to current filter
+     * @return string|null
+     */
+    public function getSearchwordFilter()
+    {
+        return $this->getFilter(self::FILTER_SEARCHWORD);
+    }
+
+    /**
+     * @param integer[] $categoryIds  array of integer
+     * @param boolean $append         if true the category ids will added to current filter
      *
      * @return ProductSearchCriteria
      */
@@ -118,6 +148,14 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         $categoryIds = array_unique($categoryIds);
 
         return $this->filterBy(self::FILTER_CATEGORY_IDS, $categoryIds);
+    }
+
+    /**
+     * @return integer[]|null
+     */
+    public function getCategoryFilter()
+    {
+        return $this->getFilter(self::FILTER_CATEGORY_IDS);
     }
 
     /**
@@ -142,6 +180,15 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         }
 
         return $this->filterBy(self::FILTER_ATTRIBUTES, $attributes);
+    }
+
+    /**
+     * @return array|null
+     * @see filterByFacetIds()
+     */
+    public function getFacetFilter()
+    {
+        return $this->getFilter(self::FILTER_ATTRIBUTES);
     }
 
     /**
@@ -186,6 +233,17 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         }
 
         return $this->filterBy(self::FILTER_PRICE, $price);
+    }
+
+    /**
+     * Returns an associative array with could contains "to" and/or "from", eg.
+     * ["from" => 100, "to" => 10000] or ["to" => 20000]
+     *
+     * @return array|null
+     */
+    public function getPriceRangeFilter()
+    {
+        return $this->getFilter(self::FILTER_PRICE);
     }
 
     /**

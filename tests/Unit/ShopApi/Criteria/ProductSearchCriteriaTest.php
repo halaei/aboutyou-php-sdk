@@ -80,8 +80,8 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
 
         $criteria = ProductSearchCriteria::create('12345')
             ->filterBySale(false);
-
         $this->assertEquals(array('session_id' => '12345', 'filter' => array('sale' => false)), $criteria->toArray());
+        $this->assertEquals(false, $criteria->getSaleFilter());
 
         $criteria = ProductSearchCriteria::create('12345')
             ->filterByCategoryIds(array(123, 456));
@@ -93,6 +93,7 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
         $criteria->filterByCategoryIds(array(123,456), true);
         $this->assertEquals(array('session_id' => '12345', 'filter' => array('categories' => array(789, 456, 123))), $criteria->toArray());
         $this->assertEquals('{"session_id":"12345","filter":{"categories":[789,456,123]}}', json_encode($criteria->toArray()));
+        $this->assertEquals(array(789, 456, 123), $criteria->getCategoryFilter());
 
         $criteria = ProductSearchCriteria::create('12345')
             ->filterByPriceRange(123);
@@ -104,6 +105,7 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
             ->filterByPriceRange(123, 456);
         $this->assertEquals(array('session_id' => '12345', 'filter' => array('prices' => array('from' => 123, 'to' => 456))), $criteria->toArray());
         $this->assertEquals('{"session_id":"12345","filter":{"prices":{"from":123,"to":456}}}', json_encode($criteria->toArray()));
+        $this->assertEquals(array('to' => 456, 'from' => 123), $criteria->getPriceRangeFilter());
 
         $criteria = ProductSearchCriteria::create('12345')
             ->filterByPriceRange(-1);
@@ -115,6 +117,7 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
         $criteria = ProductSearchCriteria::create('12345')
             ->filterBySearchword('word1 word2');
         $this->assertEquals(array('session_id' => '12345', 'filter' => array('searchword' => 'word1 word2')), $criteria->toArray());
+        $this->assertEquals('word1 word2', $criteria->getSearchwordFilter());
 
         $criteria = ProductSearchCriteria::create('12345')
             ->filterBySearchword('word')
