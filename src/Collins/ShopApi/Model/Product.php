@@ -278,8 +278,8 @@ class Product extends AbstractModel
     {
         $categories = $this->getLeafCategories($active);
 
-        if(count($categories)) {
-            return array_values($categories)[0];
+        if (count($categories)) {
+            return reset($categories);
 
         }
 
@@ -297,7 +297,7 @@ class Product extends AbstractModel
     public function getLeafCategories($activeOnly = true) {
         $categories = $this->getCategories($activeOnly);
         
-        $leafCategories = [];
+        $leafCategories = array();
 
         $c = 0;
         while(count($categories) && $c<100) {
@@ -337,7 +337,7 @@ class Product extends AbstractModel
 
             // fetch all necessary categories from API
             $flattenCategories = $this->getShopApi()->fetchCategoriesByIds($flattened)->getCategories();
-            $flattenActiveCategories = [];
+            $flattenActiveCategories = array();
             
             foreach($flattenCategories as $category) {
                 if($category->isActive()) {

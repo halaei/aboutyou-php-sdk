@@ -259,10 +259,11 @@ class ShopApi
      * You can specifiy an amount. Please mind, that an amount > 1 will result in #amount basket positions.
      * So if you read out the basket again later, it's your job to merge the positions again.
      * 
-     * @param type $sessionId
+     * @param string $sessionId
      * @param \Collins\ShopApi\Model\BasketItem $item
-     * @param type $amount
-     * @return type
+     * @param integer $amount
+     *
+     * @return Basket
      */
     public function addItemToBasket($sessionId, ShopApi\Model\BasketItem $item, $amount = 1)
     {

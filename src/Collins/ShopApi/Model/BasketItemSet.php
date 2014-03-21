@@ -101,12 +101,13 @@ class BasketItemSet
     /**
      * Removes a basket item from this set by it's ID.
      * 
-     * @param type $id ID of the basket item
+     * @param string $id ID of the basket item
+     *
      * @return boolean true if item found and removed
      */
     public function removeBasketItem($id)
     {
-        if(isset($this->basketItems[$id])) {
+        if (isset($this->basketItems[$id])) {
             unset($this->basketItems[$id]);
             return true;
         }

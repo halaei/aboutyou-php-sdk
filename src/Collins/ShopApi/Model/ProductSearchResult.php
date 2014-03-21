@@ -108,7 +108,7 @@ class ProductSearchResult extends AbstractModel
     }
 
     /**
-     * @return array
+     * @return object
      */
     public function getRawFacets()
     {
