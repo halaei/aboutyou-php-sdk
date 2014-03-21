@@ -24,7 +24,7 @@ namespace Collins\ShopApi\Model;
  * $basketItemSet->setAdditionalData(['description' => 'Shoes with laces "yellow star"', 'image_url' = 'http://myapp.com/shoes_yello_star.png']);
  * $shopApi->addItemSetToBasket(session_id(), $basketItemSet);
  *
- * @author  Christian Kilb <christian.kilb@antevorte.org>
+ * @author  Christian Kilb <christian.kilb@project-collins.com>
  * @see     \Collins\ShopApi\Model\BasketItem
  * @see     \Collins\ShopApi\Model\Variant
 */

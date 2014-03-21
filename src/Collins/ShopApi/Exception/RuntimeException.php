@@ -4,7 +4,7 @@ namespace Collins\ShopApi\Exception;
 /**
  * Thrown if an API call returns an exception.
  *
- * @author Antevorte GmbH
+ * @author Collins GmbH & Co KG
  */
 class RuntimeException extends \RuntimeException
 {

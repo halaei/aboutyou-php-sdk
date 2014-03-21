@@ -20,7 +20,7 @@ use Psr\Log\LoggerInterface;
  * This class is abstract because it's not meant to be instanciated.
  * All the public methods cover a single API query.
  *
- * @author Antevorte GmbH & Co KG
+ * @author Collins GmbH & Co KG
  */
 class ShopApi
 {
