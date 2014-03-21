@@ -24,8 +24,8 @@ use Psr\Log\LoggerInterface;
  */
 class ShopApi
 {
-    const IMAGE_URL_STAGE = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file/';
-    const IMAGE_URL_LIVE = 'http://cdn.mary-paul.de/file/';
+    const IMAGE_URL_STAGE = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file';
+    const IMAGE_URL_LIVE = 'http://cdn.mary-paul.de/file';
 
     /** @var ShopApiClient */
     protected $shopApiClient;
@@ -151,14 +151,14 @@ class ShopApi
     }
 
     /**
-     * @param null|false|string $baseImageUrl
+     * @param null|false|string $baseImageUrl null will reset to the default url, false to get relative urls, otherwise the url prefix
      */
     public function setBaseImageUrl($baseImageUrl = null)
     {
         if ($baseImageUrl === null) {
-            $this->baseImageUrl = self::DEFAULT_BASE_IMAGE_URL;
+            $this->baseImageUrl = self::IMAGE_URL_LIVE;
         } else if (is_string($baseImageUrl)) {
-            $this->baseImageUrl = rtrim($baseImageUrl, '/') . '/';
+            $this->baseImageUrl = rtrim($baseImageUrl, '/');
         } else {
             $this->baseImageUrl = '';
         }
