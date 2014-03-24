@@ -1,13 +1,13 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @author nils.droege@project-collins.com
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi\Test\Functional;
 
 
-class OrderTestAbstract extends AbstractShopApiTest
+class OrderTest extends AbstractShopApiTest
 {
     public function testFetchOrder()
     {

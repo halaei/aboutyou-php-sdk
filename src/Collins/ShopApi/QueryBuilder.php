@@ -1,7 +1,7 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @author nils.droege@project-collins.com
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi;
@@ -231,18 +231,24 @@ class QueryBuilder
      *
      * @return $this
      */
-    public function fetchCategoriesByIds($ids)
+    public function fetchCategoriesByIds($ids = null)
     {
-        // we allow to pass a single ID instead of an array
-        settype($ids, 'array');
+        if ($ids === null) {
+            $this->query[] = array(
+                'category' => null
+            );
+        } else {
+            // we allow to pass a single ID instead of an array
+            settype($ids, 'array');
 
-        $ids = array_map('intval', $ids);
+            $ids = array_map('intval', $ids);
 
-        $this->query[] = array(
-            'category' => array(
-                'ids' => $ids
-            )
-        );
+            $this->query[] = array(
+                'category' => array(
+                    'ids' => $ids
+                )
+            );
+        }
 
         return $this;
     }

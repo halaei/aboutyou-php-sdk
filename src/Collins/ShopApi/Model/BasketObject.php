@@ -13,13 +13,17 @@ abstract class BasketObject extends AbstractModel
      *
      * @var array
      */
-    protected $addtionalData = array();
+    protected $additional_data = array();
     
     /**
      *
      * @var Basket
      */
     protected $basket = null;
+    
+    protected $tax = null;
+    protected $total_net = null;
+    protected $total_vat = null;
     
     /**
      * @param object        $jsonObject  json as object tree
@@ -38,6 +42,21 @@ abstract class BasketObject extends AbstractModel
     
     public function getAdditionalData()
     {
-        return $this->additionalData;
+        return $this->additional_data;
+    }
+    
+    public function getTax()
+    {
+        return $this->tax;
+    }
+    
+    public function getTotalNet()
+    {
+        return $this->total_net;
+    }
+    
+    public function getTotalVat()
+    {
+        return $this->total_vat;
     }
 }

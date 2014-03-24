@@ -21,12 +21,12 @@ use Psr\Log\LoggerInterface;
  * This class is abstract because it's not meant to be instanciated.
  * All the public methods cover a single API query.
  *
- * @author Antevorte GmbH & Co KG
+ * @author Collins GmbH & Co KG
  */
 class ShopApi
 {
-    const IMAGE_URL_STAGE = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file/';
-    const IMAGE_URL_LIVE = 'http://cdn.mary-paul.de/file/';
+    const IMAGE_URL_STAGE = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file';
+    const IMAGE_URL_LIVE = 'http://cdn.mary-paul.de/file';
 
     /** @var ShopApiClient */
     protected $shopApiClient;
@@ -152,14 +152,14 @@ class ShopApi
     }
 
     /**
-     * @param null|false|string $baseImageUrl
+     * @param null|false|string $baseImageUrl null will reset to the default url, false to get relative urls, otherwise the url prefix
      */
     public function setBaseImageUrl($baseImageUrl = null)
     {
         if ($baseImageUrl === null) {
-            $this->baseImageUrl = self::DEFAULT_BASE_IMAGE_URL;
+            $this->baseImageUrl = self::IMAGE_URL_LIVE;
         } else if (is_string($baseImageUrl)) {
-            $this->baseImageUrl = rtrim($baseImageUrl, '/') . '/';
+            $this->baseImageUrl = rtrim($baseImageUrl, '/');
         } else {
             $this->baseImageUrl = '';
         }
@@ -245,9 +245,14 @@ class ShopApi
      * Adds a single item into the basket.
      * You can specify an amount. Please mind, that an amount > 1 will result in #amount basket positions.
      * So if you read out the basket again later, it's your job to merge the positions again.
+     * 
+     * @param string $sessionId
      *
      * @param string $sessionId
      * @param \Collins\ShopApi\Model\BasketItem $item
+     * @param integer $amount
+     *
+     * @return Basket
      * @param int $amount
      *
      * @return $this
@@ -257,9 +262,9 @@ class ShopApi
         $basket = new Basket(null, null);
         $items = array();
         $idPrefix = $item->getId();
-
+        
         for ($i=0; $i<$amount; $i++) {
-            $id = $idPrefix.'-'.substr(str_shuffle(md5(mt_rand())),0,10);
+            $id = $i== 0 ? $idPrefix : ($idPrefix.'-'.($i+1));
 
             $clone = clone $item;
             $clone->setId($id);
@@ -268,6 +273,19 @@ class ShopApi
         $query = $this->getQuery()->addItemsToBasket($sessionId, $items);
 
         return $query->executeSingle();
+    }
+
+    /**
+     * Adds set of product variants into the basket.
+     *
+     * @param string $sessionId        Free to choose ID of the current website visitor.
+     * @param ShopApi\Model\BasketItemSet[] array of sets of basket items
+     *
+     * @return \Collins\ShopApi\Model\Basket
+     */
+    public function addItemSetToBasket($sessionId, ShopApi\Model\BasketItemSet $itemSet)
+    {
+        return $this->addItemSetsToBasket($sessionId, array($itemSet));
     }
 
     /**
@@ -300,6 +318,7 @@ class ShopApi
         return $query->executeSingle();
     }
 
+
     /**
      * Returns the result of a category search API request.
      * By passing one or several category ids it will return
@@ -309,10 +328,10 @@ class ShopApi
      *
      * @return \Collins\ShopApi\Model\CategoriesResult
      */
-    public function fetchCategoriesByIds($ids)
+    public function fetchCategoriesByIds($ids = null)
     {
         // we allow to pass a single ID instead of an array
-        if (!is_array($ids)) {
+        if ($ids !== null && !is_array($ids)) {
             $ids = array($ids);
         }
 

@@ -1,7 +1,7 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @author nils.droege@project-collins.com
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi\Model;
@@ -99,6 +99,7 @@ class Image extends AbstractModel
     public function getBaseUrl()
     {
         $api = $this->getShopApi();
+
         return $api ? $api->getBaseImageUrl() : '';
     }
 
@@ -112,6 +113,7 @@ class Image extends AbstractModel
     {
         $width = max(min($width, self::MAX_WIDTH), self::MIN_WIDTH);
         $height = max(min($height, self::MAX_WIDTH), self::MIN_WIDTH);
+
         return $this->getBaseUrl() . '/' . $this->hash . '?width=' . $width . '&height=' . $height;
     }
 }

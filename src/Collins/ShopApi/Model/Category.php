@@ -1,7 +1,7 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @author nils.droege@project-collins.com
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi\Model;
@@ -35,6 +35,9 @@ class Category extends AbstractModel
 
     /** @var Category[] */
     protected $activeSubCategories;
+
+    /** @var integer */
+    protected $productCount;
 
     /**
      * @param object        $jsonObject  json as object tree
@@ -110,6 +113,22 @@ class Category extends AbstractModel
     }
 
     /**
+     * @param integer $productCount
+     */
+    public function setProductCount($productCount)
+    {
+        $this->productCount = $productCount;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getProductCount()
+    {
+        return $this->productCount;
+    }
+
+    /**
      * @return Category|null
      */
     public function getParent()
@@ -160,12 +179,12 @@ class Category extends AbstractModel
      * Sets the parent category of this category
      * @return void
      */
-    protected function setParent(Category $parent)
+    public function setParent(Category $parent)
     {
         $this->parent = $parent;
     }
 
-    protected function addChild(Category $child)
+    public function addChild(Category $child)
     {
         $this->allSubCategories[] = $child;
 
@@ -174,7 +193,7 @@ class Category extends AbstractModel
         }
     }
 
-    protected function setSubCategories($categories)
+    public function setSubCategories($categories)
     {
         $this->allSubCategories = $categories;
 

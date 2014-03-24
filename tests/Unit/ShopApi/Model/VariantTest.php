@@ -1,7 +1,7 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @auther nils.droege@project-collins.com
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi\Test\Unit\Model;
@@ -29,9 +29,9 @@ class VariantTest extends AbstractModelTest
         $this->assertEquals(3990, $variant->getPrice());
         $this->assertEquals(0, $variant->getOldPrice());
         $this->assertEquals(3995, $variant->getRetailPrice());
-        $this->assertEquals(5, $variant->getMaxQuantity());
+        $this->assertEquals(5, $variant->getQuantity());
         $this->assertEquals('2014-02-14 18:09:38', $variant->getFirstActiveDate());
-        $this->assertEquals('2014-02-14 18:09:38', $variant->getFirstSaleDate());
+        $this->assertEquals('2014-01-10 10:10:00', $variant->getFirstSaleDate());
 
         $images = $variant->getImages();
         $this->assertCount(2, $images);

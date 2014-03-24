@@ -5,17 +5,20 @@ class BasketVariant extends BasketObject implements BasketObjectInterface
 {
     protected $variant_id = null;
     protected $product_id = null;
-    protected $totalPrice = null;
+    protected $total_price = null;
     
-    protected $additionalData = array();
+    protected $additional_data = array();
 
     public function fromJson($jsonObject)
     { 
         $this->id = isset($jsonObject->id) ? $jsonObject->id : null;
         $this->variant_id = $jsonObject->variant_id;
         $this->product_id = $jsonObject->product_id;
-        $this->totalPrice = $jsonObject->total_price;
-        $this->additionalData = isset($jsonObject->additional_data) ? $jsonObject->additional_data : array();
+        $this->total_price = $jsonObject->total_price;
+        $this->tax = $jsonObject->tax;
+        $this->total_net = $jsonObject->total_net;
+        $this->total_vat = $jsonObject->total_net;
+        $this->additional_data = isset($jsonObject->additional_data) ? $jsonObject->additional_data : array();
     }
     
     public function getVariantId()
@@ -30,7 +33,12 @@ class BasketVariant extends BasketObject implements BasketObjectInterface
     
     public function getTotalPrice()
     {
-        return $this->totalPrice/100;
+        return $this->total_price/100;
+    }
+    
+    public function getTax()
+    {
+        return $this->tax;
     }
     
     public function isVariant() 
@@ -63,11 +71,6 @@ class BasketVariant extends BasketObject implements BasketObjectInterface
         return null;
     }
     
-    public function getAdditionalData()
-    {
-        return $this->additionalData;
-    }
-    
     /**
      * Returns true if all the properties but the ID match.
      * 
@@ -82,7 +85,7 @@ class BasketVariant extends BasketObject implements BasketObjectInterface
     {
         $properties = array(
             'variant_id',
-            'additionalData'
+            'additional_data'
         );
         
         $key = '';

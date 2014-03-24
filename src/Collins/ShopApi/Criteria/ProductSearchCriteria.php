@@ -1,7 +1,7 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @author nils.droege@project-collins.com
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi\Criteria;
@@ -78,6 +78,20 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     }
 
     /**
+     * @param string $key
+     *
+     * @return null|mixed
+     */
+    public function getFilter($key)
+    {
+        return
+            isset($this->filter[$key]) ?
+            $this->filter[$key] :
+            null
+        ;
+    }
+
+    /**
      * @param boolean|null $sale
      *    true => only sale products
      *    false => no sale products
@@ -95,6 +109,14 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     }
 
     /**
+     * @return boolean|null
+     */
+    public function getSaleFilter()
+    {
+        return $this->getFilter(self::FILTER_SALE);
+    }
+
+    /**
      * @param string $searchword
      *
      * @return ProductSearchCriteria
@@ -105,44 +127,90 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     }
 
     /**
-     * @param array $categoryIds array of integer
+     * @return string|null
+     */
+    public function getSearchwordFilter()
+    {
+        return $this->getFilter(self::FILTER_SEARCHWORD);
+    }
+
+    /**
+     * @param integer[] $categoryIds  array of integer
+     * @param boolean $append         if true the category ids will added to current filter
      *
      * @return ProductSearchCriteria
      */
-    public function filterByCategoryIds(array $categoryIds)
+    public function filterByCategoryIds(array $categoryIds, $append = false)
     {
+        if ($append && isset($this->filter[self::FILTER_CATEGORY_IDS])) {
+            $categoryIds = array_merge($this->filter[self::FILTER_CATEGORY_IDS], $categoryIds);
+        }
+        $categoryIds = array_unique($categoryIds);
+
         return $this->filterBy(self::FILTER_CATEGORY_IDS, $categoryIds);
+    }
+
+    /**
+     * @return integer[]|null
+     */
+    public function getCategoryFilter()
+    {
+        return $this->getFilter(self::FILTER_CATEGORY_IDS);
     }
 
     /**
      * @param array $attributes  array of array with group id and attribute ids
      *   for example [0 => [264]]: search for products with the brand "TOM TAILER"
+     * @param boolean $append, if true the category ids will added to current filter
      *
      * @return ProductSearchFilter
      */
-    public function filterByFacetIds(array $attributes)
+    public function filterByFacetIds(array $attributes, $append = false)
     {
-        return $this->filterBy(self::FILTER_ATTRIBUTES, (object)$attributes);
+        if ($append && isset($this->filter[self::FILTER_ATTRIBUTES])) {
+            $merged = $this->filter[self::FILTER_ATTRIBUTES];
+            foreach ($attributes as $groupId => $facetIds) {
+                if (isset($merged[$groupId])) {
+                    $merged[$groupId] = array_unique(array_merge($merged[$groupId], $facetIds));
+                } else {
+                    $merged[$groupId] = $facetIds;
+                }
+            }
+            $attributes = $merged;
+        }
+
+        return $this->filterBy(self::FILTER_ATTRIBUTES, $attributes);
+    }
+
+    /**
+     * @return array|null
+     * @see filterByFacetIds()
+     */
+    public function getFacetFilter()
+    {
+        return $this->getFilter(self::FILTER_ATTRIBUTES);
     }
 
     /**
      * @param FacetGroup $facetGroup
+     * @param boolean $append, if true the category ids will added to current filter
      *
      * @return ProductSearchCriteria
      */
-    public function filterByFacetGroup(FacetGroup $facetGroup)
+    public function filterByFacetGroup(FacetGroup $facetGroup, $append = false)
     {
-        return $this->filterBy(self::FILTER_ATTRIBUTES, (object)$facetGroup->getIds());
+        return $this->filterByFacetIds($facetGroup->getIds(), $append);
     }
 
     /**
      * @param FacetGroupSet $facetGroupSet
+     * @param boolean $append, if true the category ids will added to current filter
      *
      * @return ProductSearchCriteria
      */
-    public function filterByFacetGroupSet(FacetGroupSet $facetGroupSet)
+    public function filterByFacetGroupSet(FacetGroupSet $facetGroupSet, $append = false)
     {
-        return $this->filterBy(self::FILTER_ATTRIBUTES, (object)$facetGroupSet->getIds());
+        return $this->filterByFacetIds($facetGroupSet->getIds(), $append);
     }
 
     /**
@@ -165,6 +233,17 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         }
 
         return $this->filterBy(self::FILTER_PRICE, $price);
+    }
+
+    /**
+     * Returns an associative array with could contains "to" and/or "from", eg.
+     * ["from" => 100, "to" => 10000] or ["to" => 20000]
+     *
+     * @return array|null
+     */
+    public function getPriceRangeFilter()
+    {
+        return $this->getFilter(self::FILTER_PRICE);
     }
 
     /**
@@ -378,7 +457,11 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
             $params['result'] = $this->result;
         }
         if ($this->filter) {
-            $params['filter'] = $this->filter;
+            $filter = $this->filter;
+            if (isset($filter[self::FILTER_ATTRIBUTES])) {
+                $filter[self::FILTER_ATTRIBUTES] = (object)$filter[self::FILTER_ATTRIBUTES];
+            }
+            $params['filter'] = $filter;
         }
 
         return $params;

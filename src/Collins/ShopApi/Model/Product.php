@@ -1,7 +1,7 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @author nils.droege@project-collins.com
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi\Model;
@@ -270,13 +270,13 @@ class Product extends AbstractModel
 
     /**
      * Returns the first active category and, if non active, then it return the first category
-
+     
      * @param bool $activeOnly return only categories that are active
      * @return Category|null
      */
-    public function getCategory($activeOnly = true)
+    public function getCategory($active = true)
     {
-        $categories = $this->getLeafCategories($activeOnly);
+        $categories = $this->getLeafCategories($active);
 
         if (count($categories)) {
             return reset($categories);

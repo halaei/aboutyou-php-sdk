@@ -56,7 +56,7 @@ class BasketVariantSet extends BasketObject implements BasketObjectInterface
     public function getUniqueKey()
     {
         $properties = array(
-            'additionalData'
+            'additional_data'
         );
         
         $key = '';
