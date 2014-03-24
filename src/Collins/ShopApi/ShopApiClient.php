@@ -189,14 +189,14 @@ class ShopApiClient
      */
     public function request($body, $cacheDuration = 0)
     {
-        $apiClient = $this->getClient();
-
         $cacheKey = md5($body);
 
         $response = $this->cache->get($cacheKey);
         if ($response) {
             return $response;
         }
+
+        $apiClient = $this->getClient();
 
         /** @var EntityEnclosingRequestInterface $request */
         $request = $apiClient->post();
