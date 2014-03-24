@@ -1,7 +1,7 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @author nils.droege@project-collins.com
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi\Model;
@@ -48,7 +48,7 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
 
     protected function genLazyGroups()
     {
-        $groups = [];
+        $groups = array();
         foreach ($this->ids as $groupId => $facetIds) {
             $group = new FacetGroup($groupId, null);
             foreach ($facetIds as $facetId) {
@@ -79,8 +79,8 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
         $groupIds = array_keys($this->ids);
         $allFacets = $shopApi->fetchFacets($groupIds);
 
-        $this->facets = [];
-        $this->groups = [];
+        $this->facets = array();
+        $this->groups = array();
 
         foreach ($this->ids as $groupId => $facetIds) {
 

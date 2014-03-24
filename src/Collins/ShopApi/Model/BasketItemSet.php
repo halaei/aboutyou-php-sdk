@@ -24,7 +24,7 @@ namespace Collins\ShopApi\Model;
  * $basketItemSet->setAdditionalData(['description' => 'Shoes with laces "yellow star"', 'image_url' = 'http://myapp.com/shoes_yello_star.png']);
  * $shopApi->addItemSetToBasket(session_id(), $basketItemSet);
  *
- * @author  Christian Kilb <christian.kilb@antevorte.org>
+ * @author  Christian Kilb <christian.kilb@project-collins.com>
  * @see     \Collins\ShopApi\Model\BasketItem
  * @see     \Collins\ShopApi\Model\Variant
 */
@@ -101,12 +101,13 @@ class BasketItemSet
     /**
      * Removes a basket item from this set by it's ID.
      * 
-     * @param type $id ID of the basket item
+     * @param string $id ID of the basket item
+     *
      * @return boolean true if item found and removed
      */
     public function removeBasketItem($id)
     {
-        if(isset($this->basketItems[$id])) {
+        if (isset($this->basketItems[$id])) {
             unset($this->basketItems[$id]);
             return true;
         }

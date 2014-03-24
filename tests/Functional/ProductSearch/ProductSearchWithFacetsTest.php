@@ -6,11 +6,14 @@ use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
 
-class ProductSearchWithFacetsTestAbstract extends AbstractShopApiTest
+class ProductSearchWithFacetsTest extends AbstractShopApiTest
 {
     public function testProductSearchWithSaleResult()
     {
-        $shopApi = $this->getShopApiWithResultFile('result-product-search-with-facets.json');
+        $shopApi = $this->getShopApiWithResultFiles(array(
+                'result-product-search-with-facets.json',
+                'category-all.json'
+            ));
 
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
 
@@ -23,7 +26,10 @@ class ProductSearchWithFacetsTestAbstract extends AbstractShopApiTest
 
     public function testProductSearchWithPriceRangeResult()
     {
-        $shopApi = $this->getShopApiWithResultFile('result-product-search-with-facets.json');
+        $shopApi = $this->getShopApiWithResultFiles(array(
+                'result-product-search-with-facets.json',
+                'category-all.json'
+            ));
 
         // get all available products
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
@@ -67,7 +73,39 @@ class ProductSearchWithFacetsTestAbstract extends AbstractShopApiTest
 
     public function testProductSearchWithCategoriesResult()
     {
-        $this->markTestIncomplete('Is not implemented yet');
+        $shopApi = $this->getShopApiWithResultFiles(array(
+            'result-product-search-with-facets.json',
+            'category-all.json'
+        ));
+
+        // get all available products
+        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $categories = $productSearchResult->getCategories();
+        $this->assertInternalType('array', $categories);
+
+        $this->assertCount(361, $categories);
+
+        foreach ($categories as $category) {
+            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+            $this->assertGreaterThan(0, $category->getProductCount());
+        }
+
+        $damenCategory = $categories['16077'];
+        $this->assertNull($damenCategory->getParent());
+        $subCategories = $damenCategory->getSubCategories();
+        $this->assertCount(6, $subCategories);
+        $this->assertEquals($damenCategory, $subCategories[0]->getParent());
+//
+//
+//        $tree = $productSearchResult->getCategoryTree();
+//        $this->assertInternalType('array', $tree);
+//        $this->assertCount(3, $tree);
+//
+//        foreach ($tree as $category) {
+//            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+//            $this->assertNull(0, $category->getParent());
+//            $this->assertNotCount(0, $category->getSubCategories());
+//        }
     }
 
     /***************************************************/

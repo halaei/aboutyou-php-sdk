@@ -1,7 +1,7 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @auther nils.droege@project-collins.com
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi\Test\Unit\Model;
@@ -71,5 +71,17 @@ class VariantTest extends AbstractModelTest
         $this->assertEquals("data", $variant->getAdditionalInfo()->some);
 
         return $variant;
+    }
+
+    /**
+     * @depends testFromJson
+     */
+    public function testGetImageByHash(Variant $variant)
+    {
+        $images = $variant->getImages();
+        $this->assertEquals($images[0], $variant->getImageByHash($images[0]->getHash()));
+        $this->assertEquals($images[1], $variant->getImageByHash($images[1]->getHash()));
+        $this->assertNotEquals($images[0], $variant->getImageByHash($images[1]->getHash()));
+        $this->assertNull($variant->getImageByHash('unknown'));
     }
 }

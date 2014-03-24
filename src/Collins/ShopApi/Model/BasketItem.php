@@ -15,7 +15,7 @@ namespace Collins\ShopApi\Model;
  * $basketItem->setAdditionalData(['description' => 'jeans with engraving "for you"', 'engraving_text' => 'for you']);
  * $shopApi->addItemToBasket(session_id(), $basketItem);
  *
- * @author  Christian Kilb <christian.kilb@antevorte.org>
+ * @author  Christian Kilb <christian.kilb@project-collins.com>
  * @see     \Collins\ShopApi\Model\Variant
 */
 class BasketItem extends AbstractModel

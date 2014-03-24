@@ -1,7 +1,7 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @author nils.droege@project-collins.com
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi\Factory;
@@ -220,14 +220,17 @@ class DefaultModelFactory implements ModelFactoryInterface
         return $termFacets;
     }
 
-    protected function getTermFacets(array $jsonTerms)
+    protected function getTermFacets(array $facets)
     {
         return array();
 
         $api    = $this->getShopApi();
+        $counts = array();
 
-        foreach ($jsonTerms as $jsonTerm) {
-            $ids[] = array('id' => (int)$jsonTerm->term, 'group_id' => 0);
+        foreach ($jsonTerms as $groudId => $jsonTerm) {
+            $id = (int)$jsonTerm->term;
+            $ids[] = array('id' => $id, 'group_id' => (int)$groudId);
+            $counts[$groudId][$id] = $jsonTerm->count;
         }
         $facets = $api->fetchFacet($ids);
 
@@ -258,8 +261,31 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function createCategoriesFacets(array $jsonObject)
+    public function createCategoriesFacets(array $jsonArray)
     {
+        $counts = array();
+        foreach($jsonArray as $item) {
+            $categoryId = $item->term;
+            $counts[$categoryId] = $item->count;
+        }
 
+        // fetch all categories from API
+        $flattenCategories = $this->getShopApi()->fetchCategoriesByIds()->getCategories();
+
+        foreach ($flattenCategories as $id => $category) {
+            if (isset($counts[$category->getId()])) {
+                $category->setProductCount($counts[$category->getId()]);
+                if ($category->getParentId()) {
+                    $parent = $flattenCategories[$category->getParentId()];
+                    $parent->addChild($category);
+                    $category->setParent($parent);
+                }
+            } else {
+                unset($flattenCategories[$id]);
+            }
+        }
+
+
+        return $flattenCategories;
     }
 }

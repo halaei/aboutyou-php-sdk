@@ -1,7 +1,7 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @author nils.droege@project-collins.com
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi\Test\Functional;
@@ -30,11 +30,11 @@ class BasketTest extends AbstractShopApiTest
         $this->assertEquals(3361, $items[0]->getTotalVat());
         $this->assertEquals(219304, $items[0]->getProduct()->getId());
         $this->assertEquals(4719964, $items[0]->getVariant()->getId());
-        $this->assertEquals([
+        $this->assertEquals(array(
             'date' => '2014-03-18',
             'foo' => 'bar',
             'description' => 'Very interesting article'
-        ], (array) $items[0]->getAdditionalData());
+        ), (array) $items[0]->getAdditionalData());
 
         $this->assertEquals('id3', $items[2]->getId());
         $subItems = $items[6]->getBasketVariants();
@@ -85,7 +85,7 @@ class BasketTest extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFile('basket.json', $exceptedRequestBody);
 
         // remove all of one item from basket
-        $basket = $shopApi->removeFromBasket('testing', ['item3']);
+        $basket = $shopApi->removeFromBasket('testing', array('item3'));
         $this->checkBasket($basket);
     }
 

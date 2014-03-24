@@ -20,12 +20,12 @@ use Psr\Log\LoggerInterface;
  * This class is abstract because it's not meant to be instanciated.
  * All the public methods cover a single API query.
  *
- * @author Antevorte GmbH & Co KG
+ * @author Collins GmbH & Co KG
  */
 class ShopApi
 {
-    const IMAGE_URL_STAGE = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file/';
-    const IMAGE_URL_LIVE = 'http://cdn.mary-paul.de/file/';
+    const IMAGE_URL_STAGE = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file';
+    const IMAGE_URL_LIVE = 'http://cdn.mary-paul.de/file';
 
     /** @var ShopApiClient */
     protected $shopApiClient;
@@ -151,14 +151,14 @@ class ShopApi
     }
 
     /**
-     * @param null|false|string $baseImageUrl
+     * @param null|false|string $baseImageUrl null will reset to the default url, false to get relative urls, otherwise the url prefix
      */
     public function setBaseImageUrl($baseImageUrl = null)
     {
         if ($baseImageUrl === null) {
-            $this->baseImageUrl = self::DEFAULT_BASE_IMAGE_URL;
+            $this->baseImageUrl = self::IMAGE_URL_LIVE;
         } else if (is_string($baseImageUrl)) {
-            $this->baseImageUrl = rtrim($baseImageUrl, '/') . '/';
+            $this->baseImageUrl = rtrim($baseImageUrl, '/');
         } else {
             $this->baseImageUrl = '';
         }
@@ -259,10 +259,11 @@ class ShopApi
      * You can specifiy an amount. Please mind, that an amount > 1 will result in #amount basket positions.
      * So if you read out the basket again later, it's your job to merge the positions again.
      * 
-     * @param type $sessionId
+     * @param string $sessionId
      * @param \Collins\ShopApi\Model\BasketItem $item
-     * @param type $amount
-     * @return type
+     * @param integer $amount
+     *
+     * @return Basket
      */
     public function addItemToBasket($sessionId, ShopApi\Model\BasketItem $item, $amount = 1)
     {
@@ -318,10 +319,10 @@ class ShopApi
      *
      * @return \Collins\ShopApi\Model\CategoriesResult
      */
-    public function fetchCategoriesByIds($ids)
+    public function fetchCategoriesByIds($ids = null)
     {
         // we allow to pass a single ID instead of an array
-        if (!is_array($ids)) {
+        if ($ids !== null && !is_array($ids)) {
             $ids = array($ids);
         }
 

@@ -1,7 +1,7 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @author nils.droege@project-collins.com
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi\Model;
@@ -95,6 +95,7 @@ class ProductSearchResult extends AbstractModel
         }
 
         $this->facets = $factory->createFacetsCounts($jsonObject);
+        unset($jsonObject->facets);
     }
 
 
@@ -107,7 +108,7 @@ class ProductSearchResult extends AbstractModel
     }
 
     /**
-     * @return array
+     * @return object
      */
     public function getRawFacets()
     {
@@ -157,5 +158,28 @@ class ProductSearchResult extends AbstractModel
     public function getSaleCounts()
     {
         return $this->saleCounts;
+    }
+
+    /**
+     * @return Category[]
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @return Category[]
+     */
+    public function getCategoryTree()
+    {
+        $topLevelCategories = array();
+        foreach ($this->categories as $category) {
+            if ($category->getParent() === null) {
+                $topLevelCategories[] = $category;
+            }
+        }
+
+        return $topLevelCategories;
     }
 }
