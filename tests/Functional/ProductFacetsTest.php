@@ -148,15 +148,19 @@ class ProductFacetsTest extends AbstractShopApiTest
 
     wenn []         =>   [rot,blau,gelb], [M,L,XL], [metall,baumwolle]
 
-    wenn XL         =>   [rot],      [metall,baumwolle]
-    wenn L          =>   [rot,blau], [baumwolle]
-    wenn M          =>   [rot,gelb], [baumwolle]
+    wenn XL         =>   [rot], [M,L,XL], [metall,baumwolle]
 
-    wenn rot        =>   [M,L,XL],   [metall,baumwolle]
+    wenn L          =>   [rot,blau], [M,L,XL], [baumwolle]
+    wenn M          =>   [rot,gelb], [M,L,XL], [baumwolle]
 
-    wenn rot,XL     =>   [metall,baumwolle]
-    wenn rot,L      =>   [baumwolle]
-    wenn blau,XL    =>   []
+    wenn rot        =>   [rot,blau,gelb], [M,L,XL],   [metall,baumwolle]
+
+    wenn rot,XL     =>   [rot], [M,L,XL], [metall,baumwolle]
+    wenn rot,L      =>   [rot,blau], [M,L,XL], [baumwolle]
+    wenn blau,XL    =>   [rot], [L], []
+
+    wenn gelb,M     =>   [gelb,rot], [M], [baumwolle]
+    wenn rot,M      =>   [gelb,rot], [M,L,XL], [baumwolle]
     */
     /**
      * @param $ids
@@ -186,6 +190,82 @@ class ProductFacetsTest extends AbstractShopApiTest
             // wenn array()         =>       array(rot,blau,gelb), array(M,L,XL), array(metall,baumwolle)
             array(array(),                        array('0:264', '1:1001,1002,1003', '2:2001,2002,2003', '3:3001,3002')),
 
+            // wenn XL         =>   [rot], [M,L,XL], [metall,baumwolle]
+            array(array("2"=>array(2003)),             array('0:264', '1:1001', '2:2001,2002,2003', '3:3001,3002')),
+
+            // wenn L          =>   [rot,blau], [M,L,XL], [baumwolle]
+            array(array("2"=>array(2002)),             array('0:264', '1:1001,1002', '2:2001,2002,2003', '3:3001')),
+            // wenn M          =>   [rot,gelb], [M,L,XL], [baumwolle]
+            array(array("2"=>array(2001)),             array('0:264', '1:1001,1003', '2:2001,2002,2003', '3:3001')),
+
+            // wenn rot        =>   [rot,blau,gelb], [M,L,XL],   [metall,baumwolle]
+            array(array("1"=>array(1001)),             array('0:264', '1:1001,1002,1003', '2:2001,2002,2003', '3:3001,3002')),
+
+            // wenn rot,XL     =>   [rot], [M,L,XL], [metall,baumwolle]
+            array(array("1"=>array(1001),"2"=>array(2003)), array('0:264', '1:1001', '2:2001,2002,2003', '3:3001,3002')),
+            // wenn rot,L      =>   [rot,blau], [M,L,XL], [baumwolle]
+            array(array("1"=>array(1001),"2"=>array(2002)), array('0:264', '1:1001', '2:2001,2002,2003', '3:3001')),
+            // wenn blau,XL    =>   [rot], [L], []
+            array(array("1"=>array(1002),"2"=>array(2003)), array('0:264', '1:1001', '2:2002')),
+
+            // wenn gelb,M     =>   [gelb,rot], [M], [baumwolle]
+            array(array("1"=>array(1003),"2"=>array(2001)), array('0:264', '1:1001,1003', '2:2001', '3:3001')),
+            // wenn rot,M      =>   [gelb,rot], [M,L,XL], [baumwolle]
+            array(array("1"=>array(1001),"2"=>array(2001)), array('0:264', '1:1001,1003', '2:2001,2002,2003', '3:3001')),
+        );
+    }
+
+    /*
+    variante 1: rot,      M,  baumwolle
+    variante 2: rot,      L,  baumwolle
+    variante 3: rot,      XL, baumwolle
+    variante 4: rot,      XL, metall
+    variante 5: blau,     L,  baumwolle
+    variante 6: rot/gelb, M,  baumwolle
+
+    wenn []         =>   [rot,blau,gelb], [M,L,XL], [metall,baumwolle]
+
+    wenn XL         =>   [rot],      [metall,baumwolle]
+    wenn L          =>   [rot,blau], [baumwolle]
+    wenn M          =>   [rot,gelb], [baumwolle]
+
+    wenn rot        =>   [M,L,XL],   [metall,baumwolle]
+
+    wenn rot,XL     =>   [metall,baumwolle]
+    wenn rot,L      =>   [baumwolle]
+    wenn blau,XL    =>   []
+
+    wenn gelb,M     =>   [baumwolle]
+    wenn rot,M      =>   [baumwolle]
+    */
+    /**
+     * @param $ids
+     * @param $expectedValues
+     * @dataProvider excludedFacetGroupsProvider
+     */
+    public function testGetExcludedFacetGroups($ids, $expectedValues)
+    {
+        $this->getShopApiWithResultFile('facets-for-product-variant-facets.json');
+
+        $json = $this->getJsonObjectFromFile('product/product-variant-facets.json');
+        $product = new ShopApi\Model\Product($json);
+
+
+        $facetGroupSet = new ShopApi\Model\FacetGroupSet($ids);
+        $groups = $product->getSelectableFacetGroups($facetGroupSet);
+        $this->assertCount(count($expectedValues), $groups);
+        foreach ($expectedValues as $index => $expected) {
+            $this->assertEquals($expected, $groups[$index]->getUniqueKey());
+        }
+    }
+
+    public function excludedFacetGroupsProvider()
+    {
+        // array of [<ids array>, <expected group keys array>]
+        return array(
+            // wenn array()         =>       array(rot,blau,gelb), array(M,L,XL), array(metall,baumwolle)
+            array(array(),                        array('0:264', '1:1001,1002,1003', '2:2001,2002,2003', '3:3001,3002')),
+
             // wenn XL         =>       array(rot),      array(metall,baumwolle)
             array(array("2"=>array(2003)),             array('0:264', '1:1001', '3:3001,3002')),
             // wenn L          =>       array(rot,blau), array(baumwolle)
@@ -202,6 +282,11 @@ class ProductFacetsTest extends AbstractShopApiTest
             array(array("1"=>array(1001),"2"=>array(2002)), array('0:264', '3:3001')),
             // wenn blau,XL    =>       array()
             array(array("1"=>array(1002),"2"=>array(2003)), array()),
+
+            // wenn gelb,M      =>       array(baumwolle)
+//            array(array("1"=>array(1003),"2"=>array(2001)), array('0:264', '3:3001')),
+            // wenn rot,M      =>       array(baumwolle)
+            array(array("1"=>array(1001),"2"=>array(2001)), array('0:264', '3:3001')),
         );
     }
 }

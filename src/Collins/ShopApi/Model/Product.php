@@ -401,9 +401,56 @@ class Product extends AbstractModel
      *
      * @param FacetGroupSet $selectedFacetGroupSet
      *
-     * @return FacetGroup[]
+     * @return FacetGroup[][]
      */
     public function getSelectableFacetGroups(FacetGroupSet $selectedFacetGroupSet)
+    {
+        /** @var FacetGroup[] $allGroups */
+        $allGroups = array();
+        $selectedGroupIds = $selectedFacetGroupSet->getGroupIds();
+
+        foreach ($this->getVariants() as $variant) {
+            $facetGroupSet = $variant->getFacetGroupSet();
+            $ids = $facetGroupSet->getGroupIds();
+
+            if ($facetGroupSet->contains($selectedFacetGroupSet)) {
+                foreach ($ids as $groupId) {
+                    if (in_array($groupId, $selectedGroupIds)) continue;
+
+                    $group = $facetGroupSet->getGroup($groupId);
+                    $allGroups[$groupId][$group->getUniqueKey()] = clone $group;
+                }
+            }
+        }
+
+        $allGroups = $this->getExcludedFacetGroups($selectedFacetGroupSet);
+
+        foreach ($selectedGroupIds as $groupId) {
+            $ids = $selectedFacetGroupSet->getIds();
+            unset($ids[$groupId]);
+            $myFacetGroupSet = new FacetGroupSet($ids);
+            foreach ($this->getVariants() as $variant) {
+                $facetGroupSet = $variant->getFacetGroupSet();
+                if ($facetGroupSet->contains($myFacetGroupSet)) {
+                    $group = $facetGroupSet->getGroup($groupId);
+                    $allGroups[$groupId][$group->getUniqueKey()] = clone $group;
+                }
+            }
+        }
+
+        return $allGroups;
+    }
+
+    /**
+     * Returns all FacetGroups, which matches the current facet group set
+     * for example:
+     * [['color'] => 'rot'] =>
+     *
+     * @param FacetGroupSet $selectedFacetGroupSet
+     *
+     * @return FacetGroup[]
+     */
+    public function getExcludedFacetGroups(FacetGroupSet $selectedFacetGroupSet)
     {
         /** @var FacetGroup[] $allGroups */
         $allGroups = array();
