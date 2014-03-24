@@ -72,6 +72,24 @@ class FacetGroup implements FacetUniqueKeyInterface, FacetGetGroupInterface
     }
 
     /**
+     * Returns all facet names separated with the given parameter
+     * eg. for size with to size facets "36" and "37" -> "36/37"
+     *
+     * @param string $separator
+     *
+     * @return string
+     */
+    public function getFacetNames($separator = '/')
+    {
+        $names = array();
+        foreach ($this->facets as $facet) {
+            $names[] = $facet->getName();
+        }
+
+        return join($separator, $names);
+    }
+
+    /**
      * @return Facet[]
      */
     public function getFacets()
