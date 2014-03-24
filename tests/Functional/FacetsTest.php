@@ -1,7 +1,9 @@
 <?php
 namespace Collins\ShopApi\Test\Functional;
 
+use Collins\Cache\ArrayCache;
 use Collins\ShopApi;
+use Guzzle\Http\Message\Response;
 
 class FacetsTestAbstract extends AbstractShopApiTest
 {
@@ -42,5 +44,47 @@ class FacetsTestAbstract extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFile('facets-206.json');
 
         $shopApi->fetchFacets(array());
+    }
+
+    public function testFacetCaching()
+    {
+        $jsonString = $this->getJsonStringFromFile('facets-206.json');
+        $client = $this->getGuzzleClientCalledOnce($jsonString);
+        $shopApi = new ShopApi('id', 'token');
+
+        $shopApi->getApiClient()->setClient($client);
+
+        $shopApi->setCache(new ArrayCache());
+        $facets = $shopApi->fetchFacets(array(206));
+        $this->assertInternalType('array', $facets);
+
+        $facets = $shopApi->fetchFacets(array(206));
+        $this->assertInternalType('array', $facets);
+
+        $this->markTestIncomplete('TODO: optimize facet caching');
+        $facets = $shopApi->fetchFacets(array(206,0));
+        $this->assertInternalType('array', $facets);
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|Client
+     */
+    protected function getGuzzleClientCalledOnce($jsonString)
+    {
+        $request = $this->getMockBuilder('Guzzle\\Http\\Message\\EntityEnclosingRequest')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $response = new Response('200 OK', null, $jsonString ?: '');
+        $request->expects($this->once())
+            ->method('send')
+            ->will($this->returnValue($response));
+
+        $client = $this->getMock('Guzzle\\Http\\Client');
+        $client->expects($this->once())
+            ->method('post')
+            ->will($this->returnValue($request));
+
+        return $client;
     }
 }
