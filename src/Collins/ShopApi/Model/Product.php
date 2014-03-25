@@ -423,8 +423,6 @@ class Product extends AbstractModel
             }
         }
 
-        $allGroups = $this->getExcludedFacetGroups($selectedFacetGroupSet);
-
         foreach ($selectedGroupIds as $groupId) {
             $ids = $selectedFacetGroupSet->getIds();
             unset($ids[$groupId]);
