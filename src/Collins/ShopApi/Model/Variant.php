@@ -70,15 +70,12 @@ class Variant extends AbstractModel
      */
     public function getImageByHash($hash)
     {
-        $images = $this->getImages();
-        foreach ($images as $image) {
-            if ($image->getHash() == $hash) {
+        foreach ($this->getImages() as $image) {
+            if ($image->getHash() === $hash) {
                 return $image;
             }
         }
-        if (isset($images[0])) {
-            return $images[0];
-        }
+
         return null;
     }
 
@@ -88,6 +85,8 @@ class Variant extends AbstractModel
      * @param string $hash The image hash or null for default image.
      *
      * @return void
+     *
+     * @depracted
      */
     public function selectImage($hash)
     {

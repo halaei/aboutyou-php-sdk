@@ -72,4 +72,16 @@ class VariantTest extends AbstractModelTest
 
         return $variant;
     }
+
+    /**
+     * @depends testFromJson
+     */
+    public function testGetImageByHash(Variant $variant)
+    {
+        $images = $variant->getImages();
+        $this->assertEquals($images[0], $variant->getImageByHash($images[0]->getHash()));
+        $this->assertEquals($images[1], $variant->getImageByHash($images[1]->getHash()));
+        $this->assertNotEquals($images[0], $variant->getImageByHash($images[1]->getHash()));
+        $this->assertNull($variant->getImageByHash('unknown'));
+    }
 }
