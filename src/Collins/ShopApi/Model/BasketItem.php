@@ -114,7 +114,7 @@ class BasketItem extends AbstractModel
         if (count($additionalData) && !isset($additionalData['description'])) {
             throw new \Collins\ShopApi\Exception\InvalidParameterException('If $additionalData is not empty, key "description" must exist.');
         }
-        if (isset($additionalData['image_url']) && !is_string($additionalData['imageUrl'])) {
+        if (isset($additionalData['image_url']) && !is_string($additionalData['image_url'])) {
             throw new \Collins\ShopApi\Exception\InvalidParameterException('If $additionalData["image_url"] is set, it must be a string.');
         }
         $this->additionalData = $additionalData;
