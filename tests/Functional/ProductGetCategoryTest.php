@@ -11,9 +11,6 @@ use Collins\ShopApi\Model\Product;
 
 class ProductGetCategoryTestAbstract extends AbstractShopApiTest
 {
-    /** @var Product */
-    private $product;
-
     /** @var ShopApi */
     private $shopApi;
 
@@ -52,12 +49,38 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
     public function testGetCategories()
     {
         $product = $this->getProduct('product-with-categories.json');
+        $categories = $product->getCategories(false);
+        $this->assertInternalType('array', $categories);
+        $this->assertCount(4, $categories);
+        foreach ($categories as $category) {
+            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+        }
+
+        $product = $this->getProduct('product-with-categories.json');
         $categories = $product->getCategories();
         $this->assertInternalType('array', $categories);
         $this->assertCount(3, $categories);
         foreach ($categories as $category) {
             $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
         }
+    }
+
+    public function testGetFirstCategory()
+    {
+        $this->markTestIncomplete();
+        $product = $this->getProduct('product-with-categories.json');
+        $category = $product->getFirstCategory();
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+        $this->assertEquals(19080, $category->getId());
+    }
+
+    public function testGetFirstActiveCategory()
+    {
+        $this->markTestIncomplete();
+        $product = $this->getProduct('product-with-categories.json');
+        $category = $product->getFirstActiveCategory();
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+        $this->assertEquals(16080, $category->getId());
     }
 
     public function testGetCategory()

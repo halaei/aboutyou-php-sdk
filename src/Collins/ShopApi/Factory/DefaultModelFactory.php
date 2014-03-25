@@ -52,7 +52,31 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createBasket($json)
     {
-        return new ShopApi\Model\Basket($json);
+        return new ShopApi\Model\Basket($json, $this);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createBasketItem(\stdClass $json, array $products)
+    {
+        return new ShopApi\Model\Basket\BasketItem($json, $products);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createBasketSet(\stdClass $json, array $products)
+    {
+        return new ShopApi\Model\Basket\BasketSet($json, $this, $products);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createBasketSetItem(\stdClass $json, array $products)
+    {
+        return new ShopApi\Model\Basket\BasketVariantItem($json, $products);
     }
 
     /**
@@ -171,7 +195,9 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createOrder($json)
     {
-        return new ShopApi\Model\Order($json);
+        $basket = $this->createBasket($json->basket);
+
+        return new ShopApi\Model\Order($json->order_id, $basket);
     }
 
     /**
@@ -287,5 +313,18 @@ class DefaultModelFactory implements ModelFactoryInterface
 
 
         return $flattenCategories;
+    }
+
+    public function preHandleError($json, $resultKey, $isMultiRequest)
+    {
+        if ($resultKey === 'basket') {
+            return false;
+        }
+
+        if ($isMultiRequest) {
+            return new ShopApi\Model\ResultError($json);
+        }
+
+        throw new ShopApi\Exception\ResultErrorException($json);
     }
 }

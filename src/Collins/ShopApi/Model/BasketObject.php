@@ -1,6 +1,9 @@
 <?php
 namespace Collins\ShopApi\Model;
 
+/**
+ * @deprecated
+ */
 abstract class BasketObject extends AbstractModel
 {
     /**

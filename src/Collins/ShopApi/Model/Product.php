@@ -280,7 +280,6 @@ class Product extends AbstractModel
 
         if (count($categories)) {
             return reset($categories);
-
         }
 
         return null;
@@ -294,27 +293,25 @@ class Product extends AbstractModel
      * @param bool $activeOnly return only categories that are active
      * @return Category[]
      */
-    public function getLeafCategories($activeOnly = true) {
+    public function getLeafCategories($activeOnly = true)
+    {
+        // TODO: refactor me
         $categories = $this->getCategories($activeOnly);
         
         $leafCategories = array();
 
-        $c = 0;
-        while(count($categories) && $c<100) {
-            $c++;
+        while (count($categories)) {
             $category = array_shift($categories);
             
             if($category->isActive() || ! $activeOnly) {
                 $subCategories = $category->getSubCategories();
 
-                if(!count($subCategories) && !isset($leafCategories[$category->getId()])) {
+                if (!count($subCategories) && !isset($leafCategories[$category->getId()])) {
                     $leafCategories[$category->getId()] = $category;
-                }
-                else {
+                } else {
                     $categories = array_merge($categories, $subCategories);
                 }
-            } 
-            
+            }
         }
 
         return array_values($leafCategories);
@@ -326,6 +323,7 @@ class Product extends AbstractModel
      */
     public function getCategories($activeOnly = true)
     {
+        // TODO: refactor me
         if (!$this->categories) {
             // put all category ids in an array to fetch by ids
             $flattened = array();

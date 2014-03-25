@@ -10,6 +10,30 @@ interface ModelFactoryInterface extends ResultFactoryInterface
 {
     /**
      * @param \stdClass $json
+     * @param array $products
+     *
+     * @return \Collins\ShopApi\Model\Basket\BasketItem
+     */
+    public function createBasketItem(\stdClass $json, array $products);
+
+    /**
+     * @param \stdClass $json
+     * @param array $products
+     *
+     * @return \Collins\ShopApi\Model\Basket\BasketSet
+     */
+    public function createBasketSet(\stdClass $json, array $products);
+
+    /**
+     * @param \stdClass $json
+     * @param array $products
+     *
+     * @return \Collins\ShopApi\Model\Basket\BasketVariantItem
+     */
+    public function createBasketSetItem(\stdClass $json, array $products);
+
+    /**
+     * @param \stdClass $json
      * @param \Collins\ShopApi\Model\Category|null $parent
      *
      * @return \Collins\ShopApi\Model\Category

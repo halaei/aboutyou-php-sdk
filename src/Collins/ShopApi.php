@@ -8,6 +8,7 @@ use Collins\ShopApi\Criteria\CriteriaInterface;
 use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Factory\ResultFactoryInterface;
+use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
@@ -223,50 +224,42 @@ class ShopApi
     }
 
     /**
-     * Add product variants into the basket.
+     * Add product variant to basket.
      *
      * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param ShopApi\Model\BasketItem[] $items
+     * @param int    $productVariantId ID of product variant.
+     * @param string $basketItemId  ID of single item or set in the basket
      *
      * @return \Collins\ShopApi\Model\Basket
      */
-    public function addItemsToBasket($sessionId, array $items)
-    {
-        $query = $this->getQuery()->addItemsToBasket($sessionId, $items);
-        return $query->executeSingle();
-    }
-
-    
-    /**
-     * Adds sets of item sets into the basket.
-     *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param ShopApi\Model\BasketItemSet[] array of sets of basket items
-     *
-     * @return \Collins\ShopApi\Model\Basket
-     */
-    public function addItemSetsToBasket($sessionId, $itemSets)
+    public function addToBasket($sessionId, $productVariantId, $basketItemId)
     {
         $query = $this->getQuery()
-            ->addItemSetsToBasket($sessionId, $itemSets)
+            ->addToBasket($sessionId, $productVariantId, $basketItemId)
         ;
 
         return $query->executeSingle();
     }
-    
+
     /**
      * Adds a single item into the basket.
-     * You can specifiy an amount. Please mind, that an amount > 1 will result in #amount basket positions.
+     * You can specify an amount. Please mind, that an amount > 1 will result in #amount basket positions.
      * So if you read out the basket again later, it's your job to merge the positions again.
      * 
+     * @param string $sessionId
+     *
      * @param string $sessionId
      * @param \Collins\ShopApi\Model\BasketItem $item
      * @param integer $amount
      *
      * @return Basket
+     * @param int $amount
+     *
+     * @return $this
      */
     public function addItemToBasket($sessionId, ShopApi\Model\BasketItem $item, $amount = 1)
     {
+        $basket = new Basket(null, null);
         $items = array();
         $idPrefix = $item->getId();
         
@@ -277,10 +270,11 @@ class ShopApi
             $clone->setId($id);
             $items[] = $clone;
         }
-        
-        return $this->addItemsToBasket($sessionId, $items);
+        $query = $this->getQuery()->addItemsToBasket($sessionId, $items);
+
+        return $query->executeSingle();
     }
-    
+
     /**
      * Adds set of product variants into the basket.
      *
@@ -297,14 +291,29 @@ class ShopApi
     /**
      * Remove basket item.
      *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param int[] $ids array of basket item ids to delete
+     * @param string $sessionId     Free to choose ID of the current website visitor.
+     * @param string[] $itemIds     array of basket item ids to delete, this can be sets or single items
      *
      * @return \Collins\ShopApi\Model\Basket
      */
-    public function removeFromBasket($sessionId, $ids)
+    public function removeItemsFromBasket($sessionId, $itemIds)
     {
-        $query = $this->getQuery()->removeFromBasket($sessionId, $ids);
+        $query = $this->getQuery()->removeFromBasket($sessionId, $itemIds);
+
+        return $query->executeSingle();
+    }
+
+    /**
+     * @param string $sessionId
+     * @param Basket $basket
+     *
+     * @return \Collins\ShopApi\Model\Basket
+     */
+    public function updateBasket($sessionId, Basket $basket)
+    {
+        $query = $this->getQuery()
+            ->updateBasket($sessionId, $basket)
+        ;
 
         return $query->executeSingle();
     }
