@@ -13,10 +13,13 @@ class DefaultModelFactory implements ModelFactoryInterface
     /** @var ShopApi */
     protected $shopApi;
 
+    /** @var ShopApi\Model\FacetManagerInterface */
+    protected $facetManager;
+
     /**
      * @param ShopApi $shopApi
      */
-    public function __construct($shopApi)
+    public function __construct(ShopApi $shopApi)
     {
         ShopApi\Model\BasketObject::setShopApi($shopApi);
         ShopApi\Model\Category::setShopApi($shopApi);
@@ -24,6 +27,24 @@ class DefaultModelFactory implements ModelFactoryInterface
         ShopApi\Model\FacetGroupSet::setShopApi($shopApi);
 
         $this->shopApi = $shopApi;
+        $this->setFacetManager(new ShopApi\Model\FacetManager());
+    }
+
+    /**
+     * @param ShopApi\Model\FacetManagerInterface $facetManager
+     */
+    public function setFacetManager(ShopApi\Model\FacetManagerInterface $facetManager)
+    {
+        $this->facetManager = $facetManager;
+        ShopApi\Model\FacetGroupSet::setFacetManager($facetManager);
+    }
+
+    /**
+     * @return ShopApi\Model\FacetManager|ShopApi\Model\FacetManagerInterface
+     */
+    public function getFacetManager()
+    {
+        return $this->facetManager;
     }
 
     public function setBaseImageUrl($baseUrl)
