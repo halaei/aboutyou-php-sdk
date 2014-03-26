@@ -32,7 +32,6 @@
     ],
     "require": {
         "php": ">=5.3",
-        "php": ">=5.3.3",
         "collins/cache": "dev-master",
         "doctrine/cache": "dev-multiget",
         "psr/log": "1.0.*",
