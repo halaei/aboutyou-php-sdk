@@ -32,7 +32,7 @@ class Query extends QueryBuilder
      *
      * @return array
      */
-    public function execute()
+    public function execute($cacheDuration = 0)
     {
         if (empty($this->query)) {
             return array();
@@ -40,7 +40,7 @@ class Query extends QueryBuilder
 
         $queryString = $this->getQueryString();
 
-        $response   = $this->client->request($queryString);
+        $response   = $this->client->request($queryString, $cacheDuration);
 
         $jsonResponse = json_decode($response->getBody(true));
 
@@ -52,9 +52,9 @@ class Query extends QueryBuilder
      *
      * @return mixed
      */
-    public function executeSingle()
+    public function executeSingle($cacheDuration = 0)
     {
-        $result = $this->execute();
+        $result = $this->execute($cacheDuration);
 
         return reset($result);
     }
@@ -79,6 +79,7 @@ class Query extends QueryBuilder
      * returns an array of parsed results
      *
      * @param array $jsonResponse the response body as json array
+     * @param bool $isMultiRequest
      *
      * @return array
      *

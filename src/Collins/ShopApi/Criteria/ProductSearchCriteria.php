@@ -419,6 +419,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      */
     public function selectProductFields(array $fields)
     {
+        // attributes_merged is required by (pre)fetching facets
+        $fields[] = ProductFields::ATTRIBUTES_MERGED;
+
         $this->result['fields'] = array_unique($fields);
 
         return $this;

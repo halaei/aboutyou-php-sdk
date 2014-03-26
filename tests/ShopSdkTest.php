@@ -13,14 +13,10 @@ class ShopSdkTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\Autocomplete');
-        $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\Category');
-        $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\CategoriesResult');
-        $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\CategoryTree');
         $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\FacetGroupSet');
-        $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\Image');
+//        $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\Image');
         $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\Product');
-        $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\Variant');
+//        $this->resetAbstractModelShopApi('\\Collins\\ShopApi\\Model\\Variant');
     }
 
     /**

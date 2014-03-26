@@ -6,6 +6,7 @@
 
 namespace Collins\ShopApi\Model;
 
+use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Model\ProductSearchResult\FacetCounts;
 use Collins\ShopApi\Model\ProductSearchResult\PriceRange;
 use Collins\ShopApi\Model\ProductSearchResult\SaleCounts;
@@ -39,26 +40,24 @@ class ProductSearchResult extends AbstractModel
      */
     protected $rawFacets;
 
-    public function __construct($jsonObject)
+    public function __construct($jsonObject, ModelFactoryInterface $factory)
     {
         $this->products = array();
-        $this->fromJson($jsonObject);
+        $this->fromJson($jsonObject, $factory);
     }
 
-    public function fromJson(\stdClass $jsonObject)
+    public function fromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
         // workaround for SHOPAPI-278
         $this->pageHash = isset($jsonObject->pageHash) ? $jsonObject->pageHash : null;
         $this->productCount = $jsonObject->product_count;
         $this->rawFacets = $jsonObject->facets;
 
-        $factory = $this->getModelFactory();
-
         foreach ($jsonObject->products as $key => $jsonProduct) {
             $this->products[$key] = $factory->createProduct($jsonProduct);
         }
 
-        $this->parseFacets($jsonObject->facets);
+        $this->parseFacets($jsonObject->facets, $factory);
     }
 
     /**
@@ -77,10 +76,8 @@ class ProductSearchResult extends AbstractModel
         return $this->products;
     }
 
-    protected function parseFacets($jsonObject)
+    protected function parseFacets($jsonObject, ModelFactoryInterface $factory)
     {
-        $factory = $this->getModelFactory();
-
         if (isset($jsonObject->categories)) {
             $this->categories = $factory->createCategoriesFacets($jsonObject->categories);
             unset($jsonObject->categories);

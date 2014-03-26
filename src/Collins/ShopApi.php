@@ -28,6 +28,12 @@ class ShopApi
     const IMAGE_URL_STAGE = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file';
     const IMAGE_URL_LIVE = 'http://cdn.mary-paul.de/file';
 
+    // basket and product by ids must not be cached, facets should use a different caching strategy
+    const NO_QUERY_CACHE = 0;
+
+    // TODO: replace with cache configuration
+    protected $queryCacheDuration = 300;
+
     /** @var ShopApiClient */
     protected $shopApiClient;
 
@@ -55,13 +61,11 @@ class ShopApi
 
         $this->modelFactory = new DefaultModelFactory($this);
 
-        $this->baseImageUrl = self::IMAGE_URL_LIVE;
-        switch($apiEndPoint) {
-            case Constants::API_ENVIRONMENT_STAGE:
-                $this->baseImageUrl = self::IMAGE_URL_STAGE;
-                break;
+        if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
+            $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
+        } else {
+            $this->setBaseImageUrl(self::IMAGE_URL_LIVE);
         }
-
 
         $this->logger = $logger;
         $this->appId  = $appId;
@@ -163,6 +167,8 @@ class ShopApi
         } else {
             $this->baseImageUrl = '';
         }
+
+        $this->modelFactory->setBaseImageUrl($this->baseImageUrl);
     }
 
     /**
@@ -171,6 +177,16 @@ class ShopApi
     public function getBaseImageUrl()
     {
         return $this->baseImageUrl;
+    }
+
+    /**
+     * @return Query
+     */
+    public function getQuery()
+    {
+        $query = new Query($this->shopApiClient, $this->modelFactory);
+
+        return $query;
     }
 
     /**
@@ -196,14 +212,7 @@ class ShopApi
             ->fetchAutocomplete($searchword, $limit, $types)
         ;
 
-        return $query->executeSingle();
-    }
-
-    public function getQuery()
-    {
-        $query = new Query($this->shopApiClient, $this->modelFactory);
-
-        return $query;
+        return $query->executeSingle($this->queryCacheDuration);
     }
 
     /**
@@ -220,7 +229,7 @@ class ShopApi
     {
         $query = $this->getQuery()->fetchBasket($sessionId);
 
-        return $query->executeSingle();
+        return $query->executeSingle(self::NO_QUERY_CACHE);
     }
 
     /**
@@ -238,7 +247,7 @@ class ShopApi
             ->addToBasket($sessionId, $productVariantId, $basketItemId)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle(self::NO_QUERY_CACHE);
     }
 
     /**
@@ -272,7 +281,7 @@ class ShopApi
         }
         $query = $this->getQuery()->addItemsToBasket($sessionId, $items);
 
-        return $query->executeSingle();
+        return $query->executeSingle(self::NO_QUERY_CACHE);
     }
 
     /**
@@ -300,7 +309,7 @@ class ShopApi
     {
         $query = $this->getQuery()->removeFromBasket($sessionId, $itemIds);
 
-        return $query->executeSingle();
+        return $query->executeSingle(self::NO_QUERY_CACHE);
     }
 
     /**
@@ -315,7 +324,7 @@ class ShopApi
             ->updateBasket($sessionId, $basket)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle(self::NO_QUERY_CACHE);
     }
 
 
@@ -339,7 +348,7 @@ class ShopApi
             ->fetchCategoriesByIds($ids)
         ;
 
-        $result = $query->executeSingle();
+        $result = $query->executeSingle($this->queryCacheDuration);
 
         $notFound = $result->getCategoriesNotFound();
         if (!empty($notFound) && $this->logger) {
@@ -363,7 +372,7 @@ class ShopApi
             ->fetchCategoryTree($maxDepth)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle($this->queryCacheDuration);
     }
 
     /**
@@ -386,7 +395,7 @@ class ShopApi
             ->fetchProductsByIds($ids, $fields)
         ;
 
-        $result = $query->executeSingle();
+        $result = $query->executeSingle(self::NO_QUERY_CACHE);
 
         $productsNotFound = $result->getProductsNotFound();
         if (!empty($productsNotFound) && $this->logger) {
@@ -416,7 +425,7 @@ class ShopApi
             ->fetchProductsByEans($eans, $fields)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle($this->queryCacheDuration);
     }
 
     /**
@@ -450,7 +459,7 @@ class ShopApi
             ->fetchProductSearch($criteria)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle($this->queryCacheDuration);
     }
 
     /**
@@ -469,7 +478,7 @@ class ShopApi
             ->fetchFacets($groupIds)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle(self::NO_QUERY_CACHE);
     }
 
     /**
@@ -483,7 +492,7 @@ class ShopApi
             ->fetchOrder($orderId)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle(self::NO_QUERY_CACHE);
     }
 
     /**
@@ -504,7 +513,7 @@ class ShopApi
             ->initiateOrder($sessionId, $successUrl, $cancelUrl, $errorUrl)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle(self::NO_QUERY_CACHE);
     }
 
     /**
@@ -528,7 +537,7 @@ class ShopApi
             ->fetchFacet($params)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle(self::NO_QUERY_CACHE);
     }
 
     /**
@@ -546,7 +555,7 @@ class ShopApi
             ->fetchSuggest($searchword)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle($this->queryCacheDuration);
     }
 
     /**
@@ -560,7 +569,7 @@ class ShopApi
             ->fetchChildApps()
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle($this->queryCacheDuration);
     }
 
     /**

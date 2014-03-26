@@ -7,12 +7,14 @@
 namespace Collins\ShopApi\Model;
 
 
-class Image extends AbstractModel
+class Image
 {
     const MIN_WIDTH  = 50;
     const MIN_HEIGHT = 50;
     const MAX_WIDTH  = 1400;
     const MAX_HEIGHT = 2000;
+
+    private static $baseUrl = '';
 
     /** @var string */
     protected $hash;
@@ -98,9 +100,12 @@ class Image extends AbstractModel
 
     public function getBaseUrl()
     {
-        $api = $this->getShopApi();
+        return self::$baseUrl;
+    }
 
-        return $api ? $api->getBaseImageUrl() : '';
+    public static function setBaseUrl($baseUrl = '')
+    {
+        self::$baseUrl = $baseUrl ?: '';
     }
 
     /**

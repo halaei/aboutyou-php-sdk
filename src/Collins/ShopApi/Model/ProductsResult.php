@@ -6,16 +6,15 @@
 
 namespace Collins\ShopApi\Model;
 
+use Collins\ShopApi\Factory\ModelFactoryInterface;
 
 class ProductsResult extends AbstractProductsResult
 {
     protected $productsNotFound = array();
 
-    public function fromJson(\stdClass $jsonObject)
+    public function fromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
         $this->pageHash = isset($jsonObject->pageHash) ? $jsonObject->pageHash : null;
-
-        $factory = $this->getModelFactory();
 
         if (isset($jsonObject->ids)) {
             foreach ($jsonObject->ids as $key => $jsonProduct) {

@@ -22,13 +22,13 @@ class ProductFacetsTest extends AbstractShopApiTest
         $this->shopApi = $this->getShopApiWithResultFile('facets-for-product.json');
 
         $json = $this->getJsonObjectFromFile('product/product-with-attributes.json');
-        $this->product = new ShopApi\Model\Product($json);
+        $this->product = new ShopApi\Model\Product($json, $this->shopApi->getResultFactory());
     }
 
     public function testGetBrandWorkaround()
     {
         $json = $this->getJsonObjectFromFile('product/product-257770.json');
-        $product = new ShopApi\Model\Product($json);
+        $product = new ShopApi\Model\Product($json, $this->shopApi->getResultFactory());
         $brand = $product->getBrand();
 
         $this->assertNotNull($brand);
@@ -96,7 +96,7 @@ class ProductFacetsTest extends AbstractShopApiTest
     public function testGetFacetGroups()
     {
         $json = $this->getJsonObjectFromFile('product/product-full.json');
-        $product = new ShopApi\Model\Product($json);
+        $product = new ShopApi\Model\Product($json, $this->shopApi->getResultFactory());
 
         $facetGroups = $product->getFacetGroups(206);
         $this->assertCount(5, $facetGroups);
@@ -109,7 +109,7 @@ class ProductFacetsTest extends AbstractShopApiTest
     public function testGetVariantByFacets()
     {
         $json = $this->getJsonObjectFromFile('product/product-full.json');
-        $product = new ShopApi\Model\Product($json);
+        $product = new ShopApi\Model\Product($json, $this->shopApi->getResultFactory());
 
         $facetGroupSet = new ShopApi\Model\FacetGroupSet([206 => [2402]]);
         $variant = $product->getVariantByFacets($facetGroupSet);
@@ -125,7 +125,7 @@ class ProductFacetsTest extends AbstractShopApiTest
     public function testGetVariantsByFacetId()
     {
         $json = $this->getJsonObjectFromFile('product/product-full.json');
-        $product = new ShopApi\Model\Product($json);
+        $product = new ShopApi\Model\Product($json, $this->shopApi->getResultFactory());
 
         $facet = new ShopApi\Model\Facet(2402, '', '', 206, '');
         $variants = $product->getVariantsByFacetId($facet->getId(), $facet->getGroupId());
@@ -173,7 +173,7 @@ class ProductFacetsTest extends AbstractShopApiTest
         $this->getShopApiWithResultFile('facets-for-product-variant-facets.json');
 
         $json = $this->getJsonObjectFromFile('product/product-variant-facets.json');
-        $product = new ShopApi\Model\Product($json);
+        $product = new ShopApi\Model\Product($json, $this->shopApi->getResultFactory());
 
 
         $facetGroupSet = new ShopApi\Model\FacetGroupSet($ids);
@@ -258,7 +258,7 @@ class ProductFacetsTest extends AbstractShopApiTest
         $this->getShopApiWithResultFile('facets-for-product-variant-facets.json');
 
         $json = $this->getJsonObjectFromFile('product/product-variant-facets.json');
-        $product = new ShopApi\Model\Product($json);
+        $product = new ShopApi\Model\Product($json, $this->shopApi->getResultFactory());
 
 
         $facetGroupSet = new ShopApi\Model\FacetGroupSet($ids);

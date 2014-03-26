@@ -73,7 +73,7 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
 
         $criteria = $this->getCriteria()
             ->selectProductFields(array(ProductFields::BRAND, ProductFields::IS_ACTIVE));
-        $this->assertEquals('{"session_id":"my","result":{"fields":["brand_id","active"]}}', json_encode($criteria->toArray()));
+        $this->assertEquals('{"session_id":"my","result":{"fields":["brand_id","active","attributes_merged"]}}', json_encode($criteria->toArray()));
 
         $criteria = new ProductSearchCriteria('12345');
         $this->assertEquals(array('session_id' => '12345'), $criteria->toArray());

@@ -86,4 +86,9 @@ class RawJsonFactory implements ResultFactoryInterface
     {
         return false;
     }
+
+    public function setBaseImageUrl($baseUrl)
+    {
+        // not used
+    }
 }

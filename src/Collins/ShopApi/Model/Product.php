@@ -8,6 +8,7 @@ namespace Collins\ShopApi\Model;
 
 use Collins\ShopApi;
 use Collins\ShopApi\Exception\MalformedJsonException;
+use Collins\ShopApi\Factory\ModelFactoryInterface;
 
 class Product extends AbstractModel
 {
@@ -69,12 +70,12 @@ class Product extends AbstractModel
     /** @var Category[] */
     protected $activeCategories;
 
-    public function __construct($jsonObject)
+    public function __construct($jsonObject, ModelFactoryInterface $factory)
     {
-        $this->fromJson($jsonObject);
+        $this->fromJson($jsonObject, $factory);
     }
 
-    public function fromJson($jsonObject)
+    public function fromJson($jsonObject, ModelFactoryInterface $factory)
     {
         // these are required fields
         if (!isset($jsonObject->id) || !isset($jsonObject->name)) {
@@ -92,15 +93,11 @@ class Product extends AbstractModel
         $this->minPrice         = isset($jsonObject->min_price) ? $jsonObject->min_price : null;
         $this->maxPrice         = isset($jsonObject->max_price) ? $jsonObject->max_price : null;
 
-        if (isset($jsonObject->default_image) || isset($jsonObject->default_variant) || isset($jsonObject->variants) || !empty($jsonObject->styles)) {
-            $factory = $this->getModelFactory();
+        $this->defaultImage     = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
+        $this->defaultVariant   = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant) : null;
+        $this->variants         = self::parseVariants($jsonObject, $factory);
+        $this->styles           = self::parseStyles($jsonObject, $factory);
 
-            $this->defaultImage     = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
-            $this->defaultVariant   = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant) : null;
-
-            $this->variants         = self::parseVariants($jsonObject, $factory);
-            $this->styles           = self::parseStyles($jsonObject, $factory);
-        }
         $this->categoryIdPaths  = self::parseCategoryIdPaths($jsonObject);
 
         $this->facetIds     = self::parseFacetIds($jsonObject);

@@ -189,11 +189,13 @@ class ShopApiClient
      */
     public function request($body, $cacheDuration = 0)
     {
-        $cacheKey = md5($body);
+        if ($cacheDuration) {
+            $cacheKey = md5($body);
 
-        $response = $this->cache->get($cacheKey);
-        if ($response) {
-            return $response;
+            $response = $this->cache->get($cacheKey);
+            if ($response) {
+                return $response;
+            }
         }
 
         $apiClient = $this->getClient();
@@ -212,7 +214,9 @@ class ShopApiClient
 
         $response = $request->send();
 
-        $this->cache->set($cacheKey, $response, $cacheDuration);
+        if ($cacheDuration) {
+            $this->cache->set($cacheKey, $response, $cacheDuration);
+        }
 
         try {
             if (!$response->isSuccessful()) {

@@ -18,17 +18,17 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function __construct($shopApi)
     {
-        ShopApi\Model\Autocomplete::setShopApi($shopApi);
         ShopApi\Model\BasketObject::setShopApi($shopApi);
-        ShopApi\Model\Category::setShopApi($shopApi);
-        ShopApi\Model\CategoriesResult::setShopApi($shopApi);
-        ShopApi\Model\CategoryTree::setShopApi($shopApi);
-        ShopApi\Model\Image::setShopApi($shopApi);
+//        ShopApi\Model\Image::setShopApi($shopApi);
         ShopApi\Model\Product::setShopApi($shopApi);
         ShopApi\Model\FacetGroupSet::setShopApi($shopApi);
-        ShopApi\Model\Variant::setShopApi($shopApi);
 
         $this->shopApi = $shopApi;
+    }
+
+    public function setBaseImageUrl($baseUrl)
+    {
+        ShopApi\Model\Image::setBaseUrl($baseUrl);
     }
 
     /**
@@ -44,7 +44,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createAutocomplete($json)
     {
-        return new ShopApi\Model\Autocomplete($json);
+        return new ShopApi\Model\Autocomplete($json, $this);
     }
 
     /**
@@ -84,7 +84,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createCategoriesResult($json, $queryParams)
     {
-        return new ShopApi\Model\CategoriesResult($json, $queryParams['ids']);
+        return new ShopApi\Model\CategoriesResult($json, $queryParams['ids'], $this);
     }
 
     /**
@@ -92,7 +92,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createCategory(\stdClass $json, $parent = null)
     {
-        return new ShopApi\Model\Category($json, $parent);
+        return new ShopApi\Model\Category($json, $this, $parent);
     }
 
     /**
@@ -100,7 +100,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createCategoryTree($json)
     {
-        return new ShopApi\Model\CategoryTree($json);
+        return new ShopApi\Model\CategoryTree($json, $this);
     }
 
     /**
@@ -147,7 +147,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createProduct(\stdClass $json)
     {
-        return new ShopApi\Model\Product($json);
+        return new ShopApi\Model\Product($json, $this);
     }
 
     /**
@@ -155,7 +155,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createProductsResult($json)
     {
-        return new ShopApi\Model\ProductsResult($json);
+        return new ShopApi\Model\ProductsResult($json, $this);
     }
 
     /**
@@ -163,7 +163,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createProductsEansResult($json)
     {
-        return new ShopApi\Model\ProductsEansResult($json);
+        return new ShopApi\Model\ProductsEansResult($json, $this);
     }
 
     /**
@@ -171,7 +171,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createProductSearchResult($json)
     {
-        return new ShopApi\Model\ProductSearchResult($json);
+        return new ShopApi\Model\ProductSearchResult($json, $this);
     }
 
     /**
@@ -187,7 +187,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createVariant(\stdClass $json)
     {
-        return new ShopApi\Model\Variant($json);
+        return new ShopApi\Model\Variant($json, $this);
     }
 
     /**

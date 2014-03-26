@@ -6,7 +6,7 @@ use Collins\ShopApi;
 /**
  *
  */
-class CategoriesByIdsTestAbstract extends AbstractShopApiTest
+class CategoriesByIdsTest extends AbstractShopApiTest
 {
     public function testFetchCategories()
     {

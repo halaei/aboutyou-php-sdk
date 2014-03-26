@@ -6,14 +6,13 @@
 
 namespace Collins\ShopApi\Model;
 
+use Collins\ShopApi\Factory\ModelFactoryInterface;
 
 class ProductsEansResult extends AbstractProductsResult
 {
-    public function fromJson(\stdClass $jsonObject)
+    public function fromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
         $this->pageHash = isset($jsonObject->pageHash) ? $jsonObject->pageHash : null;
-
-        $factory = $this->getModelFactory();
 
         foreach ($jsonObject->eans as $jsonProduct) {
             $this->products[] = $factory->createProduct($jsonProduct);

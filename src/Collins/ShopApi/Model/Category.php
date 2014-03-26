@@ -6,8 +6,9 @@
 
 namespace Collins\ShopApi\Model;
 
+use Collins\ShopApi\Factory\ModelFactoryInterface;
 
-class Category extends AbstractModel
+class Category
 {
     const ALL = false;
     const ACTIVE_ONLY = true;
@@ -43,15 +44,15 @@ class Category extends AbstractModel
      * @param object        $jsonObject  json as object tree
      * @param Category|null $parent
      */
-    public function __construct($jsonObject, $parent = null)
+    public function __construct($jsonObject, ModelFactoryInterface $factory, $parent = null)
     {
         $this->allSubCategories = array();
         $this->activeSubCategories = array();
         $this->parent = $parent;
-        $this->fromJson($jsonObject);
+        $this->fromJson($jsonObject, $factory);
     }
 
-    public function fromJson($jsonObject)
+    public function fromJson($jsonObject, ModelFactoryInterface $factory)
     {
         $this->parentId = $jsonObject->parent;
         $this->id       = $jsonObject->id;
@@ -60,8 +61,6 @@ class Category extends AbstractModel
         $this->position = $jsonObject->position;
 
         if (isset($jsonObject->sub_categories)) {
-            $factory = $this->getModelFactory();
-
             foreach ($jsonObject->sub_categories as $jsonSubCategory) {
                 $category = $factory->createCategory($jsonSubCategory, $this);
                 $this->allSubCategories[] = $category;

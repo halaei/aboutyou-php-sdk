@@ -7,6 +7,8 @@
 namespace Collins\ShopApi\Model;
 
 
+use Collins\ShopApi\Factory\ModelFactoryInterface;
+
 class Variant extends AbstractModel
 {
     protected $jsonObject;
@@ -17,13 +19,17 @@ class Variant extends AbstractModel
     /** @var FacetGroupSet */
     protected $facetGroups;
 
+    /** @var ModelFactoryInterface */
+    protected $factory;
+
     /**
      * @var Image
      */
     protected $selectedImage = null;
 
-    public function __construct($jsonObject)
+    public function __construct($jsonObject, ModelFactoryInterface $factory)
     {
+        $this->factory = $factory;
         $this->fromJson($jsonObject);
     }
 
@@ -49,7 +55,7 @@ class Variant extends AbstractModel
         if ($this->images === null) {
             $this->images = array();
             if (!empty($this->jsonObject->images)) {
-                $factory = $this->getModelFactory();
+                $factory = $this->factory;
 
                 foreach ($this->jsonObject->images as $image) {
                     $this->images[] = $factory->createImage($image);

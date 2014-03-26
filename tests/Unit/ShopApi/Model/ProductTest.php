@@ -6,6 +6,7 @@
 
 namespace Collins\ShopApi\Test\Unit\Model;
 
+use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Model\Product;
 
 class ProductTest extends AbstractModelTest
@@ -13,7 +14,7 @@ class ProductTest extends AbstractModelTest
     public function testConstructor()
     {
         $json = json_decode('{"id":1,"name":"Product"}');
-        new Product($json);
+        new Product($json, $this->getModelFactory());
     }
 
     /**
@@ -22,7 +23,7 @@ class ProductTest extends AbstractModelTest
     public function testMalformedJsonException()
     {
         $json = json_decode('{"id":1,"but":"now name attribute"}');
-        new Product($json);
+        new Product($json, $this->getModelFactory());
     }
 
     /**
@@ -31,7 +32,7 @@ class ProductTest extends AbstractModelTest
     public function testGetBrandRuntimeException()
     {
         $json = json_decode('{"id":1,"name":"Product"}');
-        $product = new Product($json);
+        $product = new Product($json, $this->getModelFactory());
         $product->getBrand();
     }
 }

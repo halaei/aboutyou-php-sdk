@@ -3,7 +3,7 @@ namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi;
 
-class AutocompleteTestAbstract extends AbstractShopApiTest
+class AutocompleteTest extends AbstractShopApiTest
 {
     /**
      *
