@@ -7,6 +7,7 @@
 namespace Collins\ShopApi\Test\Unit\Model;
 
 use Collins\ShopApi\Model\FacetGroupSet;
+use Collins\ShopApi\Model\FacetManager;
 
 class FacetGroupSetTest extends AbstractModelTest
 {
@@ -95,6 +96,16 @@ class FacetGroupSetTest extends AbstractModelTest
                 array(5 => array(7))
             ),
         );
+    }
+
+    public function testSetFacetManager()
+    {
+        FacetGroupSet::setFacetManager(new FacetManager());
+    }
+
+    public function testUsingFacetManager()
+    {
+        $this->markTestIncomplete('implement me');
     }
 }
  

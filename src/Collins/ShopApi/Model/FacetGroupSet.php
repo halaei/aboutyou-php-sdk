@@ -19,6 +19,9 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
     /** @var Facet[] */
     protected $facets;
 
+    /** @var FacetManagerInterface */
+    protected static $facetManager;
+
     /**
      * @param array $ids two dimensional array of group ids and array ids
      */
@@ -31,6 +34,11 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
         }
 
         $this->ids = $ids;
+    }
+
+    public static function setFacetManager(FacetManagerInterface $facetManager)
+    {
+        self::$facetManager = $facetManager;
     }
 
     /**
