@@ -11,7 +11,7 @@ use Collins\ShopApi\Model\ProductSearchResult\FacetCounts;
 use Collins\ShopApi\Model\ProductSearchResult\PriceRange;
 use Collins\ShopApi\Model\ProductSearchResult\SaleCounts;
 
-class ProductSearchResult extends AbstractModel
+class ProductSearchResult
 {
     /** @var Product[] */
     protected $products;
@@ -48,8 +48,7 @@ class ProductSearchResult extends AbstractModel
 
     public function fromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
-        // workaround for SHOPAPI-278
-        $this->pageHash = isset($jsonObject->pageHash) ? $jsonObject->pageHash : null;
+        $this->pageHash = $jsonObject->pageHash;
         $this->productCount = $jsonObject->product_count;
         $this->rawFacets = $jsonObject->facets;
 
