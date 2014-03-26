@@ -8,6 +8,7 @@ namespace Collins\ShopApi\Test\Unit\Model;
 
 use Collins\ShopApi\Model\FacetGroupSet;
 use Collins\ShopApi\Model\FacetManager;
+use Symfony\Component\EventDispatcher\Event;
 
 class FacetGroupSetTest extends AbstractModelTest
 {
@@ -105,6 +106,14 @@ class FacetGroupSetTest extends AbstractModelTest
 
     public function testUsingFacetManager()
     {
+        $facetManagerMock = $this->getMockForAbstractClass('Collins\\ShopApi\\Model\\FacetManagerInterface');
+        $facetManagerMock->expects($this->atLeastOnce())
+            ->method('getFacet');
+
+        FacetGroupSet::setFacetManager($facetManagerMock);
+        $facetGroupSet = new FacetGroupSet(array(0=>array(123)));
+
+        $facetGroupSet->getGroups();
         $this->markTestIncomplete('implement me');
     }
 }
