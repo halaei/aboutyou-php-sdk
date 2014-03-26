@@ -9,7 +9,10 @@ namespace Collins\ShopApi\Model;
 
 class FacetManager implements FacetManagerInterface
 {
+    /** @var Facet[][] */
     private $facets;
+
+    private $cache;
 
     public function parseJson(array $json)
     {
@@ -18,13 +21,24 @@ class FacetManager implements FacetManagerInterface
         }
     }
 
-    public function preFetch()
+    public function preFetch($brandIds, $facetGroupIds)
     {
 
     }
 
+    /**
+     * @param $groupId
+     * @param $id
+     *
+     * @return Facet
+     */
     public function getFacet($groupId, $id)
     {
+        $facet = $this->facets[$groupId][$id];
+        if (!$facet instanceof Facet) {
+            $this->facets[$groupId][$id] = $facet = Facet::createFromJson($facet);
+        }
 
+        return $facet;
     }
 } 

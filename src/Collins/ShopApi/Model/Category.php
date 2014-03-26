@@ -8,7 +8,7 @@ namespace Collins\ShopApi\Model;
 
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 
-class Category
+class Category extends AbstractModel
 {
     const ALL = false;
     const ACTIVE_ONLY = true;
