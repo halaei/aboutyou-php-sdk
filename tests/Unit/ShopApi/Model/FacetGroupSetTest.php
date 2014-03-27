@@ -113,8 +113,8 @@ class FacetGroupSetTest extends AbstractModelTest
         FacetGroupSet::setFacetManager($facetManagerMock);
         $facetGroupSet = new FacetGroupSet(array(0=>array(123)));
 
-        $facetGroupSet->getGroups();
         $this->markTestIncomplete('implement me');
+        $facetGroupSet->getGroups();
     }
 }
  

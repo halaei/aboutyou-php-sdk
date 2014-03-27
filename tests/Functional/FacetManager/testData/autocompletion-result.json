@@ -1,0 +1,241 @@
+[
+    {
+        "autocompletion": {
+            "products": [
+                {
+                    "name": "Herren Boat - Authentics 3-Eye Classic Boat",
+                    "description_long": "Kompakter, trendiger und stabiler Timberland Herrenschuh.<br />\nDer robuste Schnürer im Bootsschuh-Look mit 360°-Schnürung sind Sie immer im Trend.<br><br><ul><li>Timberland Herrenschuh aus Glattleder</li><li>mit einer Decksohle aus Leder</li><li>mit einer Gummisohle</li><li>mit Metallösen</li></ul><br><br>Materialzusammensetzung: Leder",
+                    "sale": false,
+                    "max_price": 15995,
+                    "brand_id": 38,
+                    "default_variant": {
+                        "updated_date": null,
+                        "ean": "0000906654574",
+                        "default": false,
+                        "first_sale_date": null,
+                        "price": 15995,
+                        "first_active_date": "2014-02-26 02:10:44",
+                        "old_price": 0,
+                        "additional_info": {},
+                        "created_date": null,
+                        "images": [
+                            {
+                                "hash": "895484ece562e00becfd4149f0566d65",
+                                "image": {
+                                    "width": 762,
+                                    "height": 1100
+                                },
+                                "mime": "image/jpeg",
+                                "ext": ".jpg",
+                                "size": 230840
+                            },
+                            {
+                                "hash": "e1fc144a280315c7058dd5b3d1f5646f",
+                                "image": {
+                                    "width": 762,
+                                    "height": 1100
+                                },
+                                "mime": "image/jpeg",
+                                "ext": ".jpg",
+                                "size": 519949
+                            },
+                            {
+                                "hash": "50a2946c5d4ba9d3c6aa280e013c00aa",
+                                "image": {
+                                    "width": 762,
+                                    "height": 1100
+                                },
+                                "mime": "image/jpeg",
+                                "ext": ".jpg",
+                                "size": 563726
+                            },
+                            {
+                                "hash": "8dd7b4bed570b83ce16492c8db1fe82e",
+                                "image": {
+                                    "width": 762,
+                                    "height": 1100
+                                },
+                                "mime": "image/jpeg",
+                                "ext": ".jpg",
+                                "size": 195661
+                            },
+                            {
+                                "hash": "e7f51edd9ebe15c11d8d441d48605c85",
+                                "image": {
+                                    "width": 762,
+                                    "height": 1100
+                                },
+                                "mime": "image/jpeg",
+                                "ext": ".jpg",
+                                "size": 184890
+                            },
+                            {
+                                "hash": "5c92e65443324cae3b535c60faf68817",
+                                "image": {
+                                    "width": 762,
+                                    "height": 1100
+                                },
+                                "mime": "image/jpeg",
+                                "ext": ".jpg",
+                                "size": 305154
+                            }
+                        ],
+                        "attributes": {
+                            "attributes_172": [
+                                1988
+                            ],
+                            "attributes_206": [
+                                2419
+                            ],
+                            "attributes_194": [
+                                2232
+                            ],
+                            "attributes_2": [
+                                87
+                            ],
+                            "attributes_0": [
+                                38
+                            ],
+                            "attributes_1": [
+                                15
+                            ]
+                        },
+                        "retail_price": 0,
+                        "id": 5476876,
+                        "quantity": 5
+                    },
+                    "min_price": 15995,
+                    "default_image": {
+                        "hash": "895484ece562e00becfd4149f0566d65",
+                        "image": {
+                            "width": 762,
+                            "height": 1100
+                        },
+                        "mime": "image/jpeg",
+                        "ext": ".jpg",
+                        "size": 230840
+                    },
+                    "description_short": "",
+                    "id": 304241
+                },
+                {
+                    "name": "Herren Boatschuh Classic Boat 2-Eye Smooth",
+                    "description_long": "Modischer Timberland Herrenschuh für die neue Saison.<br><br><ul><li>Timberland Herrenschuh aus Glattleder</li><li>Decksohle aus Leder</li><li>mit einer Gummisohle</li><li>mit einer 360° Schnürung</li></ul><br><br>Materialzusammensetzung: Glattleder",
+                    "sale": false,
+                    "max_price": 13995,
+                    "brand_id": 38,
+                    "default_variant": {
+                        "updated_date": null,
+                        "ean": "0000906463541",
+                        "default": false,
+                        "first_sale_date": null,
+                        "price": 13995,
+                        "first_active_date": "2014-02-26 02:11:36",
+                        "old_price": 0,
+                        "additional_info": {},
+                        "created_date": null,
+                        "images": [
+                            {
+                                "hash": "51ff4ccca62ca4970bf49c15dcab3024",
+                                "image": {
+                                    "width": 762,
+                                    "height": 1100
+                                },
+                                "mime": "image/jpeg",
+                                "ext": ".jpg",
+                                "size": 215402
+                            },
+                            {
+                                "hash": "584927ff8d31ceffe76ea53a7b141357",
+                                "image": {
+                                    "width": 762,
+                                    "height": 1100
+                                },
+                                "mime": "image/jpeg",
+                                "ext": ".jpg",
+                                "size": 161274
+                            },
+                            {
+                                "hash": "faaed2a596f4f57cefe0ab8c32df4684",
+                                "image": {
+                                    "width": 762,
+                                    "height": 1100
+                                },
+                                "mime": "image/jpeg",
+                                "ext": ".jpg",
+                                "size": 439023
+                            },
+                            {
+                                "hash": "6f3a02c88d8300f8c1f45001e5b14134",
+                                "image": {
+                                    "width": 762,
+                                    "height": 1100
+                                },
+                                "mime": "image/jpeg",
+                                "ext": ".jpg",
+                                "size": 151314
+                            },
+                            {
+                                "hash": "4bd49464bdc81ca6521132fdf76725fd",
+                                "image": {
+                                    "width": 762,
+                                    "height": 1100
+                                },
+                                "mime": "image/jpeg",
+                                "ext": ".jpg",
+                                "size": 459060
+                            },
+                            {
+                                "hash": "99e9126f84b5df1cf6b62448620a3970",
+                                "image": {
+                                    "width": 762,
+                                    "height": 1100
+                                },
+                                "mime": "image/jpeg",
+                                "ext": ".jpg",
+                                "size": 230569
+                            }
+                        ],
+                        "attributes": {
+                            "attributes_172": [
+                                1988
+                            ],
+                            "attributes_206": [
+                                2409
+                            ],
+                            "attributes_194": [
+                                2185
+                            ],
+                            "attributes_2": [
+                                5
+                            ],
+                            "attributes_0": [
+                                38
+                            ],
+                            "attributes_1": [
+                                15
+                            ]
+                        },
+                        "retail_price": 0,
+                        "id": 5476910,
+                        "quantity": 5
+                    },
+                    "min_price": 13995,
+                    "default_image": {
+                        "hash": "51ff4ccca62ca4970bf49c15dcab3024",
+                        "image": {
+                            "width": 762,
+                            "height": 1100
+                        },
+                        "mime": "image/jpeg",
+                        "ext": ".jpg",
+                        "size": 215402
+                    },
+                    "description_short": "",
+                    "id": 304244
+                }
+            ],
+            "categories": null
+        }
+    }
+]

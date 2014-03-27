@@ -6,14 +6,15 @@
 
 namespace Collins\ShopApi\Model;
 
-
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Doctrine\Common\Cache\CacheMultiGet;
 
 class FacetManager implements FacetManagerInterface, EventSubscriberInterface
 {
     /** @var Facet[][] */
     private $facets;
 
+    /** @var CacheMultiGet */
     private $cache;
 
     public static function getSubscribedEvents()
@@ -34,6 +35,23 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
     {
 
     }
+
+    /**
+     * @param CacheMultiGet $cache
+     */
+    public function setCache(CacheMultiGet $cache)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
+     * @return CacheMultiGet
+     */
+    public function getCache()
+    {
+        return $this->cache;
+    }
+
 
     /**
      * @param $groupId

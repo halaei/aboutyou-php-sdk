@@ -410,10 +410,10 @@ class ShopApi
     }
 
     /**
-     * @param integer[] $eans
+     * @param string[] $eans
      * @param string[] $fields
      *
-     * @return ProductsResult
+     * @return ProductsEansResult
      *
      * @throws ShopApi\Exception\MalformedJsonException
      * @throws ShopApi\Exception\UnexpectedResultException
