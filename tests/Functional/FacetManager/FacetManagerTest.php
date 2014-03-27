@@ -77,7 +77,13 @@ class FacetManagerTest extends AbstractShopApiTest
 
     protected function getShopApiWithResultFile($filename, $expectedMuilitGet)
     {
-        $shopApi = parent::getShopApiWithResultFile($filename);
+//        $shopApi = parent::getShopApiWithResultFiles(
+//            $filename,
+//            'facets-all.json'
+//        );
+        $shopApi = parent::getShopApiWithResultFile(
+            $filename
+        );
         $facetManager = $shopApi->getResultFactory()->getFacetManager();
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager', $facetManager);
         $cacheMock = $this->getMockForAbstractClass('Doctrine\\Common\\Cache\\CacheMultiGet');

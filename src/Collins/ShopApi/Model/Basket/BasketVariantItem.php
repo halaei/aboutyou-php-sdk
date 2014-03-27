@@ -3,16 +3,12 @@ namespace Collins\ShopApi\Model\Basket;
 
 use Collins\ShopApi\Model\Variant;
 use Collins\ShopApi\Model\Product;
-use Collins\ShopApi\Model\ResultErrorTrait;
 
 /**
  *
  */
-class BasketVariantItem
+class BasketVariantItem extends AbstractBasketItem
 {
-    use ResultErrorTrait;
-    use AddionalDataTrait;
-
     /**
      * @var object
      */

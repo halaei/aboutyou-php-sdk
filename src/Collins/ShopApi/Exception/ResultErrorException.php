@@ -6,20 +6,44 @@
 
 namespace Collins\ShopApi\Exception;
 
-use Collins\ShopApi\Model\ResultErrorTrait;
-
 class ResultErrorException extends ApiErrorException
 {
-    use ResultErrorTrait;
+    /** @var string */
+    protected $errorIdent;
 
     public function __construct(\stdClass $jsonObject)
     {
-        $this->parseErrorResult($jsonObject);
-        // TODO: Remove redundants, eg. errorMessage and message
+        $this->errorIdent   = isset($jsonObject->error_ident) ? (string)$jsonObject->error_ident : null;
+        $errorCode    = isset($jsonObject->error_code) ? (int)$jsonObject->error_code : 0;
+        $errorMessage = isset($jsonObject->error_message) ? $jsonObject->error_message : null;
+
         parent::__construct(
-            is_array($this->errorMessage) ? join(PHP_EOL, $this->errorMessage) : $this->errorMessage,
-            $this->errorCode
+            is_array($errorMessage) ? join(PHP_EOL, $errorMessage) : $errorMessage,
+            $errorCode
         );
-//        parent::__construct(null);
     }
-} 
+
+    /**
+     * @return string
+     */
+    public function getErrorIdent()
+    {
+        return $this->errorIdent;
+    }
+
+    /**
+     * @return int
+     */
+    public function getErrorCode()
+    {
+        return $this->getMessage();
+    }
+
+    /**
+     * @return string
+     */
+    public function getErrorMessage()
+    {
+        return $this->getCode();
+    }
+}

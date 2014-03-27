@@ -6,8 +6,9 @@
 
 namespace Collins\ShopApi\Model\Basket;
 
+use Collins\ShopApi\Model\ResultError;
 
-trait AddionalDataTrait
+class AbstractBasketItem extends ResultError
 {
     /** @var array */
     protected $additionalData;
@@ -28,7 +29,7 @@ trait AddionalDataTrait
         return isset($this->additionalData) ?
             $this->additionalData->description :
             null
-            ;
+        ;
     }
 
     /**
@@ -61,13 +62,13 @@ trait AddionalDataTrait
     {
         $this->isChanged = true;
 
-        $data = [
+        $data = array(
             'description' => $description
-        ];
+        );
         if (!empty($customData)) {
             $data['internal_infos'] = array_values($customData);
         }
 
         $this->additionalData = $data;
     }
-}
+} 

@@ -7,20 +7,16 @@
 namespace Collins\ShopApi\Model\Basket;
 
 use Collins\ShopApi\Factory\ModelFactoryInterface;
-use Collins\ShopApi\Model\ResultErrorTrait;
 
-class BasketSet implements BasketItemInterface
+class BasketSet extends AbstractBasketItem implements BasketItemInterface
 {
-    use ResultErrorTrait;
-    use AddionalDataTrait;
-
     /** @var string */
     protected $id;
 
     /** @var BasketVariantItem[] */
     protected $items;
 
-    /** @var ResultErrorTrait[] */
+    /** @var ResultError[] */
     protected $errors;
 
     /** @var interger */
