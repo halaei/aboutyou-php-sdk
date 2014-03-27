@@ -7,12 +7,21 @@
 namespace Collins\ShopApi\Model;
 
 
-class FacetManager implements FacetManagerInterface
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+class FacetManager implements FacetManagerInterface, EventSubscriberInterface
 {
     /** @var Facet[][] */
     private $facets;
 
     private $cache;
+
+    public static function getSubscribedEvents()
+    {
+        return array(
+            //'example.from_json' => array('onExampleFromJson', 0),
+        );
+    }
 
     public function parseJson(array $json)
     {

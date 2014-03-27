@@ -15,6 +15,7 @@ use Collins\ShopApi\Model\ProductsResult;
 use Collins\ShopApi\Query;
 use Collins\ShopApi\ShopApiClient;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Provides access to the Collins Frontend Platform.
@@ -47,6 +48,9 @@ class ShopApi
     protected $logger;
 
     protected $appId;
+
+    /** @var  Symfony\Component\EventDispatcher\EventDispatcher */
+    static protected $eventDispatcher;
 
     /**
      * @param string $appId
@@ -622,5 +626,15 @@ class ShopApi
         $tag = '<script type="text/javascript" src="' . self::getJavaScriptURL() . '"></script>';
 
         return $tag;
+    }
+
+    public static function getEventDispatcher()
+    {
+        if(is_null(self::$eventDispatcher))
+        {
+            self::$eventDispatcher = new EventDispatcher();
+        }
+
+        return(self::$eventDispatcher);
     }
 }
