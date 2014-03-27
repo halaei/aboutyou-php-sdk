@@ -272,7 +272,7 @@ class ShopApi
      */
     public function addItemToBasket($sessionId, ShopApi\Model\BasketItem $item, $amount = 1)
     {
-        $basket = new Basket(null, null);
+//        $basket = new Basket(null, null);
         $items = array();
         $idPrefix = $item->getId();
         

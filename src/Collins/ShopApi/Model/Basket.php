@@ -34,11 +34,12 @@ class Basket
      * Constructor.
      *
      * @param object $jsonObject The basket data.
+     * @param ModelFactoryInterface $factory
      */
     public function __construct($jsonObject, ModelFactoryInterface $factory)
     {
-        $this->jsonObject = $jsonObject;
         $this->factory    = $factory;
+        $this->jsonObject = $jsonObject;
     }
 
     /**
@@ -179,10 +180,12 @@ class Basket
         $factory = $this->factory;
 
         $products = array();
-        foreach ($this->jsonObject->products as $productId => $jsonProduct) {
-            $products[$productId] = $factory->createProduct($jsonProduct);
+        if ($this->jsonObject->products) {
+            foreach ($this->jsonObject->products as $productId => $jsonProduct) {
+                $products[$productId] = $factory->createProduct($jsonProduct);
+            }
+            unset($this->jsonObject->products);
         }
-        unset($this->jsonObject->products);
         $this->products = $products;
 
         $vids = array();
@@ -218,7 +221,9 @@ class Basket
     protected $updatedItems = array();
 
     /**
-     * @param $itemId
+     * @param string $itemId
+     *
+     * @return $this
      */
     public function deleteItem($itemId)
     {
@@ -289,7 +294,7 @@ class Basket
         return $this;
     }
 
-    protected function checkAdditionData(array $additionalData = null)
+    protected function checkAdditionData(array $additionalData = null, $imageUrlRequired = false)
     {
         if ($additionalData && !isset($additionalData['description'])) {
             throw new InvalidParameterException('description is required in additional data');
