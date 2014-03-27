@@ -7,11 +7,14 @@
 namespace Collins\ShopApi\Model;
 
 
+use Doctrine\Common\Cache\CacheMultiGet;
+
 class FacetManager implements FacetManagerInterface
 {
     /** @var Facet[][] */
     private $facets;
 
+    /** @var CacheMultiGet */
     private $cache;
 
     public function parseJson(array $json)
@@ -25,6 +28,23 @@ class FacetManager implements FacetManagerInterface
     {
 
     }
+
+    /**
+     * @param CacheMultiGet $cache
+     */
+    public function setCache(CacheMultiGet $cache)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
+     * @return CacheMultiGet
+     */
+    public function getCache()
+    {
+        return $this->cache;
+    }
+
 
     /**
      * @param $groupId
