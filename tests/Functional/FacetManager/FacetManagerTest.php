@@ -6,6 +6,9 @@ use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
 
+/**
+ * @group facet-manager
+ */
 class FacetManagerTest extends AbstractShopApiTest
 {
     public function testProductSearch()

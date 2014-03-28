@@ -71,4 +71,20 @@ class AbstractBasketItem extends ResultError
 
         $this->additionalData = $data;
     }
-} 
+
+    protected function checkAdditionData(array $additionalData = null, $imageUrlRequired = false)
+    {
+        if ($additionalData) {
+            if (!isset($additionalData['description'])) {
+                throw new InvalidParameterException('description is required in additional data');
+            }
+            if ($imageUrlRequired && !isset($additionalData['image_url'])) {
+                throw new InvalidParameterException('image_url is required in additional data');
+            }
+        }
+
+        if (isset($additionalData['internal_infos']) && !is_array($additionalData['internal_infos'])) {
+            throw new InvalidParameterException('internal_infos must be an array');
+        }
+    }
+}

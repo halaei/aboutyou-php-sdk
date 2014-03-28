@@ -24,25 +24,40 @@ class BasketVariantItem extends AbstractBasketItem
      */
     private $variant = null;
 
+    /** @var integer */
+    private $variantId;
+
     /**
      * Constructor.
      *
+     * @param integer $variantId
+     * @param array $additionalData
+     */
+    public function __construct($variantId, $additionalData = null)
+    {
+        $this->variantId = $variantId;
+        $this->additionalData = $additionalData;
+    }
+
+    /**
      * @param object $jsonObject The basket data.
      * @param Product[] $products
+     *
+     * @return BasketVariantItem
      */
-    public function __construct($jsonObject, array $products)
+    public static function createFromJson($jsonObject, array $products)
     {
-        if (isset($jsonObject->additional_data)) {
-            $this->additionalData = $jsonObject->additional_data;
-        }
+        $item = new self($jsonObject->variant_id, isset($jsonObject->additional_data) ? $jsonObject->additional_data : null);
+        $item->parseErrorResult($jsonObject);
 
-        $this->parseErrorResult($jsonObject);
-
-        $this->jsonObject = $jsonObject;
+        $item->jsonObject = $jsonObject;
 
         if ($products[$jsonObject->product_id]) {
-            $this->setProduct($products[$jsonObject->product_id]);
+            $item->setProduct($products[$jsonObject->product_id]);
         }
+        unset($jsonObject->variant_id, $jsonObject->additional_data, $jsonObject->product_id);
+
+        return $item;
     }
 
     /**
@@ -129,11 +144,19 @@ class BasketVariantItem extends AbstractBasketItem
     {
         if (!$this->variant) {
             $this->variant = $this->getProduct() ?
-                $this->getProduct()->getVariantById($this->jsonObject->variant_id) :
+                $this->getProduct()->getVariantById($this->variantId) :
                 null
             ;
         }
 
         return $this->variant;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getVariantId()
+    {
+        return $this->variantId;
     }
 }

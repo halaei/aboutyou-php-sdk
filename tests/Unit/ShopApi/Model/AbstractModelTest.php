@@ -20,6 +20,9 @@ abstract class AbstractModelTest extends \Collins\ShopApi\Test\ShopSdkTest
         return json_decode($jsonString);
     }
 
+    /**
+     * @return ShopApi\Factory\ModelFactoryInterface
+     */
     protected function getModelFactory()
     {
         $shopApi =  new ShopApi('id', 'token');

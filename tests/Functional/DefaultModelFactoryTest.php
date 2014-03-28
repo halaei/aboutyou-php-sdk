@@ -10,6 +10,9 @@ use Collins\ShopApi;
 
 class DefaultModelFactoryTest extends AbstractShopApiTest
 {
+    /**
+     * @group facet-manager
+     */
     public function testFacetManager()
     {
         $shopApi = $this->getShopApiWithResultFile('facets-all.json');
