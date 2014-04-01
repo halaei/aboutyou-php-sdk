@@ -84,7 +84,7 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
         $this->assertEquals(false, $criteria->getSaleFilter());
 
         $criteria = ProductSearchCriteria::create('12345')
-            ->filterByCategoryIds(array(456, 123, 456));
+            ->filterByCategoryIds(array(123, 456));
         $this->assertEquals(array('session_id' => '12345', 'filter' => array('categories' => array(123, 456))), $criteria->toArray());
         $this->assertEquals('{"session_id":"12345","filter":{"categories":[123,456]}}', json_encode($criteria->toArray()));
         $criteria->filterByCategoryIds(array(789, 456));
