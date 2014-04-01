@@ -10,7 +10,14 @@ use Collins\ShopApi\Model\ResultError;
 
 class AbstractBasketItem extends ResultError
 {
-    /** @var array */
+    /**
+     * Additional data are transmitted to the merchant untouched.
+     * If set (array not empty), a key "description" must exist. This description
+     * must be a string that describes the variant. If you want to pass a different image URL,
+     * you can add a key "image_url" to the $additionalData that contains the URL to the image.
+     *
+     * @var array $additionalData additional data for this variant
+     */
     protected $additionalData;
 
     /** @var boolean */
@@ -27,49 +34,43 @@ class AbstractBasketItem extends ResultError
     public function getDescription()
     {
         return isset($this->additionalData) ?
-            $this->additionalData->description :
+            $this->additionalData['description'] :
             null
         ;
     }
 
     /**
-     * @return array|null
-     */
-    public function getCustomData()
-    {
-        return isset($this->additionalData) && isset($this->additionalData->internal_infos) ?
-            $this->additionalData->internal_infos :
-            null
-            ;
-    }
-
-    /**
-     * @return array|null
+     * Additional data are transmitted to the merchant untouched.
+     * If set (array not empty), a key "description" must exist. This description
+     * must be a string that describes the variant. If you want to pass an image URL that
+     * represents this item set,
+     * you can add a key "image_url" to the $additionalData that contains the URL to the image.
+     *
+     * @return array|null additional data
      */
     public function getAdditionalData()
     {
         return isset($this->additionalData) ?
             $this->additionalData :
             null
-            ;
+        ;
     }
 
     /**
-     * @param string $description
-     * @param array $customData
+     * Additional data are transmitted to the merchant untouched.
+     * If set (array not empty), a key "description" must exist. This description
+     * must be a string that describes the variant. If you want to pass a different image URL,
+     * you can add a key "image_url" to the $additionalData that contains the URL to the image.
+     *
+     * @param array $additionalData additional data for this variant
+     * @throws \Collins\ShopApi\Exception\InvalidParameterException
      */
-    public function setAdditionData($description, array $customData = null)
+    public function setAdditionData(array $additionalData)
     {
+        $this->checkAdditionData($additionalData);
         $this->isChanged = true;
 
-        $data = array(
-            'description' => $description
-        );
-        if (!empty($customData)) {
-            $data['internal_infos'] = array_values($customData);
-        }
-
-        $this->additionalData = $data;
+        $this->additionalData = $additionalData;
     }
 
     protected function checkAdditionData(array $additionalData = null, $imageUrlRequired = false)

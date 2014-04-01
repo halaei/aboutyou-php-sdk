@@ -15,6 +15,7 @@ use Collins\ShopApi\Model\ProductsResult;
 use Collins\ShopApi\Query;
 use Collins\ShopApi\ShopApiClient;
 use Psr\Log\LoggerInterface;
+use Rhumsaa\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -237,68 +238,39 @@ class ShopApi
     }
 
     /**
-     * Add product variant to basket.
-     *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param int    $productVariantId ID of product variant.
-     * @param string $basketItemId  ID of single item or set in the basket
-     *
-     * @return \Collins\ShopApi\Model\Basket
-     */
-    public function addToBasket($sessionId, $productVariantId, $basketItemId)
-    {
-        $query = $this->getQuery()
-            ->addToBasket($sessionId, $productVariantId, $basketItemId)
-        ;
-
-        return $query->executeSingle(self::NO_QUERY_CACHE);
-    }
-
-    /**
      * Adds a single item into the basket.
      * You can specify an amount. Please mind, that an amount > 1 will result in #amount basket positions.
      * So if you read out the basket again later, it's your job to merge the positions again.
-     * 
+     *
+     * It is highly recommend to use the basket update method, to manage your items.
+     *
      * @param string $sessionId
      *
      * @param string $sessionId
-     * @param \Collins\ShopApi\Model\BasketItem $item
+     * @param interger $variantId
      * @param integer $amount
      *
      * @return Basket
-     * @param int $amount
      *
      * @return $this
      */
-    public function addItemToBasket($sessionId, ShopApi\Model\BasketItem $item, $amount = 1)
+    public function addItemToBasket($sessionId, $variantId, $amount = 1)
     {
-//        $basket = new Basket(null, null);
-        $items = array();
-        $idPrefix = $item->getId();
-        
-        for ($i=0; $i<$amount; $i++) {
-            $id = $i== 0 ? $idPrefix : ($idPrefix.'-'.($i+1));
+        $basket = new Basket();
 
-            $clone = clone $item;
-            $clone->setId($id);
-            $items[] = $clone;
+        for ($i=0; $i < $amount; $i++) {
+            $item = new Basket\BasketItem($this->generateBasketItemId(), $variantId);
+            $basket->updateItem($item);
         }
-        $query = $this->getQuery()->addItemsToBasket($sessionId, $items);
 
-        return $query->executeSingle(self::NO_QUERY_CACHE);
+        return $this->updateBasket($sessionId, $basket);
     }
 
-    /**
-     * Adds set of product variants into the basket.
-     *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param ShopApi\Model\BasketItemSet[] array of sets of basket items
-     *
-     * @return \Collins\ShopApi\Model\Basket
-     */
-    public function addItemSetToBasket($sessionId, ShopApi\Model\BasketItemSet $itemSet)
+    public function generateBasketItemId()
     {
-        return $this->addItemSetsToBasket($sessionId, array($itemSet));
+        $id = 'i_' . Uuid::uuid4();
+
+        return $id;
     }
 
     /**
@@ -311,9 +283,10 @@ class ShopApi
      */
     public function removeItemsFromBasket($sessionId, $itemIds)
     {
-        $query = $this->getQuery()->removeFromBasket($sessionId, $itemIds);
+        $basket = new Basket();
+        $basket->deleteItems($itemIds);
 
-        return $query->executeSingle(self::NO_QUERY_CACHE);
+        return $this->updateBasket($sessionId, $basket);
     }
 
     /**

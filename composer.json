@@ -36,7 +36,8 @@
         "doctrine/cache": "dev-multiget",
         "psr/log": "1.0.*",
         "symfony/event-dispatcher": ">=2.1",
-        "guzzle/guzzle": "~3.7"
+        "guzzle/guzzle": "~3.7",
+        "rhumsaa/uuid": "~2.7"
     },
     "suggest" : {
         "monolog/monolog" : ".",

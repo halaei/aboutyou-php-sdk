@@ -128,28 +128,29 @@ class Basket
         return $this->products;
     }
     
-    public function getItemsMerged()
+    public function getCollectedItems()
     {
         $items = $this->getItems();
         $itemsMerged = array();
-        while(count($items)) {
-            $item = array_shift($items);
-            $amount = 1;
-            foreach($items as $key => $item2) {
-                if($item->isEqual($item2)) {
-                    $amount++;
-                    unset($items[$key]);
-                }
+        foreach ($items as $item) {
+            $key = $item->getUniqueKey();
+            if (isset($itemsMerged[$key])) {
+                $amount = $itemsMerged[$key]['amount'] + 1;
+                $itemsMerged[$key] = array(
+                    'item' => $item,
+                    'price' => $item->getTotalPrice() * $amount,
+                    'amount' => $amount
+                );
+            } else {
+                $itemsMerged[$key] = array(
+                    'item' => $item,
+                    'price' => $item->getTotalPrice(),
+                    'amount' => 1
+                );
             }
-            
-            $itemsMerged[] = array(
-                'item' => $item,
-                'price' => $item->getTotalPrice()*$amount,
-                'amount' => $amount
-            );
         }
-        
-        return $itemsMerged;
+
+        return array_values($itemsMerged);
     }
 
     /**
@@ -160,7 +161,7 @@ class Basket
     {
         $orderLines = array();
 
-        foreach ($this->deletedItems as $itemId) {
+        foreach (array_unique($this->deletedItems) as $itemId) {
             $orderLines[] = array('delete' => $itemId);
         }
 
@@ -227,69 +228,43 @@ class Basket
     }
 
     /**
-     * @param $itemId
-     * @param $variantId
-     * @param array $additionalData
+     * @param string[] $itemIds
      *
      * @return $this
      */
-    public function updateItem($itemId, $variantId, array $additionalData = null)
+    public function deleteItems(array $itemIds)
     {
-        $this->checkAdditionData($additionalData);
-
-        $this->updatedItems[$itemId] = array(
-            'id' => $itemId,
-            'variant_id' => $variantId,
-            'additional_data' => $additionalData
-        );
+        $this->deletedItems = array_merge($this->deletedItems, $itemIds);
 
         return $this;
     }
 
-//    /**
-//     * Update an basket item set, for example:
-//     *  $basket->updateItemSet(
-//     *      'identifier4',
-//     *      [
-//     *          [12312121],
-//     *          [66666, ['description' => 'engravingssens', 'internal_infos' => ['stuff']]]
-//     *      ],
-//     *      ['description' => 'Wudnerschön und s 2o']
-//     *  );
-//     *
-//     * @param $itemId
-//     * @param $subItems
-//     * @param array $additionalData
-//     *
-//     * @return $this
-//     */
-//    public function updateItemSet($itemId, $subItems, array $additionalData = null)
-//    {
-//        $this->checkAdditionData($additionalData);
-//
-//        $itemSet = array();
-//        foreach ($subItems as $subItem) {
-//            $item = array(
-//                'variant_id' => $subItem[0]
-//            );
-//            if (isset($subItem[1])) {
-//                $this->checkAdditionData($subItem[1]);
-//                $item['additional_data'] = $subItem[1];
-//            }
-//            $itemSet[] = $item;
-//        }
-//
-//        $this->updatedItems[$itemId] = array(
-//            'id' => $itemId,
-//            'additional_data' => $additionalData,
-//            'set_items' => $itemSet,
-//        );
-//
-//        return $this;
-//    }
+    /**
+     * @param BasketItem $basketItem
+     *
+     * @return $this
+     */
+    public function updateItem(BasketItem $basketItem)
+    {
+        $item = array(
+            'id' => $basketItem->getId(),
+            'variant_id' => $basketItem->getVariantId(),
+        );
+        $additionalData = $basketItem->getAdditionalData();
+        if (!empty($additionalData)) {
+            $this->checkAdditionData($additionalData);
+            $item['additional_data'] = (array)$additionalData;
+        }
+
+        $this->updatedItems[$basketItem->getId()] = $item;
+
+        return $this;
+    }
 
     /**
      * @param BasketSet $basketSet
+     *
+     * @return $this
      */
     public function updateItemSet(BasketSet $basketSet)
     {

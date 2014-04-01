@@ -28,7 +28,7 @@ interface ModelFactoryInterface extends ResultFactoryInterface
      * @param \stdClass $json
      * @param array $products
      *
-     * @return \Collins\ShopApi\Model\Basket\BasketVariantItem
+     * @return \Collins\ShopApi\Model\Basket\BasketSetItem
      */
     public function createBasketSetItem(\stdClass $json, array $products);
 

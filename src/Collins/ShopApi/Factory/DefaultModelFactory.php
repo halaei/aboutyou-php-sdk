@@ -98,7 +98,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createBasketSetItem(\stdClass $json, array $products)
     {
-        return ShopApi\Model\Basket\BasketVariantItem::createFromJson($json, $products);
+        return ShopApi\Model\Basket\BasketSetItem::createFromJson($json, $products);
     }
 
     /**

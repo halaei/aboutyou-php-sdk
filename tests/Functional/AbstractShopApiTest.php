@@ -83,7 +83,8 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
     }
 
     /**
-     * @param $jsonString
+     * @param string $jsonString
+     * @param string $exceptedRequestBody
      *
      * @return ShopApi
      */
@@ -92,6 +93,30 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
         $client = $this->getGuzzleClient($jsonString, $exceptedRequestBody);
 
         $shopApi = new ShopApi('id', 'token');
+
+        $shopApi->getApiClient()->setClient($client);
+
+        return $shopApi;
+    }
+
+    protected function getMockedShopApiWithResultFile(array $methods, $filepath, $exceptedRequestBody = null)
+    {
+        $jsonString = $this->getJsonStringFromFile($filepath);
+
+        return $this->getMockedShopApiWithResult($methods, $jsonString, $exceptedRequestBody);
+    }
+
+    /**
+     * @param string $jsonString
+     * @param string $exceptedRequestBody
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|ShopApi
+     */
+    protected function getMockedShopApiWithResult(array $methods, $jsonString, $exceptedRequestBody = null)
+    {
+        $client = $this->getGuzzleClient($jsonString, $exceptedRequestBody);
+
+        $shopApi = $this->getMock('Collins\\ShopApi', $methods, array('id', 'token'));
 
         $shopApi->getApiClient()->setClient($client);
 

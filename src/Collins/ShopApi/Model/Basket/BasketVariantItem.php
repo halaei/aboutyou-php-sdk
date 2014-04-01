@@ -4,10 +4,7 @@ namespace Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\Variant;
 use Collins\ShopApi\Model\Product;
 
-/**
- *
- */
-class BasketVariantItem extends AbstractBasketItem
+abstract class BasketVariantItem extends AbstractBasketItem
 {
     /**
      * @var object
@@ -37,27 +34,6 @@ class BasketVariantItem extends AbstractBasketItem
     {
         $this->variantId = $variantId;
         $this->additionalData = $additionalData;
-    }
-
-    /**
-     * @param object $jsonObject The basket data.
-     * @param Product[] $products
-     *
-     * @return BasketVariantItem
-     */
-    public static function createFromJson($jsonObject, array $products)
-    {
-        $item = new self($jsonObject->variant_id, isset($jsonObject->additional_data) ? $jsonObject->additional_data : null);
-        $item->parseErrorResult($jsonObject);
-
-        $item->jsonObject = $jsonObject;
-
-        if ($products[$jsonObject->product_id]) {
-            $item->setProduct($products[$jsonObject->product_id]);
-        }
-        unset($jsonObject->variant_id, $jsonObject->additional_data, $jsonObject->product_id);
-
-        return $item;
     }
 
     /**
@@ -158,5 +134,20 @@ class BasketVariantItem extends AbstractBasketItem
     public function getVariantId()
     {
         return $this->variantId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUniqueKey()
+    {
+        $key = $this->getVariantId();
+        $additionalData = $this->additionalData;
+        if (!empty($additionalData)) {
+            ksort($additionalData);
+            $key .= ':' . json_encode($additionalData);
+        }
+
+        return $key;
     }
 }
