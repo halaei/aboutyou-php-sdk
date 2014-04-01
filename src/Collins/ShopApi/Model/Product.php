@@ -141,7 +141,7 @@ class Product extends AbstractModel
         return $paths;
     }
 
-    protected static function parseFacetIds($jsonObject)
+    public static function parseFacetIds($jsonObject)
     {
         $ids = array();
         if (!empty($jsonObject->attributes_merged)) {
@@ -488,9 +488,9 @@ class Product extends AbstractModel
      */
     public function getBrand()
     {
-        $key = Facet::uniqueKey(ShopApi\Constants::FACET_BRAND, $this->brandId);
+        #$key = Facet::uniqueKey(ShopApi\Constants::FACET_BRAND, $this->brandId);
 
-        return $this->getFacetGroupSet()->getFacetByKey($key);
+        return $this->getFacetGroupSet()->getFacet(ShopApi\Constants::FACET_BRAND, $this->brandId);
     }
 
     /**
