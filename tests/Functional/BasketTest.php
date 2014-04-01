@@ -94,9 +94,6 @@ class BasketTest extends AbstractShopApiTest
         $this->assertEquals(400, $items[2]['price']);
     }
 
-    /**
-     *
-     */
     public function testAddToBasket()
     {
         $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item1","variant_id":123}]}}]';
@@ -108,6 +105,17 @@ class BasketTest extends AbstractShopApiTest
         ;
         // add one item to basket
         $basket = $shopApi->addItemToBasket($this->sessionId, 123);
+        $this->checkBasket($basket);
+
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item1","variant_id":123}]}}]';
+        $shopApi = $this->getMockedShopApiWithResultFile(array('generateBasketItemId'), 'result/basket1.json', $exceptedRequestBody);
+        $shopApi->expects($this->once())
+            ->method('generateBasketItemId')
+            ->withAnyParameters()
+            ->will($this->returnValue('item1'))
+        ;
+        // add one item to basket
+        $basket = $shopApi->addItemToBasket($this->sessionId, '123');
         $this->checkBasket($basket);
 
         $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item2","variant_id":123}]}}]';
@@ -122,8 +130,25 @@ class BasketTest extends AbstractShopApiTest
     }
 
     /**
-     *
+     * @expectedException \Collins\ShopApi\Exception\InvalidParameterException
      */
+    public function testAddToBasketThrowsException()
+    {
+        $shopApi = $this->getShopApiWithResultFile('result/basket1.json');
+        $variant = new ShopApi\Model\Variant(json_decode('{"id":123}'), $shopApi->getResultFactory());
+        $shopApi->addItemToBasket($this->sessionId, $variant);
+    }
+
+    /**
+     * @expectedException \Collins\ShopApi\Exception\InvalidParameterException
+     */
+    public function testAddToBasketThrowsException2()
+    {
+        $shopApi = $this->getShopApiWithResultFile('result/basket1.json');
+        $item = new Basket\BasketItem('item_id', 123);
+        $shopApi->addItemToBasket($this->sessionId, $item);
+    }
+
     public function testRemoveFromBasket()
     {
         $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"delete":"item3"}]}}]';
