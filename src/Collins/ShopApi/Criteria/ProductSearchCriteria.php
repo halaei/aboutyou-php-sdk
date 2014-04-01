@@ -145,7 +145,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         if ($append && isset($this->filter[self::FILTER_CATEGORY_IDS])) {
             $categoryIds = array_merge($this->filter[self::FILTER_CATEGORY_IDS], $categoryIds);
         }
-        $categoryIds = array_unique($categoryIds);
+        $categoryIds = array_values(array_unique($categoryIds));
 
         return $this->filterBy(self::FILTER_CATEGORY_IDS, $categoryIds);
     }
@@ -395,18 +395,14 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     public function boostProducts(array $ids)
     {
         $ids = array_map(function($val) {
-            if($val instanceof Product) {
+            if ($val instanceof Product) {
                 return $val->getId();
             }
 
             return intval($val);
         }, $ids);
 
-        if (empty($this->result['boost'])) {
-            unset($this->result['boost']);
-        }
-
-        $ids = array_unique(array_map('intval', $ids));
+        $ids = array_values(array_unique($ids));
         $this->result['boost'] = $ids;
 
         return $this;

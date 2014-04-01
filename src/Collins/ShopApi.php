@@ -4,12 +4,13 @@ namespace Collins;
 use Collins\Cache\CacheInterface;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
-use Collins\ShopApi\Criteria\CriteriaInterface;
+use Collins\ShopApi\Exception\InvalidParameterException;
 use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Factory\ResultFactoryInterface;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
+use Collins\ShopApi\Model\ProductsEansResult;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
 use Collins\ShopApi\Query;
@@ -245,17 +246,23 @@ class ShopApi
      * It is highly recommend to use the basket update method, to manage your items.
      *
      * @param string $sessionId
-     *
-     * @param string $sessionId
-     * @param interger $variantId
+     * @param integer $variantId
      * @param integer $amount
      *
      * @return Basket
      *
-     * @return $this
+     * @throws ShopApi\Exception\InvalidParameterException
      */
     public function addItemToBasket($sessionId, $variantId, $amount = 1)
     {
+        if (!is_long($variantId)) {
+            if (is_string($variantId) && ctype_digit($variantId)) {
+                $variantId = intval($variantId);
+            } else {
+                throw new InvalidParameterException('the variant id must be an integer or sting with digits');
+            }
+        }
+
         $basket = new Basket();
 
         for ($i=0; $i < $amount; $i++) {
