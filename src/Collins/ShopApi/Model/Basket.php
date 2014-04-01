@@ -200,7 +200,7 @@ class Basket
             }
         }
 
-        array_unique($vids);
+        $vids = array_unique($vids);
         $this->uniqueVariantCount = count($vids);
     }
 
