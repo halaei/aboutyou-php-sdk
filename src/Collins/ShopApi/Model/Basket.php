@@ -13,12 +13,6 @@ use Collins\ShopApi\Model\Basket\BasketItem;
  */
 class Basket
 {
-    /** @var object */
-    protected $jsonObject = null;
-
-    /** @var ModelFactoryInterface */
-    protected $factory;
-
     /** @var AbstractBasketItem[] */
     private $items = array();
 
@@ -30,15 +24,38 @@ class Basket
     /** @var Product[] */
     protected $products;
 
+    /** @var integer */
+    protected $totalPrice;
+
+    /** @var integer */
+    protected $totalNet;
+
+    /** @var integer */
+    protected $totalVat;
+
     /**
      * Constructor.
-     *
-     * @param object $jsonObject The basket data.
      */
-    public function __construct($jsonObject, ModelFactoryInterface $factory)
+    public function __construct()
     {
-        $this->jsonObject = $jsonObject;
-        $this->factory    = $factory;
+    }
+
+    /**
+     * @param object $jsonObject
+     * @param ModelFactoryInterface $factory
+     *
+     * @return Basket
+     */
+    public static function createFromJson($jsonObject, ModelFactoryInterface $factory)
+    {
+        $basket = new Basket();
+        $basket->totalPrice = $jsonObject->total_price;
+        $basket->totalNet   = $jsonObject->total_net;
+        $basket->totalVat   = $jsonObject->total_vat;
+
+        $basket->parseItems($jsonObject, $factory);
+
+        return $basket;
     }
 
     /**
@@ -48,7 +65,7 @@ class Basket
      */
     public function getTotalPrice()
     {
-        return $this->jsonObject->total_price;
+        return $this->totalPrice;
     }
 
     /**
@@ -58,7 +75,7 @@ class Basket
      */
     public function getTotalNet()
     {
-        return $this->jsonObject->total_net;
+        return $this->totalNet;
     }
 
     /**
@@ -68,7 +85,7 @@ class Basket
      */
     public function getTotalVat()
     {
-        return $this->jsonObject->total_vat;
+        return $this->totalVat;
     }
 
     /**
@@ -78,10 +95,6 @@ class Basket
      */
     public function getTotalAmount()
     {
-        if (!$this->items) {
-            $this->parseItems();
-        }
-
         return count($this->items);
     }
 
@@ -92,19 +105,11 @@ class Basket
      */
     public function getTotalVariants()
     {
-        if (!$this->items) {
-            $this->parseItems();
-        }
-
         return $this->uniqueVariantCount;
     }
 
     public function hasErrors()
     {
-        if (!$this->items) {
-            $this->parseItems();
-        }
-
         return count($this->errors) > 0;
     }
 
@@ -115,44 +120,37 @@ class Basket
      */
     public function getItems()
     {
-        if (!$this->items) {
-            $this->parseItems();
-        }
-
         return $this->items;
     }
 
     public function getProducts()
     {
-        if (!$this->products) {
-            $this->parseItems();
-        }
-        
         return $this->products;
     }
     
-    public function getItemsMerged()
+    public function getCollectedItems()
     {
         $items = $this->getItems();
         $itemsMerged = array();
-        while(count($items)) {
-            $item = array_shift($items);
-            $amount = 1;
-            foreach($items as $key => $item2) {
-                if($item->isEqual($item2)) {
-                    $amount++;
-                    unset($items[$key]);
-                }
+        foreach ($items as $item) {
+            $key = $item->getUniqueKey();
+            if (isset($itemsMerged[$key])) {
+                $amount = $itemsMerged[$key]['amount'] + 1;
+                $itemsMerged[$key] = array(
+                    'item' => $item,
+                    'price' => $item->getTotalPrice() * $amount,
+                    'amount' => $amount
+                );
+            } else {
+                $itemsMerged[$key] = array(
+                    'item' => $item,
+                    'price' => $item->getTotalPrice(),
+                    'amount' => 1
+                );
             }
-            
-            $itemsMerged[] = array(
-                'item' => $item,
-                'price' => $item->getTotalPrice()*$amount,
-                'amount' => $amount
-            );
         }
-        
-        return $itemsMerged;
+
+        return array_values($itemsMerged);
     }
 
     /**
@@ -163,7 +161,7 @@ class Basket
     {
         $orderLines = array();
 
-        foreach ($this->deletedItems as $itemId) {
+        foreach (array_unique($this->deletedItems) as $itemId) {
             $orderLines[] = array('delete' => $itemId);
         }
 
@@ -174,33 +172,33 @@ class Basket
         return $orderLines;
     }
 
-    protected function parseItems()
+    protected function parseItems($jsonObject, ModelFactoryInterface $factory)
     {
-        $factory = $this->factory;
-
         $products = array();
-        foreach ($this->jsonObject->products as $productId => $jsonProduct) {
-            $products[$productId] = $factory->createProduct($jsonProduct);
+        if (!empty($jsonObject->products)) {
+            foreach ($jsonObject->products as $productId => $jsonProduct) {
+                $products[$productId] = $factory->createProduct($jsonProduct);
+            }
         }
-        unset($this->jsonObject->products);
         $this->products = $products;
 
         $vids = array();
-        foreach ($this->jsonObject->order_lines as $index => $jsonItem) {
-            if (isset($jsonItem->set_items)) {
-                $item = $factory->createBasketSet($jsonItem, $products);
-            } else {
-                $item = $factory->createBasketItem($jsonItem, $products);
-                $vids[] = $jsonItem->variant_id;
-            }
+        if (!empty($jsonObject->order_lines)) {
+            foreach ($jsonObject->order_lines as $index => $jsonItem) {
+                if (isset($jsonItem->set_items)) {
+                    $item = $factory->createBasketSet($jsonItem, $products);
+                } else {
+                    $vids[] = $jsonItem->variant_id;
+                    $item = $factory->createBasketItem($jsonItem, $products);
+                }
 
-            if ($item->hasErrors()) {
-                $this->errors[$index] = $item;
-            } else {
-                $this->items[$index] = $item;
+                if ($item->hasErrors()) {
+                    $this->errors[$index] = $item;
+                } else {
+                    $this->items[$index] = $item;
+                }
             }
         }
-        unset($this->jsonObject->order_lines);
 
         array_unique($vids);
         $this->uniqueVariantCount = count($vids);
@@ -218,7 +216,9 @@ class Basket
     protected $updatedItems = array();
 
     /**
-     * @param $itemId
+     * @param string $itemId
+     *
+     * @return $this
      */
     public function deleteItem($itemId)
     {
@@ -228,68 +228,70 @@ class Basket
     }
 
     /**
-     * @param $itemId
-     * @param $variantId
-     * @param array $additionalData
+     * @param string[] $itemIds
      *
      * @return $this
      */
-    public function updateItem($itemId, $variantId, array $additionalData = null)
+    public function deleteItems(array $itemIds)
     {
-        $this->checkAdditionData($additionalData);
-
-        $this->updatedItems[$itemId] = array(
-            'id' => $itemId,
-            'variant_id' => $variantId,
-            'additional_data' => $additionalData
-        );
+        $this->deletedItems = array_merge($this->deletedItems, $itemIds);
 
         return $this;
     }
 
     /**
-     * Update an basket item set, for example:
-     *  $basket->updateItemSet(
-     *      'identifier4',
-     *      [
-     *          [12312121],
-     *          [66666, ['description' => 'engravingssens', 'internal_infos' => ['stuff']]]
-     *      ],
-     *      ['description' => 'Wudnerschön und s 2o']
-     *  );
-     *
-     * @param $itemId
-     * @param $subItems
-     * @param array $additionalData
+     * @param BasketItem $basketItem
      *
      * @return $this
      */
-    public function updateItemSet($itemId, $subItems, array $additionalData = null)
+    public function updateItem(BasketItem $basketItem)
     {
-        $this->checkAdditionData($additionalData);
-
-        $itemSet = array();
-        foreach ($subItems as $subItem) {
-            $item = array(
-                'variant_id' => $subItem[0]
-            );
-            if (isset($subItem[1])) {
-                $this->checkAdditionData($subItem[1]);
-                $item['additional_data'] = $subItem[1];
-            }
-            $itemSet[] = $item;
+        $item = array(
+            'id' => $basketItem->getId(),
+            'variant_id' => $basketItem->getVariantId(),
+        );
+        $additionalData = $basketItem->getAdditionalData();
+        if (!empty($additionalData)) {
+            $this->checkAdditionData($additionalData);
+            $item['additional_data'] = (array)$additionalData;
         }
 
-        $this->updatedItems[$itemId] = array(
-            'id' => $itemId,
-            'additional_data' => $additionalData,
-            'set_items' => $itemSet,
-        );
+        $this->updatedItems[$basketItem->getId()] = $item;
 
         return $this;
     }
 
-    protected function checkAdditionData(array $additionalData = null)
+    /**
+     * @param BasketSet $basketSet
+     *
+     * @return $this
+     */
+    public function updateItemSet(BasketSet $basketSet)
+    {
+        $itemSet = array();
+        foreach ($basketSet->getItems() as $subItem) {
+            $item = array(
+                'variant_id' => $subItem->getVariantId()
+            );
+            $additionalData = $subItem->getAdditionalData();
+            if (!empty($additionalData)) {
+                $this->checkAdditionData($additionalData);
+                $item['additional_data'] = (array)$additionalData;
+            }
+            $itemSet[] = $item;
+        }
+
+        $this->updatedItems[$basketSet->getId()] = array(
+            'id' => $basketSet->getId(),
+            'additional_data' => (array)$basketSet->getAdditionalData(),
+            'set_items' => $itemSet,
+        );
+
+        return $this;
+
+    }
+
+    protected function checkAdditionData(array $additionalData = null, $imageUrlRequired = false)
     {
         if ($additionalData && !isset($additionalData['description'])) {
             throw new InvalidParameterException('description is required in additional data');

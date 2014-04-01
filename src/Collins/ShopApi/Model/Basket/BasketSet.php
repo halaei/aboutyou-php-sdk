@@ -1,26 +1,65 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @auther nils.droege@project-collins.com
+ * @author Christian Kilb <christian.kilb@project-collins.com>
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi\Model\Basket;
 
 use Collins\ShopApi\Factory\ModelFactoryInterface;
-use Collins\ShopApi\Model\ResultErrorTrait;
 
-class BasketSet implements BasketItemInterface
+/**
+ * BasketSet is a class used for adding a set of variant items into the basket
+ *
+ * If you want to add a set of variant items into a basket, you need to create an instance
+ * of a BasketSet. The BasketSet contains BasketSetItems.
+ *
+ * A set can be useful if you want to sell several variants as a single product.
+ * For example, if you offer a pair of shoes and additionally different styles of shoelaces
+ * the customer can choose from, you maybe want to put both - shoes and laces - together.
+ *
+ * Example usage:
+ * $lacesVariantId = $lacesVariant->getId(); // $lacesVariant is instance of \Collins\ShopApi\Model\Variant
+ * $shoesVariantID = $shoesVariant->getId(); // $lacesVariant is instance of \Collins\ShopApi\Model\Variant
+ * $basketItem1 = new BasketItem($lacesVariantId);
+ *
+ * $basketSet = new BasketItemSet('my-personal-identifier');
+ * $basketSet->addItem(new BasketSetItem($lacesVariantId));
+ * $basketSet->addItem(new BasketSetItem($shoesVariantId));
+ * $basketSet->setAdditionalData(['description' => 'Shoes with laces "yellow star"', 'image_url' = 'http://myapp.com/shoes_yello_star.png']);
+ * $basket->updateItemSet($basketSet)
+ * $shopApi->updateBasket(session_id(), $basket);
+ *
+ * You can use the static method create as an alternative to generate a basket set:
+ * $basketSet = BasketItemSet::create(
+ *     'my-personal-identifier',
+ *     [
+ *         [$lacesVariant->getId()],
+ *         [$shoesVariantID->getId()],
+ *     ]
+ * );
+ * @see create()
+ *
+ * @see     \Collins\ShopApi\Model\Basket
+ * @see     \Collins\ShopApi\Model\Basket\BasketSetItem
+ * @see     \Collins\ShopApi\Model\Variant
+ * @see     \Collins\ShopApi
+ */
+class BasketSet extends AbstractBasketItem implements BasketItemInterface
 {
-    use ResultErrorTrait;
-    use AddionalDataTrait;
-
-    /** @var string */
+    /**
+     * The ID of this basket item. You can choose this ID by yourself to identify
+     * your item later.
+     *
+     * @var string $id ID of this basket item
+     */
     protected $id;
 
-    /** @var BasketVariantItem[] */
+    /** @var BasketSetItem[] */
     protected $items;
 
-    /** @var ResultErrorTrait[] */
+    /** @var ResultError[] */
     protected $errors;
 
     /** @var interger */
@@ -32,27 +71,84 @@ class BasketSet implements BasketItemInterface
     /** @var interger */
     protected $totalVat;
 
-    public function __construct(\stdClass $jsonObject, ModelFactoryInterface $factory, $products)
+    /**
+     * Additional data are transmitted to the merchant untouched.
+     * If set (array not empty), a key "description" must exist. This description
+     * must be a string that describes the variant. If you want to pass an image URL that
+     * represents this item set,
+     * you can add a key "image_url" to the $additionalData that contains the URL to the image.
+     *
+     * @param string $id ID of the basket item set.
+     * @param array $additionalData additional data for this item set
+     */
+    public function __construct($id, $additionalData = null)
     {
-        $this->id = $jsonObject->id;
-        if (isset($jsonObject->additional_data)) {
-            $this->additionalData = $jsonObject->additional_data;
-        }
+        $this->id = $id;
+        $this->additionalData = $additionalData;
+    }
 
-        $this->parseErrorResult($jsonObject);
+    /**
+     * @param \stdClass $jsonObject
+     * @param ModelFactoryInterface $factory
+     * @param Product[] $products
+     *
+     * @return BasketSet
+     */
+    public static function createFromJson(\stdClass $jsonObject, ModelFactoryInterface $factory, $products)
+    {
+        $set = new self($jsonObject->id, isset($jsonObject->additional_data) ? (array)$jsonObject->additional_data : null);
+
+        $set->parseErrorResult($jsonObject);
 
         foreach ($jsonObject->set_items as $index => $jsonItem) {
             $item = $factory->createBasketSetItem($jsonItem, $products);
             if ($item->hasErrors()) {
-                $this->errors[$index] = $item;
+                $set->errors[$index] = $item;
             } else {
-                $this->items[$index] = $item;
+                $set->items[$index] = $item;
             }
         }
 
-        $this->totalPrice = isset($jsonObject->total_price) ? $jsonObject->total_price : null;
-        $this->totalNet   = isset($jsonObject->total_net)   ? $jsonObject->total_net   : null;
-        $this->totalVat   = isset($jsonObject->total_vat)   ? $jsonObject->total_vat   : null;
+        $set->totalPrice = isset($jsonObject->total_price) ? $jsonObject->total_price : null;
+        $set->totalNet   = isset($jsonObject->total_net)   ? $jsonObject->total_net   : null;
+        $set->totalVat   = isset($jsonObject->total_vat)   ? $jsonObject->total_vat   : null;
+
+        return $set;
+    }
+
+    /**
+     * Create an basket item set from an array, for example:
+     *  BasketSet::create(
+     *      'identifier4',
+     *      [
+     *          [12312121],
+     *          [7777777, ['description' => 'engravingssens', 'internal_infos' => ['stuff']]]
+     *      ],
+     *      ['description' => 'Wunderschön und so']
+     *  );
+     *
+     * @param $itemId
+     * @param $subItems
+     * @param array $additionalData
+     *
+     * @return BasketSet
+     */
+    public static function create($itemId, $subItems, array $additionalData = null)
+    {
+        $set = new self($itemId, $additionalData);
+        foreach ($subItems as $itemData) {
+            $set->addItem(new BasketSetItem($itemData[0], isset($itemData[1]) ? $itemData[1] : null));
+        }
+
+        return $set;
+    }
+
+    /**
+     * @param BasketSetItem $item
+     */
+    public function addItem(BasketSetItem $item)
+    {
+        $this->items[] = $item;
     }
 
     /**
@@ -64,7 +160,7 @@ class BasketSet implements BasketItemInterface
     }
 
     /**
-     * @return BasketVariantItem[]
+     * @return BasketSetItem[]
      */
     public function getItems()
     {
@@ -107,5 +203,23 @@ class BasketSet implements BasketItemInterface
     public function getTotalVat()
     {
         return $this->totalVat;
+    }
+
+    public function getUniqueKey()
+    {
+        $key = ':';
+        $additionalData = $this->additionalData;
+        if (!empty($additionalData)) {
+            ksort($additionalData);
+            $key .= ':' . json_encode($additionalData);
+        }
+
+        $items = array();
+        foreach ($this->items as $item) {
+            $items[] = $item->getUniqueKey();
+        }
+        $key .= json_encode($items);
+
+        return $key;
     }
 }

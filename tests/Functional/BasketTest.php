@@ -21,9 +21,6 @@ class BasketTest extends AbstractShopApiTest
         $this->sessionId = 'testing';
     }
 
-    /**
-     *
-     */
     public function testBasket()
     {
         $exceptedRequestBody = '[{"basket":{"session_id":"testing"}}]';
@@ -61,12 +58,40 @@ class BasketTest extends AbstractShopApiTest
         $this->assertEquals(12312121, $subItems[0]->getVariant()->getId());
         $this->assertNotNull($subItems[0]->getAdditionalData());
         $this->assertEquals('engravingssens', $subItems[0]->getDescription());
-        $this->assertEquals(['stuff'], $subItems[0]->getCustomData());
+        $this->assertEquals(array('description' => 'engravingssens', 'internal_infos' => array('stuff')), $subItems[0]->getAdditionalData());
 
 //        $this->assertEquals('identifier2', $items[1]->getId());
 //        $this->assertTrue($items[1]->hasErrors());
 
         return $basket;
+    }
+
+    public function testBasketGetCollectedItems()
+    {
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing"}}]';
+        $shopApi = $this->getShopApiWithResultFile('result/basket-similar-items.json', $exceptedRequestBody);
+
+        $basket = $shopApi->fetchBasket($this->sessionId);
+        $this->checkBasket($basket);
+        $this->assertFalse($basket->hasErrors());
+
+        $items = $basket->getItems();
+        $this->assertCount(5, $items);
+
+        $items = $basket->getCollectedItems();
+        $this->assertCount(3, $items);
+
+        $this->assertInternalType('array', $items[0]);
+        $this->assertEquals(2, $items[0]['amount']);
+        $this->assertEquals(800, $items[0]['price']);
+
+        $this->assertInternalType('array', $items[1]);
+        $this->assertEquals(2, $items[1]['amount']);
+        $this->assertEquals(800, $items[1]['price']);
+
+        $this->assertInternalType('array', $items[2]);
+        $this->assertEquals(1, $items[2]['amount']);
+        $this->assertEquals(400, $items[2]['price']);
     }
 
     /**
@@ -75,18 +100,24 @@ class BasketTest extends AbstractShopApiTest
     public function testAddToBasket()
     {
         $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item1","variant_id":123}]}}]';
-        $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
-
+        $shopApi = $this->getMockedShopApiWithResultFile(array('generateBasketItemId'), 'result/basket1.json', $exceptedRequestBody);
+        $shopApi->expects($this->once())
+            ->method('generateBasketItemId')
+            ->withAnyParameters()
+            ->will($this->returnValue('item1'))
+        ;
         // add one item to basket
-        $productVariantId = 123;
-        $basket = $shopApi->addToBasket($this->sessionId, $productVariantId, 'item1');
+        $basket = $shopApi->addItemToBasket($this->sessionId, 123);
         $this->checkBasket($basket);
 
         $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item2","variant_id":123}]}}]';
-        $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
+        $shopApi = $this->getMockedShopApiWithResultFile(array('generateBasketItemId'), 'result/basket1.json', $exceptedRequestBody);
+        $shopApi->expects($this->once())
+            ->method('generateBasketItemId')
+            ->will($this->returnValue('item2'))
+        ;
         // add more of one item to basket
-        $productVariantId = 123;
-        $basket = $shopApi->addToBasket($this->sessionId, $productVariantId, 'item2');
+        $basket = $shopApi->addItemToBasket($this->sessionId, 123);
         $this->checkBasket($basket);
     }
 
@@ -96,11 +127,15 @@ class BasketTest extends AbstractShopApiTest
     public function testRemoveFromBasket()
     {
         $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"delete":"item3"}]}}]';
-
         $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
-
         // remove all of one item from basket
         $basket = $shopApi->removeItemsFromBasket($this->sessionId, array('item3'));
+        $this->checkBasket($basket);
+
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"delete":"item3"},{"delete":"item4"}]}}]';
+        $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
+        // remove all of one item from basket
+        $basket = $shopApi->removeItemsFromBasket($this->sessionId, array('item3', 'item4'));
         $this->checkBasket($basket);
     }
 
@@ -122,16 +157,36 @@ class BasketTest extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
         $shopApi->updateBasket($this->sessionId, $basket);
 
-        $basket = new Basket(json_decode('{"products":[], "order_line":[]}'), $shopApi->getResultFactory());
-        $basket->updateItem('item1', 123);
-        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item1","variant_id":123,"additional_data":null}]}}]';
+        $basket = Basket::createFromJson(json_decode('{"products":[], "order_line":[], "total_price":123, "total_net":12,"total_vat":34}'), $shopApi->getResultFactory());
+        $basket->updateItem(new Basket\BasketItem('item1', 123));
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item1","variant_id":123}]}}]';
+        $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
+        $shopApi->updateBasket($this->sessionId, $basket);
+
+        $basket = new Basket();
+        $basket->updateItem(new Basket\BasketItem('item2', 123));
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item2","variant_id":123}]}}]';
+        $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
+        $shopApi->updateBasket($this->sessionId, $basket);
+
+        $basket = new Basket();
+        $basket->updateItem(new Basket\BasketItem('item3', 123, array('description'=>'Wudnerschön')));
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item3","variant_id":123,"additional_data":{"description":"Wudnersch\u00f6n"}}]}}]';
+        $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
+        $shopApi->updateBasket($this->sessionId, $basket);
+
+        $basket = new Basket();
+        $item = new Basket\BasketItem('item3', 123);
+        $item->setAdditionData(array('description'=>'Wudnerschön'));
+        $basket->updateItem($item);
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item3","variant_id":123,"additional_data":{"description":"Wudnersch\u00f6n"}}]}}]';
         $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
         $shopApi->updateBasket($this->sessionId, $basket);
 
         $updatedItem4 = <<<EOS
         {
             "id": "identifier4",
-            "additional_data": {"description": "Wudnersch\u00f6n und s 2o"},
+            "additional_data": {"description": "Wudnersch\u00f6n und so"},
             "set_items": [
                 {
                     "variant_id": 12312121
@@ -148,18 +203,19 @@ class BasketTest extends AbstractShopApiTest
 EOS;
         $updatedItem4 = json_encode(json_decode($updatedItem4)); // reformat
 
-        $basket = new Basket(json_decode('{"products":[], "order_line":[]}'), $shopApi->getResultFactory());
-        $basket->updateItemSet(
+        $basket = new Basket();
+        $basket->updateItemSet(Basket\BasketSet::create(
             'identifier4',
-            [
-                [12312121],
-                [66666, ['description' => 'engravingssens', 'internal_infos' => ['stuff']]]
-            ],
-            ['description' => 'Wudnerschön und s 2o']
-        );
+            array(
+                array(12312121),
+                array(66666, array('description' => 'engravingssens', 'internal_infos' => array('stuff')))
+            ),
+            array('description' => 'Wudnerschön und so')
+            ));
         $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":['. $updatedItem4 .']}}]';
         $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
         $shopApi->updateBasket($this->sessionId, $basket);
+
 
     }
 

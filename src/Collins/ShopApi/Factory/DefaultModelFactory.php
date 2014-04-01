@@ -21,7 +21,8 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function __construct(ShopApi $shopApi)
     {
-        ShopApi\Model\BasketObject::setShopApi($shopApi);
+        $this->facetManager = new ShopApi\Model\FacetManager();
+
         ShopApi\Model\Category::setShopApi($shopApi);
         ShopApi\Model\Product::setShopApi($shopApi);
         ShopApi\Model\FacetGroupSet::setShopApi($shopApi);
@@ -75,7 +76,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createBasket($json)
     {
-        return new ShopApi\Model\Basket($json, $this);
+        return ShopApi\Model\Basket::createFromJson($json, $this);
     }
 
     /**
@@ -83,7 +84,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createBasketItem(\stdClass $json, array $products)
     {
-        return new ShopApi\Model\Basket\BasketItem($json, $products);
+        return ShopApi\Model\Basket\BasketItem::createFromJson($json, $products);
     }
 
     /**
@@ -91,7 +92,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createBasketSet(\stdClass $json, array $products)
     {
-        return new ShopApi\Model\Basket\BasketSet($json, $this, $products);
+        return ShopApi\Model\Basket\BasketSet::createFromJson($json, $this, $products);
     }
 
     /**
@@ -99,7 +100,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createBasketSetItem(\stdClass $json, array $products)
     {
-        return new ShopApi\Model\Basket\BasketVariantItem($json, $products);
+        return ShopApi\Model\Basket\BasketSetItem::createFromJson($json, $products);
     }
 
     /**

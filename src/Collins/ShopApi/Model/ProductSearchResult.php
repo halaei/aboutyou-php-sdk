@@ -10,6 +10,8 @@ use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Model\ProductSearchResult\FacetCounts;
 use Collins\ShopApi\Model\ProductSearchResult\PriceRange;
 use Collins\ShopApi\Model\ProductSearchResult\SaleCounts;
+use Collins\ShopApi;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 class ProductSearchResult
 {
@@ -43,7 +45,11 @@ class ProductSearchResult
     public function __construct($jsonObject, ModelFactoryInterface $factory)
     {
         $this->products = array();
+
+        $event = new GenericEvent($this, func_get_args());
+        ShopApi::getEventDispatcher()->dispatch("collins.shop_api.product_search_result.from_json.before", $event);
         $this->fromJson($jsonObject, $factory);
+        ShopApi::getEventDispatcher()->dispatch("collins.shop_api.product_search_result.from_json.after", $event);
     }
 
     public function fromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)

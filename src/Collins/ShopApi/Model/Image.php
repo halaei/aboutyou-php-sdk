@@ -7,6 +7,9 @@
 namespace Collins\ShopApi\Model;
 
 
+use Collins\ShopApi;
+use Symfony\Component\EventDispatcher\GenericEvent;
+
 class Image
 {
     const MIN_WIDTH  = 50;
@@ -36,7 +39,10 @@ class Image
 
     public function __construct($jsonObject)
     {
+        $event = new GenericEvent($this, func_get_args());
+        ShopApi::getEventDispatcher()->dispatch("collins.shop_api.image.from_json.before", $event);
         $this->fromJson($jsonObject);
+        ShopApi::getEventDispatcher()->dispatch("collins.shop_api.image.from_json.after", $event);
     }
 
     public function fromJson($jsonObject)

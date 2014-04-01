@@ -3,16 +3,9 @@ namespace Collins\ShopApi\Model\Basket;
 
 use Collins\ShopApi\Model\Variant;
 use Collins\ShopApi\Model\Product;
-use Collins\ShopApi\Model\ResultErrorTrait;
 
-/**
- *
- */
-class BasketVariantItem
+abstract class BasketVariantItem extends AbstractBasketItem
 {
-    use ResultErrorTrait;
-    use AddionalDataTrait;
-
     /**
      * @var object
      */
@@ -28,25 +21,19 @@ class BasketVariantItem
      */
     private $variant = null;
 
+    /** @var integer */
+    private $variantId;
+
     /**
      * Constructor.
      *
-     * @param object $jsonObject The basket data.
-     * @param Product[] $products
+     * @param integer $variantId
+     * @param array $additionalData
      */
-    public function __construct($jsonObject, array $products)
+    public function __construct($variantId, $additionalData = null)
     {
-        if (isset($jsonObject->additional_data)) {
-            $this->additionalData = $jsonObject->additional_data;
-        }
-
-        $this->parseErrorResult($jsonObject);
-
-        $this->jsonObject = $jsonObject;
-
-        if ($products[$jsonObject->product_id]) {
-            $this->setProduct($products[$jsonObject->product_id]);
-        }
+        $this->variantId = $variantId;
+        $this->additionalData = $additionalData;
     }
 
     /**
@@ -133,11 +120,34 @@ class BasketVariantItem
     {
         if (!$this->variant) {
             $this->variant = $this->getProduct() ?
-                $this->getProduct()->getVariantById($this->jsonObject->variant_id) :
+                $this->getProduct()->getVariantById($this->variantId) :
                 null
             ;
         }
 
         return $this->variant;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getVariantId()
+    {
+        return $this->variantId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUniqueKey()
+    {
+        $key = $this->getVariantId();
+        $additionalData = $this->additionalData;
+        if (!empty($additionalData)) {
+            ksort($additionalData);
+            $key .= ':' . json_encode($additionalData);
+        }
+
+        return $key;
     }
 }

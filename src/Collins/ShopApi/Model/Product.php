@@ -9,6 +9,7 @@ namespace Collins\ShopApi\Model;
 use Collins\ShopApi;
 use Collins\ShopApi\Exception\MalformedJsonException;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Product extends AbstractModel
 {
@@ -72,7 +73,10 @@ class Product extends AbstractModel
 
     public function __construct($jsonObject, ModelFactoryInterface $factory)
     {
+        $event = new GenericEvent($this, func_get_args());
+        ShopApi::getEventDispatcher()->dispatch("collins.shop_api.product.from_json.before", $event);
         $this->fromJson($jsonObject, $factory);
+        ShopApi::getEventDispatcher()->dispatch("collins.shop_api.product.from_json.after", $event);
     }
 
     public function fromJson($jsonObject, ModelFactoryInterface $factory)
