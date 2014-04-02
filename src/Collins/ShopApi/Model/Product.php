@@ -492,8 +492,6 @@ class Product extends AbstractModel
      */
     public function getBrand()
     {
-        #$key = Facet::uniqueKey(ShopApi\Constants::FACET_BRAND, $this->brandId);
-
         return $this->getFacetGroupSet()->getFacet(ShopApi\Constants::FACET_BRAND, $this->brandId);
     }
 

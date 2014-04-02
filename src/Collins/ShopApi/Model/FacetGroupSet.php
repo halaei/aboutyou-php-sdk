@@ -78,42 +78,6 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
         }
     }
 
-//    protected function fetch()
-//    {
-//        if ($this->facets !== null) return;
-//
-//        $shopApi = $this->getShopApi();
-//
-//        $groupIds = array_keys($this->ids);
-//        $allFacets = $shopApi->fetchFacets($groupIds);
-//
-//        $this->facets = array();
-//        $this->groups = array();
-//
-//        foreach ($this->ids as $groupId => $facetIds) {
-//
-//            foreach ($facetIds as $facetId) {
-//                $key = Facet::uniqueKey($groupId, $facetId);
-//                if (!isset($allFacets[$key])) {
-//                    // TODO: error handling
-//                    continue;
-//                }
-//
-//                $facet = $allFacets[$key];
-//
-//                if (isset($this->groups[$groupId])) {
-//                    $group = $this->groups[$groupId];
-//                } else {
-//                    $group = new FacetGroup($facet->getGroupId(), $facet->getGroupName());
-//                    $this->groups[$groupId] = $group;
-//                }
-//
-//                $group->addFacet($facet);
-//                $this->facets[$facet->getUniqueKey()] = $facet;
-//            }
-//        }
-//    }
-
     protected function fetch()
     {
         if (!empty($this->facets)) return;
@@ -131,6 +95,7 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
                 if (isset($this->groups[$groupId])) {
                     $group = $this->groups[$groupId];
                 } else {
+                    // @todo: Cannot we save one function call per iteration if we use $groupId instead of  $facet->getGroupId()?
                     $group = new FacetGroup($facet->getGroupId(), $facet->getGroupName());
                     $this->groups[$groupId] = $group;
                 }
@@ -193,8 +158,6 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
         if(isset($this->facets["$facetGroupId:$facetId"])) {
             return($this->facets["$facetGroupId:$facetId"]);
         }
-
-        #return($this->facets[Facet::uniqueKey($facetGroupId, $facetId)]);
     }
 
     /**

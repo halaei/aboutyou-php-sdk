@@ -7,13 +7,19 @@
 namespace Collins\ShopApi\Model;
 
 use Collins\ShopApi\Constants;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Doctrine\Common\Cache\CacheMultiGet;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
 class FacetManager implements FacetManagerInterface, EventSubscriberInterface
 {
+    /**
+     * IDs of the products, we already known, so we can skip them in #onFromJson().
+     *
+     * @var array
+     */
+    private $knownProductIds = array();
+
     /** @var Facet[][] */
     private $facets = array();
 
@@ -34,16 +40,12 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
     {
         return array(
             'collins.shop_api.product_search_result.from_json.before' => array('onFromJson', 0),
-#            'collins.shop_api.product.from_json.before' => array('onFromJson', 0),
+            'collins.shop_api.product.from_json.before' => array('onFromJson', 0),
         );
     }
 
     public function onFromJson(GenericEvent $event, $eventName, $dispatcher)
     {
-        if(!empty($this->facets) && !empty($this->groups)) {
-            return;
-        }
-
         $jsonObject = $event->getArgument(0);
 
         $facetGroupIdsAndFacetIds = array();
@@ -51,10 +53,19 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
         switch($eventName){
             case "collins.shop_api.product_search_result.from_json.before":
                 foreach($jsonObject->products as $product) {
+                    if(isset($this->knownProductIds[$product->id])) {
+                        continue;
+                    }
+
                     $facetGroupIdsAndFacetIds += Product::parseFacetIds($product);
+                    $this->knownProductIds[$product->id] = true;
                 }
                 break;
             case "collins.shop_api.product.from_json.before":
+                if(isset($this->knownProductIds[$jsonObject->id])) {
+                    return;
+                }
+
                 $facetGroupIdsAndFacetIds = Product::parseFacetIds($jsonObject);
                 break;
         }
@@ -69,13 +80,6 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
         $this->preFetch($missingFacetGroupIdsAndFacetIds);
     }
 
-//    public function parseJson(array $json)
-//    {
-//        foreach ($json as $singleFacet) {
-//            $this->facets[$singleFacet->id][$singleFacet->facet_id] = $singleFacet;
-//        }
-//    }
-
     protected function preFetch($facetGroupIds)
     {
         if(empty($facetGroupIds)) {
@@ -83,29 +87,16 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
         }
 
         /** @var  $cachedFacets Facet[] */
-        #$cachedFacets = $this->cache->fetchMulti($this->generateCacheKeys($facetGroupIds));
-        #$cachedFacets[0]->getGroupId();
-        #throw new \Exception(print_r($facetGroupIds, true));
-
-        $allFacets = $this->shopApi->fetchFacets(array_keys($facetGroupIds));
+        $apiQueryParams = array();
 
         foreach ($facetGroupIds as $groupId => $facetIds) {
-            if(!isset($this->facets[$groupId])) {
-                $this->facets[$groupId] = array();
-            }
-
             foreach ($facetIds as $facetId) {
-                $key = Facet::uniqueKey($groupId, $facetId);
-                if (!isset($allFacets[$key])) {
-                    // TODO: error handling
-                    continue;
-                }
-
-                $facet = $allFacets[$key];
-                $this->facets[$groupId][$facetId] = $facet;
-                #$this->facets[$facet->getUniqueKey()] = $facet;
+                $apiQueryParams[] = array('id' => $facetId, 'group_id' => $groupId);
             }
         }
+
+        $allFacets = $this->shopApi->fetchFacet($apiQueryParams);
+        $this->facets = array_merge($this->facets, $allFacets);
     }
 
     /**
@@ -133,16 +124,12 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
      */
     public function getFacet($groupId, $id)
     {
-        if(!isset($this->facets[$groupId]) || !isset($this->facets[$groupId][$id])) {
+        $lookupKey = Facet::uniqueKey($groupId, $id);
+        if(!isset($this->facets[$lookupKey])) {
             return(null);
         }
 
-        $facet = $this->facets[$groupId][$id];
-        if (!$facet instanceof Facet) {
-            $this->facets[$groupId][$id] = $facet = Facet::createFromJson($facet);
-        }
-
-        return $facet;
+        return $this->facets[$lookupKey];
     }
 
     /**

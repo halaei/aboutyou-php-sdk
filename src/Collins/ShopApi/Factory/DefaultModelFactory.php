@@ -21,8 +21,6 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function __construct(ShopApi $shopApi)
     {
-        $this->facetManager = new ShopApi\Model\FacetManager();
-
         ShopApi\Model\Category::setShopApi($shopApi);
         ShopApi\Model\Product::setShopApi($shopApi);
         ShopApi\Model\FacetGroupSet::setShopApi($shopApi);
