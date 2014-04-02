@@ -18,6 +18,27 @@ interface BasketItemInterface
     public function getId();
 
     /**
+     * Get the total price in euro cent
+     *
+     * @return integer
+     */
+    public function getTotalPrice();
+
+    /**
+     * Get the total net price in euro cent
+     *
+     * @return integer
+     */
+    public function getTotalNet();
+
+    /**
+     * Get the total value added tax in euro cent
+     *
+     * @return integer
+     */
+    public function getTotalVat();
+
+    /**
      * The unique key of this basket item.
      * This is used to collect similar items or sets together.
      *

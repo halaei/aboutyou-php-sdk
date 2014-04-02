@@ -52,7 +52,7 @@ abstract class BasketVariantItem extends AbstractBasketItem
      *
      * @return integer
      */
-    public function getPrice()
+    public function getTotalPrice()
     {
         return $this->jsonObject->total_price;
     }
@@ -68,11 +68,11 @@ abstract class BasketVariantItem extends AbstractBasketItem
     }
 
     /**
-     * Get the tax.
+     * Get the value added tax.
      *
      * @return integer
      */
-    public function getVat()
+    public function getTotalVat()
     {
         return $this->jsonObject->total_vat;
     }
@@ -80,7 +80,7 @@ abstract class BasketVariantItem extends AbstractBasketItem
     /**
      * @return integer
      */
-    public function getNet()
+    public function getTotalNet()
     {
         return $this->jsonObject->total_net;
     }

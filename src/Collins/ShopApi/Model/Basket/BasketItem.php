@@ -72,14 +72,4 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
     {
         return $this->id;
     }
-
-    public function getTotalPrice()
-    {
-        return $this->getPrice();
-    }
-
-    public function getTotalVat()
-    {
-        return  $this->getVat();
-    }
 }
