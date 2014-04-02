@@ -36,9 +36,9 @@ class BasketTest extends AbstractShopApiTest
         $this->assertEquals('identifier1', $items[0]->getId());
         $this->assertFalse($items[0]->hasErrors());
         $this->assertEquals(19.0, $items[0]->getTax());
-        $this->assertEquals(400, $items[0]->getPrice());
-        $this->assertEquals(390, $items[0]->getNet());
-        $this->assertEquals(10, $items[0]->getVat());
+        $this->assertEquals(400, $items[0]->getTotalPrice());
+        $this->assertEquals(390, $items[0]->getTotalNet());
+        $this->assertEquals(10, $items[0]->getTotalVat());
         $this->assertEquals(123, $items[0]->getProduct()->getId());
         $this->assertEquals(1543435, $items[0]->getVariant()->getId());
         $this->assertNull($items[0]->getAdditionalData());
@@ -51,9 +51,9 @@ class BasketTest extends AbstractShopApiTest
         $this->assertEquals(20, $items[2]->getTotalVat());
         $this->assertFalse($subItems[0]->hasErrors());
         $this->assertEquals(19.0, $subItems[0]->getTax());
-        $this->assertEquals(600, $subItems[0]->getPrice());
-        $this->assertEquals(590, $subItems[0]->getNet());
-        $this->assertEquals(10, $subItems[0]->getVat());
+        $this->assertEquals(600, $subItems[0]->getTotalPrice());
+        $this->assertEquals(590, $subItems[0]->getTotalNet());
+        $this->assertEquals(10, $subItems[0]->getTotalVat());
         $this->assertEquals(123, $subItems[0]->getProduct()->getId());
         $this->assertEquals(12312121, $subItems[0]->getVariant()->getId());
         $this->assertNotNull($subItems[0]->getAdditionalData());
@@ -270,10 +270,10 @@ EOS;
 
     private function checkBasketVariantItem(Basket\BasketVariantItem $item)
     {
-        $this->assertInternalType('int', $item->getPrice());
+        $this->assertInternalType('int', $item->getTotalPrice());
         $this->assertInternalType('float', $item->getTax());
-        $this->assertInternalType('int', $item->getNet());
-        $this->assertInternalType('int', $item->getVat());
+        $this->assertInternalType('int', $item->getTotalNet());
+        $this->assertInternalType('int', $item->getTotalVat());
         $this->assertInstanceOf('Collins\ShopApi\Model\Product', $item->getProduct());
         $this->assertInstanceOf('Collins\ShopApi\Model\Variant', $item->getVariant());
 
