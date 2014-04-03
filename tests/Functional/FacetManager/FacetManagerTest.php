@@ -13,8 +13,10 @@ class FacetManagerTest extends AbstractShopApiTest
 {
     public function testProductSearch()
     {
-        $shopApi = $this->getShopApiWithResultFile(
-            'product_search-result.json',
+        $shopApi = $this->getShopApiWithResultFiles(array(
+                'product_search-result.json',
+                'facets-all.json',
+            ),
             array('172', '206', '194', '2', '1', '0:4487')
         );
 
@@ -29,8 +31,10 @@ class FacetManagerTest extends AbstractShopApiTest
 
     public function testProductByEans()
     {
-        $shopApi = $this->getShopApiWithResultFile(
-            'products_eans-result.json',
+        $shopApi = $this->getShopApiWithResultFiles(array(
+                'products_eans-result.json',
+                'facets-all.json',
+            ),
             array('172', '206', '194', '2', '1', '0:4487')
         );
 
@@ -42,8 +46,10 @@ class FacetManagerTest extends AbstractShopApiTest
 
     public function testProductByIds()
     {
-        $shopApi = $this->getShopApiWithResultFile(
-            'products-result.json',
+        $shopApi = $this->getShopApiWithResultFiles(array(
+                'products-result.json',
+               'facets-all.json',
+            ),
             array('172', '206', '194', '2', '1', '0:4487')
         );
 
@@ -55,8 +61,10 @@ class FacetManagerTest extends AbstractShopApiTest
 
     public function testAutocomplete()
     {
-        $shopApi = $this->getShopApiWithResultFile(
-            'autocompletion-result.json',
+        $shopApi = $this->getShopApiWithResultFiles(array(
+                'autocompletion-result.json',
+                'facets-all.json',
+            ),
             array('172', '206', '194', '2', '1', '0:4487')
         );
 
@@ -68,8 +76,10 @@ class FacetManagerTest extends AbstractShopApiTest
 
     public function testBasket()
     {
-        $shopApi = $this->getShopApiWithResultFile(
-            'basket-result.json',
+        $shopApi = $this->getShopApiWithResultFiles(array(
+                'basket-result.json',
+                'facets-all.json',
+            ),
             array('172', '206', '194', '2', '1', '0:4487')
         );
 
