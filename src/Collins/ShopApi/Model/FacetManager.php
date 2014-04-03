@@ -41,6 +41,7 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
         return array(
             'collins.shop_api.product_search_result.from_json.before' => array('onFromJson', 0),
             'collins.shop_api.product.from_json.before' => array('onFromJson', 0),
+            'collins.shop_api.products_result.from_json.before' => array('onFromJson', 0)
         );
     }
 
@@ -50,19 +51,30 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
 
         $facetGroupIdsAndFacetIds = array();
 
-        switch($eventName){
+        switch ($eventName) {
             case "collins.shop_api.product_search_result.from_json.before":
-                foreach($jsonObject->products as $product) {
-                    if(isset($this->knownProductIds[$product->id])) {
+                foreach ($jsonObject->products as $product) {
+                    if (isset($this->knownProductIds[$product->id])) {
                         continue;
                     }
+                    // @todo: optimize this.
+                    //        Unfortunately we cannot combine the arrays
+                    //        just by using array_merge() or the plus operator,
+                    //        because we need to merge arrays of arrays (=>recursive merge)
+                    //        without any renumbering!
+                    foreach (Product::parseFacetIds($product) as $groupId => $facetIds) {
+                        if (!isset($facetGroupIdsAndFacetIds[$groupId])) {
+                            $facetGroupIdsAndFacetIds[$groupId] = $facetIds;
+                        } else {
+                            $facetGroupIdsAndFacetIds[$groupId] = array_merge($facetGroupIdsAndFacetIds[$groupId], $facetIds);
+                        }
+                    }
 
-                    $facetGroupIdsAndFacetIds += Product::parseFacetIds($product);
                     $this->knownProductIds[$product->id] = true;
                 }
                 break;
             case "collins.shop_api.product.from_json.before":
-                if(isset($this->knownProductIds[$jsonObject->id])) {
+                if (isset($this->knownProductIds[$jsonObject->id])) {
                     return;
                 }
 
@@ -73,7 +85,7 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
         $missingFacetGroupIdsAndFacetIds = array();
         $missingFacetGroupIds = array_diff(array_keys($facetGroupIdsAndFacetIds), array_keys($this->groups));
 
-        foreach($missingFacetGroupIds as $groupId) {
+        foreach ($missingFacetGroupIds as $groupId) {
             $missingFacetGroupIdsAndFacetIds[$groupId] = $facetGroupIdsAndFacetIds[$groupId];
         }
 
@@ -82,7 +94,7 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
 
     protected function preFetch($facetGroupIds)
     {
-        if(empty($facetGroupIds)) {
+        if (empty($facetGroupIds)) {
             return;
         }
 
@@ -95,8 +107,8 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
             }
         }
 
-        $allFacets = $this->shopApi->fetchFacet($apiQueryParams);
-        $this->facets = array_merge($this->facets, $allFacets);
+        $this->facets += $this->shopApi->fetchFacet($apiQueryParams);
+
     }
 
     /**
@@ -125,8 +137,8 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
     public function getFacet($groupId, $id)
     {
         $lookupKey = Facet::uniqueKey($groupId, $id);
-        if(!isset($this->facets[$lookupKey])) {
-            return(null);
+        if (!isset($this->facets[$lookupKey])) {
+            return (null);
         }
 
         return $this->facets[$lookupKey];
@@ -139,15 +151,15 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
      */
     public function generateCacheKeys($facetGroupIds)
     {
-        $cacheKeyNamespace = '\\Collins\\ShopApi\\'.(Constants::SDK_VERSION)."\\Facet#";
+        $cacheKeyNamespace = '\\Collins\\ShopApi\\' . (Constants::SDK_VERSION) . "\\Facet#";
         $keys = array();
 
         foreach ($facetGroupIds as $groupId => $facetIds) {
             foreach ($facetIds as $facetId) {
-                $keys[] = $cacheKeyNamespace.Facet::uniqueKey($groupId, $facetId);
+                $keys[] = $cacheKeyNamespace . Facet::uniqueKey($groupId, $facetId);
             }
         }
 
-        return($keys);
+        return ($keys);
     }
 } 
