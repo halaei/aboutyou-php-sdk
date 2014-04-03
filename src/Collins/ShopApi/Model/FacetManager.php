@@ -102,6 +102,8 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
         $apiQueryParams = array();
 
         foreach ($facetGroupIds as $groupId => $facetIds) {
+            $facetIds = array_values(array_unique($facetIds));
+
             foreach ($facetIds as $facetId) {
                 $apiQueryParams[] = array('id' => $facetId, 'group_id' => $groupId);
             }
