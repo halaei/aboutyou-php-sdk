@@ -10,6 +10,7 @@ use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Factory\ResultFactoryInterface;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
+use Collins\ShopApi\Model\FacetManager;
 use Collins\ShopApi\Model\ProductsEansResult;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
@@ -46,6 +47,9 @@ class ShopApi
     /** @var ModelFactoryInterface */
     protected $modelFactory;
 
+    /** @var FacetManagerInterface */
+    protected $facetManager;
+
     /** @var LoggerInterface */
     protected $logger;
 
@@ -65,7 +69,8 @@ class ShopApi
     {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $cache, $logger);
 
-        $this->modelFactory = new DefaultModelFactory($this);
+        $this->facetManager = new FacetManager();
+        $this->modelFactory = new DefaultModelFactory($this, $this->facetManager);
 
         if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
@@ -124,6 +129,24 @@ class ShopApi
     public function getCache()
     {
         return $this->shopApiClient->getCache();
+    }
+
+
+    /**
+     * @param \Collins\FacetManagerInterface $facetManager
+     */
+    public function setFacetManager($facetManager)
+    {
+        $this->facetManager = $facetManager;
+        $this->modelFactory->setFacetManager($facetManager);
+    }
+
+    /**
+     * @return \Collins\FacetManagerInterface
+     */
+    public function getFacetManager()
+    {
+        return $this->facetManager;
     }
 
     /**
