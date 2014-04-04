@@ -35,10 +35,15 @@ class DefaultModelFactory implements ModelFactoryInterface
     public function setFacetManager(ShopApi\Model\FacetManagerInterface $facetManager)
     {
         if(!empty($this->facetManager)) {
-            $this->shopApi->getEventDispatcher()->removeSubscriber($facetManager);
+            $oldFacetManagerSubscribedEvents = $this->facetManager->getSubscribedEvents();
+            if(!empty($oldFacetManagerSubscribedEvents)) {
+                $this->shopApi->getEventDispatcher()->removeSubscriber($this->facetManager);
+            }
         }
 
-        $this->shopApi->getEventDispatcher()->addSubscriber($facetManager);
+        if($facetManager->getSubscribedEvents()) {
+            $this->shopApi->getEventDispatcher()->addSubscriber($facetManager);
+        }
         $this->facetManager = $facetManager;
         $this->facetManager->setShopApi($this->shopApi);
         ShopApi\Model\FacetGroupSet::setFacetManager($facetManager);
