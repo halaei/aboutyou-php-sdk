@@ -96,7 +96,7 @@ class BasketSet extends AbstractBasketItem implements BasketItemInterface
      */
     public static function createFromJson(\stdClass $jsonObject, ModelFactoryInterface $factory, $products)
     {
-        $set = new self($jsonObject->id, isset($jsonObject->additional_data) ? (array)$jsonObject->additional_data : null);
+        $set = new static($jsonObject->id, isset($jsonObject->additional_data) ? (array)$jsonObject->additional_data : null);
 
         $set->parseErrorResult($jsonObject);
 
@@ -135,7 +135,7 @@ class BasketSet extends AbstractBasketItem implements BasketItemInterface
      */
     public static function create($itemId, $subItems, array $additionalData = null)
     {
-        $set = new self($itemId, $additionalData);
+        $set = new static($itemId, $additionalData);
         foreach ($subItems as $itemData) {
             $set->addItem(new BasketSetItem($itemData[0], isset($itemData[1]) ? $itemData[1] : null));
         }

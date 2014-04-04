@@ -4,7 +4,6 @@ namespace Collins;
 use Collins\Cache\CacheInterface;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
-use Collins\ShopApi\Exception\InvalidParameterException;
 use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Factory\ResultFactoryInterface;
@@ -274,7 +273,7 @@ class ShopApi
      *
      * @return Basket
      *
-     * @throws ShopApi\Exception\InvalidParameterException
+     * @throws \InvalidArgumentException
      */
     public function addItemToBasket($sessionId, $variantId, $amount = 1)
     {
@@ -282,7 +281,7 @@ class ShopApi
             if (is_string($variantId) && ctype_digit($variantId)) {
                 $variantId = intval($variantId);
             } else {
-                throw new InvalidParameterException('the variant id must be an integer or sting with digits');
+                throw new \InvalidArgumentException('the variant id must be an integer or sting with digits');
             }
         }
 

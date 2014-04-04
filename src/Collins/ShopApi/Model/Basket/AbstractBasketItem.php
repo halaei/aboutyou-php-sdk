@@ -63,7 +63,8 @@ class AbstractBasketItem extends ResultError
      * you can add a key "image_url" to the $additionalData that contains the URL to the image.
      *
      * @param array $additionalData additional data for this variant
-     * @throws \Collins\ShopApi\Exception\InvalidParameterException
+     *
+     * @throws \InvalidArgumentException
      */
     public function setAdditionData(array $additionalData)
     {
@@ -77,15 +78,15 @@ class AbstractBasketItem extends ResultError
     {
         if ($additionalData) {
             if (!isset($additionalData['description'])) {
-                throw new InvalidParameterException('description is required in additional data');
+                throw new \InvalidArgumentException('description is required in additional data');
             }
             if ($imageUrlRequired && !isset($additionalData['image_url'])) {
-                throw new InvalidParameterException('image_url is required in additional data');
+                throw new \InvalidArgumentException('image_url is required in additional data');
             }
         }
 
         if (isset($additionalData['internal_infos']) && !is_array($additionalData['internal_infos'])) {
-            throw new InvalidParameterException('internal_infos must be an array');
+            throw new \InvalidArgumentException('internal_infos must be an array');
         }
     }
 }

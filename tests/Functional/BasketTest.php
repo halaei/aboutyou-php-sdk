@@ -130,7 +130,7 @@ class BasketTest extends AbstractShopApiTest
     }
 
     /**
-     * @expectedException \Collins\ShopApi\Exception\InvalidParameterException
+     * @expectedException \InvalidArgumentException
      */
     public function testAddToBasketThrowsException()
     {
@@ -140,7 +140,7 @@ class BasketTest extends AbstractShopApiTest
     }
 
     /**
-     * @expectedException \Collins\ShopApi\Exception\InvalidParameterException
+     * @expectedException \InvalidArgumentException
      */
     public function testAddToBasketThrowsException2()
     {

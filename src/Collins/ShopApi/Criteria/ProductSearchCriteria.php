@@ -6,7 +6,6 @@
 
 namespace Collins\ShopApi\Criteria;
 
-use Collins\ShopApi\Exception\InvalidParameterException;
 use Collins\ShopApi\Model\FacetGetGroupInterface;
 use Collins\ShopApi\Model\FacetGroup;
 use Collins\ShopApi\Model\FacetGroupSet;
@@ -317,13 +316,13 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return $this
      *
-     * @throws \Collins\ShopApi\Exception\InvalidParameterException
+     * @throws \InvalidArgumentException
      */
     public function selectFacetsByGroupId($groupId, $limit)
     {
         $this->checkFacetLimit($limit);
         if (!is_long($groupId) && !ctype_digit($groupId)) {
-            throw new InvalidParameterException();
+            throw new \InvalidArgumentException();
         }
 
         if (!isset($this->result['facets'])) {
@@ -364,10 +363,10 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     protected function checkFacetLimit($limit)
     {
         if (!is_long($limit)) {
-            throw new InvalidParameterException('limit must be an integer');
+            throw new \InvalidArgumentException('limit must be an integer');
         }
         if ($limit < -1) {
-            throw new InvalidParameterException('limit must be positive or -1 for unlimited facets');
+            throw new \InvalidArgumentException('limit must be positive or -1 for unlimited facets');
         }
     }
 

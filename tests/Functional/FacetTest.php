@@ -30,7 +30,7 @@ class FacetTestAbstract extends AbstractShopApiTest
     }
 
     /**
-     * @expectedException \Collins\ShopApi\Exception\InvalidParameterException
+     * @expectedException \InvalidArgumentException
      */
     public function testFacetsEmptyParams()
     {

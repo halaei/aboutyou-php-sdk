@@ -8,7 +8,6 @@ namespace Collins\ShopApi;
 
 
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
-use Collins\ShopApi\Exception\InvalidParameterException;
 use Collins\ShopApi\Model\Basket;
 
 class QueryBuilder
@@ -376,12 +375,12 @@ class QueryBuilder
      *
      * @return $this
      *
-     * @throws Exception\InvalidParameterException
+     * @throws \InvalidArgumentException
      */
     public function fetchFacets(array $groupIds)
     {
         if (empty($groupIds)) {
-            throw new InvalidParameterException('no groupId given');
+            throw new \InvalidArgumentException('no groupId given');
         }
 
         $groupIds = array_map('intval', $groupIds);
@@ -400,12 +399,12 @@ class QueryBuilder
      *
      * @return $this
      *
-     * @throws Exception\InvalidParameterException
+     * @throws \InvalidArgumentException
      */
     public function fetchFacet(array $params)
     {
         if (empty($params)) {
-            throw new InvalidParameterException('no params given');
+            throw new \InvalidArgumentException('no params given');
         }
 
         $this->query[] = array('facet' => $params);
@@ -450,15 +449,15 @@ class QueryBuilder
     /**
      * @param $sessionId
      *
-     * @throws Exception\InvalidParameterException
+     * @throws \InvalidArgumentException
      */
     protected function checkSessionId($sessionId)
     {
         if (!is_string($sessionId)) {
-            throw new InvalidParameterException('The session id must be a string');
+            throw new \InvalidArgumentException('The session id must be a string');
         }
         if (!isset($sessionId[4])) {
-            throw new InvalidParameterException('The session id must have at least 5 characters');
+            throw new \InvalidArgumentException('The session id must have at least 5 characters');
         }
     }
 }

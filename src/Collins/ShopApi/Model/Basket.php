@@ -1,7 +1,6 @@
 <?php
 namespace Collins\ShopApi\Model;
 
-use Collins\ShopApi\Exception\InvalidParameterException;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Model\Basket\BasketItemInterface;
 use Collins\ShopApi\Model\Basket\BasketVariantItem;
@@ -48,7 +47,7 @@ class Basket
      */
     public static function createFromJson($jsonObject, ModelFactoryInterface $factory)
     {
-        $basket = new Basket();
+        $basket = new static();
         $basket->totalPrice = $jsonObject->total_price;
         $basket->totalNet   = $jsonObject->total_net;
         $basket->totalVat   = $jsonObject->total_vat;
@@ -108,10 +107,24 @@ class Basket
         return $this->uniqueVariantCount;
     }
 
+    /**
+     * @return boolean
+     */
     public function hasErrors()
     {
         return count($this->errors) > 0;
     }
+
+    /**
+     * Returns all items with errors
+     *
+     * @return BasketItem[]|BasketSet[]
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
 
     /**
      * Get all basket items.
@@ -294,11 +307,11 @@ class Basket
     protected function checkAdditionData(array $additionalData = null, $imageUrlRequired = false)
     {
         if ($additionalData && !isset($additionalData['description'])) {
-            throw new InvalidParameterException('description is required in additional data');
+            throw new \InvalidArgumentException('description is required in additional data');
         }
 
         if (isset($additionalData['internal_infos']) && !is_array($additionalData['internal_infos'])) {
-            throw new InvalidParameterException('internal_infos must be an array');
+            throw new \InvalidArgumentException('internal_infos must be an array');
         }
     }
 }
