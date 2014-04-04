@@ -4,13 +4,15 @@
  * (c) Antevorte GmbH & Co KG
  */
 
-namespace Collins\ShopApi\Model;
+namespace Collins\ShopApi\Model\FacetManager;
 
 use Collins\ShopApi\Constants;
+use Collins\ShopApi\Model\Facet;
+use Collins\ShopApi\Model\Product;
 use Doctrine\Common\Cache\CacheMultiGet;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
-class AbstractFacetManager implements FacetManagerInterface
+abstract class AbstractFacetManager implements FacetManagerInterface
 {
     /**
      * IDs of the products, we already known, so we can skip them in #onFromJson().
@@ -20,15 +22,13 @@ class AbstractFacetManager implements FacetManagerInterface
     private $knownProductIds = array();
 
     /** @var Facet[][] */
-    private $facets = array();
-
-    private $groups = array();
+    protected $facets = array();
 
     /** @var CacheMultiGet */
     private $cache;
 
     /** @var  \Collins\ShopApi */
-    private $shopApi;
+    protected $shopApi;
 
     /**
      * facet groups and facets, which should be fetched lazily
@@ -36,13 +36,7 @@ class AbstractFacetManager implements FacetManagerInterface
      *
      * @var array
      */
-    private $missingFacetGroupIdsAndFacetIds = array();
-
-    private $random;
-
-    public function __construct() {
-        $this->random = rand();
-    }
+    protected $missingFacetGroupIdsAndFacetIds = array();
 
     public function setShopApi($shopApi)
     {
@@ -53,6 +47,7 @@ class AbstractFacetManager implements FacetManagerInterface
     {
         return array(
             'collins.shop_api.product_search_result.from_json.before' => array('onFromJson', 0),
+            'collins.shop_api.product.from_json.before' => array('onFromJson', 0),
             'collins.shop_api.products_result.from_json.before' => array('onFromJson', 0)
         );
     }
@@ -71,7 +66,6 @@ class AbstractFacetManager implements FacetManagerInterface
                 $this->onProductFetched($jsonObject);
                 break;
         }
-        echo("");
     }
 
     protected function onProductFetched($productJsonObject) {
@@ -95,30 +89,7 @@ class AbstractFacetManager implements FacetManagerInterface
         $this->knownProductIds[$productJsonObject->id] = true;
     }
 
-    protected function preFetch()
-    {
-        if (empty($this->missingFacetGroupIdsAndFacetIds)) {
-            return;
-        }
-
-        /** @var  $cachedFacets Facet[] */
-        $apiQueryParams = array();
-
-        foreach ($this->missingFacetGroupIdsAndFacetIds as $groupId => $facetIds) {
-            unset($this->missingFacetGroupIdsAndFacetIds[$groupId]);
-
-            $facetIds = array_values(array_unique($facetIds));
-
-            foreach ($facetIds as $facetId) {
-                $apiQueryParams[] = array('id' => $facetId, 'group_id' => $groupId);
-            }
-        }
-
-        $this->facets += $this->shopApi->fetchFacet($apiQueryParams);
-
-        #$this->missingFacetGroupIdsAndFacetIds = array();
-    }
-
+    abstract protected function preFetch();
     /**
      * @param CacheMultiGet $cache
      */

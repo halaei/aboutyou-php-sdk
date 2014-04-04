@@ -10,6 +10,7 @@ use Collins\ShopApi\Factory\ResultFactoryInterface;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\FacetManager;
+use Collins\ShopApi\Model\FacetManager\SingleFacetManager;
 use Collins\ShopApi\Model\ProductsEansResult;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
@@ -68,7 +69,7 @@ class ShopApi
     {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $cache, $logger);
 
-        $this->facetManager = new FacetManager();
+        $this->facetManager = new SingleFacetManager();
         $this->modelFactory = new DefaultModelFactory($this, $this->facetManager);
 
         if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
