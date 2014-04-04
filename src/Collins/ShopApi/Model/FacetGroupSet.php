@@ -226,6 +226,22 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
         return true;
     }
 
+    public static function mergeFacetIds($facetIdsArray)
+    {
+        $ids = array();
+        foreach ($facetIdsArray as $facetIds) {
+            foreach ($facetIds as $groupId => $facetIds) {
+                if (isset( $ids[$groupId])) {
+                    $ids[$groupId] = array_merge($ids[$groupId], $facetIds);
+                } else {
+                    $ids[$groupId] = $facetIds;
+                }
+            }
+        }
+
+        return $ids;
+    }
+
     /**
      * @return array
      */

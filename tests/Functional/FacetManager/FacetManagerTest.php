@@ -15,11 +15,9 @@ class FacetManagerTest extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
                 'product_search-result.json',
-                'facets-all.json',
-            ),
-            array('172', '206', '194', '2', '1', '0:4487')
+                'facets-for-product-variant-facets.json',
+            )
         );
-
 
         $k = $shopApi->getResultFactory()->getFacetManager();
 
@@ -33,9 +31,8 @@ class FacetManagerTest extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
                 'products_eans-result.json',
-                'facets-all.json',
-            ),
-            array('172', '206', '194', '2', '1', '0:4487')
+                'facets-for-product-variant-facets.json',
+            )
         );
 
         $productEansResult = $shopApi->fetchProductsByEans(array('dummy'));
@@ -48,9 +45,8 @@ class FacetManagerTest extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
                 'products-result.json',
-               'facets-all.json',
-            ),
-            array('172', '206', '194', '2', '1', '0:4487')
+                'facets-for-product-variant-facets.json',
+            )
         );
 
         $productResult = $shopApi->fetchProductsByIds(array('dummy'));
@@ -64,8 +60,7 @@ class FacetManagerTest extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFiles(array(
                 'autocompletion-result.json',
                 'facets-all.json',
-            ),
-            array('172', '206', '194', '2', '1', '0:4487')
+            )
         );
 
         $autocompletionResult = $shopApi->fetchAutocomplete('dummy');
@@ -79,8 +74,7 @@ class FacetManagerTest extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFiles(array(
                 'basket-result.json',
                 'facets-all.json',
-            ),
-            array('172', '206', '194', '2', '1', '0:4487')
+            )
         );
 
         $basket = $shopApi->fetchBasket('dummy');

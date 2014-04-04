@@ -147,18 +147,67 @@ class Product extends AbstractModel
 
     public static function parseFacetIds($jsonObject)
     {
-        $ids = array();
-        if (!empty($jsonObject->attributes_merged)) {
-            foreach ($jsonObject->attributes_merged as $group => $facetIds) {
-                $gid = substr($group, 11); // rm prefix "attributes"
+        $ids = self::parseFacetIdsInAttributesMerged($jsonObject);
+        if ($ids === null) {
+            $ids = self::parseFacetIdsInVariants($jsonObject);
+        }
+        if ($ids === null) {
+            $ids = self::parseFacetIdsInBrand($jsonObject);
+        }
 
-                // TODO: Remove Workaround for Ticket ???
-                settype($facetIds, 'array');
-                $ids[$gid] = $facetIds;
-            }
+        return ($ids === null) ? $ids : array();
+    }
+
+    public static function parseFacetIdsInAttributesMerged($jsonObject)
+    {
+        if (empty($jsonObject->attributes_merged)) {
+            return null;
+        }
+
+        return self::parseAttributesJson($jsonObject->attributes_merged);
+    }
+
+    public static function parseAttributesJson($AttributesJsonObject)
+    {
+        $ids = array();
+
+        foreach ($AttributesJsonObject as $group => $facetIds) {
+            $gid = substr($group, 11); // rm prefix "attributes"
+
+            // TODO: Remove Workaround for Ticket ???
+            settype($facetIds, 'array');
+            $ids[$gid] = $facetIds;
         }
 
         return $ids;
+    }
+
+    public static function parseFacetIdsInVariants($jsonObject)
+    {
+        if (isset($jsonObject->variants)) {
+            $ids = array();
+            foreach ($jsonObject->variants as $variant) {
+                $ids[] = self::parseAttributesJson($variant->attributes);
+            }
+            $ids = FacetGroupSet::mergeFacetIds($ids);
+
+            return $ids;
+        } else if (isset($jsonObject->default_variant)) {
+            $ids = self::parseAttributesJson($jsonObject->default_variant->attributes);
+
+            return $ids;
+        }
+
+        return null;
+    }
+
+    public static function parseFacetIdsInBrand($jsonObject)
+    {
+        if (!isset($jsonObject->brand_id)) {
+            return null;
+        }
+
+        return array('0' => array($jsonObject->brand_id));
     }
 
     /**
@@ -417,6 +466,9 @@ class Product extends AbstractModel
                     if (in_array($groupId, $selectedGroupIds)) continue;
 
                     $group = $facetGroupSet->getGroup($groupId);
+                    if ($group === null) {
+                        throw new ShopApi\Exception\RuntimeException('group for id ' . $groupId . ' not found');
+                    }
                     $allGroups[$groupId][$group->getUniqueKey()] = clone $group;
                 }
             }
