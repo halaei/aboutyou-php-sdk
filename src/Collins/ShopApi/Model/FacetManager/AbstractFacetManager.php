@@ -10,7 +10,7 @@ use Collins\ShopApi\Constants;
 use Doctrine\Common\Cache\CacheMultiGet;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
-class FacetManager implements FacetManagerInterface
+class AbstractFacetManager implements FacetManagerInterface
 {
     /**
      * IDs of the products, we already known, so we can skip them in #onFromJson().
@@ -53,7 +53,6 @@ class FacetManager implements FacetManagerInterface
     {
         return array(
             'collins.shop_api.product_search_result.from_json.before' => array('onFromJson', 0),
-            'collins.shop_api.product.from_json.before' => array('onFromJson', 0),
             'collins.shop_api.products_result.from_json.before' => array('onFromJson', 0)
         );
     }
