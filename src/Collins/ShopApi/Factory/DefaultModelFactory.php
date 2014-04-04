@@ -7,19 +7,20 @@
 namespace Collins\ShopApi\Factory;
 
 use Collins\ShopApi;
+use Collins\ShopApi\Model\FacetManager\FacetManagerInterface;
 
 class DefaultModelFactory implements ModelFactoryInterface
 {
     /** @var ShopApi */
     protected $shopApi;
 
-    /** @var ShopApi\Model\FacetManagerInterface */
+    /** @var FacetManagerInterface */
     protected $facetManager;
 
     /**
      * @param ShopApi $shopApi
      */
-    public function __construct(ShopApi $shopApi, ShopApi\Model\FacetManagerInterface $facetManager)
+    public function __construct(ShopApi $shopApi, FacetManagerInterface $facetManager)
     {
         ShopApi\Model\Category::setShopApi($shopApi);
         ShopApi\Model\Product::setShopApi($shopApi);
@@ -30,9 +31,9 @@ class DefaultModelFactory implements ModelFactoryInterface
     }
 
     /**
-     * @param ShopApi\Model\FacetManagerInterface $facetManager
+     * @param FacetManagerInterface $facetManager
      */
-    public function setFacetManager(ShopApi\Model\FacetManagerInterface $facetManager)
+    public function setFacetManager(FacetManagerInterface $facetManager)
     {
         if(!empty($this->facetManager)) {
             $oldFacetManagerSubscribedEvents = $this->facetManager->getSubscribedEvents();
@@ -41,7 +42,8 @@ class DefaultModelFactory implements ModelFactoryInterface
             }
         }
 
-        if($facetManager->getSubscribedEvents()) {
+        $newSubscribedEvents = $facetManager->getSubscribedEvents();
+        if(!empty($newSubscribedEvents)) {
             $this->shopApi->getEventDispatcher()->addSubscriber($facetManager);
         }
         $this->facetManager = $facetManager;
@@ -50,7 +52,7 @@ class DefaultModelFactory implements ModelFactoryInterface
     }
 
     /**
-     * @return ShopApi\Model\FacetManager|ShopApi\Model\FacetManagerInterface
+     * @return ShopApi\Model\FacetManager|FacetManagerInterface
      */
     public function getFacetManager()
     {

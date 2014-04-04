@@ -7,6 +7,7 @@
 namespace Collins\ShopApi\Model;
 
 use Collins\ShopApi;
+use Collins\ShopApi\Model\FacetManager\FacetManagerInterface;
 
 class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
 {

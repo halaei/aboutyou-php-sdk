@@ -4,7 +4,7 @@
  * (c) Antevorte GmbH & Co KG
  */
 
-namespace Collins\ShopApi\Model;
+namespace Collins\ShopApi\Model\FacetManager;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
