@@ -1,7 +1,6 @@
 <?php
 namespace Collins\ShopApi\Model\Basket;
 
-use Collins\ShopApi\Exception\InvalidParameterException;
 use Collins\ShopApi\Model\Variant;
 use Collins\ShopApi\Model\Product;
 
@@ -157,7 +156,7 @@ abstract class BasketVariantItem extends AbstractBasketItem
     protected function checkVariantId($variantId)
     {
         if (!is_long($variantId)) {
-            throw new InvalidParameterException('the variant id must be an integer');
+            throw new \InvalidArgumentException('the variant id must be an integer');
         }
     }
 }

@@ -1,7 +1,6 @@
 <?php
 namespace Collins\ShopApi\Model;
 
-use Collins\ShopApi\Exception\InvalidParameterException;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Model\Basket\BasketItemInterface;
 use Collins\ShopApi\Model\Basket\BasketVariantItem;
@@ -308,11 +307,11 @@ class Basket
     protected function checkAdditionData(array $additionalData = null, $imageUrlRequired = false)
     {
         if ($additionalData && !isset($additionalData['description'])) {
-            throw new InvalidParameterException('description is required in additional data');
+            throw new \InvalidArgumentException('description is required in additional data');
         }
 
         if (isset($additionalData['internal_infos']) && !is_array($additionalData['internal_infos'])) {
-            throw new InvalidParameterException('internal_infos must be an array');
+            throw new \InvalidArgumentException('internal_infos must be an array');
         }
     }
 }
