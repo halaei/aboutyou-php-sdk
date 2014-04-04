@@ -517,6 +517,9 @@ class Product extends AbstractModel
                 if (in_array($groupId, $selectedGroupIds)) continue;
 
                 $group  = $facetGroupSet->getGroup($groupId);
+                if ($group === null) {
+                    throw new ShopApi\Exception\RuntimeException('group for id ' . $groupId . ' not found');
+                }
                 $facets = $group->getFacets();
                 if (empty($facets)) continue;
 
