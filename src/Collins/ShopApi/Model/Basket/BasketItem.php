@@ -55,7 +55,7 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
      */
     public static function createFromJson($jsonObject, array $products)
     {
-        $item = new self($jsonObject->id, $jsonObject->variant_id, isset($jsonObject->additional_data) ? (array)$jsonObject->additional_data : null);
+        $item = new static($jsonObject->id, $jsonObject->variant_id, isset($jsonObject->additional_data) ? (array)$jsonObject->additional_data : null);
         $item->parseErrorResult($jsonObject);
 
         $item->jsonObject = $jsonObject;
