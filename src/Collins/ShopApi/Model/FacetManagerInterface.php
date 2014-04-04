@@ -6,7 +6,9 @@
 
 namespace Collins\ShopApi\Model;
 
-interface FacetManagerInterface
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+interface FacetManagerInterface extends EventSubscriberInterface
 {
     /**
      * @param $shopApi \Collins\ShopApi

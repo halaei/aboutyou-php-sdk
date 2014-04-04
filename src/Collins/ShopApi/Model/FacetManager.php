@@ -7,11 +7,10 @@
 namespace Collins\ShopApi\Model;
 
 use Collins\ShopApi\Constants;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Doctrine\Common\Cache\CacheMultiGet;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
-class FacetManager implements FacetManagerInterface, EventSubscriberInterface
+class FacetManager implements FacetManagerInterface
 {
     /**
      * IDs of the products, we already known, so we can skip them in #onFromJson().
@@ -31,6 +30,20 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
     /** @var  \Collins\ShopApi */
     private $shopApi;
 
+    /**
+     * facet groups and facets, which should be fetched lazily
+     * by #prefech(), if #getFacet() misses something.
+     *
+     * @var array
+     */
+    private $missingFacetGroupIdsAndFacetIds = array();
+
+    private $random;
+
+    public function __construct() {
+        $this->random = rand();
+    }
+
     public function setShopApi($shopApi)
     {
         $this->shopApi = $shopApi;
@@ -49,59 +62,52 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
     {
         $jsonObject = $event->getArgument(0);
 
-        $facetGroupIdsAndFacetIds = array();
-
         switch ($eventName) {
             case "collins.shop_api.product_search_result.from_json.before":
-                foreach ($jsonObject->products as $product) {
-                    if (isset($this->knownProductIds[$product->id])) {
-                        continue;
-                    }
-                    // @todo: optimize this.
-                    //        Unfortunately we cannot combine the arrays
-                    //        just by using array_merge() or the plus operator,
-                    //        because we need to merge arrays of arrays (=>recursive merge)
-                    //        without any renumbering!
-                    foreach (Product::parseFacetIds($product) as $groupId => $facetIds) {
-                        if (!isset($facetGroupIdsAndFacetIds[$groupId])) {
-                            $facetGroupIdsAndFacetIds[$groupId] = $facetIds;
-                        } else {
-                            $facetGroupIdsAndFacetIds[$groupId] = array_merge($facetGroupIdsAndFacetIds[$groupId], $facetIds);
-                        }
-                    }
-
-                    $this->knownProductIds[$product->id] = true;
+                foreach ($jsonObject->products as $productJsonObject) {
+                    $this->onProductFetched($productJsonObject);
                 }
                 break;
             case "collins.shop_api.product.from_json.before":
-                if (isset($this->knownProductIds[$jsonObject->id])) {
-                    return;
-                }
-
-                $facetGroupIdsAndFacetIds = Product::parseFacetIds($jsonObject);
+                $this->onProductFetched($jsonObject);
                 break;
         }
-
-        $missingFacetGroupIdsAndFacetIds = array();
-        $missingFacetGroupIds = array_diff(array_keys($facetGroupIdsAndFacetIds), array_keys($this->groups));
-
-        foreach ($missingFacetGroupIds as $groupId) {
-            $missingFacetGroupIdsAndFacetIds[$groupId] = $facetGroupIdsAndFacetIds[$groupId];
-        }
-
-        $this->preFetch($missingFacetGroupIdsAndFacetIds);
+        echo("");
     }
 
-    protected function preFetch($facetGroupIds)
+    protected function onProductFetched($productJsonObject) {
+        if (isset($this->knownProductIds[$productJsonObject->id])) {
+            return;
+        }
+
+        // @todo: optimize this.
+        //        Unfortunately we cannot combine the arrays
+        //        just by using array_merge() or the plus operator,
+        //        because we need to merge arrays of arrays (=>recursive merge)
+        //        without any renumbering!
+        foreach (Product::parseFacetIds($productJsonObject) as $groupId => $facetIds) {
+            if (!isset($this->missingFacetGroupIdsAndFacetIds[$groupId])) {
+                $this->missingFacetGroupIdsAndFacetIds[$groupId] = $facetIds;
+            } else {
+                $this->missingFacetGroupIdsAndFacetIds[$groupId] = array_merge($this->missingFacetGroupIdsAndFacetIds[$groupId], $facetIds);
+            }
+        }
+
+        $this->knownProductIds[$productJsonObject->id] = true;
+    }
+
+    protected function preFetch()
     {
-        if (empty($facetGroupIds)) {
+        if (empty($this->missingFacetGroupIdsAndFacetIds)) {
             return;
         }
 
         /** @var  $cachedFacets Facet[] */
         $apiQueryParams = array();
 
-        foreach ($facetGroupIds as $groupId => $facetIds) {
+        foreach ($this->missingFacetGroupIdsAndFacetIds as $groupId => $facetIds) {
+            unset($this->missingFacetGroupIdsAndFacetIds[$groupId]);
+
             $facetIds = array_values(array_unique($facetIds));
 
             foreach ($facetIds as $facetId) {
@@ -111,6 +117,7 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
 
         $this->facets += $this->shopApi->fetchFacet($apiQueryParams);
 
+        #$this->missingFacetGroupIdsAndFacetIds = array();
     }
 
     /**
@@ -139,8 +146,11 @@ class FacetManager implements FacetManagerInterface, EventSubscriberInterface
     public function getFacet($groupId, $id)
     {
         $lookupKey = Facet::uniqueKey($groupId, $id);
+
         if (!isset($this->facets[$lookupKey])) {
-            return (null);
+            $this->preFetch();
+
+            return (isset($this->facets[$lookupKey]) ? $this->facets[$lookupKey] : null);
         }
 
         return $this->facets[$lookupKey];
