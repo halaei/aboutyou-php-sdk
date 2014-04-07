@@ -59,7 +59,8 @@ class FacetManagerTest extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
                 'autocompletion-result.json',
-                'facets-all.json',
+                #'facets-all.json',
+                'facets-for-product-variant-facets.json'
             )
         );
 
@@ -73,7 +74,7 @@ class FacetManagerTest extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
                 'basket-result.json',
-                'facets-all.json',
+                'facets-for-product-variant-facets.json',
             )
         );
 
