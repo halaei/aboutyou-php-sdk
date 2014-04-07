@@ -174,50 +174,37 @@ class BasketTest extends AbstractShopApiTest
         $this->assertEquals("test", $basketItem->getDescription());
     }    
     
+    /**
+     * @expectedException InvalidArgumentException
+     */
     public function testAddAdditionalDataToBasketItemWithoutDescription()
     {
         $basketItem = new Basket\BasketItem("item_id", 123);
-
-        try {
-           $basketItem->setAdditionData(array("foo" => "bar")); 
-        } catch(\InvalidArgumentException $e) {
-            return;
-        }
-        
-        $this->fail('AdditionalData for BasketItem must have a description');
+        $basketItem->setAdditionData(array("foo" => "bar")); 
     }
     
+    /**
+     * @expectedException InvalidArgumentException
+     */    
     public function testAddEmptyAdditionalDataToBasketSet()
-    {        
-        try {
-           $basketItemSet = new Basket\BasketSet(123, array());
-        } catch(\InvalidArgumentException $e) {
-            return;
-        }
-        
-        $this->fail('BasketSet must have AdditionalData');
+    {   
+        $basketItemSet = new Basket\BasketSet(123, array());        
     }  
     
+    /**
+     * @expectedException InvalidArgumentException
+     */      
     public function testAddOnlyImageAdditionalDataToBasketSet()
-    {        
-        try {
-           $basketItemSet = new Basket\BasketSet(123, array("image_url" => "www"));
-        } catch(\InvalidArgumentException $e) {
-            return;
-        }
-        
-        $this->fail('AdditionalData for BasketSet must have key description');
+    {  
+        $basketItemSet = new Basket\BasketSet(123, array("image_url" => "www"));        
     }  
     
+    /**
+     * @expectedException InvalidArgumentException
+     */      
     public function testAddOnlyDescAdditionalDataToBasketSet()
-    {        
-        try {
-           $basketItemSet = new Basket\BasketSet(123, array("description" => "www"));
-        } catch(\InvalidArgumentException $e) {
-            return;
-        }
-        
-        $this->fail('AdditionalData for BasketSet must have key image_url');
+    {    
+        $basketItemSet = new Basket\BasketSet(123, array("description" => "www"));        
     }   
     
     public function testAddAdditionalDataToBasketSet()
