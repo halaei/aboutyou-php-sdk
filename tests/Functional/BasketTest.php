@@ -26,7 +26,7 @@ class BasketTest extends AbstractShopApiTest
         $exceptedRequestBody = '[{"basket":{"session_id":"testing"}}]';
         $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
 
-        $basket = $shopApi->fetchBasket($this->sessionId);
+        $basket = $shopApi->fetchBasket($this->sessionId);       
         $this->checkBasket($basket);
         $this->assertTrue($basket->hasErrors());
 
@@ -165,6 +165,55 @@ class BasketTest extends AbstractShopApiTest
         $basket = $shopApi->removeItemsFromBasket($this->sessionId, array('item3', 'item4'));
         $this->checkBasket($basket);
     }
+   
+    public function testAddAdditionalDataToBasketItemWithDescription()
+    {
+        $basketItem = new Basket\BasketItem("item_id", 123);
+        $basketItem->setAdditionData(array("description" => "test")); 
+        
+        $this->assertEquals("test", $basketItem->getDescription());
+    }    
+    
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testAddAdditionalDataToBasketItemWithoutDescription()
+    {
+        $basketItem = new Basket\BasketItem("item_id", 123);
+        $basketItem->setAdditionData(array("foo" => "bar")); 
+    }
+    
+    /**
+     * @expectedException InvalidArgumentException
+     */    
+    public function testAddEmptyAdditionalDataToBasketSet()
+    {   
+        $basketItemSet = new Basket\BasketSet(123, array());        
+    }  
+    
+    /**
+     * @expectedException InvalidArgumentException
+     */      
+    public function testAddOnlyImageAdditionalDataToBasketSet()
+    {  
+        $basketItemSet = new Basket\BasketSet(123, array("image_url" => "www"));        
+    }  
+    
+    /**
+     * @expectedException InvalidArgumentException
+     */      
+    public function testAddOnlyDescAdditionalDataToBasketSet()
+    {    
+        $basketItemSet = new Basket\BasketSet(123, array("description" => "www"));        
+    }   
+    
+    public function testAddAdditionalDataToBasketSet()
+    {        
+        $basketItemSet = new Basket\BasketSet(123, array("image_url" => "www", "description" => "Test"));
+        
+        $this->assertEquals("Test", $basketItemSet->getDescription());
+        $this->assertCount(2, $basketItemSet->getAdditionalData());
+    }    
 
     /**
      * @depends testBasket
@@ -213,7 +262,7 @@ class BasketTest extends AbstractShopApiTest
         $updatedItem4 = <<<EOS
         {
             "id": "identifier4",
-            "additional_data": {"description": "Wudnersch\u00f6n und so"},
+            "additional_data": {"description": "Wudnersch\u00f6n und so", "image_url": "http://google.de"},
             "set_items": [
                 {
                     "variant_id": 12312121
@@ -237,7 +286,7 @@ EOS;
                 array(12312121),
                 array(66666, array('description' => 'engravingssens', 'internal_infos' => array('stuff')))
             ),
-            array('description' => 'Wudnerschön und so')
+            array('description' => 'Wudnerschön und so', "image_url" => "http://google.de")
             ));
         $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":['. $updatedItem4 .']}}]';
         $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
