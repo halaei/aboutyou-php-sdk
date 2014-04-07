@@ -7,6 +7,7 @@
 namespace Collins\ShopApi\Model;
 
 use Collins\ShopApi;
+use Collins\ShopApi\Model\FacetManager\FacetManagerInterface;
 
 class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
 {
@@ -82,36 +83,28 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
 
     protected function fetch()
     {
-        if ($this->facets !== null) return;
-
-        $shopApi = $this->getShopApi();
-
-        $groupIds = array_keys($this->ids);
-        $allFacets = $shopApi->fetchFacets($groupIds);
-
-        $this->facets = array();
-        $this->groups = array();
+        if (!empty($this->facets)) return;
 
         foreach ($this->ids as $groupId => $facetIds) {
 
             foreach ($facetIds as $facetId) {
-                $key = Facet::uniqueKey($groupId, $facetId);
-                if (!isset($allFacets[$key])) {
+                $facet = self::$facetManager->getFacet($groupId, $facetId);
+
+                if (empty($facet)) {
                     // TODO: error handling
                     continue;
                 }
 
-                $facet = $allFacets[$key];
-
                 if (isset($this->groups[$groupId])) {
                     $group = $this->groups[$groupId];
                 } else {
+                    // @todo: Cannot we save one function call per iteration if we use $groupId instead of  $facet->getGroupId()?
                     $group = new FacetGroup($facet->getGroupId(), $facet->getGroupName());
                     $this->groups[$groupId] = $group;
                 }
 
                 $group->addFacet($facet);
-                $this->facets[$facet->getUniqueKey()] = $facet;
+                $this->facets["$groupId:$facetId"] = $facet;
             }
         }
     }
@@ -121,13 +114,11 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
      */
     public function getGroups()
     {
-        $this->fetch();
-
-        if ($this->groups === null) {
+        if (empty($this->groups)) {
             $this->fetch();
         }
 
-        return $this->groups;
+        return($this->groups);
     }
 
     /**
@@ -159,6 +150,17 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
             $this->facets[$key] :
             null
         ;
+    }
+
+    public function getFacet($facetGroupId, $facetId)
+    {
+        if(empty($this->facets)) {
+            $this->fetch();
+        }
+
+        if(isset($this->facets["$facetGroupId:$facetId"])) {
+            return($this->facets["$facetGroupId:$facetId"]);
+        }
     }
 
     /**
@@ -223,6 +225,22 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
         }
 
         return true;
+    }
+
+    public static function mergeFacetIds($facetIdsArray)
+    {
+        $ids = array();
+        foreach ($facetIdsArray as $facetIds) {
+            foreach ($facetIds as $groupId => $facetIds) {
+                if (isset( $ids[$groupId])) {
+                    $ids[$groupId] = array_merge($ids[$groupId], $facetIds);
+                } else {
+                    $ids[$groupId] = $facetIds;
+                }
+            }
+        }
+
+        return $ids;
     }
 
     /**

@@ -7,41 +7,52 @@
 namespace Collins\ShopApi\Factory;
 
 use Collins\ShopApi;
+use Collins\ShopApi\Model\FacetManager\FacetManagerInterface;
 
 class DefaultModelFactory implements ModelFactoryInterface
 {
     /** @var ShopApi */
     protected $shopApi;
 
-    /** @var ShopApi\Model\FacetManagerInterface */
+    /** @var FacetManagerInterface */
     protected $facetManager;
 
     /**
      * @param ShopApi $shopApi
      */
-    public function __construct(ShopApi $shopApi)
+    public function __construct(ShopApi $shopApi, FacetManagerInterface $facetManager)
     {
-        $this->facetManager = new ShopApi\Model\FacetManager();
-
         ShopApi\Model\Category::setShopApi($shopApi);
         ShopApi\Model\Product::setShopApi($shopApi);
         ShopApi\Model\FacetGroupSet::setShopApi($shopApi);
 
         $this->shopApi = $shopApi;
-        $this->setFacetManager(new ShopApi\Model\FacetManager());
+        $this->setFacetManager($facetManager);
     }
 
     /**
-     * @param ShopApi\Model\FacetManagerInterface $facetManager
+     * @param FacetManagerInterface $facetManager
      */
-    public function setFacetManager(ShopApi\Model\FacetManagerInterface $facetManager)
+    public function setFacetManager(FacetManagerInterface $facetManager)
     {
+        if(!empty($this->facetManager)) {
+            $oldFacetManagerSubscribedEvents = $this->facetManager->getSubscribedEvents();
+            if(!empty($oldFacetManagerSubscribedEvents)) {
+                $this->shopApi->getEventDispatcher()->removeSubscriber($this->facetManager);
+            }
+        }
+
+        $newSubscribedEvents = $facetManager->getSubscribedEvents();
+        if(!empty($newSubscribedEvents)) {
+            $this->shopApi->getEventDispatcher()->addSubscriber($facetManager);
+        }
         $this->facetManager = $facetManager;
+        $this->facetManager->setShopApi($this->shopApi);
         ShopApi\Model\FacetGroupSet::setFacetManager($facetManager);
     }
 
     /**
-     * @return ShopApi\Model\FacetManager|ShopApi\Model\FacetManagerInterface
+     * @return ShopApi\Model\FacetManager|FacetManagerInterface
      */
     public function getFacetManager()
     {
