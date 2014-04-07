@@ -232,7 +232,7 @@ class BasketSet extends AbstractBasketItem implements BasketItemInterface
      * you can add a key "image_url" to the $additionalData that contains the URL to the image.
      * 
      * @param array $additionalData additional data for this item set
-     * @throws \Collins\ShopApi\Exception\InvalidParameterException
+     * @throws \InvalidArgumentException
      */    
     protected function checkAdditionData(array $additionalData = null)
     {

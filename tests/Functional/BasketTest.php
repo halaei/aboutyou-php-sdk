@@ -212,7 +212,7 @@ class BasketTest extends AbstractShopApiTest
         $basketItemSet = new Basket\BasketSet(123, array("image_url" => "www", "description" => "Test"));
         
         $this->assertEquals("Test", $basketItemSet->getDescription());
-        $this->assertEquals(2, count($basketItemSet->getAdditionalData()));
+        $this->assertCount(2, $basketItemSet->getAdditionalData());
     }    
 
     /**
