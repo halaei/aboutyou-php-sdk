@@ -26,7 +26,7 @@ class BasketTest extends AbstractShopApiTest
         $exceptedRequestBody = '[{"basket":{"session_id":"testing"}}]';
         $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
 
-        $basket = $shopApi->fetchBasket($this->sessionId);
+        $basket = $shopApi->fetchBasket($this->sessionId);       
         $this->checkBasket($basket);
         $this->assertTrue($basket->hasErrors());
 
@@ -165,6 +165,68 @@ class BasketTest extends AbstractShopApiTest
         $basket = $shopApi->removeItemsFromBasket($this->sessionId, array('item3', 'item4'));
         $this->checkBasket($basket);
     }
+   
+    public function testAddAdditionalDataToBasketItemWithDescription()
+    {
+        $basketItem = new Basket\BasketItem("item_id", 123);
+        $basketItem->setAdditionData(array("description" => "test")); 
+        
+        $this->assertEquals("test", $basketItem->getDescription());
+    }    
+    
+    public function testAddAdditionalDataToBasketItemWithoutDescription()
+    {
+        $basketItem = new Basket\BasketItem("item_id", 123);
+
+        try {
+           $basketItem->setAdditionData(array("foo" => "bar")); 
+        } catch(\InvalidArgumentException $e) {
+            return;
+        }
+        
+        $this->fail('AdditionalData for BasketItem must have a description');
+    }
+    
+    public function testAddEmptyAdditionalDataToBasketSet()
+    {        
+        try {
+           $basketItemSet = new Basket\BasketSet(123, array());
+        } catch(\InvalidArgumentException $e) {
+            return;
+        }
+        
+        $this->fail('BasketSet must have AdditionalData');
+    }  
+    
+    public function testAddOnlyImageAdditionalDataToBasketSet()
+    {        
+        try {
+           $basketItemSet = new Basket\BasketSet(123, array("image_url" => "www"));
+        } catch(\InvalidArgumentException $e) {
+            return;
+        }
+        
+        $this->fail('AdditionalData for BasketSet must have key description');
+    }  
+    
+    public function testAddOnlyDescAdditionalDataToBasketSet()
+    {        
+        try {
+           $basketItemSet = new Basket\BasketSet(123, array("description" => "www"));
+        } catch(\InvalidArgumentException $e) {
+            return;
+        }
+        
+        $this->fail('AdditionalData for BasketSet must have key image_url');
+    }   
+    
+    public function testAddAdditionalDataToBasketSet()
+    {        
+        $basketItemSet = new Basket\BasketSet(123, array("image_url" => "www", "description" => "Test"));
+        
+        $this->assertEquals("Test", $basketItemSet->getDescription());
+        $this->assertEquals(2, count($basketItemSet->getAdditionalData()));
+    }    
 
     /**
      * @depends testBasket
@@ -213,7 +275,7 @@ class BasketTest extends AbstractShopApiTest
         $updatedItem4 = <<<EOS
         {
             "id": "identifier4",
-            "additional_data": {"description": "Wudnersch\u00f6n und so"},
+            "additional_data": {"description": "Wudnersch\u00f6n und so", "image_url": "http://google.de"},
             "set_items": [
                 {
                     "variant_id": 12312121
@@ -237,7 +299,7 @@ EOS;
                 array(12312121),
                 array(66666, array('description' => 'engravingssens', 'internal_infos' => array('stuff')))
             ),
-            array('description' => 'Wudnerschön und so')
+            array('description' => 'Wudnerschön und so', "image_url" => "http://google.de")
             ));
         $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":['. $updatedItem4 .']}}]';
         $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);
