@@ -133,9 +133,25 @@ class Basket
      */
     public function getItems()
     {
-        return $this->items;
+        return array_values($this->items);
     }
 
+    /**
+     * @param $itemId
+     *
+     * @return BasketItem|BasketSet|null
+     */
+    public function getItem($itemId)
+    {
+        return isset($this->items[$itemId]) ?
+            $this->items[$itemId] :
+            null
+        ;
+    }
+
+    /**
+     * @return Product[]
+     */
     public function getProducts()
     {
         return $this->products;
@@ -208,7 +224,7 @@ class Basket
                 if ($item->hasErrors()) {
                     $this->errors[$index] = $item;
                 } else {
-                    $this->items[$index] = $item;
+                    $this->items[$item->getId()] = $item;
                 }
             }
         }

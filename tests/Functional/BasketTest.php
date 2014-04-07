@@ -43,12 +43,14 @@ class BasketTest extends AbstractShopApiTest
         $this->assertEquals(1543435, $items[0]->getVariant()->getId());
         $this->assertNull($items[0]->getAdditionalData());
         $this->assertNull($items[0]->getDescription());
+        $this->assertEquals($items[0], $basket->getItem($items[0]->getId()));
+        $this->assertEquals($items[1], $basket->getItem($items[1]->getId()));
 
-        $this->assertEquals('identifier3', $items[2]->getId());
-        $subItems = $items[2]->getItems();
-        $this->assertEquals(300, $items[2]->getTotalPrice());
-        $this->assertEquals(280, $items[2]->getTotalNet());
-        $this->assertEquals(20, $items[2]->getTotalVat());
+        $this->assertEquals('identifier3', $items[1]->getId());
+        $subItems = $items[1]->getItems();
+        $this->assertEquals(300, $items[1]->getTotalPrice());
+        $this->assertEquals(280, $items[1]->getTotalNet());
+        $this->assertEquals(20, $items[1]->getTotalVat());
         $this->assertFalse($subItems[0]->hasErrors());
         $this->assertEquals(19.0, $subItems[0]->getTax());
         $this->assertEquals(600, $subItems[0]->getTotalPrice());
