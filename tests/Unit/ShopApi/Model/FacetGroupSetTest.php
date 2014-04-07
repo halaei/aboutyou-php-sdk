@@ -106,7 +106,7 @@ class FacetGroupSetTest extends AbstractModelTest
 
     public function testUsingFacetManager()
     {
-        $facetManagerMock = $this->getMockForAbstractClass('Collins\\ShopApi\\Model\\FacetManagerInterface');
+        $facetManagerMock = $this->getMockForAbstractClass('Collins\\ShopApi\\Model\\FacetManager\\FacetManagerInterface');
         $facetManagerMock->expects($this->atLeastOnce())
             ->method('getFacet');
 

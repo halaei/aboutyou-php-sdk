@@ -95,7 +95,7 @@ class FacetManagerTest extends AbstractShopApiTest
             $filename
         );
         $facetManager = $shopApi->getResultFactory()->getFacetManager();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager', $facetManager);
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\AbstractFacetManager', $facetManager);
         $cacheMock = $this->getMockForAbstractClass('Doctrine\\Common\\Cache\\CacheMultiGet');
         $cacheMock->expects($this->atLeastOnce())
             ->method('fetchMulti')
