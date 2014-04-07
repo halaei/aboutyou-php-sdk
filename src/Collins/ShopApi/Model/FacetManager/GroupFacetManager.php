@@ -10,7 +10,7 @@ class GroupFacetManager extends AbstractFacetManager
 {
     protected function preFetch()
     {
-        $this->facets += $this->shopApi->fetchFacet(array_keys($this->missingFacetGroupIdsAndFacetIds));
+        $this->facets += $this->shopApi->fetchFacets(array_keys($this->missingFacetGroupIdsAndFacetIds));
         $this->missingFacetGroupIdsAndFacetIds = array();
     }
 }
