@@ -10,7 +10,9 @@ class AutocompleteTest extends AbstractShopApiTest
      */
     public function testAutocomplete()
     {
-        $shopApi = $this->getShopApiWithResultFile('autocomplete-sho.json');
+        $shopApi = $this->getShopApiWithResultFiles(
+            'autocomplete-sho.json',
+        );
 
         $autocomplete = $shopApi->fetchAutocomplete('Sho', 10);
         $this->assertInstanceOf('Collins\ShopApi\Model\Autocomplete', $autocomplete);

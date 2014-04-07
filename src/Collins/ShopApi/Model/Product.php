@@ -155,7 +155,7 @@ class Product extends AbstractModel
             $ids = self::parseFacetIdsInBrand($jsonObject);
         }
 
-        return ($ids === null) ? $ids : array();
+        return ($ids !== null) ? $ids : array();
     }
 
     public static function parseFacetIdsInAttributesMerged($jsonObject)
