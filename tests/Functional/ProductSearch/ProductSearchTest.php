@@ -76,6 +76,22 @@ class ProductSearchTest extends AbstractShopApiTest
         $this->checkProductSearchResult($products);
     }
 
+    public function testProductGetEmptyCategoryTree()
+    {
+        $shopApi = $this->getShopApiWithResultFile('product_search.json');
+        
+        $pagination = array(
+            'limit' => 20,
+            'offset' => 21,
+        );
+        $criteria = $shopApi->getProductSearchCriteria('12345')
+            ->setLimit($pagination['limit'], $pagination['offset'])
+        ;
+        $products = $shopApi->fetchProductSearch($criteria);
+        
+        $this->assertInternalType('array', $products->getCategoryTree());
+    }
+    
     public function testProductGetCategoryGetParent()
     {
         $shopApi = $this->getShopApiWithResultFiles(array(

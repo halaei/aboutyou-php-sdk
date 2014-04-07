@@ -34,7 +34,7 @@ class ProductSearchResult
     protected $facets;
 
     /** @var Category[] */
-    protected $categories;
+    protected $categories = array();
 
     /**
      * @var array
