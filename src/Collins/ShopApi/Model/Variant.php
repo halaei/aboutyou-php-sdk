@@ -210,6 +210,14 @@ class Variant extends AbstractModel
     }
 
     /**
+     * @return array
+     */
+    public function getFacetIds()
+    {
+        return self::parseFacetIds($this->jsonObject);
+    }
+
+    /**
      * @return FacetGroupSet
      */
     public function getFacetGroupSet()

@@ -13,10 +13,13 @@ class FacetManagerTest extends AbstractShopApiTest
 {
     public function testProductSearch()
     {
-        $shopApi = $this->getShopApiWithResultFile(
-            'product_search-result.json',
-            array('172', '206', '194', '2', '1', '0:4487')
+        $shopApi = $this->getShopApiWithResultFiles(array(
+                'product_search-result.json',
+                'facets-for-product-variant-facets.json',
+            )
         );
+
+        $k = $shopApi->getResultFactory()->getFacetManager();
 
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
         $products = $productSearchResult->getProducts();
@@ -26,9 +29,10 @@ class FacetManagerTest extends AbstractShopApiTest
 
     public function testProductByEans()
     {
-        $shopApi = $this->getShopApiWithResultFile(
-            'products_eans-result.json',
-            array('172', '206', '194', '2', '1', '0:4487')
+        $shopApi = $this->getShopApiWithResultFiles(array(
+                'products_eans-result.json',
+                'facets-for-product-variant-facets.json',
+            )
         );
 
         $productEansResult = $shopApi->fetchProductsByEans(array('dummy'));
@@ -39,9 +43,10 @@ class FacetManagerTest extends AbstractShopApiTest
 
     public function testProductByIds()
     {
-        $shopApi = $this->getShopApiWithResultFile(
-            'products-result.json',
-            array('172', '206', '194', '2', '1', '0:4487')
+        $shopApi = $this->getShopApiWithResultFiles(array(
+                'products-result.json',
+                'facets-for-product-variant-facets.json',
+            )
         );
 
         $productResult = $shopApi->fetchProductsByIds(array('dummy'));
@@ -52,9 +57,11 @@ class FacetManagerTest extends AbstractShopApiTest
 
     public function testAutocomplete()
     {
-        $shopApi = $this->getShopApiWithResultFile(
-            'autocompletion-result.json',
-            array('172', '206', '194', '2', '1', '0:4487')
+        $shopApi = $this->getShopApiWithResultFiles(array(
+                'autocompletion-result.json',
+                #'facets-all.json',
+                'facets-for-product-variant-facets.json'
+            )
         );
 
         $autocompletionResult = $shopApi->fetchAutocomplete('dummy');
@@ -65,9 +72,10 @@ class FacetManagerTest extends AbstractShopApiTest
 
     public function testBasket()
     {
-        $shopApi = $this->getShopApiWithResultFile(
-            'basket-result.json',
-            array('172', '206', '194', '2', '1', '0:4487')
+        $shopApi = $this->getShopApiWithResultFiles(array(
+                'basket-result.json',
+                'facets-for-product-variant-facets.json',
+            )
         );
 
         $basket = $shopApi->fetchBasket('dummy');
@@ -88,7 +96,7 @@ class FacetManagerTest extends AbstractShopApiTest
             $filename
         );
         $facetManager = $shopApi->getResultFactory()->getFacetManager();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager', $facetManager);
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\AbstractFacetManager', $facetManager);
         $cacheMock = $this->getMockForAbstractClass('Doctrine\\Common\\Cache\\CacheMultiGet');
         $cacheMock->expects($this->atLeastOnce())
             ->method('fetchMulti')
