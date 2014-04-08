@@ -350,7 +350,7 @@ class DefaultModelFactory implements ModelFactoryInterface
 
     public function preHandleError($json, $resultKey, $isMultiRequest)
     {
-        if ($resultKey === 'basket') {
+        if ($resultKey === 'basket' && isset($json->order_lines)) {
             return false;
         }
 

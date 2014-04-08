@@ -83,6 +83,7 @@ class BasketSet extends AbstractBasketItem implements BasketItemInterface
      */
     public function __construct($id, $additionalData = null)
     {
+        $this->checkId($id);
         $this->checkAdditionData($additionalData);
         $this->id = $id;
         $this->additionalData = $additionalData;
@@ -222,6 +223,17 @@ class BasketSet extends AbstractBasketItem implements BasketItemInterface
         $key .= json_encode($items);
 
         return $key;
+    }
+    
+    /**
+     * @param mixed $id
+     * @throws \InvalidArgumentException
+     */
+    protected function checkId($id) 
+    {
+        if(!is_string($id) || strlen($id) < 2) {
+            throw new \InvalidArgumentException('ID of the basket item set must be a String that must contain minimum two characters');            
+        }
     }
     
     /**

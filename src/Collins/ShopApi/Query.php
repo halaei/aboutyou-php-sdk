@@ -41,7 +41,7 @@ class Query extends QueryBuilder
         $queryString = $this->getQueryString();
 
         $response   = $this->client->request($queryString, $cacheDuration);
-
+        
         $jsonResponse = json_decode($response->getBody(true));
 
         return $this->parseResult($jsonResponse, count($this->query) > 1);
@@ -128,15 +128,15 @@ class Query extends QueryBuilder
 //            }
 
             $factory = $this->factory;
-
+            
             if (isset($jsonObject->error_code)) {
                 $result = $factory->preHandleError($jsonObject, $resultKey, $isMultiRequest);
                 if ($result !== false) {
                     $results[$resultKey] = $result;
                     continue;
-                }
+                }               
             }
-
+            
             $method  = $this->mapping[$resultKey];
             $results[$resultKey] = $factory->$method($jsonObject, $currentQuery[$queryKey]);
         }

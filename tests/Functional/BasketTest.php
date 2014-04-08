@@ -74,7 +74,7 @@ class BasketTest extends AbstractShopApiTest
     public function testAddEmptyItemSetToBasket()
     {
         $basket = new Basket();        
-        $set = new Basket\BasketSet(123, ['description' => 'test', 'image_url' => 'http://img-url']);                
+        $set = new Basket\BasketSet('123', ['description' => 'test', 'image_url' => 'http://img-url']);                
         $basket->updateItemSet($set);        
     }
     
@@ -96,7 +96,7 @@ class BasketTest extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFile('emptyBasketSet.json');        
         $basket = new Basket();
         
-        $set = new Basket\BasketSet(123, ['description' => 'test', 'image_url' => 'http://img-url']);                
+        $set = new Basket\BasketSet('A123567', ['description' => 'test', 'image_url' => 'http://img-url']);                
         $item = new Basket\BasketSetItem(226651);
         $set->addItem($item);
         
@@ -104,6 +104,31 @@ class BasketTest extends AbstractShopApiTest
         $result = $shopApi->updateBasket('123456xyz', $basket);
          
         $this->assertTrue($result->hasErrors());
+    }
+    
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testCreateBasketSetWithWrongID()
+    {
+        $set = new Basket\BasketSet(12, ['description' => 'test', 'image_url' => 'http://img-url']);        
+    }
+    
+    /**
+     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
+     */
+    public function testAddItemSetToBasketWithWrongBasketSetID()
+    {
+        $shopApi = $this->getShopApiWithResultFile('basketSetWrongId.json');        
+        $basket = new Basket();
+        
+        $set = new Basket\BasketSet('WRONG_ID', ['description' => 'test', 'image_url' => 'http://img-url']);                
+        $item = new Basket\BasketSetItem(226651);
+        $set->addItem($item);
+        
+        $basket->updateItemSet($set);
+        
+        $shopApi->updateBasket('123456xyz', $basket);                 
     }
         
     
@@ -124,7 +149,7 @@ class BasketTest extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFile('wrongEmptyBasketSet.json');
         $basket = new Basket();
         
-        $set = new Basket\BasketSet(123, ['description' => 'test', 'image_url' => 'http://img-url']);                
+        $set = new Basket\BasketSet('123', ['description' => 'test', 'image_url' => 'http://img-url']);                
         $item = new Basket\BasketSetItem(12312121);
         $set->addItem($item);
         
@@ -234,10 +259,10 @@ class BasketTest extends AbstractShopApiTest
    
     public function testAddAdditionalDataToBasketItemWithDescription()
     {
-        $basketItem = new Basket\BasketItem("item_id", 123);
-        $basketItem->setAdditionData(array("description" => "test")); 
+        $basketItem = new Basket\BasketItem('item_id', 123);
+        $basketItem->setAdditionData(array('description' => 'test')); 
         
-        $this->assertEquals("test", $basketItem->getDescription());
+        $this->assertEquals('test', $basketItem->getDescription());
     }    
     
     /**
@@ -245,8 +270,8 @@ class BasketTest extends AbstractShopApiTest
      */
     public function testAddAdditionalDataToBasketItemWithoutDescription()
     {
-        $basketItem = new Basket\BasketItem("item_id", 123);
-        $basketItem->setAdditionData(array("foo" => "bar")); 
+        $basketItem = new Basket\BasketItem('item_id', 123);
+        $basketItem->setAdditionData(array('foo' => 'bar')); 
     }
     
     /**
@@ -254,7 +279,7 @@ class BasketTest extends AbstractShopApiTest
      */    
     public function testAddEmptyAdditionalDataToBasketSet()
     {   
-        $basketItemSet = new Basket\BasketSet(123, array());        
+        $basketItemSet = new Basket\BasketSet('123', array());        
     }  
     
     /**
@@ -262,7 +287,7 @@ class BasketTest extends AbstractShopApiTest
      */      
     public function testAddOnlyImageAdditionalDataToBasketSet()
     {  
-        $basketItemSet = new Basket\BasketSet(123, array("image_url" => "www"));        
+        $basketItemSet = new Basket\BasketSet('123', array('image_url' => 'www'));        
     }  
     
     /**
@@ -270,14 +295,14 @@ class BasketTest extends AbstractShopApiTest
      */      
     public function testAddOnlyDescAdditionalDataToBasketSet()
     {    
-        $basketItemSet = new Basket\BasketSet(123, array("description" => "www"));        
+        $basketItemSet = new Basket\BasketSet('123', array('description' => 'www'));        
     }   
     
     public function testAddAdditionalDataToBasketSet()
     {        
-        $basketItemSet = new Basket\BasketSet(123, array("image_url" => "www", "description" => "Test"));
+        $basketItemSet = new Basket\BasketSet('123', array('image_url' => 'www', 'description' => 'Test'));
         
-        $this->assertEquals("Test", $basketItemSet->getDescription());
+        $this->assertEquals('Test', $basketItemSet->getDescription());
         $this->assertCount(2, $basketItemSet->getAdditionalData());
     }    
 

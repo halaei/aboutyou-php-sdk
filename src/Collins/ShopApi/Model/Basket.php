@@ -197,7 +197,7 @@ class Basket
         foreach ($this->updatedItems as $item) {
             $orderLines[] = $item;
         }
-
+        
         return $orderLines;
     }
 
