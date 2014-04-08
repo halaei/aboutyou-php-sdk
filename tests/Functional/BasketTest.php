@@ -67,6 +67,19 @@ class BasketTest extends AbstractShopApiTest
 
         return $basket;
     }
+    
+    public function testAddItemToBasketWithProductID()
+    {
+        $shopApi = $this->getShopApiWithResultFile('emptyBasket.json');
+        
+        $basket = $shopApi->addItemToBasket("123456xyz", 226651);      
+        $this->assertTrue($basket->hasErrors());
+        
+        $errors = $basket->getErrors();
+        $error = $errors[0];
+        
+        $this->assertEquals("variant not found", $error->getErrorMessage());
+    }
 
     public function testBasketGetCollectedItems()
     {

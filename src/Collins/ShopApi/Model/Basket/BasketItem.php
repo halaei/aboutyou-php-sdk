@@ -59,8 +59,8 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
         $item->parseErrorResult($jsonObject);
 
         $item->jsonObject = $jsonObject;
-
-        if ($products[$jsonObject->product_id]) {
+        
+        if (!empty($products) && $products[$jsonObject->product_id]) {
             $item->setProduct($products[$jsonObject->product_id]);
         }
         unset($jsonObject->id, $jsonObject->variant_id, $jsonObject->additional_data, $jsonObject->product_id);
