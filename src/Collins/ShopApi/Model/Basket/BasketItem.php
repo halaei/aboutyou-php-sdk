@@ -43,6 +43,7 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
      */
     public function __construct($id, $variantId, array $additionalData = null)
     {
+        $this->checkId($id);
         $this->id = $id;
         parent::__construct($variantId, $additionalData);
     }
@@ -76,4 +77,15 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
     {
         return $this->id;
     }
+    
+    /**
+     * @param mixed $id
+     * @throws \InvalidArgumentException
+     */
+    protected function checkId($id) 
+    {
+        if(!is_string($id) || strlen($id) < 2) {
+            throw new \InvalidArgumentException('ID of the BasketSetItem must be a String that must contain minimum two characters');            
+        }
+    }    
 }

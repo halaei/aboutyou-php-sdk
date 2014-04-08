@@ -267,6 +267,26 @@ class Basket
 
         return $this;
     }
+    
+    /**
+     * @return $this
+     */
+    public function deleteAllItems()
+    {
+        $items = $this->getItems();
+      
+        if (!empty($items)) {
+            $ids = array();
+
+            foreach ($items as $item) {                
+                $ids[] = $item->getId();
+            }  
+            
+            $this->deleteItems($ids);
+        }
+
+        return $this;
+    }
 
     /**
      * @param BasketItem $basketItem

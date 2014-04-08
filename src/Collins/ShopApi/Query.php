@@ -134,9 +134,9 @@ class Query extends QueryBuilder
                 if ($result !== false) {
                     $results[$resultKey] = $result;
                     continue;
-                }               
+                }
             }
-            
+
             $method  = $this->mapping[$resultKey];
             $results[$resultKey] = $factory->$method($jsonObject, $currentQuery[$queryKey]);
         }

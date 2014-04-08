@@ -305,7 +305,15 @@ class BasketTest extends AbstractShopApiTest
         $this->assertEquals('Test', $basketItemSet->getDescription());
         $this->assertCount(2, $basketItemSet->getAdditionalData());
     }    
-
+    
+    /**
+     * @expectedException InvalidArgumentException
+     */     
+    public function testCreateBasketItemWithWrongId()
+    {
+        $item = new Basket\BasketItem(123, 12345);
+    }
+    
     /**
      * @depends testBasket
      */
