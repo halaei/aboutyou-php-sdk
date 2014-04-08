@@ -59,10 +59,14 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
         $item->parseErrorResult($jsonObject);
 
         $item->jsonObject = $jsonObject;
-        
-        if (!empty($products) && $products[$jsonObject->product_id]) {
-            $item->setProduct($products[$jsonObject->product_id]);
-        }
+                
+        if ($jsonObject->product_id !== null) {
+            if (isset($products[$jsonObject->product_id])) {
+                $item->setProduct($products[$jsonObject->product_id]);
+            } else {
+                throw new \Collins\ShopApi\Exception\UnexpectedResultException('Product with ID '.$jsonObject->product_id.' expected but wasnt received with the basket');
+            }
+        } 
         unset($jsonObject->id, $jsonObject->variant_id, $jsonObject->additional_data, $jsonObject->product_id);
 
         return $item;

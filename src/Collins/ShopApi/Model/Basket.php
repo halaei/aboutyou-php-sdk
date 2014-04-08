@@ -297,8 +297,14 @@ class Basket
      */
     public function updateItemSet(BasketSet $basketSet)
     {
+        $items = $basketSet->getItems();
+        
+        if (empty($items)) {
+            throw new \InvalidArgumentException('BasketSet needs at least one item');            
+        }
+
         $itemSet = array();
-        foreach ($basketSet->getItems() as $subItem) {
+        foreach ($items as $subItem) {
             $item = array(
                 'variant_id' => $subItem->getVariantId()
             );

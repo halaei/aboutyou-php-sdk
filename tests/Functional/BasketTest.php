@@ -68,18 +68,71 @@ class BasketTest extends AbstractShopApiTest
         return $basket;
     }
     
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testAddEmptyItemSetToBasket()
+    {
+        $basket = new Basket();        
+        $set = new Basket\BasketSet(123, ['description' => 'test', 'image_url' => 'http://img-url']);                
+        $basket->updateItemSet($set);        
+    }
+    
     public function testAddItemToBasketWithProductID()
     {
         $shopApi = $this->getShopApiWithResultFile('emptyBasket.json');
         
-        $basket = $shopApi->addItemToBasket("123456xyz", 226651);      
+        $basket = $shopApi->addItemToBasket('123456xyz', 226651);      
         $this->assertTrue($basket->hasErrors());
-        
+
         $errors = $basket->getErrors();
         $error = $errors[0];
         
-        $this->assertEquals("variant not found", $error->getErrorMessage());
+        $this->assertEquals('variant not found', $error->getErrorMessage());
     }
+    
+    public function testAddItemSetToBasketWithProductID()
+    {
+        $shopApi = $this->getShopApiWithResultFile('emptyBasketSet.json');        
+        $basket = new Basket();
+        
+        $set = new Basket\BasketSet(123, ['description' => 'test', 'image_url' => 'http://img-url']);                
+        $item = new Basket\BasketSetItem(226651);
+        $set->addItem($item);
+        
+        $basket->updateItemSet($set);
+        $result = $shopApi->updateBasket('123456xyz', $basket);
+         
+        $this->assertTrue($result->hasErrors());
+    }
+        
+    
+    /**
+     * @expectedException \Collins\ShopApi\Exception\UnexpectedResultException
+     */
+    public function testAddItemToBasketWithWrongProductsResult()
+    {
+        $shopApi = $this->getShopApiWithResultFile('wrongEmptyBasket.json');
+        $shopApi->addItemToBasket('123456xyz', 1543435);              
+    }
+    
+    /**
+     * @expectedException \Collins\ShopApi\Exception\UnexpectedResultException
+     */
+    public function testAddItemToBasketWithWrongProductsResultInSet()
+    {
+        $shopApi = $this->getShopApiWithResultFile('wrongEmptyBasketSet.json');
+        $basket = new Basket();
+        
+        $set = new Basket\BasketSet(123, ['description' => 'test', 'image_url' => 'http://img-url']);                
+        $item = new Basket\BasketSetItem(12312121);
+        $set->addItem($item);
+        
+        $basket->updateItemSet($set);
+        $result = $shopApi->updateBasket('123456xyz', $basket);        
+    }    
+    
+   
 
     public function testBasketGetCollectedItems()
     {
