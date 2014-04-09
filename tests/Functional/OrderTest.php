@@ -19,6 +19,18 @@ class OrderTest extends AbstractShopApiTest
         $basket = $order->getBasket();
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\Basket', $basket);
     }
+    
+    public function testFetchOrderWithProductsWithoutCategories()
+    {
+        $shopApi = $this->getShopApiWithResultFile('get-order-without-categories.json');
+        
+        $order = $shopApi->fetchOrder('53574');
+        $basket = $order->getBasket();
+        $products = $basket->getProducts();
+        $product = array_pop($products);
+
+        $this->assertCount(0, $product->getCategories());
+    }
 
     public function testInitiateOrderSuccess()
     {
@@ -59,9 +71,13 @@ class OrderTest extends AbstractShopApiTest
         $this->markTestIncomplete('implement me');
     }
 
+
+    /**
+     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
+     * @expectedExceptionMessage Basket is empty: abcabcabc
+     */
     public function testInitiateOrderFailedWithEmptyBasket()
     {
-        $this->markTestIncomplete('implement behavior');
         $shopApi = $this->getShopApiWithResult('[
             {
                 "initiate_order": {
@@ -77,13 +93,14 @@ class OrderTest extends AbstractShopApiTest
             "abcabcabc",
             "http://somedomain.com/url"
         );
-
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\InitiateOrder', $initiateOrder);
     }
 
+    /**
+     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
+     * @expectedExceptionMessage success_url: u'/checkout/success' does not match '^http(s|)://'
+     */
     public function testInitiateOrderFailedWithError()
     {
-        $this->markTestIncomplete('implent be');
         $response = <<<EOS
         [{
             "initiate_order": {
@@ -98,7 +115,5 @@ EOS;
             "abcabcabc",
             "/somedomain.com/url"
         );
-
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\InitiateOrder', $initiateOrder);
     }
 }

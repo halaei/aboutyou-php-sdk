@@ -6,6 +6,7 @@
 
 namespace Collins\ShopApi\Model;
 
+use Collins\ShopApi\Factory\ModelFactoryInterface;
 
 abstract class AbstractProductsResult extends AbstractModel implements \IteratorAggregate, \ArrayAccess, \Countable
 {
@@ -15,13 +16,40 @@ abstract class AbstractProductsResult extends AbstractModel implements \Iterator
     /** @var string */
     protected $pageHash;
 
-    public function __construct(\stdClass $jsonObject)
+    protected $factory;
+
+    public function __construct(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
         $this->products = array();
-        $this->fromJson($jsonObject);
+        $this->fromJson($jsonObject, $factory);
+        $this->preFetchFacets();
     }
 
-    abstract protected function fromJson(\stdClass $jsonObject);
+    public function preFetchFacets()
+    {
+        $brandIds = array();
+        $groupIds = array();
+        foreach ($this->products as $product) {
+            $ids = $product->getFacetIds();
+            if (!$ids) break; // every product should have merged_attributes
+
+            if ($ids[0]) {
+                $brandIds[] = $ids[0];
+                unset($ids[0]);
+            }
+            $groupIds[] = array_keys($ids);
+        }
+
+        if (!empty($brandIds)) {
+            $brandIds = call_user_func_array('array_merge', $brandIds);
+            $brandIds = array_unique($brandIds);
+        }
+        if (!empty($groupIds)) {
+            $groupIds = call_user_func_array('array_merge', $groupIds);
+        }
+    }
+
+    abstract protected function fromJson(\stdClass $jsonObject, ModelFactoryInterface $factory);
 
     /**
      * @return string

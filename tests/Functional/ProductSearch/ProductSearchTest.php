@@ -76,6 +76,41 @@ class ProductSearchTest extends AbstractShopApiTest
         $this->checkProductSearchResult($products);
     }
 
+    public function testProductGetEmptyCategoryTree()
+    {
+        $shopApi = $this->getShopApiWithResultFile('product_search.json');
+        
+        $pagination = array(
+            'limit' => 20,
+            'offset' => 21,
+        );
+        $criteria = $shopApi->getProductSearchCriteria('12345')
+            ->setLimit($pagination['limit'], $pagination['offset'])
+        ;
+        $products = $shopApi->fetchProductSearch($criteria);
+        
+        $this->assertInternalType('array', $products->getCategoryTree());
+    }
+    
+    public function testProductGetCategoryGetParent()
+    {
+        $shopApi = $this->getShopApiWithResultFiles(array(
+                'product-search-result-with-product-categories.json',
+                'category-all.json',
+        ));
+
+        // get all available products
+        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $products = $productSearchResult->getProducts();
+
+        $product = $products[0];
+        $category = $product->getCategory();
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category->getParent());
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category->getParent()->getParent());
+        $this->assertNull($category->getParent()->getParent()->getParent());
+    }
+
     /***************************************************/
 
     private function checkProduct(Product $product)

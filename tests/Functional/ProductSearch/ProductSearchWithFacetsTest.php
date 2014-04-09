@@ -108,7 +108,30 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
 //        }
     }
 
-    /***************************************************/
+    public function testProductSearchGetActiveBrands()
+    {
+        $this->markTestIncomplete('implement method');
+
+//        $shopApi = $this->getShopApiWithResultFiles(array(
+//                'result-product-search-with-facets.json',
+//                'category-all.json'
+//            ));
+//
+//        $criteria = $shopApi->getProductSearchCriteria('12345')
+//            ->setLimit(0)
+//            ->selectFacetsByFacetGroup(0, -1);
+//        $productSearchResult = $shopApi->fetchProductSearch($criteria);
+//        $brandRawFacetIds = $productSearchResult->getRawFacets();
+//
+//        // collect ids
+//        $brandFacetIds = array();
+//
+//        $brands = $shopApi->fetchFacets($brandFacetIds);
+
+    }
+
+
+        /***************************************************/
 
     protected function getJsonStringFromFile($filepath)
     {

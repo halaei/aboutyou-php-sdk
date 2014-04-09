@@ -8,7 +8,7 @@ namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi;
 
-class BreadcrumbTestAbstract extends AbstractShopApiTest
+class BreadcrumbTest extends AbstractShopApiTest
 {
      /**
      *

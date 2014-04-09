@@ -1,0 +1,65 @@
+[
+    {
+        "products": {
+            "pageHash": "5e2fd2f3-6672-4181-a7b9-00101105bf56",
+            "ids": {
+                "301673": {
+                    "styles": [],
+                    "name": "Herren Stiefelette",
+                    "attributes_merged": {
+                        "attributes_172": [
+                            1988
+                        ],
+                        "attributes_206": [
+                            2394
+                        ],
+                        "attributes_194": [
+                            2119
+                        ],
+                        "attributes_2": [
+                            6
+                        ],
+                        "attributes_0": [
+                            4487
+                        ],
+                        "attributes_1": [
+                            11
+                        ]
+                    },
+                    "brand_id": 4487,
+                    "active": true,
+                    "id": 301673,
+                    "style_key": "m0E_10667_TB-EVI"
+                },
+                "302320": {
+                    "styles": [],
+                    "name": "Damen Sandalette, weiß",
+                    "attributes_merged": {
+                        "attributes_172": [
+                            1988
+                        ],
+                        "attributes_206": [
+                            2402
+                        ],
+                        "attributes_194": [
+                            2151
+                        ],
+                        "attributes_2": [
+                            16
+                        ],
+                        "attributes_0": [
+                            4487
+                        ],
+                        "attributes_1": [
+                            570
+                        ]
+                    },
+                    "brand_id": 4487,
+                    "active": true,
+                    "id": 302320,
+                    "style_key": "m0E_8431_TB-EVI"
+                }
+            }
+        }
+    }
+]

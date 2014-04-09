@@ -6,6 +6,8 @@
 
 namespace Collins\ShopApi\Test\Unit\Model;
 
+use Collins\ShopApi;
+
 abstract class AbstractModelTest extends \Collins\ShopApi\Test\ShopSdkTest
 {
     protected function getJsonObject($filepath)
@@ -17,4 +19,14 @@ abstract class AbstractModelTest extends \Collins\ShopApi\Test\ShopSdkTest
 
         return json_decode($jsonString);
     }
-} 
+
+    /**
+     * @return ShopApi\Factory\ModelFactoryInterface
+     */
+    protected function getModelFactory()
+    {
+        $shopApi =  new ShopApi('id', 'token');
+
+        return $shopApi->getResultFactory();
+    }
+}

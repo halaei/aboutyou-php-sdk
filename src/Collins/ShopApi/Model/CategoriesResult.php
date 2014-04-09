@@ -1,28 +1,28 @@
 <?php
 namespace Collins\ShopApi\Model;
 
+use Collins\ShopApi\Factory\ModelFactoryInterface;
+
 /**
  *
  */
-class CategoriesResult extends AbstractModel implements \IteratorAggregate, \ArrayAccess, \Countable
+class CategoriesResult implements \IteratorAggregate, \ArrayAccess, \Countable
 {
     /** @var Category[] */
     protected $categories = array();
 
     protected $categoriesNotFound = array();
 
-    public function __construct($jsonObject, $orderByIds = null)
+    public function __construct($jsonObject, $orderByIds = null, ModelFactoryInterface $factory)
     {
-        $this->fromJson($jsonObject, $orderByIds);
+        $this->fromJson($jsonObject, $orderByIds, $factory);
     }
 
-    public function fromJson($jsonObject, $orderByIds = null)
+    public function fromJson($jsonObject, $orderByIds = null, ModelFactoryInterface $factory)
     {
         if ($orderByIds === null) {
             $orderByIds = array_keys(get_object_vars($jsonObject));
         }
-
-        $factory = $this->getModelFactory();
 
         foreach ($orderByIds as $id) {
             if (!isset($jsonObject->$id) ) {

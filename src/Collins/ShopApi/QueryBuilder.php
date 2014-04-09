@@ -8,7 +8,7 @@ namespace Collins\ShopApi;
 
 
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
-use Collins\ShopApi\Exception\InvalidParameterException;
+use Collins\ShopApi\Model\Basket;
 
 class QueryBuilder
 {
@@ -74,22 +74,22 @@ class QueryBuilder
     public function addItemsToBasket($sessionId, array $items)
     {
         $this->checkSessionId($sessionId);
-        
+
         $orderLines = array();
-        
+
         foreach($items as $item) {
             $orderLine = array(
                 'id' => $item->getId(),
                 'variant_id' => $item->getVariantId(),
             );
-            
+
             if($item->getAdditionalData()) {
                 $orderLine['additional_data'] = $item->getAdditionalData();
             }
-            
+
             $orderLines[] = $orderLine;
         }
-        
+
         $this->query[] = array(
             'basket' => array(
                 'session_id' => $sessionId,
@@ -99,7 +99,7 @@ class QueryBuilder
 
         return $this;
     }
-    
+
     /**
      * @param string $sessionId        Free to choose ID of the current website visitor.
      * @param Model\BasketItemSet[]    $itemSets
@@ -110,32 +110,32 @@ class QueryBuilder
     public function addItemSetsToBasket($sessionId, array $itemSets)
     {
         $this->checkSessionId($sessionId);
-        
+
         $orderLines = array();
-        
-        foreach($itemSets as $itemSet) {
+
+        foreach ($itemSets as $itemSet) {
             $orderLine = array(
                 'id' => $itemSet->getId(),
                 'set_items' => array()
             );
-            
+
             if($itemSet->getAdditionalData()) {
                 $orderLine['additional_data'] = $itemSet->getAdditionalData();
             }
-            
-            
+
+
             foreach($itemSet->getItems() as $item) {
                 $entry = array(
                     'variant_id' => $item->getVariantId(),
                 );
-                
+
                 if($item->getAdditionalData()) {
                     $entry['additional_data'] = $item->getAdditionalData();
                 }
-                
+
                 $orderLine['set_items'][] = $entry;
             }
-            
+
             $orderLines[] = $orderLine;
         }
 
@@ -152,16 +152,42 @@ class QueryBuilder
     /**
      * @param string $sessionId        Free to choose ID of the current website visitor.
      * @param int    $productVariantId ID of product variant.
+     * @param string $basketItemId  ID of single item or set in the basket
      *
      * @return $this
      */
-    public function removeFromBasket($sessionId, $ids)
+    public function addToBasket($sessionId, $productVariantId, $basketItemId)
+    {
+        $this->checkSessionId($sessionId);
+
+        $this->query[] = array(
+            'basket' => array(
+                'session_id' => $sessionId,
+                'order_lines' => array(
+                    array(
+                        'id' => $basketItemId,
+                        'variant_id' => (int)$productVariantId
+                    )
+                )
+            )
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param string   $sessionId   Free to choose ID of the current website visitor.
+     * @param string[] $itemIds     array of basket item ids to delete, this can be sets or single items
+     *
+     * @return $this
+     */
+    public function removeFromBasket($sessionId, $itemIds)
     {
         $this->checkSessionId($sessionId);
 
         $orderLines = array();
         
-        foreach($ids as $id) {
+        foreach ($itemIds as $id) {
             $orderLines[] = array('delete' => $id);
         }
         
@@ -176,27 +202,24 @@ class QueryBuilder
     }
 
     /**
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param int    $productVariantId ID of product variant.
-     * @param int    $amount           Amount to set.
+     * @param string $sessionId
+     * @param Basket $basket
      *
      * @return $this
      */
-    public function updateBasketAmount($sessionId, $productVariantId, $amount)
+    public function updateBasket($sessionId, Basket $basket)
     {
         $this->checkSessionId($sessionId);
 
+        $basketQuery = array('session_id'  => $sessionId);
+
+        $orderLines = $basket->getOrderLinesArray();
+        if (!empty($orderLines)) {
+            $basketQuery['order_lines'] = $orderLines;
+        }
+
         $this->query[] = array(
-            'basket_add' => array(
-                'session_id' => $sessionId,
-                'product_variant' => array(
-                    array(
-                        'id' => (int)$productVariantId,
-                        'command' => 'set',
-                        'amount' => (int)$amount,
-                    ),
-                ),
-            )
+            'basket' => $basketQuery
         );
 
         return $this;
@@ -352,12 +375,12 @@ class QueryBuilder
      *
      * @return $this
      *
-     * @throws Exception\InvalidParameterException
+     * @throws \InvalidArgumentException
      */
     public function fetchFacets(array $groupIds)
     {
         if (empty($groupIds)) {
-            throw new InvalidParameterException('no groupId given');
+            throw new \InvalidArgumentException('no groupId given');
         }
 
         $groupIds = array_map('intval', $groupIds);
@@ -376,12 +399,12 @@ class QueryBuilder
      *
      * @return $this
      *
-     * @throws Exception\InvalidParameterException
+     * @throws \InvalidArgumentException
      */
     public function fetchFacet(array $params)
     {
         if (empty($params)) {
-            throw new InvalidParameterException('no params given');
+            throw new \InvalidArgumentException('no params given');
         }
 
         $this->query[] = array('facet' => $params);
@@ -426,15 +449,15 @@ class QueryBuilder
     /**
      * @param $sessionId
      *
-     * @throws Exception\InvalidParameterException
+     * @throws \InvalidArgumentException
      */
     protected function checkSessionId($sessionId)
     {
         if (!is_string($sessionId)) {
-            throw new InvalidParameterException('The session id must be a string');
+            throw new \InvalidArgumentException('The session id must be a string');
         }
         if (!isset($sessionId[4])) {
-            throw new InvalidParameterException('The session id must have at least 5 characters');
+            throw new \InvalidArgumentException('The session id must have at least 5 characters');
         }
     }
 }

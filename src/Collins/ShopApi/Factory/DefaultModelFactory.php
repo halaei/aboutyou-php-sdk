@@ -7,28 +7,61 @@
 namespace Collins\ShopApi\Factory;
 
 use Collins\ShopApi;
+use Collins\ShopApi\Model\FacetManager\FacetManagerInterface;
 
 class DefaultModelFactory implements ModelFactoryInterface
 {
     /** @var ShopApi */
     protected $shopApi;
 
+    /** @var FacetManagerInterface */
+    protected $facetManager;
+
     /**
      * @param ShopApi $shopApi
      */
-    public function __construct($shopApi)
+    public function __construct(ShopApi $shopApi, FacetManagerInterface $facetManager)
     {
-        ShopApi\Model\Autocomplete::setShopApi($shopApi);
-        ShopApi\Model\BasketObject::setShopApi($shopApi);
         ShopApi\Model\Category::setShopApi($shopApi);
-        ShopApi\Model\CategoriesResult::setShopApi($shopApi);
-        ShopApi\Model\CategoryTree::setShopApi($shopApi);
-        ShopApi\Model\Image::setShopApi($shopApi);
         ShopApi\Model\Product::setShopApi($shopApi);
         ShopApi\Model\FacetGroupSet::setShopApi($shopApi);
-        ShopApi\Model\Variant::setShopApi($shopApi);
 
         $this->shopApi = $shopApi;
+        $this->setFacetManager($facetManager);
+    }
+
+    /**
+     * @param FacetManagerInterface $facetManager
+     */
+    public function setFacetManager(FacetManagerInterface $facetManager)
+    {
+        if(!empty($this->facetManager)) {
+            $oldFacetManagerSubscribedEvents = $this->facetManager->getSubscribedEvents();
+            if(!empty($oldFacetManagerSubscribedEvents)) {
+                $this->shopApi->getEventDispatcher()->removeSubscriber($this->facetManager);
+            }
+        }
+
+        $newSubscribedEvents = $facetManager->getSubscribedEvents();
+        if(!empty($newSubscribedEvents)) {
+            $this->shopApi->getEventDispatcher()->addSubscriber($facetManager);
+        }
+        $this->facetManager = $facetManager;
+        $this->facetManager->setShopApi($this->shopApi);
+        ShopApi\Model\FacetGroupSet::setFacetManager($facetManager);
+    }
+
+    /**
+     * @return ShopApi\Model\FacetManager|FacetManagerInterface
+     */
+    public function getFacetManager()
+    {
+        return $this->facetManager;
+    }
+
+    public function setBaseImageUrl($baseUrl)
+    {
+        ShopApi\Model\Image::setBaseUrl($baseUrl);
     }
 
     /**
@@ -44,7 +77,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createAutocomplete($json)
     {
-        return new ShopApi\Model\Autocomplete($json);
+        return new ShopApi\Model\Autocomplete($json, $this);
     }
 
     /**
@@ -52,7 +85,31 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createBasket($json)
     {
-        return new ShopApi\Model\Basket($json);
+        return ShopApi\Model\Basket::createFromJson($json, $this);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createBasketItem(\stdClass $json, array $products)
+    {
+        return ShopApi\Model\Basket\BasketItem::createFromJson($json, $products);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createBasketSet(\stdClass $json, array $products)
+    {
+        return ShopApi\Model\Basket\BasketSet::createFromJson($json, $this, $products);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createBasketSetItem(\stdClass $json, array $products)
+    {
+        return ShopApi\Model\Basket\BasketSetItem::createFromJson($json, $products);
     }
 
     /**
@@ -60,7 +117,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createCategoriesResult($json, $queryParams)
     {
-        return new ShopApi\Model\CategoriesResult($json, $queryParams['ids']);
+        return new ShopApi\Model\CategoriesResult($json, $queryParams['ids'], $this);
     }
 
     /**
@@ -68,7 +125,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createCategory(\stdClass $json, $parent = null)
     {
-        return new ShopApi\Model\Category($json, $parent);
+        return new ShopApi\Model\Category($json, $this, $parent);
     }
 
     /**
@@ -76,7 +133,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createCategoryTree($json)
     {
-        return new ShopApi\Model\CategoryTree($json);
+        return new ShopApi\Model\CategoryTree($json, $this);
     }
 
     /**
@@ -123,7 +180,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createProduct(\stdClass $json)
     {
-        return new ShopApi\Model\Product($json);
+        return new ShopApi\Model\Product($json, $this);
     }
 
     /**
@@ -131,7 +188,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createProductsResult($json)
     {
-        return new ShopApi\Model\ProductsResult($json);
+        return new ShopApi\Model\ProductsResult($json, $this);
     }
 
     /**
@@ -139,7 +196,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createProductsEansResult($json)
     {
-        return new ShopApi\Model\ProductsEansResult($json);
+        return new ShopApi\Model\ProductsEansResult($json, $this);
     }
 
     /**
@@ -147,7 +204,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createProductSearchResult($json)
     {
-        return new ShopApi\Model\ProductSearchResult($json);
+        return new ShopApi\Model\ProductSearchResult($json, $this);
     }
 
     /**
@@ -163,7 +220,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createVariant(\stdClass $json)
     {
-        return new ShopApi\Model\Variant($json);
+        return new ShopApi\Model\Variant($json, $this);
     }
 
     /**
@@ -171,7 +228,9 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createOrder($json)
     {
-        return new ShopApi\Model\Order($json);
+        $basket = $this->createBasket($json->basket);
+
+        return new ShopApi\Model\Order($json->order_id, $basket);
     }
 
     /**
@@ -287,5 +346,18 @@ class DefaultModelFactory implements ModelFactoryInterface
 
 
         return $flattenCategories;
+    }
+
+    public function preHandleError($json, $resultKey, $isMultiRequest)
+    {
+        if ($resultKey === 'basket' && isset($json->order_lines)) {
+            return false;
+        }
+
+        if ($isMultiRequest) {
+            return new ShopApi\Model\ResultError($json);
+        }
+
+        throw new ShopApi\Exception\ResultErrorException($json);
     }
 }

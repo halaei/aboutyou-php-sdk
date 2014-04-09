@@ -34,4 +34,8 @@ interface ResultFactoryInterface
     public function initiateOrder($json);
 
     public function createChildApps($json);
+
+    public function preHandleError($json, $resultKey, $isMultiRequest);
+
+    public function setBaseImageUrl($baseUrl);
 }

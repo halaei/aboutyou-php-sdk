@@ -1,10 +1,12 @@
 <?php
 namespace Collins\ShopApi\Model;
 
+use Collins\ShopApi\Factory\ModelFactoryInterface;
+
 /**
  *
  */
-class Autocomplete extends AbstractModel
+class Autocomplete
 {
     /**
      * @var object
@@ -21,14 +23,18 @@ class Autocomplete extends AbstractModel
      */
     private $categories = null;
 
+    /** @var ModelFactoryInterface */
+    protected $factory;
+
     /**
      * Constructor.
      *
      * @param object $jsonObject The autocomplete data.
      */
-    public function __construct($jsonObject)
+    public function __construct($jsonObject, ModelFactoryInterface $factory)
     {
         $this->jsonObject = $jsonObject;
+        $this->factory    = $factory;
     }
 
     /**
@@ -39,7 +45,7 @@ class Autocomplete extends AbstractModel
     public function getProducts()
     {
         if (!$this->products) {
-            $factory = $this->getModelFactory();
+            $factory = $this->factory;
 
             $this->products = array();
             if ($this->jsonObject->products) {
@@ -60,7 +66,7 @@ class Autocomplete extends AbstractModel
     public function getCategories()
     {
         if (!$this->categories) {
-            $factory = $this->getModelFactory();
+            $factory = $this->factory;
 
             $this->categories = array();
             if ($this->jsonObject->categories) {

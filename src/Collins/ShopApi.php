@@ -4,16 +4,21 @@ namespace Collins;
 use Collins\Cache\CacheInterface;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
-use Collins\ShopApi\Criteria\CriteriaInterface;
 use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Factory\ResultFactoryInterface;
+use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
+use Collins\ShopApi\Model\FacetManager;
+use Collins\ShopApi\Model\FacetManager\SingleFacetManager;
+use Collins\ShopApi\Model\ProductsEansResult;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
 use Collins\ShopApi\Query;
 use Collins\ShopApi\ShopApiClient;
 use Psr\Log\LoggerInterface;
+use Rhumsaa\Uuid\Uuid;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Provides access to the Collins Frontend Platform.
@@ -27,6 +32,12 @@ class ShopApi
     const IMAGE_URL_STAGE = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file';
     const IMAGE_URL_LIVE = 'http://cdn.mary-paul.de/file';
 
+    // basket and product by ids must not be cached, facets should use a different caching strategy
+    const NO_QUERY_CACHE = 0;
+
+    // TODO: replace with cache configuration
+    protected $queryCacheDuration = 300;
+
     /** @var ShopApiClient */
     protected $shopApiClient;
 
@@ -36,10 +47,16 @@ class ShopApi
     /** @var ModelFactoryInterface */
     protected $modelFactory;
 
+    /** @var FacetManagerInterface */
+    protected $facetManager;
+
     /** @var LoggerInterface */
     protected $logger;
 
     protected $appId;
+
+    /** @var  Symfony\Component\EventDispatcher\EventDispatcher */
+    static protected $eventDispatcher;
 
     /**
      * @param string $appId
@@ -52,15 +69,14 @@ class ShopApi
     {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $cache, $logger);
 
-        $this->modelFactory = new DefaultModelFactory($this);
+        $this->facetManager = new SingleFacetManager();
+        $this->modelFactory = new DefaultModelFactory($this, $this->facetManager);
 
-        $this->baseImageUrl = self::IMAGE_URL_LIVE;
-        switch($apiEndPoint) {
-            case Constants::API_ENVIRONMENT_STAGE:
-                $this->baseImageUrl = self::IMAGE_URL_STAGE;
-                break;
+        if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
+            $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
+        } else {
+            $this->setBaseImageUrl(self::IMAGE_URL_LIVE);
         }
-
 
         $this->logger = $logger;
         $this->appId  = $appId;
@@ -115,6 +131,24 @@ class ShopApi
         return $this->shopApiClient->getCache();
     }
 
+
+    /**
+     * @param \Collins\FacetManagerInterface $facetManager
+     */
+    public function setFacetManager($facetManager)
+    {
+        $this->facetManager = $facetManager;
+        $this->modelFactory->setFacetManager($facetManager);
+    }
+
+    /**
+     * @return \Collins\FacetManagerInterface
+     */
+    public function getFacetManager()
+    {
+        return $this->facetManager;
+    }
+
     /**
      * @param \Psr\Log\LoggerInterface $logger
      */
@@ -162,6 +196,8 @@ class ShopApi
         } else {
             $this->baseImageUrl = '';
         }
+
+        $this->modelFactory->setBaseImageUrl($this->baseImageUrl);
     }
 
     /**
@@ -170,6 +206,16 @@ class ShopApi
     public function getBaseImageUrl()
     {
         return $this->baseImageUrl;
+    }
+
+    /**
+     * @return Query
+     */
+    public function getQuery()
+    {
+        $query = new Query($this->shopApiClient, $this->modelFactory);
+
+        return $query;
     }
 
     /**
@@ -195,14 +241,7 @@ class ShopApi
             ->fetchAutocomplete($searchword, $limit, $types)
         ;
 
-        return $query->executeSingle();
-    }
-
-    public function getQuery()
-    {
-        $query = new Query($this->shopApiClient, $this->modelFactory);
-
-        return $query;
+        return $query->executeSingle($this->queryCacheDuration);
     }
 
     /**
@@ -219,94 +258,80 @@ class ShopApi
     {
         $query = $this->getQuery()->fetchBasket($sessionId);
 
-        return $query->executeSingle();
+        return $query->executeSingle(self::NO_QUERY_CACHE);
     }
 
-    /**
-     * Add product variants into the basket.
-     *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param ShopApi\Model\BasketItem[] $items
-     *
-     * @return \Collins\ShopApi\Model\Basket
-     */
-    public function addItemsToBasket($sessionId, array $items)
-    {
-        $query = $this->getQuery()->addItemsToBasket($sessionId, $items);
-        return $query->executeSingle();
-    }
-
-    
-    /**
-     * Adds sets of item sets into the basket.
-     *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param ShopApi\Model\BasketItemSet[] array of sets of basket items
-     *
-     * @return \Collins\ShopApi\Model\Basket
-     */
-    public function addItemSetsToBasket($sessionId, $itemSets)
-    {
-        $query = $this->getQuery()
-            ->addItemSetsToBasket($sessionId, $itemSets)
-        ;
-
-        return $query->executeSingle();
-    }
-    
     /**
      * Adds a single item into the basket.
-     * You can specifiy an amount. Please mind, that an amount > 1 will result in #amount basket positions.
+     * You can specify an amount. Please mind, that an amount > 1 will result in #amount basket positions.
      * So if you read out the basket again later, it's your job to merge the positions again.
-     * 
+     *
+     * It is highly recommend to use the basket update method, to manage your items.
+     *
      * @param string $sessionId
-     * @param \Collins\ShopApi\Model\BasketItem $item
+     * @param integer $variantId
      * @param integer $amount
      *
      * @return Basket
+     *
+     * @throws \InvalidArgumentException
      */
-    public function addItemToBasket($sessionId, ShopApi\Model\BasketItem $item, $amount = 1)
+    public function addItemToBasket($sessionId, $variantId, $amount = 1)
     {
-        $items = array();
-        $idPrefix = $item->getId();
-        
-        for ($i=0; $i<$amount; $i++) {
-            $id = $i== 0 ? $idPrefix : ($idPrefix.'-'.($i+1));
-
-            $clone = clone $item;
-            $clone->setId($id);
-            $items[] = $clone;
+        if (!is_long($variantId)) {
+            if (is_string($variantId) && ctype_digit($variantId)) {
+                $variantId = intval($variantId);
+            } else {
+                throw new \InvalidArgumentException('the variant id must be an integer or sting with digits');
+            }
         }
-        
-        return $this->addItemsToBasket($sessionId, $items);
+
+        $basket = new Basket();
+
+        for ($i=0; $i < $amount; $i++) {
+            $item = new Basket\BasketItem($this->generateBasketItemId(), $variantId);
+            $basket->updateItem($item);
+        }
+
+        return $this->updateBasket($sessionId, $basket);
     }
-    
-    /**
-     * Adds set of product variants into the basket.
-     *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param ShopApi\Model\BasketItemSet[] array of sets of basket items
-     *
-     * @return \Collins\ShopApi\Model\Basket
-     */
-    public function addItemSetToBasket($sessionId, ShopApi\Model\BasketItemSet $itemSet)
+
+    public function generateBasketItemId()
     {
-        return $this->addItemSetsToBasket($sessionId, array($itemSet));
+        $id = 'i_' . Uuid::uuid4();
+
+        return $id;
     }
 
     /**
      * Remove basket item.
      *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param int[] $ids array of basket item ids to delete
+     * @param string $sessionId     Free to choose ID of the current website visitor.
+     * @param string[] $itemIds     array of basket item ids to delete, this can be sets or single items
      *
      * @return \Collins\ShopApi\Model\Basket
      */
-    public function removeFromBasket($sessionId, $ids)
+    public function removeItemsFromBasket($sessionId, $itemIds)
     {
-        $query = $this->getQuery()->removeFromBasket($sessionId, $ids);
+        $basket = new Basket();
+        $basket->deleteItems($itemIds);
 
-        return $query->executeSingle();
+        return $this->updateBasket($sessionId, $basket);
+    }
+
+    /**
+     * @param string $sessionId
+     * @param Basket $basket
+     *
+     * @return \Collins\ShopApi\Model\Basket
+     */
+    public function updateBasket($sessionId, Basket $basket)
+    {
+        $query = $this->getQuery()
+            ->updateBasket($sessionId, $basket)
+        ;
+
+        return $query->executeSingle(self::NO_QUERY_CACHE);
     }
 
 
@@ -330,7 +355,7 @@ class ShopApi
             ->fetchCategoriesByIds($ids)
         ;
 
-        $result = $query->executeSingle();
+        $result = $query->executeSingle($this->queryCacheDuration);
 
         $notFound = $result->getCategoriesNotFound();
         if (!empty($notFound) && $this->logger) {
@@ -354,7 +379,7 @@ class ShopApi
             ->fetchCategoryTree($maxDepth)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle($this->queryCacheDuration);
     }
 
     /**
@@ -377,7 +402,7 @@ class ShopApi
             ->fetchProductsByIds($ids, $fields)
         ;
 
-        $result = $query->executeSingle();
+        $result = $query->executeSingle(self::NO_QUERY_CACHE);
 
         $productsNotFound = $result->getProductsNotFound();
         if (!empty($productsNotFound) && $this->logger) {
@@ -388,10 +413,10 @@ class ShopApi
     }
 
     /**
-     * @param integer[] $eans
+     * @param string[] $eans
      * @param string[] $fields
      *
-     * @return ProductsResult
+     * @return ProductsEansResult
      *
      * @throws ShopApi\Exception\MalformedJsonException
      * @throws ShopApi\Exception\UnexpectedResultException
@@ -407,7 +432,7 @@ class ShopApi
             ->fetchProductsByEans($eans, $fields)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle($this->queryCacheDuration);
     }
 
     /**
@@ -441,7 +466,7 @@ class ShopApi
             ->fetchProductSearch($criteria)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle($this->queryCacheDuration);
     }
 
     /**
@@ -460,7 +485,7 @@ class ShopApi
             ->fetchFacets($groupIds)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle(self::NO_QUERY_CACHE);
     }
 
     /**
@@ -474,7 +499,7 @@ class ShopApi
             ->fetchOrder($orderId)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle(self::NO_QUERY_CACHE);
     }
 
     /**
@@ -495,7 +520,7 @@ class ShopApi
             ->initiateOrder($sessionId, $successUrl, $cancelUrl, $errorUrl)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle(self::NO_QUERY_CACHE);
     }
 
     /**
@@ -519,7 +544,7 @@ class ShopApi
             ->fetchFacet($params)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle(self::NO_QUERY_CACHE);
     }
 
     /**
@@ -537,7 +562,7 @@ class ShopApi
             ->fetchSuggest($searchword)
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle($this->queryCacheDuration);
     }
 
     /**
@@ -551,7 +576,7 @@ class ShopApi
             ->fetchChildApps()
         ;
 
-        return $query->executeSingle();
+        return $query->executeSingle($this->queryCacheDuration);
     }
 
     /**
@@ -604,5 +629,15 @@ class ShopApi
         $tag = '<script type="text/javascript" src="' . self::getJavaScriptURL() . '"></script>';
 
         return $tag;
+    }
+
+    public static function getEventDispatcher()
+    {
+        if(is_null(self::$eventDispatcher))
+        {
+            self::$eventDispatcher = new EventDispatcher();
+        }
+
+        return(self::$eventDispatcher);
     }
 }
