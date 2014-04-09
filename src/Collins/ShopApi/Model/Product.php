@@ -374,27 +374,34 @@ class Product extends AbstractModel
     public function getCategories($activeOnly = true)
     {
         // TODO: refactor me
-        if (!$this->categories) {
-            // put all category ids in an array to fetch by ids
-            $flattened = array();
-            foreach($this->categoryIdPaths as $path) {
-                foreach($path as $categoryId) {
-                    $flattened[] = $categoryId;
+        if ($this->categories === null) {
+            if (empty($this->categoryIdPaths)) {     
+                
+                $this->categories = array();
+                $this->activeCategories = array();
+                
+            } else {                  
+                // put all category ids in an array to fetch by ids
+                $flattened = array();
+                foreach($this->categoryIdPaths as $path) {
+                    foreach($path as $categoryId) {
+                        $flattened[] = $categoryId;
+                    }
                 }
-            }
 
-            // fetch all necessary categories from API
-            $flattenCategories = $this->getShopApi()->fetchCategoriesByIds($flattened)->getCategories();
-            $flattenActiveCategories = array();
-            
-            foreach($flattenCategories as $category) {
-                if($category->isActive()) {
-                    $flattenActiveCategories[] = clone $category;
+                // fetch all necessary categories from API
+                $flattenCategories = $this->getShopApi()->fetchCategoriesByIds($flattened)->getCategories();
+                $flattenActiveCategories = array();
+
+                foreach($flattenCategories as $category) {
+                    if($category->isActive()) {
+                        $flattenActiveCategories[] = clone $category;
+                    }
                 }
-            }
 
-            $this->categories = Category::buildTree($flattenCategories);
-            $this->activeCategories = Category::buildTree($flattenActiveCategories);
+                $this->categories = Category::buildTree($flattenCategories);
+                $this->activeCategories = Category::buildTree($flattenActiveCategories);                
+            }
         }
         
         if($activeOnly) {

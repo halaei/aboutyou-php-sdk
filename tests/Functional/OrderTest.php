@@ -19,6 +19,18 @@ class OrderTest extends AbstractShopApiTest
         $basket = $order->getBasket();
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\Basket', $basket);
     }
+    
+    public function testFetchOrderWithProductsWithoutCategories()
+    {
+        $shopApi = $this->getShopApiWithResultFile('get-order-without-categories.json');
+        
+        $order = $shopApi->fetchOrder('53574');
+        $basket = $order->getBasket();
+        $products = $basket->getProducts();
+        $product = array_pop($products);
+
+        $this->assertCount(0, $product->getCategories());
+    }
 
     public function testInitiateOrderSuccess()
     {
