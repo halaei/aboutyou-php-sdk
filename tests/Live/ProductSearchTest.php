@@ -7,7 +7,7 @@ class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTe
     
     public function testProductSearchWithLimit()
     {
-        $api = $this->getShopApi();        
+        $api = $this->getShopApi();           
         $criteria = $this->getSearchCriteria();
         $criteria->setLimit(5);
         
