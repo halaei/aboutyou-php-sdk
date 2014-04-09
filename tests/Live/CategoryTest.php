@@ -1,8 +1,4 @@
 <?php
-/**
- * @author nils.droege@project-collins.com
- * (c) Collins GmbH & Co KG
- */
 
 namespace Collins\ShopApi\Test\Functional;
 
@@ -21,7 +17,7 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
     public function testFetchCategoriesByIdWithStrings()
     {
         $api = $this->getShopApi();
-        $api->fetchCategoriesByIds(";!");
+        $api->fetchCategoriesByIds(';!');
     }
     
     /**

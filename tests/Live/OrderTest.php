@@ -1,8 +1,4 @@
 <?php
-/**
- * @author nils.droege@project-collins.com
- * (c) Collins GmbH & Co KG
- */
 
 namespace Collins\ShopApi\Test\Live;
 
@@ -25,10 +21,10 @@ class OrderTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $basket = $shopApi->fetchBasket($this->getSessionId());
         
         if ($basket->getTotalAmount() == 0) {
-            $result = $shopApi->initiateOrder($this->getSessionId(), "http://google.de");
+            $result = $shopApi->initiateOrder($this->getSessionId(), 'http://google.de');
             $this->assertEquals(400, $result->getErrorCode());
         } else {
-            $this->fail("The basket isnt empty!");            
+            $this->fail('The basket isnt empty!');            
         }              
     }
     

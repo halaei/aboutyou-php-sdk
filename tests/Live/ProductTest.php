@@ -2,7 +2,6 @@
 
 namespace Collins\ShopApi\Test\Live;
 
-
 class ProductTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
     public function testGetCategories()

@@ -80,7 +80,7 @@ abstract class AbstractShopApiLiveTest extends \Collins\ShopApi\Test\ShopSdkTest
      */
     protected function getSearchCriteria()
     {
-        $criteria = new Criteria\ProductSearchCriteria("123456");
+        $criteria = new Criteria\ProductSearchCriteria('123456');
         
         return $criteria;
     }
