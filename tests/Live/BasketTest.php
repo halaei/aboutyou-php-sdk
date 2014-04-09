@@ -9,12 +9,12 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
 
     public function testEmptyBasket()
-    {
+    {        
         $api = $this->getShopApi();
           
-        $basket = $api->fetchBasket($this->getSessionId());
+        $basket = $api->fetchBasket($this->getSessionId());    
         $amount = $basket->getTotalAmount();
-        
+
         $this->assertEquals(0, $amount);
     }
         
@@ -24,19 +24,30 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
     public function testAddProductToBasket()
     {
         $api = $this->getShopApi(); 
+
+        $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(1));
+        $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(2));
+        $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(3), 3);
         
-        $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId());        
+        $set = new Basket\BasketSet("123456", ['image_url' => "http://", 'description' => 'Hallo']);
+        $item = new Basket\BasketSetItem($this->getVariantId(4));
         
-        $this->assertEquals(1, $basket->getTotalAmount());
+        $set->addItem($item);
+        $basket->updateItemSet($set);
+        
+        $basket = $api->updateBasket($this->getSessionId(), $basket);
+        
+        $this->assertEquals(6, $basket->getTotalAmount());
+        
+        return $basket;
     }
     
     /**
      * @depends testAddProductToBasket
      */
-    public function testRemoveAllProductsInBasket()
+    public function testRemoveAllProductsInBasket($basket)
     {
         $api = $this->getShopApi(); 
-        $basket = $api->fetchBasket($this->getSessionId());
         $basket->deleteAllItems();
         
         $result = $api->updateBasket($this->getSessionId(), $basket);
@@ -47,7 +58,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
     public function testAddItemToBasketWithProductID()
     {
         $api = $this->getShopApi();        
-        $basket = $api->addItemToBasket($this->getSessionId(), $this->getProductId());
+        $basket = $api->addItemToBasket($this->getSessionId(), $this->getProductId(1));
         
         $this->assertTrue($basket->hasErrors());
     } 
@@ -58,14 +69,15 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $basket = new Basket();
         
         $set = new Basket\BasketSet('A123567', ['description' => 'test', 'image_url' => 'http://img-url']);                
-        $item = new Basket\BasketSetItem($this->getProductId());
+        $item = new Basket\BasketSetItem($this->getProductId(1));
+        
         $set->addItem($item);
         
         $basket->updateItemSet($set);
         $result = $shopApi->updateBasket($this->getSessionId(), $basket);
         
         $this->assertTrue($result->hasErrors());
-    }    
+    }   
     
 }
 

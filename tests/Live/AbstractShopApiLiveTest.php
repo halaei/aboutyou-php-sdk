@@ -54,18 +54,25 @@ abstract class AbstractShopApiLiveTest extends \Collins\ShopApi\Test\ShopSdkTest
     }
     
     /**
-     * @param int $limit
-     * @return Products[]
+     * @param int $offset
+     * @return ShopApi\Model\Product
      */
-    public function getProducts($limit = 1)
+    public function getProduct($offset = 1)
     {
-        $api = $this->getShopApi();
-        $criteria = $this->getSearchCriteria();
-        $criteria->setLimit($limit);
-        $criteria->selectProductFields(array(\Collins\ShopApi\Criteria\ProductFields::DEFAULT_VARIANT));        
-        $result = $api->fetchProductSearch($criteria);
+        if ($offset < 1) {
+            $offset = 1;
+        }
         
-        return $result->getProducts();
+        $api = $this->getShopApi();
+        
+        $criteria = $this->getSearchCriteria();
+        $criteria->setLimit(1, $offset);
+        $criteria->selectProductFields(array(\Collins\ShopApi\Criteria\ProductFields::DEFAULT_VARIANT));        
+        
+        $result = $api->fetchProductSearch($criteria);
+        $products = $result->getProducts();
+        
+        return $products[0];
     }
   
     /**
@@ -78,17 +85,15 @@ abstract class AbstractShopApiLiveTest extends \Collins\ShopApi\Test\ShopSdkTest
         return $criteria;
     }
     
-    protected function getVariantId()
+    protected function getVariantId($index)
     {
-        $config = $this->getConfig();
+        $product = $this->getProduct($index);
         
-        return $config['variant_id'];
+        return $product->getDefaultVariant()->getId();
     }
     
     protected function getProductId()
-    {
-        $config = $this->getConfig();
-        
-        return (int) $config['product_id'];        
+    {        
+        return (int) $this->getProduct()->getId();
     }
 }
