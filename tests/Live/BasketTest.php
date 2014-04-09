@@ -8,6 +8,24 @@ use Collins\ShopApi\Model\Basket;
 class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFetchBasketWithFalseSessionId()
+    {
+        $api = $this->getShopApi();
+        $api->fetchBasket(false);
+    }
+    
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFetchBasketWithIntSessionId()
+    {
+        $api = $this->getShopApi();
+        $api->fetchBasket(123456);      
+    }    
+    
     public function testEmptyBasket()
     {        
         $api = $this->getShopApi();

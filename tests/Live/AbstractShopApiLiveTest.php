@@ -73,7 +73,7 @@ abstract class AbstractShopApiLiveTest extends \Collins\ShopApi\Test\ShopSdkTest
         $products = $result->getProducts();
         
         return $products[0];
-    }
+    }    
   
     /**
      * @return \Collins\ShopApi\Criteria\ProductSearchCriteria
