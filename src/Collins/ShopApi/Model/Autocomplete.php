@@ -31,12 +31,12 @@ class Autocomplete
     }
 
     /**
-     * @param object $jsonObject The autocomplete data.
+     * @param \stdClass $jsonObject The autocomplete data.
      * @param ModelFactoryInterface $factory
      *
      * @return static
      */
-    public static function createFromJson($jsonObject, ModelFactoryInterface $factory)
+    public static function createFromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
         $autocomplete = new static();
 
