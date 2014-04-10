@@ -35,6 +35,10 @@ class QueryBuilder
             Constants::TYPE_CATEGORIES
         )
     ) {
+        if (!is_string($searchword)) {
+            throw new \InvalidArgumentException('$searchword must be a string');
+        }
+        
         $this->query[] = array(
             'autocompletion' => array(
                 'searchword' => $searchword,
@@ -239,6 +243,14 @@ class QueryBuilder
         } else {
             // we allow to pass a single ID instead of an array
             settype($ids, 'array');
+            
+            foreach ($ids as $id) {
+                if (!is_long($id) && !ctype_digit($id)) {
+                    throw new \InvalidArgumentException('A single category ID must be an integer or a numeric string');
+                } else if ($id < 1) {
+                    throw new \InvalidArgumentException('A single category ID must be greater than 0');
+                }
+            }
 
             $ids = array_map('intval', $ids);
 
@@ -259,8 +271,10 @@ class QueryBuilder
      */
     public function fetchCategoryTree($maxDepth = -1)
     {
-        if ($maxDepth >= 0) {
+        if ($maxDepth >= 0 && $maxDepth <= 10) {
             $params = array('max_depth' => $maxDepth);
+        } else if($maxDepth > 10 || $maxDepth < -1) {
+            throw new \InvalidArgumentException('$maxDepth must be greater than or equal to -1 and less than or equal to 10');
         } else {
             $params = new \stdClass();
         }
