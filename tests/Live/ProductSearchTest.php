@@ -70,7 +70,46 @@ class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTe
         $result = $api->fetchProductSearch($criteria);
 
         $this->assertInternalType('int', $result->getProductCount());
+        $this->assertCount(5, $result->getProducts());
+    } 
+    
+    public function ProductSearchSort()
+    {
+        $shopApi = $this->getShopApi();
+
+        // search products and sort
+        $criteria = $shopApi->getProductSearchCriteria($this->getSessionId())
+            ->sortBy(
+            \Collins\ShopApi\Criteria\ProductSearchCriteria::SORT_TYPE_MOST_VIEWED
+            )
+        ;
+        $productSearchResult = $shopApi->fetchProductSearch($criteria);
+        $this->checkProductSearchResult($productSearchResult);
+
+        $rawFacets = $productSearchResult->getRawFacets();
+        $this->assertInstanceOf('\stdClass', $rawFacets);
+        $this->assertObjectHasAttribute("0", $rawFacets);
+        $brandFacets = $rawFacets->{"0"};
+        $this->assertInstanceOf('\stdClass', $brandFacets);
+        $this->assertObjectHasAttribute('_type', $brandFacets);
+        $this->assertObjectHasAttribute('total', $brandFacets);
+        $this->assertObjectHasAttribute('terms', $brandFacets);
+        $this->assertObjectHasAttribute('other', $brandFacets);
+        $this->assertObjectHasAttribute('missing', $brandFacets);
     }    
     
+    
+    private function checkProduct(Product $product)
+    {
+        $this->assertObjectHasAttribute('id', $product);
+        $this->assertObjectHasAttribute('name', $product);
+    }
+
+    private function checkProductSearchResult(ProductSearchResult $products)
+    {
+        foreach ($products as $product) {
+            $this->checkProduct($product);
+        }
+    }    
 }
 

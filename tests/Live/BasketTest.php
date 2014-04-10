@@ -7,7 +7,7 @@ use Collins\ShopApi\Model\Basket;
 
 class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
-
+    
     /**
      * @expectedException \InvalidArgumentException
      */
@@ -28,11 +28,13 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
     
     public function testEmptyBasket()
     {        
+        $this->clearBasket();
+        
         $api = $this->getShopApi();
-          
-        $basket = $api->fetchBasket($this->getSessionId());    
-        $amount = $basket->getTotalAmount();
 
+        $basket = $api->fetchBasket($this->getSessionId());    
+        $amount = $basket->getTotalAmount();   
+        
         $this->assertEquals(0, $amount);
     }
         
@@ -56,7 +58,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $basket = $api->updateBasket($this->getSessionId(), $basket);
         
         $this->assertEquals(6, $basket->getTotalAmount());
-        
+
         return $basket;
     }
     
@@ -72,7 +74,68 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         
         $this->assertEquals(0, $result->getTotalAmount());
     }
+    
+    public function testAddOneItemToBasket()
+    {
+        $api = $this->getShopApi();
         
+        $item = new Basket\BasketItem('1234', $this->getVariantId(1), array('description' => 'test',
+                                                                            'image_url' => 'http://www.google.de',
+                                                                            'foo' => 'bar'));
+        
+        $basket = new Basket();
+        $basket->updateItem($item);
+        
+        $basket = $api->updateBasket($this->getSessionId(), $basket);
+        $item   = $basket->getItem('1234');
+        
+        $this->assertEquals(1, $basket->getTotalAmount());
+        $this->assertInstanceOf('\Collins\ShopApi\Model\Basket\BasketItem', $item);
+        
+        $data = $item->getAdditionalData();
+        
+        $this->assertEquals('test', $data['description']);
+        $this->assertEquals('http://www.google.de', $data['image_url']);
+        $this->assertEquals('bar', $data['foo']);  
+        
+        $basket->deleteAllItems();
+        $api->updateBasket($this->getSessionId(), $basket);
+    }
+    
+    public function testAddOneItemSetToBasket()
+    {
+        $api = $this->getShopApi();
+        
+        $item = new Basket\BasketSetItem($this->getVariantId(1));
+        
+        $set = new Basket\BasketSet('1234', array('description' => 'test',
+                                                  'image_url' => 'http://www.google.de',
+                                                  'foo' => 'bar'));
+        $set->addItem($item);
+        
+        $basket = new Basket();
+        
+        $basket->updateItemSet($set);
+        
+        $basket = $api->updateBasket($this->getSessionId(), $basket);
+        $set = $basket->getItem('1234');
+               
+        $this->assertEquals(1, $basket->getTotalAmount());
+        $this->assertInstanceOf('\Collins\ShopApi\Model\Basket\BasketSet', $set);
+        
+        $items = $set->getItems();
+        $this->assertCount(1, $items);
+        
+        $data = $set->getAdditionalData();
+        
+        $this->assertEquals('test', $data['description']);
+        $this->assertEquals('http://www.google.de', $data['image_url']);
+        $this->assertEquals('bar', $data['foo']); 
+        
+        $basket->deleteAllItems();
+        $api->updateBasket($this->getSessionId(), $basket);        
+    }
+
     public function testAddItemToBasketWithProductID()
     {
         $api = $this->getShopApi();        
@@ -97,5 +160,16 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $this->assertTrue($result->hasErrors());
     }   
     
+    /**
+     * 
+     */
+    private function clearBasket()
+    {
+        $api = $this->getShopApi();       
+        $basket = $api->fetchBasket($this->getSessionId());    
+
+        $basket->deleteAllItems();
+        $basket = $api->updateBasket($this->getSessionId(), $basket);       
+    }    
 }
 
