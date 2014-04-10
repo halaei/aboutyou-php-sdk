@@ -19,6 +19,7 @@ class DefaultModelFactory implements ModelFactoryInterface
 
     /**
      * @param ShopApi $shopApi
+     * @param FacetManagerInterface $facetManager
      */
     public function __construct(ShopApi $shopApi, FacetManagerInterface $facetManager)
     {
@@ -77,7 +78,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createAutocomplete($json)
     {
-        return new ShopApi\Model\Autocomplete($json, $this);
+        return ShopApi\Model\Autocomplete::createFromJson($json, $this);
     }
 
     /**
@@ -117,7 +118,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createCategoriesResult($json, $queryParams)
     {
-        return new ShopApi\Model\CategoriesResult($json, $queryParams['ids'], $this);
+        return ShopApi\Model\CategoriesResult::createFromJson($json, $queryParams['ids'], $this);
     }
 
     /**
@@ -125,7 +126,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createCategory(\stdClass $json, $parent = null)
     {
-        return new ShopApi\Model\Category($json, $this, $parent);
+        return ShopApi\Model\Category::createFromJson($json, $this, $parent);
     }
 
     /**
@@ -133,7 +134,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createCategoryTree($json)
     {
-        return new ShopApi\Model\CategoryTree($json, $this);
+        return ShopApi\Model\CategoryTree::createFromJson($json, $this);
     }
 
     /**
@@ -172,7 +173,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createImage(\stdClass $json)
     {
-        return new ShopApi\Model\Image($json);
+        return ShopApi\Model\Image::createFromJson($json);
     }
 
     /**
@@ -180,7 +181,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createProduct(\stdClass $json)
     {
-        return new ShopApi\Model\Product($json, $this);
+        return ShopApi\Model\Product::createFromJson($json, $this);
     }
 
     /**
@@ -188,7 +189,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createProductsResult($json)
     {
-        return new ShopApi\Model\ProductsResult($json, $this);
+        return ShopApi\Model\ProductsResult::createFromJson($json, $this);
     }
 
     /**
@@ -196,7 +197,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createProductsEansResult($json)
     {
-        return new ShopApi\Model\ProductsEansResult($json, $this);
+        return ShopApi\Model\ProductsEansResult::createFromJson($json, $this);
     }
 
     /**
@@ -204,7 +205,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createProductSearchResult($json)
     {
-        return new ShopApi\Model\ProductSearchResult($json, $this);
+        return ShopApi\Model\ProductSearchResult::createFromJson($json, $this);
     }
 
     /**
@@ -220,7 +221,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createVariant(\stdClass $json)
     {
-        return new ShopApi\Model\Variant($json, $this);
+        return ShopApi\Model\Variant::createFromJson($json, $this);
     }
 
     /**
@@ -238,7 +239,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
    public function initiateOrder($json)
     {
-        return new ShopApi\Model\InitiateOrder($json);
+        return ShopApi\Model\InitiateOrder::createFromJson($json);
     }
 
     /**
@@ -259,9 +260,9 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function createApp($json)
+    public function createApp(\stdClass $json)
     {
-        return new ShopApi\Model\App($json);
+        return ShopApi\Model\App::createFromJson($json);
     }
 
     /**
@@ -273,7 +274,7 @@ class DefaultModelFactory implements ModelFactoryInterface
         foreach ($jsonObject as $key => $jsonResultFacet) {
             $facets = $this->getTermFacets($jsonResultFacet->terms);
 
-            $termFacets[$key] = new ShopApi\Model\ProductSearchResult\FacetCounts($key, $jsonResultFacet, $facets);
+            $termFacets[$key] = ShopApi\Model\ProductSearchResult\FacetCounts::createFromJson($key, $jsonResultFacet, $facets);
         }
 
         return $termFacets;
@@ -303,7 +304,7 @@ class DefaultModelFactory implements ModelFactoryInterface
     {
         $priceRanges = array();
         foreach ($jsonObject->ranges as $range) {
-            $priceRanges[] = new ShopApi\Model\ProductSearchResult\PriceRange($range);
+            $priceRanges[] = ShopApi\Model\ProductSearchResult\PriceRange::createFromJson($range);
         }
 
         return $priceRanges;
@@ -314,7 +315,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createSaleFacet(\stdClass $jsonObject)
     {
-        return new ShopApi\Model\ProductSearchResult\SaleCounts($jsonObject);
+        return ShopApi\Model\ProductSearchResult\SaleCounts::createFromJson($jsonObject);
     }
 
     /**
@@ -323,7 +324,7 @@ class DefaultModelFactory implements ModelFactoryInterface
     public function createCategoriesFacets(array $jsonArray)
     {
         $counts = array();
-        foreach($jsonArray as $item) {
+        foreach ($jsonArray as $item) {
             $categoryId = $item->term;
             $counts[$categoryId] = $item->count;
         }
@@ -343,7 +344,6 @@ class DefaultModelFactory implements ModelFactoryInterface
                 unset($flattenCategories[$id]);
             }
         }
-
 
         return $flattenCategories;
     }

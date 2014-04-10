@@ -19,7 +19,7 @@ class CategoryTest extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResult(''); // Init DefaultModelFactory
         $json = json_decode(file_get_contents(__DIR__ . '/testData/category-tree.json'));
-        $this->category = new \Collins\ShopApi\Model\Category($json[0]->category_tree[1], $shopApi->getResultFactory());
+        $this->category = \Collins\ShopApi\Model\Category::createFromJson($json[0]->category_tree[1], $shopApi->getResultFactory());
     }
 
     /**
@@ -28,6 +28,7 @@ class CategoryTest extends AbstractShopApiTest
     public function testBreadcrumb()
     {
         $breadcrumb = $this->category->getBreadcrumb();
+//        echo '<pre>', __LINE__, ') ', __METHOD__, ': <b>$breadcrumb</b>=', var_export($breadcrumb), '</pre>', PHP_EOL;
         $this->assertCount(1, $breadcrumb);
         $this->assertEquals(200, $breadcrumb[0]->getId());
 

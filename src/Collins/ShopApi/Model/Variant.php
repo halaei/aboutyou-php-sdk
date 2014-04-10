@@ -11,7 +11,7 @@ use Collins\ShopApi\Factory\ModelFactoryInterface;
 
 class Variant extends AbstractModel
 {
-    protected $jsonObject;
+    private $jsonObject;
 
     /** @var Image[]|null */
     protected $images = null;
@@ -20,22 +20,31 @@ class Variant extends AbstractModel
     protected $facetGroups;
 
     /** @var ModelFactoryInterface */
-    protected $factory;
+    private $factory;
 
     /**
      * @var Image
      */
     protected $selectedImage = null;
 
-    public function __construct($jsonObject, ModelFactoryInterface $factory)
+    protected function __construct()
     {
-        $this->factory = $factory;
-        $this->fromJson($jsonObject);
     }
 
-    public function fromJson($jsonObject)
+    /**
+     * @param \stdClass $jsonObject
+     * @param ModelFactoryInterface $factory
+     *
+     * @return static
+     */
+    public static function createFromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
-        $this->jsonObject = $jsonObject;
+        $variant = new static();
+
+        $variant->factory    = $factory;
+        $variant->jsonObject = $jsonObject;
+
+        return $variant;
     }
 
     /**

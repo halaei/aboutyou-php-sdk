@@ -18,11 +18,22 @@ class InitiateOrder
     /** @var string */
     protected $appToken;
 
-    public function __construct($json)
+    /**
+     * @param $json
+     *
+     * @return static
+     */
+    public static function createFRomJson($json)
     {
-        $this->url = $json->url;
-        $this->userToken = $json->user_token;
-        $this->appToken = $json->app_token;
+        $order = new static();
+
+        $order->url = $json->url;
+        $order->userToken = $json->user_token;
+        $order->appToken = $json->app_token;
+
+        $order->parseErrorResult($json);
+
+        return $order;
     }
 
     /**

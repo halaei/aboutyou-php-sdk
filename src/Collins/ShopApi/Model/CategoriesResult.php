@@ -13,13 +13,21 @@ class CategoriesResult implements \IteratorAggregate, \ArrayAccess, \Countable
 
     protected $categoriesNotFound = array();
 
-    public function __construct($jsonObject, $orderByIds = null, ModelFactoryInterface $factory)
+    protected function __construct()
     {
-        $this->fromJson($jsonObject, $orderByIds, $factory);
     }
 
-    public function fromJson($jsonObject, $orderByIds = null, ModelFactoryInterface $factory)
+    /**
+     * @param $jsonObject
+     * @param null $orderByIds
+     * @param ModelFactoryInterface $factory
+     *
+     * @return static
+     */
+    public static function createFromJson($jsonObject, $orderByIds = null, ModelFactoryInterface $factory)
     {
+        $categoriesResult = new static();
+
         if ($orderByIds === null) {
             $orderByIds = array_keys(get_object_vars($jsonObject));
         }
@@ -31,11 +39,13 @@ class CategoriesResult implements \IteratorAggregate, \ArrayAccess, \Countable
 
             $jsonCategory = $jsonObject->$id;
             if (isset($jsonCategory->error_code)) {
-                $this->categoriesNotFound[] = $id;
+                $categoriesResult->categoriesNotFound[] = $id;
             } else {
-                $this->categories[$id] = $factory->createCategory($jsonCategory);
+                $categoriesResult->categories[$id] = $factory->createCategory($jsonCategory);
             }
         }
+
+        return $categoriesResult;
     }
 
     /**

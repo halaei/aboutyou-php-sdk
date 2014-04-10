@@ -37,23 +37,31 @@ class Image
     /** @var array|null */
     protected $tags;
 
-    public function __construct($jsonObject)
+    protected function __construct()
     {
-        $event = new GenericEvent($this, func_get_args());
-        ShopApi::getEventDispatcher()->dispatch("collins.shop_api.image.from_json.before", $event);
-        $this->fromJson($jsonObject);
-        ShopApi::getEventDispatcher()->dispatch("collins.shop_api.image.from_json.after", $event);
     }
 
-    public function fromJson($jsonObject)
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return static
+     */
+    public static function createFromJson(\stdClass $jsonObject)
     {
-        $this->hash     = $jsonObject->hash;
-        $this->filesize = (int)$jsonObject->size;
-        $this->ext      = $jsonObject->ext;
-        $this->mimetype = $jsonObject->mime;
-        $this->tags     = isset($jsonObject->tags) ? $jsonObject->tags : null;
+        $image = new static();
+        $event = new GenericEvent($image, func_get_args());
+        ShopApi::getEventDispatcher()->dispatch('collins.shop_api.image.from_json.before', $event);
 
-        $this->imageSize = new ImageSize((int)$jsonObject->image->width, (int)$jsonObject->image->height);
+        $image->hash     = $jsonObject->hash;
+        $image->filesize = (int)$jsonObject->size;
+        $image->ext      = $jsonObject->ext;
+        $image->mimetype = $jsonObject->mime;
+        $image->tags     = isset($jsonObject->tags) ? $jsonObject->tags : null;
+
+        $image->imageSize = new ImageSize((int)$jsonObject->image->width, (int)$jsonObject->image->height);
+        ShopApi::getEventDispatcher()->dispatch('collins.shop_api.image.from_json.after', $event);
+
+        return $image;
     }
 
     /**

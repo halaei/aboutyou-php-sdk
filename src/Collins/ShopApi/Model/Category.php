@@ -40,35 +40,41 @@ class Category extends AbstractModel
     /** @var integer */
     protected $productCount;
 
-    /**
-     * @param object        $jsonObject  json as object tree
-     * @param Category|null $parent
-     */
-    public function __construct($jsonObject, ModelFactoryInterface $factory, $parent = null)
+    protected function __construct()
     {
         $this->allSubCategories = array();
         $this->activeSubCategories = array();
-        $this->parent = $parent;
-        $this->fromJson($jsonObject, $factory);
     }
 
-    public function fromJson($jsonObject, ModelFactoryInterface $factory)
+    /**
+     * @param object        $jsonObject  json as object tree
+     * @param ModelFactoryInterface $factory
+     * @param Category|null $parent
+     *
+     * @return static
+     */
+    public static function createFromJson($jsonObject, ModelFactoryInterface $factory, $parent = null)
     {
-        $this->parentId = $jsonObject->parent;
-        $this->id       = $jsonObject->id;
-        $this->name     = $jsonObject->name;
-        $this->isActive = $jsonObject->active;
-        $this->position = $jsonObject->position;
+        $category = new static();
+
+        $category->parent   = $parent;
+        $category->parentId = $jsonObject->parent;
+        $category->id       = $jsonObject->id;
+        $category->name     = $jsonObject->name;
+        $category->isActive = $jsonObject->active;
+        $category->position = $jsonObject->position;
 
         if (isset($jsonObject->sub_categories)) {
             foreach ($jsonObject->sub_categories as $jsonSubCategory) {
-                $category = $factory->createCategory($jsonSubCategory, $this);
-                $this->allSubCategories[] = $category;
-                if ($category->isActive) {
-                    $this->activeSubCategories[] = $category;
+                $subCategory = $factory->createCategory($jsonSubCategory, $category);
+                $category->allSubCategories[] = $subCategory;
+                if ($subCategory->isActive) {
+                    $category->activeSubCategories[] = $subCategory;
                 }
             }
         }
+
+        return $category;
     }
 
     /**

@@ -26,15 +26,24 @@ class Autocomplete
     /** @var ModelFactoryInterface */
     protected $factory;
 
-    /**
-     * Constructor.
-     *
-     * @param object $jsonObject The autocomplete data.
-     */
-    public function __construct($jsonObject, ModelFactoryInterface $factory)
+    protected function __construct()
     {
-        $this->jsonObject = $jsonObject;
-        $this->factory    = $factory;
+    }
+
+    /**
+     * @param object $jsonObject The autocomplete data.
+     * @param ModelFactoryInterface $factory
+     *
+     * @return static
+     */
+    public static function createFromJson($jsonObject, ModelFactoryInterface $factory)
+    {
+        $autocomplete = new static();
+
+        $autocomplete->jsonObject = $jsonObject;
+        $autocomplete->factory    = $factory;
+
+        return $autocomplete;
     }
 
     /**

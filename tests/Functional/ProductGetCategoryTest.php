@@ -22,7 +22,7 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
     public function getProduct($filname)
     {
         $json = $this->getJsonObjectFromFile('product/' . $filname);
-        $product = new ShopApi\Model\Product($json, $this->shopApi->getResultFactory());
+        $product = Product::createFromJson($json, $this->shopApi->getResultFactory());
 
         return $product;
     }
@@ -30,7 +30,7 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
     public function testGetCategoryIdHierachies()
     {
         $json = $this->getJsonObjectFromFile('product/product-with-categories.json');
-        $product = new ShopApi\Model\Product($json, $this->shopApi->getResultFactory());
+        $product = Product::createFromJson($json, $this->shopApi->getResultFactory());
 
         $this->assertEquals(
             array(array(19080,123),array(19000),array(16080),array(19084),array(19097)),
@@ -41,7 +41,7 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
     public function testGetCategoryIdsEmpty()
     {
         $json = $this->getJsonObjectFromFile('product/product-with-attributes.json');
-        $product = new ShopApi\Model\Product($json, $this->shopApi->getResultFactory());
+        $product = Product::createFromJson($json, $this->shopApi->getResultFactory());
 
         $this->assertEquals(array(), $product->getCategoryIdHierachies());
     }

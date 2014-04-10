@@ -2,7 +2,6 @@
 
 namespace Collins\ShopApi\Model;
 
-
 class App
 {
     /** @var string */
@@ -23,14 +22,27 @@ class App
     /** @var string */
     protected $tosUrl;
 
-    public function __construct($json)
+    protected function __construct()
     {
-        $this->id     = $json->id;
-        $this->logoUrl = $json->logo_url;
-        $this->name     = $json->name;
-        $this->url     = $json->url;
-        $this->privacyStatementUrl     = $json->privacy_statement_url;
-        $this->tosUrl     = $json->tos_url;
+    }
+
+    /**
+     * @param \stdClass $json
+     *
+     * @return static
+     */
+    public static function createFromJson(\stdClass $json)
+    {
+        $app = new static();
+
+        $app->id                  = $json->id;
+        $app->logoUrl             = $json->logo_url;
+        $app->name                = $json->name;
+        $app->url                 = $json->url;
+        $app->privacyStatementUrl = $json->privacy_statement_url;
+        $app->tosUrl              = $json->tos_url;
+
+        return $app;
     }
 
     /**
@@ -80,5 +92,4 @@ class App
     {
         return $this->tosUrl;
     }
-
 }

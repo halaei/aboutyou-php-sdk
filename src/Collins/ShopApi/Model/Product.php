@@ -71,40 +71,53 @@ class Product extends AbstractModel
     /** @var Category[] */
     protected $activeCategories;
 
-    public function __construct($jsonObject, ModelFactoryInterface $factory)
+    protected function __construct()
     {
-        $event = new GenericEvent($this, func_get_args());
-        ShopApi::getEventDispatcher()->dispatch("collins.shop_api.product.from_json.before", $event);
-        $this->fromJson($jsonObject, $factory);
-        ShopApi::getEventDispatcher()->dispatch("collins.shop_api.product.from_json.after", $event);
     }
 
-    public function fromJson($jsonObject, ModelFactoryInterface $factory)
+    /**
+     * @param $jsonObject
+     * @param ModelFactoryInterface $factory
+     *
+     * @return static
+     *
+     * @throws \Collins\ShopApi\Exception\MalformedJsonException
+     */
+    public static function createFromJson($jsonObject, ModelFactoryInterface $factory)
     {
+        $product = new static();
+        $event = new GenericEvent($product, func_get_args());
+        ShopApi::getEventDispatcher()->dispatch('collins.shop_api.product.from_json.before', $event);
+
         // these are required fields
         if (!isset($jsonObject->id) || !isset($jsonObject->name)) {
             throw new MalformedJsonException();
         }
-        $this->id   = $jsonObject->id;
-        $this->name = $jsonObject->name;
 
-        $this->isSale            = isset($jsonObject->sale) ? $jsonObject->sale : false;
-        $this->descriptionShort  = isset($jsonObject->description_short) ? $jsonObject->description_short : '';
-        $this->descriptionLong   = isset($jsonObject->description_long) ? $jsonObject->description_long : '';
-        $this->isActive          = isset($jsonObject->active) ? $jsonObject->active : true;
-        $this->brandId           = isset($jsonObject->brand_id) ? $jsonObject->brand_id : null;
+        $product->id   = $jsonObject->id;
+        $product->name = $jsonObject->name;
 
-        $this->minPrice         = isset($jsonObject->min_price) ? $jsonObject->min_price : null;
-        $this->maxPrice         = isset($jsonObject->max_price) ? $jsonObject->max_price : null;
+        $product->isSale            = isset($jsonObject->sale) ? $jsonObject->sale : false;
+        $product->descriptionShort  = isset($jsonObject->description_short) ? $jsonObject->description_short : '';
+        $product->descriptionLong   = isset($jsonObject->description_long) ? $jsonObject->description_long : '';
+        $product->isActive          = isset($jsonObject->active) ? $jsonObject->active : true;
+        $product->brandId           = isset($jsonObject->brand_id) ? $jsonObject->brand_id : null;
 
-        $this->defaultImage     = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
-        $this->defaultVariant   = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant) : null;
-        $this->variants         = self::parseVariants($jsonObject, $factory);
-        $this->styles           = self::parseStyles($jsonObject, $factory);
+        $product->minPrice         = isset($jsonObject->min_price) ? $jsonObject->min_price : null;
+        $product->maxPrice         = isset($jsonObject->max_price) ? $jsonObject->max_price : null;
 
-        $this->categoryIdPaths  = self::parseCategoryIdPaths($jsonObject);
+        $product->defaultImage     = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
+        $product->defaultVariant   = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant) : null;
+        $product->variants         = self::parseVariants($jsonObject, $factory);
+        $product->styles           = self::parseStyles($jsonObject, $factory);
 
-        $this->facetIds     = self::parseFacetIds($jsonObject);
+        $product->categoryIdPaths  = self::parseCategoryIdPaths($jsonObject);
+
+        $product->facetIds     = self::parseFacetIds($jsonObject);
+
+        ShopApi::getEventDispatcher()->dispatch('collins.shop_api.product.from_json.after', $event);
+
+        return $product;
     }
 
     protected static function parseVariants($jsonObject, ShopApi\Factory\ModelFactoryInterface $factory)

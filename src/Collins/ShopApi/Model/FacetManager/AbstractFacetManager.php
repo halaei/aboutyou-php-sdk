@@ -57,12 +57,12 @@ abstract class AbstractFacetManager implements FacetManagerInterface
         $jsonObject = $event->getArgument(0);
 
         switch ($eventName) {
-            case "collins.shop_api.product_search_result.from_json.before":
+            case 'collins.shop_api.product_search_result.from_json.before':
                 foreach ($jsonObject->products as $productJsonObject) {
                     $this->onProductFetched($productJsonObject);
                 }
                 break;
-            case "collins.shop_api.product.from_json.before":
+            case 'collins.shop_api.product.from_json.before':
                 $this->onProductFetched($jsonObject);
                 break;
         }
@@ -90,6 +90,7 @@ abstract class AbstractFacetManager implements FacetManagerInterface
     }
 
     abstract protected function preFetch();
+
     /**
      * @param CacheMultiGet $cache
      */
@@ -127,13 +128,13 @@ abstract class AbstractFacetManager implements FacetManagerInterface
     }
 
     /**
-     * @param $type
-     * @param $ids
+     * @param $facetGroupIds
+     *
      * @return array
      */
     public function generateCacheKeys($facetGroupIds)
     {
-        $cacheKeyNamespace = '\\Collins\\ShopApi\\' . (Constants::SDK_VERSION) . "\\Facet#";
+        $cacheKeyNamespace = '\\Collins\\ShopApi\\' . (Constants::SDK_VERSION) . '\\Facet#';
         $keys = array();
 
         foreach ($facetGroupIds as $groupId => $facetIds) {
