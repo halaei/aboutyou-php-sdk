@@ -133,7 +133,7 @@ class Query extends QueryBuilder
             $query = $currentQuery[$queryKey];
 
             $event = new GenericEvent($jsonObject, array('result' => $resultKey, 'query' => $query));
-            $this->eventDispatcher->dispatch('collins.shop_api.' . $resultKey . '.create_model.before', $event);
+            $this->eventDispatcher->dispatch('collins.shop_api.' . $resultKey . '_result.create_model.before', $event);
 
             $method  = $this->mapping[$resultKey];
             $results[$resultKey] = $factory->$method($jsonObject, $query);

@@ -50,6 +50,9 @@ abstract class AbstractFacetManager implements FacetManagerInterface
     {
         return array(
             'collins.shop_api.product.create_model.before' => array('onProductFetched', 0),
+            'collins.shop_api.autocompletion_result.create_model.before' => array('onBeforeCreateProductSearchResultModel', 0),
+            'collins.shop_api.basket_result.create_model.before' => array('onBeforeCreateProductSearchResultModel', 0),
+            'collins.shop_api.get_order_result.create_model.before' => array('onBeforeCreateOrderResultModel', 0),
             'collins.shop_api.product_search_result.create_model.before' => array('onBeforeCreateProductSearchResultModel', 0),
             'collins.shop_api.products_result.create_model.before' => array('onBeforeCreateProductsResultModel', 0),
             'collins.shop_api.products_eans_result.create_model.before' => array('onBeforeCreateProductsEansResultModel', 0),
@@ -70,12 +73,27 @@ abstract class AbstractFacetManager implements FacetManagerInterface
         }
     }
 
+    public function onBeforeCreateOrderResultModel(GenericEvent $event, $eventName, $dispatcher)
+    {
+        $jsonObject = $event->getSubject();
+
+        foreach ($jsonObject->basket->products as $productJsonObject) {
+            $this->collectFacetIds($productJsonObject);
+        }
+    }
+
     public function onBeforeCreateProductsResultModel(GenericEvent $event, $eventName, $dispatcher)
     {
         $jsonObject = $event->getSubject();
 
         foreach ($jsonObject->ids as $productJsonObject) {
             $this->collectFacetIds($productJsonObject);
+
+            if (empty($productJsonObject->styles)) continue;
+
+            foreach ($productJsonObject->styles as $styleJsonObject) {
+                $this->collectFacetIds($styleJsonObject);
+            }
         }
     }
 
@@ -90,7 +108,7 @@ abstract class AbstractFacetManager implements FacetManagerInterface
 
     protected function collectFacetIds(\stdClass $productJsonObject)
     {
-        if (isset($this->knownProductIds[$productJsonObject->id])) {
+        if (!isset($productJsonObject->id) || isset($this->knownProductIds[$productJsonObject->id])) {
             return;
         }
 
