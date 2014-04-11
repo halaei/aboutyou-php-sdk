@@ -9,33 +9,109 @@ namespace Collins\ShopApi\Factory;
 
 interface ResultFactoryInterface
 {
-    public function createAutocomplete($json);
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return mixed
+     */
+    public function createAutocomplete(\stdClass $jsonObject);
 
-    public function createBasket($json);
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return mixed
+     */
+    public function createBasket(\stdClass $jsonObject);
 
-    public function createCategoriesResult($json, $queryParams);
+    /**
+     * @param \stdClass $jsonObject
+     * @param $queryParams
+     *
+     * @return mixed
+     */
+    public function createCategoriesResult(\stdClass $jsonObject, $queryParams);
 
-    public function createCategoryTree($json);
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return mixed
+     */
+    public function createCategoryTree(\stdClass $jsonObject);
 
-    public function createFacetsList($json);
+    /**
+     * @param array $jsonArray
+     *
+     * @return mixed
+     */
+    public function createFacetList(array $jsonArray);
 
-    public function createFacetList($json);
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return mixed
+     */
+    public function createFacetsList(\stdClass $jsonObject);
 
-    public function createProductsResult($json);
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return mixed
+     */
+    public function createProductsResult(\stdClass $jsonObject);
 
-    public function createProductsEansResult($json);
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return mixed
+     */
+    public function createProductsEansResult(\stdClass $jsonObject);
 
-    public function createProductSearchResult($json);
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return mixed
+     */
+    public function createProductSearchResult(\stdClass $jsonObject);
 
-    public function createSuggest($json);
+    /**
+     * @param array $jsonArray
+     *
+     * @return mixed
+     */
+    public function createSuggest(array $jsonArray);
 
-    public function createOrder($json);
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return mixed
+     */
+    public function createOrder(\stdClass $jsonObject);
 
-    public function initiateOrder($json);
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return mixed
+     */
+    public function initiateOrder(\stdClass $jsonObject);
 
-    public function createChildApps($json);
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return mixed
+     */
+    public function createChildApps(\stdClass $jsonObject);
 
+    /**
+     * @param array|\stdClass $json
+     * @param string          $resultKey
+     * @param boolean         $isMultiRequest
+     *
+     * @return mixed|false
+     */
     public function preHandleError($json, $resultKey, $isMultiRequest);
 
+    /**
+     * @param $baseUrl
+     */
     public function setBaseImageUrl($baseUrl);
 }

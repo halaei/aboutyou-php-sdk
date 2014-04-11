@@ -17,16 +17,26 @@ abstract class TermsCounts
     /** @var integer */
     protected $productCountWithoutThisFacetGroup;
 
-    /**
-     * @param object $jsonObject
-     */
-    public function __construct($jsonObject)
+    protected function __construct()
     {
-        $this->productCountTotal                 = $jsonObject->total;
-        $this->productCountWithOtherFacetId      = $jsonObject->other;
-        $this->productCountWithoutThisFacetGroup = $jsonObject->missing;
+    }
 
-        $this->parseTerms($jsonObject->terms);
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return static
+     */
+    public static function createFromJson(\stdClass $jsonObject)
+    {
+        $termCounts = new static();
+
+        $termCounts->productCountTotal                 = $jsonObject->total;
+        $termCounts->productCountWithOtherFacetId      = $jsonObject->other;
+        $termCounts->productCountWithoutThisFacetGroup = $jsonObject->missing;
+
+        $termCounts->parseTerms($jsonObject->terms);
+
+        return $termCounts;
     }
 
     /**

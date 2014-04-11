@@ -14,7 +14,7 @@ class ProductTest extends AbstractModelTest
     public function testConstructor()
     {
         $json = json_decode('{"id":1,"name":"Product"}');
-        new Product($json, $this->getModelFactory());
+        Product::createFromJson($json, $this->getModelFactory());
     }
 
     /**
@@ -23,7 +23,7 @@ class ProductTest extends AbstractModelTest
     public function testMalformedJsonException()
     {
         $json = json_decode('{"id":1,"but":"now name attribute"}');
-        new Product($json, $this->getModelFactory());
+        Product::createFromJson($json, $this->getModelFactory());
     }
 
     /**
@@ -32,7 +32,7 @@ class ProductTest extends AbstractModelTest
     public function testGetBrandRuntimeException()
     {
         $json = json_decode('{"id":1,"name":"Product"}');
-        $product = new Product($json, $this->getModelFactory());
+        $product = Product::createFromJson($json, $this->getModelFactory());
         $product->getBrand();
     }
 }

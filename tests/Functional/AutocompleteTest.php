@@ -25,4 +25,16 @@ class AutocompleteTest extends AbstractShopApiTest
             $this->assertInstanceOf('Collins\ShopApi\Model\Category', $category);
         }
     }
+    
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testAutocompleteWithWrongSearchword()
+    {
+        $shopApi = $this->getShopApiWithResultFile(
+            'result/autocompletion-shop.json'
+        );
+        
+        $shopApi->fetchAutocomplete(false);
+    }
 }

@@ -55,8 +55,8 @@ class ShopApi
 
     protected $appId;
 
-    /** @var  Symfony\Component\EventDispatcher\EventDispatcher */
-    static protected $eventDispatcher;
+    /** @var EventDispatcher */
+    protected $eventDispatcher;
 
     /**
      * @param string $appId
@@ -69,8 +69,9 @@ class ShopApi
     {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $cache, $logger);
 
-        $this->facetManager = new SingleFacetManager();
-        $this->modelFactory = new DefaultModelFactory($this, $this->facetManager);
+        $this->eventDispatcher = new EventDispatcher();
+        $this->facetManager = new SingleFacetManager($this->eventDispatcher);
+        $this->modelFactory = new DefaultModelFactory($this, $this->facetManager, $this->eventDispatcher);
 
         if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
@@ -82,6 +83,9 @@ class ShopApi
         $this->appId  = $appId;
     }
 
+    /**
+     * @return ShopApiClient
+     */
     public function getApiClient()
     {
         return $this->shopApiClient;
@@ -213,7 +217,7 @@ class ShopApi
      */
     public function getQuery()
     {
-        $query = new Query($this->shopApiClient, $this->modelFactory);
+        $query = new Query($this->shopApiClient, $this->modelFactory, $this->eventDispatcher);
 
         return $query;
     }
@@ -629,15 +633,5 @@ class ShopApi
         $tag = '<script type="text/javascript" src="' . self::getJavaScriptURL() . '"></script>';
 
         return $tag;
-    }
-
-    public static function getEventDispatcher()
-    {
-        if(is_null(self::$eventDispatcher))
-        {
-            self::$eventDispatcher = new EventDispatcher();
-        }
-
-        return(self::$eventDispatcher);
     }
 }

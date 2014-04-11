@@ -10,10 +10,10 @@ class FacetCounts extends TermsCounts
 {
     protected $groupId;
 
-    public function __construct($groupId, $jsonObject)
+    public static function createFromJson($groupId, \stdClass $jsonObject)
     {
-        $this->groupId = $groupId;
-        parent::__construct($jsonObject);
+        $facetCounts = parent::createFromJson($jsonObject);
+        $facetCounts->groupId = $groupId;
     }
 
     public function parseTerms($jsonTerms)

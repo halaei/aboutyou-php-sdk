@@ -31,9 +31,14 @@ class Facet implements FacetUniqueKeyInterface, FacetGetGroupInterface
     /** @var array */
     protected $options;
 
-    public static function createFromJson($jsonObject)
+    /**
+     * @param $jsonObject
+     *
+     * @return static
+     */
+    public static function createFromJson(\stdClass $jsonObject)
     {
-        return new self(
+        return new static(
             $jsonObject->facet_id,
             $jsonObject->name,
             isset($jsonObject->value) ? $jsonObject->value : null,

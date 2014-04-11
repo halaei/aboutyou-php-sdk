@@ -14,6 +14,8 @@ class BasketSetItem extends BasketVariantItem
      * @param Product[] $products
      *
      * @return BasketVariantItem
+     *
+     * @throws \Collins\ShopApi\Exception\UnexpectedResultException
      */
     public static function createFromJson($jsonObject, array $products)
     {
