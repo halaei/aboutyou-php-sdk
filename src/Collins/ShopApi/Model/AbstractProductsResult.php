@@ -48,7 +48,8 @@ abstract class AbstractProductsResult extends AbstractModel implements \Iterator
      *
      * @return \Iterator
      */
-    public function getIterator() {
+    public function getIterator()
+    {
         return new \ArrayIterator($this->products);
     }
 
@@ -79,7 +80,8 @@ abstract class AbstractProductsResult extends AbstractModel implements \Iterator
      *
      * throws LogicException because, it's readonly
      */
-    public function offsetSet($index, $newval) {
+    public function offsetSet($index, $newval)
+    {
         throw new LogicException('Attempting to write to an immutable array');
     }
 
@@ -88,7 +90,8 @@ abstract class AbstractProductsResult extends AbstractModel implements \Iterator
      *
      * throws LogicException because, it's readonly
      */
-    public function offsetUnset($index) {
+    public function offsetUnset($index)
+    {
         throw new LogicException('Attempting to write to an immutable array');
     }
 
