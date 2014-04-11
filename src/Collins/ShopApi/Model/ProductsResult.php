@@ -23,11 +23,7 @@ class ProductsResult extends AbstractProductsResult
     public static function createFromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
         $productsResult = new static();
-        /**
-         * @todo fire the event in the function, which calls this method, while preserving the correct event key (constructor of the abstract class...)
-         */
-        $event = new GenericEvent($productsResult, func_get_args());
-        ShopApi::getEventDispatcher()->dispatch('collins.shop_api.products_result.from_json.before', $event);
+
         $productsResult->pageHash = isset($jsonObject->pageHash) ? $jsonObject->pageHash : null;
 
         if (isset($jsonObject->ids)) {
@@ -39,7 +35,6 @@ class ProductsResult extends AbstractProductsResult
                 $productsResult->products[$key] = $factory->createProduct($jsonProduct);
             }
         }
-        ShopApi::getEventDispatcher()->dispatch('collins.shop_api.products_result.from_json.after', $event);
 
         return $productsResult;
     }

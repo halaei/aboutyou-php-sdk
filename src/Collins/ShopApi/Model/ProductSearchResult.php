@@ -56,8 +56,6 @@ class ProductSearchResult
     public static function createFromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
         $productSearchResult = new static();
-        $event = new GenericEvent($productSearchResult, func_get_args());
-        ShopApi::getEventDispatcher()->dispatch('collins.shop_api.product_search_result.from_json.before', $event);
 
         $productSearchResult->pageHash = $jsonObject->pageHash;
         $productSearchResult->productCount = $jsonObject->product_count;
@@ -68,7 +66,6 @@ class ProductSearchResult
         }
 
         $productSearchResult->parseFacets($jsonObject->facets, $factory);
-        ShopApi::getEventDispatcher()->dispatch('collins.shop_api.product_search_result.from_json.after', $event);
 
         return $productSearchResult;
     }

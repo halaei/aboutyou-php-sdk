@@ -49,8 +49,6 @@ class Image
     public static function createFromJson(\stdClass $jsonObject)
     {
         $image = new static();
-        $event = new GenericEvent($image, func_get_args());
-        ShopApi::getEventDispatcher()->dispatch('collins.shop_api.image.from_json.before', $event);
 
         $image->hash     = $jsonObject->hash;
         $image->filesize = (int)$jsonObject->size;
@@ -59,7 +57,6 @@ class Image
         $image->tags     = isset($jsonObject->tags) ? $jsonObject->tags : null;
 
         $image->imageSize = new ImageSize((int)$jsonObject->image->width, (int)$jsonObject->image->height);
-        ShopApi::getEventDispatcher()->dispatch('collins.shop_api.image.from_json.after', $event);
 
         return $image;
     }

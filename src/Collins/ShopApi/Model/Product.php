@@ -86,8 +86,6 @@ class Product extends AbstractModel
     public static function createFromJson($jsonObject, ModelFactoryInterface $factory)
     {
         $product = new static();
-        $event = new GenericEvent($product, func_get_args());
-        ShopApi::getEventDispatcher()->dispatch('collins.shop_api.product.from_json.before', $event);
 
         // these are required fields
         if (!isset($jsonObject->id) || !isset($jsonObject->name)) {
@@ -114,8 +112,6 @@ class Product extends AbstractModel
         $product->categoryIdPaths  = self::parseCategoryIdPaths($jsonObject);
 
         $product->facetIds     = self::parseFacetIds($jsonObject);
-
-        ShopApi::getEventDispatcher()->dispatch('collins.shop_api.product.from_json.after', $event);
 
         return $product;
     }

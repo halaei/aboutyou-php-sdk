@@ -49,29 +49,46 @@ abstract class AbstractFacetManager implements FacetManagerInterface
     public static function getSubscribedEvents()
     {
         return array(
-            'collins.shop_api.product_search_result.from_json.before' => array('onFromJson', 0),
-            'collins.shop_api.product.from_json.before' => array('onFromJson', 0),
-            'collins.shop_api.products_result.from_json.before' => array('onFromJson', 0)
+            'collins.shop_api.product.create_model.before' => array('onProductFetched', 0),
+            'collins.shop_api.product_search_result.create_model.before' => array('onBeforeCreateProductSearchResultModel', 0),
+            'collins.shop_api.products_result.create_model.before' => array('onBeforeCreateProductsResultModel', 0),
+            'collins.shop_api.products_eans_result.create_model.before' => array('onBeforeCreateProductsEansResultModel', 0),
         );
     }
 
-    public function onFromJson(GenericEvent $event, $eventName, $dispatcher)
+    public function onProductFetched(GenericEvent $event)
     {
-        $jsonObject = $event->getArgument(0);
+        $this->collectFacetIds($event->getSubject());
+    }
 
-        switch ($eventName) {
-            case 'collins.shop_api.product_search_result.from_json.before':
-                foreach ($jsonObject->products as $productJsonObject) {
-                    $this->onProductFetched($productJsonObject);
-                }
-                break;
-            case 'collins.shop_api.product.from_json.before':
-                $this->onProductFetched($jsonObject);
-                break;
+    public function onBeforeCreateProductSearchResultModel(GenericEvent $event, $eventName, $dispatcher)
+    {
+        $jsonObject = $event->getSubject();
+
+        foreach ($jsonObject->products as $productJsonObject) {
+            $this->collectFacetIds($productJsonObject);
         }
     }
 
-    protected function onProductFetched($productJsonObject)
+    public function onBeforeCreateProductsResultModel(GenericEvent $event, $eventName, $dispatcher)
+    {
+        $jsonObject = $event->getSubject();
+
+        foreach ($jsonObject->ids as $productJsonObject) {
+            $this->collectFacetIds($productJsonObject);
+        }
+    }
+
+    public function onBeforeCreateProductsEansResultModel(GenericEvent $event, $eventName, $dispatcher)
+    {
+        $jsonObject = $event->getSubject();
+
+        foreach ($jsonObject->eans as $productJsonObject) {
+            $this->collectFacetIds($productJsonObject);
+        }
+    }
+
+    protected function collectFacetIds(\stdClass $productJsonObject)
     {
         if (isset($this->knownProductIds[$productJsonObject->id])) {
             return;

@@ -8,6 +8,8 @@ namespace Collins\ShopApi;
 
 use Collins\ShopApi\Exception\UnexpectedResultException;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Query extends QueryBuilder
 {
@@ -17,18 +19,25 @@ class Query extends QueryBuilder
     /** @var ModelFactoryInterface */
     protected $factory;
 
+    /** @var EventDispatcher */
+    protected $eventDispatcher;
+
     /**
      * @param ShopApiClient       $client
      * @param ModelFactoryInterface $factory
+     * @param EventDispatcher $eventDispatcher
      */
-    public function __construct(ShopApiClient $client, ModelFactoryInterface $factory)
+    public function __construct(ShopApiClient $client, ModelFactoryInterface $factory, EventDispatcher $eventDispatcher)
     {
-        $this->client  = $client;
-        $this->factory = $factory;
+        $this->client          = $client;
+        $this->factory         = $factory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
      * request the queries and returns an array of the results
+     *
+     * @param int $cacheDuration
      *
      * @return array
      */
@@ -40,7 +49,7 @@ class Query extends QueryBuilder
 
         $queryString = $this->getQueryString();
 
-        $response   = $this->client->request($queryString, $cacheDuration);
+        $response = $this->client->request($queryString, $cacheDuration);
         
         $jsonResponse = json_decode($response->getBody(true));
 
@@ -49,6 +58,8 @@ class Query extends QueryBuilder
 
     /**
      * request the current query and returns the first result
+     *
+     * @param int $cacheDuration
      *
      * @return mixed
      */
@@ -109,24 +120,6 @@ class Query extends QueryBuilder
                 throw new UnexpectedResultException('internal error, '. $resultKey . ' is unknown result');
             }
 
-//            if (isset($jsonObject->error_code)) {
-//                $resultKeyClass = preg_replace('/[^a-z]+/i', '', $resultKey);
-//                $resultKeyClass = ucfirst(strtolower($resultKeyClass));
-//                $resultKeyClass .= 'ResultException';
-//
-//                $namespace = 'Collins\\ShopApi\\Exception\\';
-//                $class = $namespace.'ResultException';
-//                if(class_exists($namespace.$resultKeyClass)) {
-//                    $class = $namespace.$resultKeyClass;
-//                }
-//                $message = isset($jsonObject->error_message) ? implode(', ',$jsonObject->error_message) : '';
-//                $message .= PHP_EOL.PHP_EOL;
-//                $message .= 'Query was: '.json_encode($this->query);
-//                $message = trim($message);
-//
-//                throw new $class($message, $jsonObject->error_code);
-//            }
-
             $factory = $this->factory;
             
             if (isset($jsonObject->error_code)) {
@@ -137,8 +130,13 @@ class Query extends QueryBuilder
                 }
             }
 
+            $query = $currentQuery[$queryKey];
+
+            $event = new GenericEvent($jsonObject, array('result' => $resultKey, 'query' => $query));
+            $this->eventDispatcher->dispatch('collins.shop_api.' . $resultKey . '.create_model.before', $event);
+
             $method  = $this->mapping[$resultKey];
-            $results[$resultKey] = $factory->$method($jsonObject, $currentQuery[$queryKey]);
+            $results[$resultKey] = $factory->$method($jsonObject, $query);
         }
 
         return $results;
