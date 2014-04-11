@@ -9,7 +9,7 @@ namespace Collins\ShopApi\Model\FacetManager;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Model\Facet;
 use Collins\ShopApi\Model\Product;
-use Doctrine\Common\Cache\CacheMultiGet;
+use Collins\ShopApi;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
 abstract class AbstractFacetManager implements FacetManagerInterface
@@ -24,25 +24,28 @@ abstract class AbstractFacetManager implements FacetManagerInterface
     /** @var Facet[][] */
     protected $facets = array();
 
-    /** @var CacheMultiGet */
-    private $cache;
-
     /** @var  \Collins\ShopApi */
     protected $shopApi;
 
     /**
      * facet groups and facets, which should be fetched lazily
-     * by #prefech(), if #getFacet() misses something.
+     * by #prefetch(), if #getFacet() misses something.
      *
      * @var array
      */
     protected $missingFacetGroupIdsAndFacetIds = array();
 
-    public function setShopApi($shopApi)
+    /**
+     * @param \Collins\ShopApi $shopApi
+     */
+    public function setShopApi(ShopApi $shopApi)
     {
         $this->shopApi = $shopApi;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public static function getSubscribedEvents()
     {
         return array(
@@ -68,7 +71,8 @@ abstract class AbstractFacetManager implements FacetManagerInterface
         }
     }
 
-    protected function onProductFetched($productJsonObject) {
+    protected function onProductFetched($productJsonObject)
+    {
         if (isset($this->knownProductIds[$productJsonObject->id])) {
             return;
         }
@@ -92,27 +96,7 @@ abstract class AbstractFacetManager implements FacetManagerInterface
     abstract protected function preFetch();
 
     /**
-     * @param CacheMultiGet $cache
-     */
-    public function setCache(CacheMultiGet $cache)
-    {
-        $this->cache = $cache;
-    }
-
-    /**
-     * @return CacheMultiGet
-     */
-    public function getCache()
-    {
-        return $this->cache;
-    }
-
-
-    /**
-     * @param $groupId
-     * @param $id
-     *
-     * @return Facet
+     * {@inheritdoc}
      */
     public function getFacet($groupId, $id)
     {
@@ -128,9 +112,9 @@ abstract class AbstractFacetManager implements FacetManagerInterface
     }
 
     /**
-     * @param $facetGroupIds
+     * @param integer[][] $facetGroupIds array with the structure array(<group id> => array(<facet id>,...),...)
      *
-     * @return array
+     * @return string[]
      */
     public function generateCacheKeys($facetGroupIds)
     {
@@ -143,6 +127,6 @@ abstract class AbstractFacetManager implements FacetManagerInterface
             }
         }
 
-        return ($keys);
+        return $keys;
     }
 } 
