@@ -8,10 +8,7 @@ use Collins\ShopApi\Factory\ModelFactoryInterface;
  */
 class Autocomplete
 {
-    /**
-     * @var object
-     */
-    protected $jsonObject = null;
+    const NOT_REQUESTED = null;
 
     /**
      * @var Product[]
@@ -23,11 +20,10 @@ class Autocomplete
      */
     private $categories = null;
 
-    /** @var ModelFactoryInterface */
-    protected $factory;
-
-    protected function __construct()
+    public function __construct(array $categories = null, array $products = null)
     {
+        $this->categories = $categories;
+        $this->products   = $products;
     }
 
     /**
@@ -38,33 +34,12 @@ class Autocomplete
      */
     public static function createFromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
-        $autocomplete = new static();
-
-        $autocomplete->jsonObject = $jsonObject;
-        $autocomplete->factory    = $factory;
+        $autocomplete = new static(
+            static::parseCategories($jsonObject, $factory),
+            static::parseProducts($jsonObject, $factory)
+        );
 
         return $autocomplete;
-    }
-
-    /**
-     * Get autocompleted products.
-     *
-     * @return Product[]
-     */
-    public function getProducts()
-    {
-        if (!$this->products) {
-            $factory = $this->factory;
-
-            $this->products = array();
-            if ($this->jsonObject->products) {
-                foreach ($this->jsonObject->products as $product) {
-                    $this->products[] = $factory->createProduct($product);
-                }
-            }
-            unset($this->jsonObject->products); // free memory
-        }
-        return $this->products;
     }
 
     /**
@@ -74,17 +49,70 @@ class Autocomplete
      */
     public function getCategories()
     {
-        if (!$this->categories) {
-            $factory = $this->factory;
-
-            $this->categories = array();
-            if ($this->jsonObject->categories) {
-                foreach ($this->jsonObject->categories as $category) {
-                    $this->categories[] = $factory->createCategory($category);
-                }
-            }
-            unset($this->jsonObject->categories); // free memory
-        }
         return $this->categories;
+    }
+
+    /**
+     * Get autocompleted products.
+     *
+     * @return Product[]
+     */
+    public function getProducts()
+    {
+        return $this->products;
+    }
+
+    /**
+     * parse autocompleted categories.
+     *
+     *
+     * @param \stdClass $jsonObject
+     * @param ModelFactoryInterface $factory
+     *
+     * @return Category[]|null
+     */
+    protected static function parseCategories(\stdClass $jsonObject, ModelFactoryInterface $factory)
+    {
+        if (!isset($jsonObject->categories)) {
+            return self::NOT_REQUESTED;
+        }
+
+        if ($jsonObject->categories === null) {
+            return array();
+        }
+
+        $categories = array();
+        foreach ($jsonObject->categories as $category) {
+            $categories[] = $factory->createCategory($category);
+        }
+
+
+        return $categories;
+    }
+
+    /**
+     * parse autocompleted products.
+     *
+     * @param \stdClass $jsonObject
+     * @param ModelFactoryInterface $factory
+     *
+     * @return Products[]
+     */
+    protected static function parseProducts(\stdClass $jsonObject, ModelFactoryInterface $factory)
+    {
+        if (!isset($jsonObject->products)) {
+            return self::NOT_REQUESTED;
+        }
+
+        if ($jsonObject->products === null) {
+            return array();
+        }
+
+        $products = array();
+        foreach ($jsonObject->products as $product) {
+            $products[] = $factory->createProduct($product);
+        }
+
+        return $products;
     }
 }
