@@ -3,6 +3,7 @@
 namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
+use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
 
@@ -99,6 +100,19 @@ class FacetManagerTest extends AbstractShopApiTest
         $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
     }
 
+    /**
+     * ensure, that the FacetManager isn't catched or doesn't throw a different error
+     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
+     */
+    public function testGetOrderFailed()
+    {
+        $shopApi = $this->getShopApiWithResultFiles(array(
+            'get_order-failed.json',
+            'facets-for-product-variant-facets.json',
+        ));
+
+        $order = $shopApi->fetchOrder('dummy');
+    }
 
     protected function getShopApiWithResultFile($filename, $expectedMuilitGet)
     {
