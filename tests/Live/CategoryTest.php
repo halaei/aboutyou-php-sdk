@@ -6,13 +6,10 @@ use Collins\ShopApi;
 
 class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
 {
-    /**
-     * @var $category \Collins\ShopApi\Model\Category
-     */
-    protected $category;
 
     /**
      * @expectedException \InvalidArgumentException
+     * @group live
      */
     public function testFetchCategoriesByIdWithStrings()
     {
@@ -22,6 +19,7 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
     
     /**
      * @expectedException \InvalidArgumentException
+     * @group live
      */    
     public function testFetchCategoryTreeWithDepth()
     {
@@ -31,6 +29,7 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
     
     /**
      * @expectedException Collins\ShopApi\Exception\ResultErrorException
+     * @group live
      */    
     public function testFetchCategoryTreeWithTrueDepth()
     {
@@ -40,6 +39,7 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
 
     /**
      * @expectedException Collins\ShopApi\Exception\ResultErrorException
+     * @group live
      */    
     public function testFetchCategoryTreeWithFalseDepth()
     {
@@ -47,6 +47,9 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
         $tree = $api->fetchCategoryTree(false);
     }    
     
+    /**
+     * @group live
+     */
     public function testFetchCategoriesOverTree()
     {
         $api = $this->getShopApi();
@@ -67,6 +70,7 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
     
     /**
      * @depends testFetchCategoriesOverTree
+     * @group live
      */
     public function testFetchCategoriesByIds($ids)
     {

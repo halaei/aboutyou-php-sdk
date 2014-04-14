@@ -4,7 +4,9 @@ namespace Collins\ShopApi\Test\Live;
 
 class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
-    
+    /**
+     * @group live
+     */
     public function testProductSearchWithLimit()
     {
         $api = $this->getShopApi();           
@@ -21,6 +23,9 @@ class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTe
         }
     }
     
+    /**
+     * @group live
+     */
     public function testProductSearchWithId()
     {
         $api = $this->getShopApi();        
@@ -39,6 +44,9 @@ class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTe
         $this->assertInstanceOf('\Collins\ShopApi\Model\ProductsResult', $resultProduct); 
     }
     
+    /**
+     * @group live
+     */
     public function testProductSearchCategoryTree()
     {
         $api = $this->getShopApi();        
@@ -50,6 +58,9 @@ class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTe
         $this->assertInternalType('array', $result->getCategoryTree());
     }
     
+    /**
+     * @group live
+     */
     public function testProductSearchCategory()
     {
         $api = $this->getShopApi();        
@@ -61,6 +72,9 @@ class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTe
         $this->assertInternalType('array', $result->getCategories());
     }    
     
+    /**
+     * @group live
+     */
     public function testProductSearchProductCount()
     {
         $api = $this->getShopApi();        
@@ -73,6 +87,9 @@ class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTe
         $this->assertCount(5, $result->getProducts());
     } 
     
+    /**
+     * @group live
+     */
     public function ProductSearchSort()
     {
         $shopApi = $this->getShopApi();
@@ -97,7 +114,6 @@ class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTe
         $this->assertObjectHasAttribute('other', $brandFacets);
         $this->assertObjectHasAttribute('missing', $brandFacets);
     }    
-    
     
     private function checkProduct(Product $product)
     {

@@ -5,8 +5,9 @@ namespace Collins\ShopApi\Test\Live;
 
 class AutocompelteTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
+
     /**
-     *
+     * @group live
      */
     public function testAutocomplete()
     {
@@ -25,6 +26,7 @@ class AutocompelteTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTes
     }
     
     /**
+     * @group live     
      * @expectedException \InvalidArgumentException
      */
     public function testFetchAutocompleteWithInt()

@@ -7,6 +7,7 @@ class OrderTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
     /**
      * @expectedException \Collins\ShopApi\Exception\ResultErrorException
+     * @group live
      */
     public function testFetchOrderWithWrongId()
     {
@@ -14,6 +15,9 @@ class OrderTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $order = $shopApi->fetchOrder(false);
     }
     
+    /**
+     * @group live
+     */
     public function testInitiateOrderWithEmptyBasket()
     {
         $shopApi = $this->getShopApi();
