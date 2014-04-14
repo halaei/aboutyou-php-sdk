@@ -10,7 +10,11 @@ namespace Collins\ShopApi\Model\ProductSearchResult;
 class PriceRange
 {
     /** @var object */
-    protected $jsonObject;
+    private $jsonObject;
+
+    protected function __construct()
+    {
+    }
 
     /**
      * Expected json format
@@ -25,11 +29,17 @@ class PriceRange
      * "mean": 5327.8147028403
      * }
      *
-     * @param object $jsonObject
+     * @param \stdClass $jsonObject
+     *
+     * @return static
      */
-    public function __construct($jsonObject)
+    public static function createFromJson(\stdClass $jsonObject)
     {
-        $this->jsonObject = $jsonObject;
+        $priceRange = new static();
+
+        $priceRange->jsonObject = $jsonObject;
+
+        return $priceRange;
     }
 
     /**

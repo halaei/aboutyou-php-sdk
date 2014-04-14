@@ -15,7 +15,7 @@ class VariantTest extends AbstractModelTest
     {
         $jsonObject = $this->getJsonObject('variant.json');
 
-        $variant = new Variant($jsonObject, $this->getModelFactory());
+        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory());
 
         $this->assertEquals(5145543, $variant->getId());
         $this->assertEquals('ean1', $variant->getEan());
@@ -55,12 +55,12 @@ class VariantTest extends AbstractModelTest
     public function testFromJsonAdditionalInfo()
     {
         $jsonObject = json_decode('{"additional_info":null}');
-        $variant = new Variant($jsonObject, $this->getModelFactory());
+        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory());
         $this->assertEquals(null, $variant->getAdditionalInfo());
 
         $expected = json_decode('{"some":"data"}');
         $jsonObject = json_decode('{"additional_info":{"some":"data"}}');
-        $variant = new Variant($jsonObject, $this->getModelFactory());
+        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory());
         $this->assertEquals($expected, $variant->getAdditionalInfo());
         $this->assertEquals("data", $variant->getAdditionalInfo()->some);
 

@@ -109,6 +109,20 @@ class ProductsByIdsTest extends AbstractShopApiTest
         return $p456;
     }
 
+    public function testFetchProductsSample()
+    {
+        $productIds = array(123, 456);
+
+        $shopApi = $this->getShopApiWithResultFile('p.json');
+
+        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $products = $productResult->getProducts();
+
+        $product = reset($products);
+        $this->checkProductFull($product);
+    }
+
+
     public function testFetchProductsWithStyles()
     {
         $productIds = array(220430);
@@ -193,5 +207,24 @@ EOS;
         $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Product', $product);
         $this->assertObjectHasAttribute('id', $product);
         $this->assertObjectHasAttribute('name', $product);
+    }
+
+    private function checkProductFull(ShopApi\Model\Product $product)
+    {
+        $this->checkProduct($product);
+        $variants = $product->getVariants();
+        if ($variants === null) {
+            $this->fail('a Product must have at least one variant');
+        } else {
+            foreach ($variants as $variant) {
+                $this->checkVariant($variant);
+            }
+        }
+    }
+
+    private function checkVariant(ShopApi\Model\Variant $variant)
+    {
+        $this->assertInternalType('int', $variant->getId());
+        $this->assertGreaterThan(0, count($variant->getFacetIds()));
     }
 }

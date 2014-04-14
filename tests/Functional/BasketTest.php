@@ -228,7 +228,7 @@ class BasketTest extends AbstractShopApiTest
     public function testAddToBasketThrowsException()
     {
         $shopApi = $this->getShopApiWithResultFile('result/basket1.json');
-        $variant = new ShopApi\Model\Variant(json_decode('{"id":123}'), $shopApi->getResultFactory());
+        $variant = ShopApi\Model\Variant::createFromJson(json_decode('{"id":123}'), $shopApi->getResultFactory());
         $shopApi->addItemToBasket($this->sessionId, $variant);
     }
 

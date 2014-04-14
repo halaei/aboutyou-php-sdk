@@ -16,40 +16,10 @@ abstract class AbstractProductsResult extends AbstractModel implements \Iterator
     /** @var string */
     protected $pageHash;
 
-    protected $factory;
-
-    public function __construct(\stdClass $jsonObject, ModelFactoryInterface $factory)
+    protected function __construct()
     {
         $this->products = array();
-        $this->fromJson($jsonObject, $factory);
-        $this->preFetchFacets();
     }
-
-    public function preFetchFacets()
-    {
-        $brandIds = array();
-        $groupIds = array();
-        foreach ($this->products as $product) {
-            $ids = $product->getFacetIds();
-            if (!$ids) break; // every product should have merged_attributes
-
-            if ($ids[0]) {
-                $brandIds[] = $ids[0];
-                unset($ids[0]);
-            }
-            $groupIds[] = array_keys($ids);
-        }
-
-        if (!empty($brandIds)) {
-            $brandIds = call_user_func_array('array_merge', $brandIds);
-            $brandIds = array_unique($brandIds);
-        }
-        if (!empty($groupIds)) {
-            $groupIds = call_user_func_array('array_merge', $groupIds);
-        }
-    }
-
-    abstract protected function fromJson(\stdClass $jsonObject, ModelFactoryInterface $factory);
 
     /**
      * @return string
@@ -78,7 +48,8 @@ abstract class AbstractProductsResult extends AbstractModel implements \Iterator
      *
      * @return \Iterator
      */
-    public function getIterator() {
+    public function getIterator()
+    {
         return new \ArrayIterator($this->products);
     }
 
@@ -109,7 +80,8 @@ abstract class AbstractProductsResult extends AbstractModel implements \Iterator
      *
      * throws LogicException because, it's readonly
      */
-    public function offsetSet($index, $newval) {
+    public function offsetSet($index, $newval)
+    {
         throw new LogicException('Attempting to write to an immutable array');
     }
 
@@ -118,7 +90,8 @@ abstract class AbstractProductsResult extends AbstractModel implements \Iterator
      *
      * throws LogicException because, it's readonly
      */
-    public function offsetUnset($index) {
+    public function offsetUnset($index)
+    {
         throw new LogicException('Attempting to write to an immutable array');
     }
 
