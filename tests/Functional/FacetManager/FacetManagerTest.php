@@ -3,6 +3,7 @@
 namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
+use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
 
@@ -14,10 +15,9 @@ class FacetManagerTest extends AbstractShopApiTest
     public function testProductSearch()
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
-                'product_search-result.json',
-                'facets-for-product-variant-facets.json',
-            )
-        );
+            'product_search-result.json',
+            'facets-for-product-variant-facets.json',
+        ));
 
         $k = $shopApi->getResultFactory()->getFacetManager();
 
@@ -25,73 +25,101 @@ class FacetManagerTest extends AbstractShopApiTest
         $products = $productSearchResult->getProducts();
 
         $brand = $products[0]->getBrand();
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
     }
 
     public function testProductByEans()
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
-                'products_eans-result.json',
-                'facets-for-product-variant-facets.json',
-            )
-        );
+            'products_eans-result.json',
+            'facets-for-product-variant-facets.json',
+        ));
 
         $productEansResult = $shopApi->fetchProductsByEans(array('dummy'));
         $products = $productEansResult->getProducts();
 
         $brand = $products[0]->getBrand();
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
     }
 
     public function testProductByIds()
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
-                'products-result.json',
-                'facets-for-product-variant-facets.json',
-            )
-        );
+            'products-result.json',
+            'facets-for-product-variant-facets.json',
+        ));
 
         $productResult = $shopApi->fetchProductsByIds(array('dummy'));
         $products      = $productResult->getProducts();
 
         $brand = $products[301673]->getBrand();
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
     }
 
     public function testAutocomplete()
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
-                'autocompletion-result.json',
-                #'facets-all.json',
-                'facets-for-product-variant-facets.json'
-            )
-        );
+            'autocompletion-result.json',
+            'facets-for-product-variant-facets.json'
+        ));
 
         $autocompletionResult = $shopApi->fetchAutocomplete('dummy');
         $products = $autocompletionResult->getProducts();
 
         $brand = $products[0]->getBrand();
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
     }
 
     public function testBasket()
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
-                'basket-result.json',
-                'facets-for-product-variant-facets.json',
-            )
-        );
+            'basket-result.json',
+            'facets-for-product-variant-facets.json',
+        ));
 
         $basket = $shopApi->fetchBasket('dummy');
         $products = $basket->getProducts();
         $product = reset($products);
 
         $brand = $product->getBrand();
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
     }
 
+    public function testGetOrder()
+    {
+        $shopApi = $this->getShopApiWithResultFiles(array(
+            'get_order-result.json',
+            'facets-for-product-variant-facets.json',
+        ));
+
+        $order = $shopApi->fetchOrder('dummy');
+        $products = $order->getBasket()->getProducts();
+        $product = reset($products);
+
+        $brand = $product->getBrand();
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+    }
+
+    /**
+     * ensure, that the FacetManager isn't catched or doesn't throw a different error
+     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
+     */
+    public function testGetOrderFailed()
+    {
+        $shopApi = $this->getShopApiWithResultFiles(array(
+            'get_order-failed.json',
+            'facets-for-product-variant-facets.json',
+        ));
+
+        $order = $shopApi->fetchOrder('dummy');
+    }
 
     protected function getShopApiWithResultFile($filename, $expectedMuilitGet)
     {
-//        $shopApi = parent::getShopApiWithResultFiles(
+//        $shopApi = parent::getShopApiWithResultFiles(array(
 //            $filename,
 //            'facets-all.json'
-//        );
+//        ));
         $shopApi = parent::getShopApiWithResultFile(
             $filename
         );

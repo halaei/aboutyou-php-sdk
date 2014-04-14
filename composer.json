@@ -35,7 +35,6 @@
     "require": {
         "php": ">=5.3",
         "collins/cache": "dev-master",
-        "doctrine/cache": "dev-multiget",
         "psr/log": "1.0.*",
         "symfony/event-dispatcher": ">=2.1",
         "guzzle/guzzle": "~3.7",
@@ -43,6 +42,7 @@
     },
     "suggest" : {
         "monolog/monolog" : ".",
+        "doctrine/cache": "dev-multiget",
         "ext-zlib" : "Allows handling gzip compressed responses.",
         "lib-curl" : "Allows using cURL as a request backend.",
         "lib-openssl" : "Allows handling SSL requests when not using cURL."

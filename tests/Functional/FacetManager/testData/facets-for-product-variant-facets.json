@@ -58,6 +58,54 @@
                     "group_name": "material"
                 },
                 {
+                    "facet_id": 174,
+                    "options": [
+                        {
+                            "key": "logo_extension",
+                            "value": "png"
+                        }
+                    ],
+                    "id": 0,
+                    "name": "Some Brand",
+                    "group_name": "brand"
+                },
+                {
+                    "facet_id": 4487,
+                    "options": [
+                        {
+                            "key": "logo_extension",
+                            "value": "png"
+                        }
+                    ],
+                    "id": 0,
+                    "name": "Other Brand",
+                    "group_name": "brand"
+                },
+                {
+                    "facet_id": 38,
+                    "options": [
+                        {
+                            "key": "logo_extension",
+                            "value": "png"
+                        }
+                    ],
+                    "id": 0,
+                    "name": "One more Brand",
+                    "group_name": "brand"
+                },
+                {
+                    "facet_id": 50,
+                    "options": [
+                        {
+                            "key": "logo_extension",
+                            "value": "png"
+                        }
+                    ],
+                    "id": 0,
+                    "name": "Next Brand",
+                    "group_name": "brand"
+                },
+                {
                     "facet_id": 264,
                     "options": [
                         {

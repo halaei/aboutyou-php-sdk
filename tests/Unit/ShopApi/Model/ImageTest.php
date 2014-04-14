@@ -15,7 +15,7 @@ class ImageTest extends AbstractModelTest
     {
         $jsonObject = $this->getJsonObject('image.json');
 
-        $image = new Image($jsonObject);
+        $image = Image::createFromJson($jsonObject);
         $this->assertNotNull($image->getBaseUrl());
 
         $this->assertEquals('hash1', $image->getHash());
