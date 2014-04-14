@@ -20,7 +20,7 @@ class ProductFacetsTest extends AbstractShopApiTest
 
     public function setup()
     {
-        $this->shopApi = $this->getShopApiWithResultFile('facets-for-product.json');
+        $this->shopApi = $this->getShopApiWithResultFile('facet-for-product.json');
     }
 
     /**

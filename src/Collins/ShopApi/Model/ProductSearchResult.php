@@ -123,6 +123,14 @@ class ProductSearchResult
     }
 
     /**
+     * @return ProductSearchResult\FacetCounts[]
+     */
+    public function getFacets()
+    {
+        return $this->facets;
+    }
+
+    /**
      * @return PriceRange[]
      */
     public function getPriceRanges()

@@ -6,35 +6,29 @@
 
 namespace Collins\ShopApi\Model\ProductSearchResult;
 
+use Collins\ShopApi\Factory\ModelFactoryInterface;
+
 abstract class TermsCounts
 {
     /** @var integer */
     protected $productCountTotal;
 
     /** @var integer */
-    protected $productCountWithOtherFacetId;
+    protected $productCountWithOtherFacet;
 
     /** @var integer */
-    protected $productCountWithoutThisFacetGroup;
+    protected $productCountWithoutAnyFacet;
 
-    protected function __construct()
+    protected function __construct($productCountTotal, $productCountWithOtherFacet, $productCountWithoutAnyFacet)
     {
+        $this->productCountTotal           = $productCountTotal;
+        $this->productCountWithOtherFacet  = $productCountWithOtherFacet;
+        $this->productCountWithoutAnyFacet = $productCountWithoutAnyFacet;
     }
 
-    /**
-     * @param \stdClass $jsonObject
-     *
-     * @return static
-     */
     public static function createFromJson(\stdClass $jsonObject)
     {
-        $termCounts = new static();
-
-        $termCounts->productCountTotal                 = $jsonObject->total;
-        $termCounts->productCountWithOtherFacetId      = $jsonObject->other;
-        $termCounts->productCountWithoutThisFacetGroup = $jsonObject->missing;
-
-        $termCounts->parseTerms($jsonObject->terms);
+        $termCounts = new static($jsonObject->total, $jsonObject->other, $jsonObject->missing);
 
         return $termCounts;
     }
@@ -48,7 +42,18 @@ abstract class TermsCounts
     }
 
     /**
-     * @param object $jsonTerms
+     * @return integer
      */
-    abstract protected function parseTerms($jsonTerms);
+    public function getProductCountWithOtherFacetId()
+    {
+        return $this->productCountWithOtherFacet;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getProductCountWithoutAnyFacet()
+    {
+        return $this->productCountWithoutAnyFacet;
+    }
 }

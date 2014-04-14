@@ -1,16 +1,20 @@
 <?php
 
-namespace Collins\ShopApi\Test\Functional;
+namespace Collins\ShopApi\Test\Functional\ProductSearch;
 
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
+use Collins\ShopApi\Test\Functional\AbstractShopApiTest;
 
 class ProductSearchTest extends AbstractShopApiTest
 {
     public function testProductSearch()
     {
-        $shopApi = $this->getShopApiWithResultFile('product_search.json');
+        $shopApi = $this->getShopApiWithResultFiles(array(
+            'product_search.json',
+            'facet-result.json'
+        ));
 
         // get all available products
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
@@ -19,7 +23,10 @@ class ProductSearchTest extends AbstractShopApiTest
 
     public function testProductSearchSort()
     {
-        $shopApi = $this->getShopApiWithResultFile('product_search.json');
+        $shopApi = $this->getShopApiWithResultFiles(array(
+            'product_search.json',
+            'facet-result.json'
+        ));
 
         // search products and sort
         $criteria = $shopApi->getProductSearchCriteria('12345')
@@ -63,7 +70,10 @@ class ProductSearchTest extends AbstractShopApiTest
 
     public function testProductSearchPagination()
     {
-        $shopApi = $this->getShopApiWithResultFile('product_search.json');
+        $shopApi = $this->getShopApiWithResultFiles(array(
+            'product_search.json',
+            'facet-result.json'
+        ));
 
         $pagination = array(
             'limit' => 20,
@@ -78,7 +88,10 @@ class ProductSearchTest extends AbstractShopApiTest
 
     public function testProductGetEmptyCategoryTree()
     {
-        $shopApi = $this->getShopApiWithResultFile('product_search.json');
+        $shopApi = $this->getShopApiWithResultFiles(array(
+            'product_search.json',
+            'facet-result.json'
+        ));
         
         $pagination = array(
             'limit' => 20,

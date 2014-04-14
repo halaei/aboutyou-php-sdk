@@ -67,10 +67,21 @@ abstract class AbstractFacetManager implements FacetManagerInterface
     public function onBeforeCreateProductSearchResultModel(GenericEvent $event, $eventName, $dispatcher)
     {
         $jsonObject = $event->getSubject();
-        if (empty($jsonObject->products)) return;
+        if (!empty($jsonObject->products)) {
+            foreach ($jsonObject->products as $productJsonObject) {
+                $this->collectFacetIds($productJsonObject);
+            }
+        }
 
-        foreach ($jsonObject->products as $productJsonObject) {
-            $this->collectFacetIds($productJsonObject);
+
+        if (!empty($jsonObject->facets)) {
+            foreach ($jsonObject->facets as $groupId => $jsonTerms) {
+                if (!ctype_digit($groupId)) continue;
+                foreach ($jsonTerms->terms as $jsonTerm) {
+                    $id = (int)$jsonTerm->term;
+                    $this->missingFacetGroupIdsAndFacetIds[$groupId][] = $id;
+                }
+            }
         }
     }
 

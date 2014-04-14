@@ -1,8 +1,9 @@
 <?php
 
-namespace Collins\ShopApi\Test\Functional;
+namespace Collins\ShopApi\Test\Functional\ProductSearch;
 
 use Collins\ShopApi\Model\ProductSearchResult;
+use Collins\ShopApi\Test\Functional\AbstractShopApiTest;
 
 class ProductSearchRealLifeTest extends AbstractShopApiTest
 {

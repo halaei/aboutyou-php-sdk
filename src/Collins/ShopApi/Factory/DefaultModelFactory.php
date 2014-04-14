@@ -350,31 +350,31 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createFacetsCounts(\stdClass $jsonObject)
     {
-        $termFacets = array();
-        foreach ($jsonObject as $key => $jsonResultFacet) {
-            $facets = $this->getTermFacets($jsonResultFacet->terms);
+        $facetsCounts = array();
 
-            $termFacets[$key] = ShopApi\Model\ProductSearchResult\FacetCounts::createFromJson($key, $jsonResultFacet, $facets);
+        foreach ($jsonObject as $groupId => $jsonResultFacet) {
+            if (!ctype_digit($groupId)) continue;
+            $facetCounts = $this->getTermFacets($groupId, $jsonResultFacet->terms);
+
+            $facetsCounts[$groupId] = ShopApi\Model\ProductSearchResult\FacetCounts::createFromJson($groupId, $jsonResultFacet, $facetCounts);
         }
 
-        return $termFacets;
+        return $facetsCounts;
     }
 
-    protected function getTermFacets(array $facets)
+    protected function getTermFacets($groupId, array $jsonTerms)
     {
-        return array();
+        $facetManager = $this->facetManager;
 
-        $api    = $this->getShopApi();
-        $counts = array();
-
-        foreach ($jsonTerms as $groudId => $jsonTerm) {
-            $id = (int)$jsonTerm->term;
-            $ids[] = array('id' => $id, 'group_id' => (int)$groudId);
-            $counts[$groudId][$id] = $jsonTerm->count;
+        $facetCounts = array();
+        foreach ($jsonTerms as $jsonTerm) {
+            $id    = (int)$jsonTerm->term;
+            $count = $jsonTerm->count;
+            $facet = $facetManager->getFacet($groupId, $id);
+            $facetCounts[] = new ShopApi\Model\ProductSearchResult\FacetCount($facet, $count);
         }
-        $facets = $api->fetchFacet($ids);
 
-        return $facets;
+        return $facetCounts;
     }
 
     /**
