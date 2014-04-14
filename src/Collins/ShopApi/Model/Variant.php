@@ -282,4 +282,55 @@ class Variant extends AbstractModel
     {
         return($this->getFacetGroup(Constants::FACET_LENGTH));
     }
+
+    /**
+     * @return FacetGroup|null
+     */
+    public function getSize()
+    {
+        /**
+         * @todo: Instance level caching
+         */
+        $groupIds = $this->getSizeGroupIds();
+
+        if(!empty($groupIds)) {
+            return($this->getFacetGroup(reset($groupIds)));
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function getSizeGroupIds()
+    {
+        $keys = array_flip($this->getShopApi()->getFacetGroups());
+
+        $sizeRun = $this->getFacetGroup(Constants::FACET_SIZE_RUN);
+
+        $result = array();
+
+        /**
+         * @todo Simplify this!
+         */
+        if(empty($sizeRun)) {
+            foreach(array('size', 'size_run') as $groupName) {
+                if(isset($keys[$groupName])) {
+                    $result[] = $keys[$groupName];
+                    break;
+                }
+            }
+        } else {
+            foreach($sizeRun->getFacets() as $facet){
+                /** @var $facet Facet */
+                foreach(array($facet->getValue(), 'size', 'size_run') as $groupName) {
+                    if(isset($keys[$groupName])) {
+                        $result[] = $keys[$groupName];
+                        break;
+                    }
+                }
+            }
+        }
+
+        return($result);
+    }
 }
