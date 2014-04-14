@@ -23,16 +23,16 @@ class CategoryTree implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @param $jsonObject
+     * @param array $jsonArray
      * @param ModelFactoryInterface $factory
      *
      * @return static
      */
-    public static function createFromJson($jsonObject, ModelFactoryInterface $factory)
+    public static function createFromJson(array $jsonArray, ModelFactoryInterface $factory)
     {
         $categoryTree = new static();
 
-        foreach ($jsonObject as $jsonCategory) {
+        foreach ($jsonArray as $jsonCategory) {
             $category = $factory->createCategory($jsonCategory);
             $categoryTree->allCategories[] = $category;
             if ($category->isActive()) {
