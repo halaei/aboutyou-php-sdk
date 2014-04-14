@@ -76,7 +76,7 @@ class AbstractBasketItem extends ResultError
 
     protected function checkAdditionData(array $additionalData = null, $imageUrlRequired = false)
     {
-        if ($additionalData) {
+        if ($additionalData || $imageUrlRequired) {
             if (!isset($additionalData['description'])) {
                 throw new \InvalidArgumentException('description is required in additional data');
             }

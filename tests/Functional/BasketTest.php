@@ -295,7 +295,8 @@ class BasketTest extends AbstractShopApiTest
      */      
     public function testAddOnlyDescAdditionalDataToBasketSet()
     {    
-        $basketItemSet = new Basket\BasketSet('123', array('description' => 'www'));        
+        $basketItemSet = new Basket\BasketSet('123', array('description' => 'www'));  
+        
     }   
     
     public function testAddAdditionalDataToBasketSet()

@@ -84,7 +84,7 @@ class BasketSet extends AbstractBasketItem implements BasketItemInterface
     public function __construct($id, $additionalData = null)
     {
         $this->checkId($id);
-        $this->checkAdditionData($additionalData);
+        $this->checkAdditionData($additionalData, true);
         $this->id = $id;
         $this->additionalData = $additionalData;
     }
@@ -246,7 +246,7 @@ class BasketSet extends AbstractBasketItem implements BasketItemInterface
      * @param array $additionalData additional data for this item set
      * @throws \InvalidArgumentException
      */    
-    protected function checkAdditionData(array $additionalData = null)
+/*    protected function checkAdditionData(array $additionalData = null)
     {
         if(count($additionalData) < 2 && (!isset($additionalData['description']) || !isset($additionalData['image_url']))) {
             throw new \InvalidArgumentException('$additionalData must be set, key "description" and "image_url" must exist.');
@@ -255,5 +255,5 @@ class BasketSet extends AbstractBasketItem implements BasketItemInterface
         if(!is_string($additionalData['image_url'])) {
             throw new \InvalidArgumentException('If $additionalData["image_url"] is set, it must be a string.');
         }
-    }    
+    }    */
 }
