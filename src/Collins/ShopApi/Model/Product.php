@@ -85,7 +85,7 @@ class Product extends AbstractModel
      */
     public static function createFromJson($jsonObject, ModelFactoryInterface $factory)
     {
-        $product = new static();
+        $product = new static($jsonObject, $factory);
 
         // these are required fields
         if (!isset($jsonObject->id) || !isset($jsonObject->name)) {
