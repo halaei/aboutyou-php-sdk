@@ -235,25 +235,5 @@ class BasketSet extends AbstractBasketItem implements BasketItemInterface
             throw new \InvalidArgumentException('ID of the BasketSetItem must be a String that must contain minimum two characters');            
         }
     }
-    
-    /**
-     * Additional data are transmitted to the merchant untouched.
-     * It must be set, a key "description" and "image_url" must exist. This description
-     * must be a string that describes the variant. If you want to pass an image URL that
-     * represents this item set,
-     * you can add a key "image_url" to the $additionalData that contains the URL to the image.
-     * 
-     * @param array $additionalData additional data for this item set
-     * @throws \InvalidArgumentException
-     */    
-/*    protected function checkAdditionData(array $additionalData = null)
-    {
-        if(count($additionalData) < 2 && (!isset($additionalData['description']) || !isset($additionalData['image_url']))) {
-            throw new \InvalidArgumentException('$additionalData must be set, key "description" and "image_url" must exist.');
-        }
-        
-        if(!is_string($additionalData['image_url'])) {
-            throw new \InvalidArgumentException('If $additionalData["image_url"] is set, it must be a string.');
-        }
-    }    */
+  
 }
