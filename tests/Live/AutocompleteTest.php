@@ -25,7 +25,7 @@ class AutocompelteTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTes
     }
     
     /**
-     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
+     * @expectedException \InvalidArgumentException
      */
     public function testFetchAutocompleteWithInt()
     {

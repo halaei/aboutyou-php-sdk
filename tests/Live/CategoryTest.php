@@ -1,6 +1,6 @@
 <?php
 
-namespace Collins\ShopApi\Test\Functional;
+namespace Collins\ShopApi\Test\Live;
 
 use Collins\ShopApi;
 
@@ -12,7 +12,7 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
     protected $category;
 
     /**
-     * @expectedException Collins\ShopApi\Exception\ResultErrorException
+     * @expectedException \InvalidArgumentException
      */
     public function testFetchCategoriesByIdWithStrings()
     {
@@ -21,7 +21,7 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
     }
     
     /**
-     * @expectedException Collins\ShopApi\Exception\ResultErrorException
+     * @expectedException \InvalidArgumentException
      */    
     public function testFetchCategoryTreeWithDepth()
     {
