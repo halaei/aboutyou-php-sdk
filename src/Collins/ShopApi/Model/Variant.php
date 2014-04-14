@@ -7,6 +7,7 @@
 namespace Collins\ShopApi\Model;
 
 
+use Collins\ShopApi\Constants;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 
 class Variant extends AbstractModel
@@ -266,4 +267,11 @@ class Variant extends AbstractModel
         return $this->jsonObject->first_sale_date;
     }
 
+    /**
+     * @return FacetGroup|null
+     */
+    public function getColor()
+    {
+        return($this->getFacetGroup(Constants::FACET_COLOR));
+    }
 }
