@@ -6,9 +6,9 @@ use Collins\ShopApi\Model\ProductSearchResult;
 
 class ProductSearchRealLifeTest extends AbstractShopApiTest
 {
-    public function testProductSearch()
+    public function testProductSearchPriceRange()
     {
-        $shopApi = $this->getShopApiWithResultFile('product_search_20140414.json');
+        $shopApi = $this->getShopApiWithResultFile('product_search-20140414.json');
 
         // get all available products
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
@@ -21,6 +21,24 @@ class ProductSearchRealLifeTest extends AbstractShopApiTest
         foreach ($priceRanges as $priceRange) {
             $this->assertInstanceOf('Collins\\ShopApi\\Model\\ProductSearchResult\\PriceRange', $priceRange);
             $this->assertEquals(0, $priceRange->getMax());
+        }
+    }
+
+    public function testProductSearchRawFacets()
+    {
+        $shopApi = $this->getShopApiWithResultFiles(array(
+            'product_search-20140414-2.json',
+            'category-all.json'
+        ));
+
+        // get all available products
+        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $facets = $productSearchResult->getRawFacets();
+
+        $this->assertInstanceOf('\stdClass', $facets);
+
+        foreach ($facets as $facet) {
+            $this->assertInstanceOf('\stdClass', $facet);
         }
     }
 
