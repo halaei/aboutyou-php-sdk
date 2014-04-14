@@ -40,8 +40,8 @@ class FactoryTestAbstract extends AbstractShopApiTest
         $this->assertInstanceOf('Collins\\ShopApi\\Factory\\ResultFactoryInterface', $factory);
         $this->assertNotInstanceOf('Collins\\ShopApi\\Factory\\ModelFactoryInterface', $factory);
 
-        $tree = $factory->createCategoryTree(json_decode('{}'));
-        $this->assertInstanceOf('\stdClass', $tree);
+        $tree = $factory->createCategoryTree(json_decode('[]'));
+        $this->assertInternalType('array', $tree);
 
         $json = $this->getJsonObjectFromFile('fetch-facet.json');
         $facets = $factory->createFacetList($json);

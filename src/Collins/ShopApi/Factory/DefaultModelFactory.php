@@ -172,9 +172,9 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return ShopApi\Model\CategoryTree
      */
-    public function createCategoryTree(\stdClass $jsonObject)
+    public function createCategoryTree(array $jsonArray)
     {
-        return ShopApi\Model\CategoryTree::createFromJson($jsonObject, $this);
+        return ShopApi\Model\CategoryTree::createFromJson($jsonArray, $this);
     }
 
     /**
