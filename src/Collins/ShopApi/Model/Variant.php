@@ -274,4 +274,12 @@ class Variant extends AbstractModel
     {
         return($this->getFacetGroup(Constants::FACET_COLOR));
     }
+
+    /**
+     * @return FacetGroup|null
+     */
+    public function getLength()
+    {
+        return($this->getFacetGroup(Constants::FACET_LENGTH));
+    }
 }
