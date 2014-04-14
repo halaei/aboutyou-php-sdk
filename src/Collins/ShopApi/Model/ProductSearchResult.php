@@ -151,6 +151,7 @@ class ProductSearchResult
     {
         if (empty($this->priceRanges)) return null;
 
+        $maxPrice = 0;
         foreach ($this->priceRanges as $priceRange) {
             if (!$priceRange->getMax()) break;
             $maxPrice = $priceRange->getMax();
