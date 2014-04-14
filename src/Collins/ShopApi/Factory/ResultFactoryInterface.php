@@ -32,11 +32,11 @@ interface ResultFactoryInterface
     public function createCategoriesResult(\stdClass $jsonObject, $queryParams);
 
     /**
-     * @param \stdClass $jsonObject
+     * @param array $jsonArray
      *
      * @return mixed
      */
-    public function createCategoryTree(\stdClass $jsonObject);
+    public function createCategoryTree(array $jsonArray);
 
     /**
      * @param array $jsonArray
