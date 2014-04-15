@@ -12,7 +12,7 @@ use Collins\ShopApi\Factory\ModelFactoryInterface;
 
 class Variant extends AbstractModel
 {
-    private $jsonObject;
+    protected $jsonObject;
 
     /** @var Image[]|null */
     protected $images = null;
@@ -291,46 +291,37 @@ class Variant extends AbstractModel
         /**
          * @todo: Instance level caching
          */
-        $groupIds = $this->getSizeGroupIds();
+        $groupId = $this->getSizeGroupId();
 
-        if (!empty($groupIds)) {
-            return $this->getFacetGroup(reset($groupIds));
+        if (!empty($groupId)) {
+            return $this->getFacetGroup($groupId);
         }
     }
 
     /**
-     * @return array
+     * @return integer|null
      */
-    private function getSizeGroupIds()
+    private function getSizeGroupId()
     {
         $keys = array_flip($this->getShopApi()->getFacetGroups());
 
         $sizeRun = $this->getFacetGroup(Constants::FACET_SIZE_RUN);
 
-        $result = array();
-
-        /**
-         * @todo Simplify this!
-         */
-        if (empty($sizeRun)) {
-            foreach (array('size', 'size_run') as $groupName) {
-                if (isset($keys[$groupName])) {
-                    $result[] = $keys[$groupName];
-                    break;
-                }
-            }
-        } else {
+        if (!empty($sizeRun)) {
             foreach ($sizeRun->getFacets() as $facet) {
-                /** @var $facet Facet */
-                foreach (array($facet->getValue(), 'size', 'size_run') as $groupName) {
-                    if (isset($keys[$groupName])) {
-                        $result[] = $keys[$groupName];
-                        break;
-                    }
+                $groupName = $facet->getValue();
+                if (isset($keys[$groupName])) {
+                    return $keys[$groupName];
                 }
             }
         }
+        if (isset($keys['size'])) {
+            return $keys['size'];
+        }
+        if (isset($keys['size_run'])) {
+            return $keys['size_run'];
+        }
 
-        return $result;
+        return null;
     }
 }

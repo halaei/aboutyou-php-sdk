@@ -38,10 +38,10 @@ class SaleCounts extends TermsCounts
      */
     public static function createFromJson(\stdClass $jsonObject)
     {
-        $termCounts = parent::createFromJson($jsonObject);
-        $termCounts->parseTerms($jsonObject->terms);
+        $self = new static($jsonObject->total, $jsonObject->other, $jsonObject->missing);
+        $self->parseTerms($jsonObject->terms);
 
-        return $termCounts;
+        return $self;
     }
 
     /**

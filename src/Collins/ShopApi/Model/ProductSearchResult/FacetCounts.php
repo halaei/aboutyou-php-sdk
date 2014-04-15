@@ -23,7 +23,7 @@ class FacetCounts extends TermsCounts
      */
     public static function createFromJson($groupId, \stdClass $jsonObject, $facetCounts)
     {
-        $self = parent::createFromJson($jsonObject);
+        $self = new static($jsonObject->total, $jsonObject->other, $jsonObject->missing);
         $self->groupId = $groupId;
 
         $self->facetCounts = $facetCounts;

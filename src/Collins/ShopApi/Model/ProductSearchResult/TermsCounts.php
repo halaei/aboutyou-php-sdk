@@ -26,13 +26,6 @@ abstract class TermsCounts
         $this->productCountWithoutAnyFacet = $productCountWithoutAnyFacet;
     }
 
-    public static function createFromJson(\stdClass $jsonObject)
-    {
-        $termCounts = new static($jsonObject->total, $jsonObject->other, $jsonObject->missing);
-
-        return $termCounts;
-    }
-
     /**
      * @return integer
      */
