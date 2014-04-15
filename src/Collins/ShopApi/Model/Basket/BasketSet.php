@@ -71,6 +71,8 @@ class BasketSet extends AbstractBasketItem implements BasketItemInterface
     /** @var interger */
     protected $totalVat;
 
+    const IMAGE_URL_REQUIRED = true;
+
     /**
      * Additional data are transmitted to the merchant untouched.
      * If set (array not empty), a key "description" must exist. This description

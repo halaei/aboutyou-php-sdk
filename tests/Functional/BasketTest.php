@@ -105,15 +105,7 @@ class BasketTest extends AbstractShopApiTest
          
         $this->assertTrue($result->hasErrors());
     }
-    
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testCreateBasketSetWithWrongID()
-    {
-        $set = new Basket\BasketSet(12, array('description' => 'test', 'image_url' => 'http://img-url'));
-    }
-    
+
     /**
      * @expectedException \Collins\ShopApi\Exception\ResultErrorException
      */
@@ -130,8 +122,7 @@ class BasketTest extends AbstractShopApiTest
         
         $shopApi->updateBasket('123456xyz', $basket);                 
     }
-        
-    
+
     /**
      * @expectedException \Collins\ShopApi\Exception\UnexpectedResultException
      */

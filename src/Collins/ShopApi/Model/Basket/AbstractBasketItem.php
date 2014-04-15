@@ -20,6 +20,8 @@ class AbstractBasketItem extends ResultError
      */
     protected $additionalData;
 
+    const IMAGE_URL_REQUIRED = false;
+
     /** @var boolean */
     protected $isChanged = false;
 
@@ -74,19 +76,15 @@ class AbstractBasketItem extends ResultError
         $this->additionalData = $additionalData;
     }
 
-    protected function checkAdditionData(array $additionalData = null, $imageUrlRequired = false)
+    protected function checkAdditionData(array $additionalData = null)
     {
-        if ($additionalData || $imageUrlRequired) {
+        if ($additionalData || static::IMAGE_URL_REQUIRED) {
             if (!isset($additionalData['description'])) {
                 throw new \InvalidArgumentException('description is required in additional data');
             }
-            if ($imageUrlRequired && !isset($additionalData['image_url'])) {
+            if (static::IMAGE_URL_REQUIRED && !isset($additionalData['image_url'])) {
                 throw new \InvalidArgumentException('image_url is required in additional data');
             }
-        }
-
-        if (isset($additionalData['internal_infos']) && !is_array($additionalData['internal_infos'])) {
-            throw new \InvalidArgumentException('internal_infos must be an array');
         }
     }
 }
