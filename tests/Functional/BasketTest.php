@@ -74,7 +74,7 @@ class BasketTest extends AbstractShopApiTest
     public function testAddEmptyItemSetToBasket()
     {
         $basket = new Basket();        
-        $set = new Basket\BasketSet('123', ['description' => 'test', 'image_url' => 'http://img-url']);                
+        $set = new Basket\BasketSet('123', array('description' => 'test', 'image_url' => 'http://img-url'));
         $basket->updateItemSet($set);        
     }
     
@@ -96,7 +96,7 @@ class BasketTest extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFile('basket-set-variant-not-found.json');        
         $basket = new Basket();
         
-        $set = new Basket\BasketSet('A123567', ['description' => 'test', 'image_url' => 'http://img-url']);                
+        $set = new Basket\BasketSet('A123567', array('description' => 'test', 'image_url' => 'http://img-url'));
         $item = new Basket\BasketSetItem(226651);
         $set->addItem($item);
         
@@ -111,7 +111,7 @@ class BasketTest extends AbstractShopApiTest
      */
     public function testCreateBasketSetWithWrongID()
     {
-        $set = new Basket\BasketSet(12, ['description' => 'test', 'image_url' => 'http://img-url']);        
+        $set = new Basket\BasketSet(12, array('description' => 'test', 'image_url' => 'http://img-url'));
     }
     
     /**
@@ -122,7 +122,7 @@ class BasketTest extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFile('basket-set-with-int-id.json');        
         $basket = new Basket();
         
-        $set = new Basket\BasketSet('WRONG_ID', ['description' => 'test', 'image_url' => 'http://img-url']);                
+        $set = new Basket\BasketSet('WRONG_ID', array('description' => 'test', 'image_url' => 'http://img-url'));
         $item = new Basket\BasketSetItem(226651);
         $set->addItem($item);
         
@@ -149,7 +149,7 @@ class BasketTest extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFile('basket-set-without-product.json');
         $basket = new Basket();
         
-        $set = new Basket\BasketSet('123', ['description' => 'test', 'image_url' => 'http://img-url']);                
+        $set = new Basket\BasketSet('123', array('description' => 'test', 'image_url' => 'http://img-url'));
         $item = new Basket\BasketSetItem(12312121);
         $set->addItem($item);
         
