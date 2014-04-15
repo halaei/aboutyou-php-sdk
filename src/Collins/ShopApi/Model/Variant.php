@@ -303,7 +303,7 @@ class Variant extends AbstractModel
      */
     private function getSizeGroupId()
     {
-        $keys = [];
+        $keys = array();
 
         $groups = $this->getFacetGroupSet()->getGroups();
 
