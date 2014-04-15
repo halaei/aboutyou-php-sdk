@@ -6,7 +6,6 @@
 
 namespace Collins\ShopApi\Test\Unit\Model\Basket;
 
-use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Model\Basket\BasketSet;
 use Collins\ShopApi\Test\Unit\Model\AbstractModelTest;
 
