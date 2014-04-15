@@ -138,18 +138,17 @@ class Category extends AbstractModel
      */
     public function getParent()
     {
-        if($this->parent) {
+        if ($this->parent) {
             return $this->parent;
         }
 
-        if(!$this->getParentId()) {
+        if (!$this->getParentId()) {
             return null;
         }
 
         $parents = $this->getShopApi()->fetchCategoriesByIds(array($this->getParentId()))->getCategories();
-        if(count($parents)) {
-            $array_parents = array_values($parents); 
-            $this->parent = $array_parents[0];
+        if (count($parents)) {
+            $this->parent = reset($parents);
         }
 
         return $this->parent;
@@ -174,7 +173,7 @@ class Category extends AbstractModel
      */
     public function getBreadcrumb()
     {
-        $breadcrumb = $this->parent ? $this->parent->getBreadcrumb() : array();
+        $breadcrumb = $this->getParent() ? $this->getParent()->getBreadcrumb() : array();
         $breadcrumb[] = $this;
 
         return $breadcrumb;
