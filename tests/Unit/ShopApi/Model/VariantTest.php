@@ -24,8 +24,10 @@ class VariantTest extends AbstractModelTest
         $this->assertEquals(0, $variant->getOldPrice());
         $this->assertEquals(3995, $variant->getRetailPrice());
         $this->assertEquals(5, $variant->getQuantity());
-        $this->assertEquals('2014-02-14 18:09:38', $variant->getFirstActiveDate());
-        $this->assertEquals('2014-01-10 10:10:00', $variant->getFirstSaleDate());
+        $this->assertEquals(new \DateTime('2014-02-14 18:09:38'), $variant->getFirstActiveDate());
+        $this->assertEquals(new \DateTime('2014-01-10 10:10:00'), $variant->getFirstSaleDate());
+        $this->assertEquals(new \DateTime('2014-01-11 10:11:00'), $variant->getCreatedDate());
+        $this->assertEquals(new \DateTime('2014-01-12 10:12:00'), $variant->getUpdatedDate());
 
         $images = $variant->getImages();
         $this->assertCount(2, $images);
@@ -36,6 +38,16 @@ class VariantTest extends AbstractModelTest
         return $variant;
     }
 
+    public function testFromJson2()
+    {
+        $jsonObject = $this->getJsonObject('variant2.json');
+
+        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory());
+        $this->assertNull($variant->getFirstActiveDate());
+        $this->assertNull($variant->getFirstSaleDate());
+        $this->assertNull($variant->getCreatedDate());
+        $this->assertNull($variant->getUpdatedDate());
+    }
     /**
      * @depends testFromJson
      */
