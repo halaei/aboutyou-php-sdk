@@ -192,7 +192,7 @@ class Variant extends AbstractModel
      * Please mind, that this quantity doesn't need to be up to date.
      * You should check via live_variant for the real quantity before
      * adding a product into the cart.
-     * 
+     *
      * @return int
      */
     public function getQuantity()
@@ -303,7 +303,13 @@ class Variant extends AbstractModel
      */
     private function getSizeGroupId()
     {
-        $keys = array_flip($this->getShopApi()->getFacetGroups());
+        $keys = [];
+
+        $groups = $this->getFacetGroupSet()->getGroups();
+
+        foreach ($groups as $group) {
+            $keys[$group->getName()] = $group->getGroupId();
+        }
 
         $sizeRun = $this->getFacetGroup(Constants::FACET_SIZE_RUN);
 
