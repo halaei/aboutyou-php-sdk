@@ -15,4 +15,7 @@ composer.phar
 composer.lock
 composer-test.lock
 vendor/
+
 /nbproject
+/tests/Live/config/config.ini
+

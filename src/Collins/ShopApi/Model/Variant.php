@@ -7,6 +7,7 @@
 namespace Collins\ShopApi\Model;
 
 
+use Collins\ShopApi\Constants;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 
 class Variant extends AbstractModel
@@ -20,22 +21,31 @@ class Variant extends AbstractModel
     protected $facetGroups;
 
     /** @var ModelFactoryInterface */
-    protected $factory;
+    private $factory;
 
     /**
      * @var Image
      */
     protected $selectedImage = null;
 
-    public function __construct($jsonObject, ModelFactoryInterface $factory)
+    protected function __construct()
     {
-        $this->factory = $factory;
-        $this->fromJson($jsonObject);
     }
 
-    public function fromJson($jsonObject)
+    /**
+     * @param \stdClass $jsonObject
+     * @param ModelFactoryInterface $factory
+     *
+     * @return static
+     */
+    public static function createFromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
-        $this->jsonObject = $jsonObject;
+        $variant = new static();
+
+        $variant->factory    = $factory;
+        $variant->jsonObject = $jsonObject;
+
+        return $variant;
     }
 
     /**
@@ -257,4 +267,70 @@ class Variant extends AbstractModel
         return $this->jsonObject->first_sale_date;
     }
 
+    /**
+     * @return FacetGroup|null
+     */
+    public function getColor()
+    {
+        return $this->getFacetGroup(Constants::FACET_COLOR);
+    }
+
+    /**
+     * @return FacetGroup|null
+     */
+    public function getLength()
+    {
+        return $this->getFacetGroup(Constants::FACET_LENGTH);
+    }
+
+    /**
+     * @return FacetGroup|null
+     */
+    public function getSize()
+    {
+        /**
+         * @todo: Instance level caching
+         */
+        $groupIds = $this->getSizeGroupIds();
+
+        if (!empty($groupIds)) {
+            return $this->getFacetGroup(reset($groupIds));
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function getSizeGroupIds()
+    {
+        $keys = array_flip($this->getShopApi()->getFacetGroups());
+
+        $sizeRun = $this->getFacetGroup(Constants::FACET_SIZE_RUN);
+
+        $result = array();
+
+        /**
+         * @todo Simplify this!
+         */
+        if (empty($sizeRun)) {
+            foreach (array('size', 'size_run') as $groupName) {
+                if (isset($keys[$groupName])) {
+                    $result[] = $keys[$groupName];
+                    break;
+                }
+            }
+        } else {
+            foreach ($sizeRun->getFacets() as $facet) {
+                /** @var $facet Facet */
+                foreach (array($facet->getValue(), 'size', 'size_run') as $groupName) {
+                    if (isset($keys[$groupName])) {
+                        $result[] = $keys[$groupName];
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
 }

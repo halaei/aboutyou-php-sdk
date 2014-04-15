@@ -17,76 +17,121 @@ class RawJsonFactory implements ResultFactoryInterface
     {
     }
 
-    public function createAutocomplete($json)
+    /**
+     * {@inheritdoc}
+     */
+    public function createAutocomplete(\stdClass $jsonObject)
     {
-        return $json;
+        return $jsonObject;
     }
 
-    public function createBasket($json)
+    /**
+     * {@inheritdoc}
+     */
+    public function createBasket(\stdClass $jsonObject)
     {
-        return $json;
+        return $jsonObject;
     }
 
-    public function createCategoriesResult($json, $queryParams)
+    /**
+     * {@inheritdoc}
+     */
+    public function createCategoriesResult(\stdClass $jsonObject, $queryParams)
     {
-        return $json;
+        return $jsonObject;
     }
 
-    public function createCategoryTree($json)
+    /**
+     * {@inheritdoc}
+     */
+    public function createCategoryTree(array $jsonArray)
     {
-        return $json;
+        return $jsonArray;
     }
 
-    public function createFacetList($json)
+    /**
+     * {@inheritdoc}
+     */
+    public function createFacetList(array $jsonArray)
     {
-        return $json;
+        return $jsonArray;
     }
 
-    public function createFacetsList($json)
+    /**
+     * {@inheritdoc}
+     */
+    public function createFacetsList(\stdClass $jsonObject)
     {
-        return $json;
+        return $jsonObject;
     }
 
-    public function createProductsResult($json)
+    /**
+     * {@inheritdoc}
+     */
+    public function createProductsResult(\stdClass $jsonObject)
     {
-        return $json;
+        return $jsonObject;
     }
 
-    public function createProductsEansResult($json)
+    /**
+     * {@inheritdoc}
+     */
+    public function createProductsEansResult(\stdClass $jsonObject)
     {
-        return $json;
+        return $jsonObject;
     }
 
-    public function createProductSearchResult($json)
+    /**
+     * {@inheritdoc}
+     */
+    public function createProductSearchResult(\stdClass $jsonObject)
     {
-        return $json;
+        return $jsonObject;
     }
 
-    public function createSuggest($json)
+    /**
+     * {@inheritdoc}
+     */
+    public function createSuggest(array $jsonArray)
     {
-        return $json;
+        return $jsonArray;
     }
 
-    public function createOrder($json)
+    /**
+     * {@inheritdoc}
+     */
+    public function createOrder(\stdClass $jsonObject)
     {
-        return $json;
+        return $jsonObject;
     }
 
-   public function initiateOrder($json)
+    /**
+     * {@inheritdoc}
+     */
+   public function initiateOrder(\stdClass $jsonObject)
     {
-        return $json;
+        return $jsonObject;
     }
 
-    public function createChildApps($json)
+    /**
+     * {@inheritdoc}
+     */
+    public function createChildApps(\stdClass $jsonObject)
     {
-        return $json;
+        return $jsonObject;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function preHandleError($json, $resultKey, $isMultiRequest)
     {
         return false;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setBaseImageUrl($baseUrl)
     {
         // not used

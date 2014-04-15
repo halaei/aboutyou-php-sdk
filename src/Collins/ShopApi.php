@@ -55,8 +55,8 @@ class ShopApi
 
     protected $appId;
 
-    /** @var  Symfony\Component\EventDispatcher\EventDispatcher */
-    static protected $eventDispatcher;
+    /** @var EventDispatcher */
+    protected $eventDispatcher;
 
     /**
      * @param string $appId
@@ -69,8 +69,9 @@ class ShopApi
     {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $cache, $logger);
 
-        $this->facetManager = new SingleFacetManager();
-        $this->modelFactory = new DefaultModelFactory($this, $this->facetManager);
+        $this->eventDispatcher = new EventDispatcher();
+        $this->facetManager = new SingleFacetManager($this->eventDispatcher);
+        $this->modelFactory = new DefaultModelFactory($this, $this->facetManager, $this->eventDispatcher);
 
         if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
@@ -82,6 +83,9 @@ class ShopApi
         $this->appId  = $appId;
     }
 
+    /**
+     * @return ShopApiClient
+     */
     public function getApiClient()
     {
         return $this->shopApiClient;
@@ -213,7 +217,7 @@ class ShopApi
      */
     public function getQuery()
     {
-        $query = new Query($this->shopApiClient, $this->modelFactory);
+        $query = new Query($this->shopApiClient, $this->modelFactory, $this->eventDispatcher);
 
         return $query;
     }
@@ -631,13 +635,34 @@ class ShopApi
         return $tag;
     }
 
-    public static function getEventDispatcher()
+    /**
+     * @private
+     * @return array
+     */
+    public function getFacetGroups()
     {
-        if(is_null(self::$eventDispatcher))
-        {
-            self::$eventDispatcher = new EventDispatcher();
-        }
-
-        return(self::$eventDispatcher);
+        return array(
+            0   => 'brand',
+            1   => 'color',
+            5   => 'length',
+            206 => 'size_code',
+            172 => 'size_run',
+            211 => 'channel',
+            247 => 'care_symbol',
+            173 => 'clothing_unisex_int',
+            204 => 'clothing_unisex_onesize',
+            175 => 'clothing_womens_de',
+            180 => 'clothing_womens_inch',
+            194 => 'shoes_unisex_eur',
+            189 => 'clothing_mens_inch',
+            185 => 'clothing_womens_scotchsoda_81hours',
+            187 => 'clothing_mens_de',
+            178 => 'clothing_womens_uk',
+            183 => 'clothing_womens_us',
+            181 => 'clothing_womens_belts_cm',
+            190 => 'clothing_mens_belts_cm',
+            176 => 'clothing_womens_it',
+            192 => 'clothing_mens_acc'
+        );
     }
 }

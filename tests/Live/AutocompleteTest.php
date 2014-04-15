@@ -1,18 +1,17 @@
 <?php
-namespace Collins\ShopApi\Test\Functional;
 
-use Collins\ShopApi;
+namespace Collins\ShopApi\Test\Live;
 
-class AutocompleteTest extends AbstractShopApiTest
+
+class AutocompelteTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
+
     /**
-     *
+     * @group live
      */
     public function testAutocomplete()
     {
-        $shopApi = $this->getShopApiWithResultFile(
-            'result/autocompletion-shop.json'
-        );
+        $shopApi = $this->getShopApi();
 
         $autocomplete = $shopApi->fetchAutocomplete('Shop', 10);
         $this->assertInstanceOf('Collins\ShopApi\Model\Autocomplete', $autocomplete);
@@ -23,18 +22,16 @@ class AutocompleteTest extends AbstractShopApiTest
 
         foreach ($autocomplete->getCategories() as $category) {
             $this->assertInstanceOf('Collins\ShopApi\Model\Category', $category);
-        }
+        }      
     }
     
     /**
+     * @group live     
      * @expectedException \InvalidArgumentException
      */
-    public function testAutocompleteWithWrongSearchword()
+    public function testFetchAutocompleteWithInt()
     {
-        $shopApi = $this->getShopApiWithResultFile(
-            'result/autocompletion-shop.json'
-        );
-        
-        $shopApi->fetchAutocomplete(false);
+        $shopApi = $this->getShopApi();
+        $autocomplete = $shopApi->fetchAutocomplete(false, 10);        
     }
 }

@@ -80,7 +80,7 @@ class BasketTest extends AbstractShopApiTest
     
     public function testAddItemToBasketWithProductID()
     {
-        $shopApi = $this->getShopApiWithResultFile('emptyBasket.json');
+        $shopApi = $this->getShopApiWithResultFile('basket-variant-not-found.json');
         
         $basket = $shopApi->addItemToBasket('123456xyz', 226651);      
         $this->assertTrue($basket->hasErrors());
@@ -93,7 +93,7 @@ class BasketTest extends AbstractShopApiTest
     
     public function testAddItemSetToBasketWithProductID()
     {
-        $shopApi = $this->getShopApiWithResultFile('emptyBasketSet.json');        
+        $shopApi = $this->getShopApiWithResultFile('basket-set-variant-not-found.json');        
         $basket = new Basket();
         
         $set = new Basket\BasketSet('A123567', ['description' => 'test', 'image_url' => 'http://img-url']);                
@@ -119,7 +119,7 @@ class BasketTest extends AbstractShopApiTest
      */
     public function testAddItemSetToBasketWithWrongBasketSetID()
     {
-        $shopApi = $this->getShopApiWithResultFile('basketSetWrongId.json');        
+        $shopApi = $this->getShopApiWithResultFile('basket-set-with-int-id.json');        
         $basket = new Basket();
         
         $set = new Basket\BasketSet('WRONG_ID', ['description' => 'test', 'image_url' => 'http://img-url']);                
@@ -137,7 +137,7 @@ class BasketTest extends AbstractShopApiTest
      */
     public function testAddItemToBasketWithWrongProductsResult()
     {
-        $shopApi = $this->getShopApiWithResultFile('wrongEmptyBasket.json');
+        $shopApi = $this->getShopApiWithResultFile('basket-without-product.json');
         $shopApi->addItemToBasket('123456xyz', 1543435);              
     }
     
@@ -146,7 +146,7 @@ class BasketTest extends AbstractShopApiTest
      */
     public function testAddItemToBasketWithWrongProductsResultInSet()
     {
-        $shopApi = $this->getShopApiWithResultFile('wrongEmptyBasketSet.json');
+        $shopApi = $this->getShopApiWithResultFile('basket-set-without-product.json');
         $basket = new Basket();
         
         $set = new Basket\BasketSet('123', ['description' => 'test', 'image_url' => 'http://img-url']);                
@@ -228,7 +228,7 @@ class BasketTest extends AbstractShopApiTest
     public function testAddToBasketThrowsException()
     {
         $shopApi = $this->getShopApiWithResultFile('result/basket1.json');
-        $variant = new ShopApi\Model\Variant(json_decode('{"id":123}'), $shopApi->getResultFactory());
+        $variant = ShopApi\Model\Variant::createFromJson(json_decode('{"id":123}'), $shopApi->getResultFactory());
         $shopApi->addItemToBasket($this->sessionId, $variant);
     }
 

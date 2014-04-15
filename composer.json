@@ -1,6 +1,5 @@
 {
     "name": "collins/shop-sdk",
-    "version": "0.2",
     "description": "Shop API SDK",
     "license": "proprietary",
     "type": "library",
@@ -8,17 +7,20 @@
     "authors": [
         {
             "name": "Christian Kilb",
-            "email": "christian.kilb@project-collins.com"
+            "email": "christian.kilb@project-collins.com",
+            "homepage": "https://devcenter.mary-paul.de/",
+            "role": "Technical Director"
         },
         {
             "name": "Nils Dröge",
-            "email": "nils.droege@project-collins.com"
-        },
-        {
-            "name": "DevCenter",
-            "homepage": "https://devcenter.mary-paul.de/"
+            "email": "nils.droege@project-collins.com",
+            "homepage": "https://devcenter.mary-paul.de/",
+            "role": "Developer"
         }
     ],
+    "support": {
+        "email": "support@project-collins.com"
+    },
 
     "repositories": [
         {
@@ -33,7 +35,6 @@
     "require": {
         "php": ">=5.3",
         "collins/cache": "dev-master",
-        "doctrine/cache": "dev-multiget",
         "psr/log": "1.0.*",
         "symfony/event-dispatcher": ">=2.1",
         "guzzle/guzzle": "~3.7",
@@ -41,6 +42,7 @@
     },
     "suggest" : {
         "monolog/monolog" : ".",
+        "doctrine/cache": "dev-multiget",
         "ext-zlib" : "Allows handling gzip compressed responses.",
         "lib-curl" : "Allows using cURL as a request backend.",
         "lib-openssl" : "Allows handling SSL requests when not using cURL."

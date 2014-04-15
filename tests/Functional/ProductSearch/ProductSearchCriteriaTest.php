@@ -4,7 +4,7 @@
  * (c) Collins GmbH & Co KG
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace Collins\ShopApi\Test\Functional\ProductSearch;
 
 use Collins\ShopApi;
 use Collins\ShopApi\Criteria\ProductFields;
@@ -16,7 +16,7 @@ use Collins\ShopApi\Criteria\ProductSearchCriteria;
  *
  * @see tests/unit/ShopApi/Criteria/ProductSearchCriteriaTestAbstract.php
  */
-class ProductSearchCriteriaTestAbstract extends AbstractShopApiTest
+class ProductSearchCriteriaTestAbstract extends ShopApi\Test\Functional\AbstractShopApiTest
 {
     public function testGetSearchCriteria()
     {

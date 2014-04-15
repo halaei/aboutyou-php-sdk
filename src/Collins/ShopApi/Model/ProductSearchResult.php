@@ -42,27 +42,32 @@ class ProductSearchResult
      */
     protected $rawFacets;
 
-    public function __construct($jsonObject, ModelFactoryInterface $factory)
+    protected function __construct()
     {
         $this->products = array();
-
-        $event = new GenericEvent($this, func_get_args());
-        ShopApi::getEventDispatcher()->dispatch("collins.shop_api.product_search_result.from_json.before", $event);
-        $this->fromJson($jsonObject, $factory);
-        ShopApi::getEventDispatcher()->dispatch("collins.shop_api.product_search_result.from_json.after", $event);
     }
 
-    public function fromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)
+    /**
+     * @param \stdClass $jsonObject
+     * @param ModelFactoryInterface $factory
+     *
+     * @return static
+     */
+    public static function createFromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
-        $this->pageHash = $jsonObject->pageHash;
-        $this->productCount = $jsonObject->product_count;
-        $this->rawFacets = $jsonObject->facets;
+        $productSearchResult = new static();
+
+        $productSearchResult->pageHash = $jsonObject->pageHash;
+        $productSearchResult->productCount = $jsonObject->product_count;
+        $productSearchResult->rawFacets = $jsonObject->facets;
 
         foreach ($jsonObject->products as $key => $jsonProduct) {
-            $this->products[$key] = $factory->createProduct($jsonProduct);
+            $productSearchResult->products[$key] = $factory->createProduct($jsonProduct);
         }
 
-        $this->parseFacets($jsonObject->facets, $factory);
+        $productSearchResult->parseFacets($jsonObject->facets, $factory);
+
+        return $productSearchResult;
     }
 
     /**
@@ -118,6 +123,14 @@ class ProductSearchResult
     }
 
     /**
+     * @return ProductSearchResult\FacetCounts[]
+     */
+    public function getFacets()
+    {
+        return $this->facets;
+    }
+
+    /**
      * @return PriceRange[]
      */
     public function getPriceRanges()
@@ -146,6 +159,7 @@ class ProductSearchResult
     {
         if (empty($this->priceRanges)) return null;
 
+        $maxPrice = 0;
         foreach ($this->priceRanges as $priceRange) {
             if (!$priceRange->getMax()) break;
             $maxPrice = $priceRange->getMax();
