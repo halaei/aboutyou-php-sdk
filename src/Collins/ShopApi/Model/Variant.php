@@ -272,7 +272,7 @@ class Variant extends AbstractModel
      */
     public function getColor()
     {
-        return($this->getFacetGroup(Constants::FACET_COLOR));
+        return $this->getFacetGroup(Constants::FACET_COLOR);
     }
 
     /**
@@ -280,7 +280,7 @@ class Variant extends AbstractModel
      */
     public function getLength()
     {
-        return($this->getFacetGroup(Constants::FACET_LENGTH));
+        return $this->getFacetGroup(Constants::FACET_LENGTH);
     }
 
     /**
@@ -293,8 +293,8 @@ class Variant extends AbstractModel
          */
         $groupIds = $this->getSizeGroupIds();
 
-        if(!empty($groupIds)) {
-            return($this->getFacetGroup(reset($groupIds)));
+        if (!empty($groupIds)) {
+            return $this->getFacetGroup(reset($groupIds));
         }
     }
 
@@ -312,18 +312,18 @@ class Variant extends AbstractModel
         /**
          * @todo Simplify this!
          */
-        if(empty($sizeRun)) {
-            foreach(array('size', 'size_run') as $groupName) {
-                if(isset($keys[$groupName])) {
+        if (empty($sizeRun)) {
+            foreach (array('size', 'size_run') as $groupName) {
+                if (isset($keys[$groupName])) {
                     $result[] = $keys[$groupName];
                     break;
                 }
             }
         } else {
-            foreach($sizeRun->getFacets() as $facet){
+            foreach ($sizeRun->getFacets() as $facet) {
                 /** @var $facet Facet */
-                foreach(array($facet->getValue(), 'size', 'size_run') as $groupName) {
-                    if(isset($keys[$groupName])) {
+                foreach (array($facet->getValue(), 'size', 'size_run') as $groupName) {
+                    if (isset($keys[$groupName])) {
                         $result[] = $keys[$groupName];
                         break;
                     }
@@ -331,6 +331,6 @@ class Variant extends AbstractModel
             }
         }
 
-        return($result);
+        return $result;
     }
 }
