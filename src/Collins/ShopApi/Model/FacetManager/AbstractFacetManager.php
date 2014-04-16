@@ -1,17 +1,20 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @author nils.droege@project-collins.com
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi\Model\FacetManager;
 
+use Collins\ShopApi;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Model\Facet;
 use Collins\ShopApi\Model\Product;
-use Collins\ShopApi;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
+/**
+ * @deprecated will merge into the DefaultFacetManager
+ */
 abstract class AbstractFacetManager implements FacetManagerInterface
 {
     /**

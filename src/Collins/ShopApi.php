@@ -8,8 +8,8 @@ use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Factory\ResultFactoryInterface;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
-use Collins\ShopApi\Model\FacetManager;
-use Collins\ShopApi\Model\FacetManager\SingleFacetManager;
+use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
+use Collins\ShopApi\Model\FacetManager\FetchSingleFacetStrategy;
 use Collins\ShopApi\Model\ProductsEansResult;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
@@ -55,15 +55,23 @@ class ShopApi
      * @param string $appId
      * @param string $appPassword
      * @param string $apiEndPoint Constants::API_ENVIRONMENT_LIVE for live environment, Constants::API_ENVIRONMENT_STAGE for staging
+     * @param ResultFactoryInterface $resultFactory if null it will use the DefaultModelFactory with the DefaultFacetManager
      * @param LoggerInterface $logger
      */
-    public function __construct($appId, $appPassword, $apiEndPoint = Constants::API_ENVIRONMENT_LIVE, LoggerInterface $logger = null)
-    {
+    public function __construct(
+        $appId,
+        $appPassword,
+        $apiEndPoint = Constants::API_ENVIRONMENT_LIVE,
+        ResultFactoryInterface $resultFactory = null,
+        LoggerInterface $logger = null
+    ) {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $logger);
 
-        $this->eventDispatcher = new EventDispatcher();
-        $this->facetManager = new SingleFacetManager($this->eventDispatcher);
-        $this->modelFactory = new DefaultModelFactory($this, $this->facetManager, $this->eventDispatcher);
+        if ($resultFactory === null) {
+            $this->facetManager    = new DefaultFacetManager(new FetchSingleFacetStrategy($this));
+            $this->eventDispatcher = new EventDispatcher();
+            $this->modelFactory    = new DefaultModelFactory($this, $this->facetManager, $this->eventDispatcher);
+        }
 
         if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
@@ -74,6 +82,8 @@ class ShopApi
         $this->logger = $logger;
         $this->appId  = $appId;
     }
+
+
 
     /**
      * @return ShopApiClient
