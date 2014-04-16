@@ -1,10 +1,9 @@
 <?php
 
-namespace Collins\ShopApi\Test\Functional;
+namespace Collins\ShopApi\Test\Functional\ProductSearch;
 
-use Collins\ShopApi\Criteria\ProductSearchCriteria;
-use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
+use Collins\ShopApi\Test\Functional\AbstractShopApiTest;
 
 class ProductSearchWithFacetsTest extends AbstractShopApiTest
 {
@@ -12,7 +11,8 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
                 'result-product-search-with-facets.json',
-                'category-all.json'
+                'category-all.json',
+                'facet-result.json'
             ));
 
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
@@ -28,7 +28,8 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
                 'result-product-search-with-facets.json',
-                'category-all.json'
+                'category-all.json',
+                'facet-result.json'
             ));
 
         // get all available products
@@ -68,14 +69,46 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
 
     public function testProductSearchWithFacetResult()
     {
-        $this->markTestIncomplete('Is not implemented yet');
+        $shopApi = $this->getShopApiWithResultFiles(array(
+            'result-product-search-with-facets.json',
+            'category-all.json',
+            'facet-result.json'
+        ));
+
+        // get all available products
+        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $facetsCounts = $productSearchResult->getFacets();
+        $this->assertInternalType('array', $facetsCounts);
+        $this->assertCount(1, $facetsCounts);
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\ProductSearchResult\\FacetCounts', $facetsCounts[0]);
+        $this->assertEquals(25303, $facetsCounts[0]->getProductCountTotal());
+        $this->assertEquals(20733, $facetsCounts[0]->getProductCountWithOtherFacetId());
+        $this->assertEquals(0, $facetsCounts[0]->getProductCountWithoutAnyFacet());
+        $facetCounts = $facetsCounts[0]->getFacetCounts();
+        $this->assertCount(3, $facetCounts);
+
+        foreach ($facetCounts as $facetCount) {
+            $this->assertInstanceOf('Collins\\ShopApi\\Model\\ProductSearchResult\\FacetCount', $facetCount);
+        }
+
+        $this->assertEquals(1122, $facetCounts[0]->getId());
+        $this->assertEquals('JACK & JONES', $facetCounts[0]->getName());
+        $this->assertEquals(0, $facetCounts[0]->getGroupId());
+        $this->assertEquals('brand', $facetCounts[0]->getGroupName());
+        $this->assertEquals(2535, $facetCounts[0]->getProductCount());
+        $this->assertEquals(121, $facetCounts[1]->getId());
+        $this->assertEquals(1165, $facetCounts[1]->getProductCount());
+        $this->assertEquals(266, $facetCounts[2]->getId());
+        $this->assertEquals(870, $facetCounts[2]->getProductCount());
+
     }
 
     public function testProductSearchWithCategoriesResult()
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
             'result-product-search-with-facets.json',
-            'category-all.json'
+            'category-all.json',
+                'facet-result.json'
         ));
 
         // get all available products

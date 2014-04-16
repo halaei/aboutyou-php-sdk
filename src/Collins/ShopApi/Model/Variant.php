@@ -7,11 +7,12 @@
 namespace Collins\ShopApi\Model;
 
 
+use Collins\ShopApi\Constants;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 
 class Variant extends AbstractModel
 {
-    private $jsonObject;
+    protected $jsonObject;
 
     /** @var Image[]|null */
     protected $images = null;
@@ -191,7 +192,7 @@ class Variant extends AbstractModel
      * Please mind, that this quantity doesn't need to be up to date.
      * You should check via live_variant for the real quantity before
      * adding a product into the cart.
-     * 
+     *
      * @return int
      */
     public function getQuantity()
@@ -266,4 +267,67 @@ class Variant extends AbstractModel
         return $this->jsonObject->first_sale_date;
     }
 
+    /**
+     * @return FacetGroup|null
+     */
+    public function getColor()
+    {
+        return $this->getFacetGroup(Constants::FACET_COLOR);
+    }
+
+    /**
+     * @return FacetGroup|null
+     */
+    public function getLength()
+    {
+        return $this->getFacetGroup(Constants::FACET_LENGTH);
+    }
+
+    /**
+     * @return FacetGroup|null
+     */
+    public function getSize()
+    {
+        /**
+         * @todo: Instance level caching
+         */
+        $groupId = $this->getSizeGroupId();
+
+        if (!empty($groupId)) {
+            return $this->getFacetGroup($groupId);
+        }
+    }
+
+    /**
+     * @return integer|null
+     */
+    private function getSizeGroupId()
+    {
+        $keys = array();
+
+        $groups = $this->getFacetGroupSet()->getGroups();
+
+        foreach ($groups as $group) {
+            $keys[$group->getName()] = $group->getGroupId();
+        }
+
+        $sizeRun = $this->getFacetGroup(Constants::FACET_SIZE_RUN);
+
+        if (!empty($sizeRun)) {
+            foreach ($sizeRun->getFacets() as $facet) {
+                $groupName = $facet->getValue();
+                if (isset($keys[$groupName])) {
+                    return $keys[$groupName];
+                }
+            }
+        }
+        if (isset($keys['size'])) {
+            return $keys['size'];
+        }
+        if (isset($keys['size_run'])) {
+            return $keys['size_run'];
+        }
+
+        return null;
+    }
 }

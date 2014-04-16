@@ -85,7 +85,7 @@ class Product extends AbstractModel
      */
     public static function createFromJson($jsonObject, ModelFactoryInterface $factory)
     {
-        $product = new static();
+        $product = new static($jsonObject, $factory);
 
         // these are required fields
         if (!isset($jsonObject->id) || !isset($jsonObject->name)) {
@@ -437,7 +437,7 @@ class Product extends AbstractModel
     }
 
     /**
-     * Returns all FacetGroups from all Variants
+     * Returns all unique FacetGroups from all Variants
      *
      * @param integer $groupId
      *
@@ -450,7 +450,7 @@ class Product extends AbstractModel
             $groups = $variant->getFacetGroupSet()->getGroups();
             foreach ($groups as $group) {
                 if ($group->getId() === $groupId) {
-                    $allGroups[] = $group;
+                    $allGroups[$group->getUniqueKey()] = $group;
                 }
             }
         }
@@ -466,6 +466,8 @@ class Product extends AbstractModel
      * @param FacetGroupSet $selectedFacetGroupSet
      *
      * @return FacetGroup[][]
+     *
+     * @throws \Collins\ShopApi\Exception\RuntimeException
      */
     public function getSelectableFacetGroups(FacetGroupSet $selectedFacetGroupSet)
     {
