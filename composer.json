@@ -25,16 +25,11 @@
     "repositories": [
         {
             "type": "git",
-            "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-shop-cache.git"
-        },
-        {
-            "type": "git",
             "url": "https://github.com/goetas/cache.git"
         }
     ],
     "require": {
         "php": ">=5.3",
-        "collins/cache": "dev-master",
         "psr/log": "1.0.*",
         "symfony/event-dispatcher": ">=2.1",
         "guzzle/guzzle": "~3.7",

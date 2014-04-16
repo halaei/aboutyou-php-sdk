@@ -37,11 +37,9 @@ class Query extends QueryBuilder
     /**
      * request the queries and returns an array of the results
      *
-     * @param int $cacheDuration
-     *
      * @return array
      */
-    public function execute($cacheDuration = 0)
+    public function execute()
     {
         if (empty($this->query)) {
             return array();
@@ -49,8 +47,8 @@ class Query extends QueryBuilder
 
         $queryString = $this->getQueryString();
 
-        $response = $this->client->request($queryString, $cacheDuration);
-        
+        $response = $this->client->request($queryString);
+
         $jsonResponse = json_decode($response->getBody(true));
 
         return $this->parseResult($jsonResponse, count($this->query) > 1);
@@ -59,13 +57,11 @@ class Query extends QueryBuilder
     /**
      * request the current query and returns the first result
      *
-     * @param int $cacheDuration
-     *
      * @return mixed
      */
-    public function executeSingle($cacheDuration = 0)
+    public function executeSingle()
     {
-        $result = $this->execute($cacheDuration);
+        $result = $this->execute();
 
         return reset($result);
     }
