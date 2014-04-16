@@ -17,5 +17,5 @@ composer-test.lock
 vendor/
 
 /nbproject
-/tests/Live/config/config.ini
+tests/Live/config/config.ini
 
