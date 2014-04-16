@@ -13,6 +13,9 @@ use Guzzle\Service\Client;
 abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
 {
     /**
+     * @param string|string[] $jsonString
+     * @param string|null $exceptedRequestBody
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|Client
      */
     protected function getGuzzleClient($jsonString, $exceptedRequestBody = null)
@@ -83,7 +86,7 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
     }
 
     /**
-     * @param string $jsonString
+     * @param string|string[] $jsonString
      * @param string $exceptedRequestBody
      *
      * @return ShopApi
@@ -111,8 +114,9 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
     }
 
     /**
-     * @param string $jsonString
-     * @param string $exceptedRequestBody
+     * @param array $methods
+     * @param string|string[] $jsonString
+     * @param string|null $exceptedRequestBody
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|ShopApi
      */
