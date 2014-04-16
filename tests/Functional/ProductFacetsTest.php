@@ -111,7 +111,7 @@ class ProductFacetsTest extends AbstractShopApiTest
         $product = $this->getProduct('product/product-full.json');
 
         $facetGroups = $product->getFacetGroups(206);
-        $this->assertCount(5, $facetGroups);
+        $this->assertCount(6, $facetGroups);
         foreach ($facetGroups as $group) {
             $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroup', $group);
             $this->assertEquals(206, $group->getId());
@@ -143,7 +143,7 @@ class ProductFacetsTest extends AbstractShopApiTest
 
         $brand = $product->getBrand();
         $variants = $product->getVariantsByFacetId($brand->getId(), $brand->getGroupId());
-        $this->assertCount(5, $variants);
+        $this->assertCount(7, $variants);
 
     }
 
