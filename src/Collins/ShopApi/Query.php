@@ -114,7 +114,10 @@ class Query extends QueryBuilder
             $queryKey       = key($currentQuery);
 
             if ($resultKey !== $queryKey) {
-                throw new UnexpectedResultException('result ' . $queryKey . ' expected, but '. $resultKey . ' given on position ' . $index);
+                throw new UnexpectedResultException(
+                    'result ' . $queryKey . ' expected, but '. $resultKey . ' given on position ' . $index .
+                    ' - query: ' . json_encode(array($currentQuery))
+                );
             }
             if (!isset($this->mapping[$resultKey])) {
                 throw new UnexpectedResultException('internal error, '. $resultKey . ' is unknown result');
