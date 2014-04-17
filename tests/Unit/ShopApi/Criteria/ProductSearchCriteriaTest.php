@@ -35,7 +35,7 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
 
         $criteria = $this->getCriteria()
             ->boostProducts(array(1,2,3));
-        $this->assertEquals('{"session_id":"my","result":{"boost":[1,2,3]}}', json_encode($criteria->toArray()));
+        $this->assertEquals('{"session_id":"my","result":{"boosts":[1,2,3]}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
             ->selectCategories();
