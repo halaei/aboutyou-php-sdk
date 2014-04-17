@@ -6,6 +6,7 @@
 
 namespace Collins\ShopApi\Model\FacetManager;
 
+use Collins\ShopApi\Model\Facet;
 use Doctrine\Common\Cache\CacheMultiGet;
 
 class DoctrineMultiGetCacheStrategy implements FetchStrategyInterface
@@ -16,14 +17,20 @@ class DoctrineMultiGetCacheStrategy implements FetchStrategyInterface
     /** @var CacheMultiGet */
     public $cache;
 
+    // cache each facet two hours
+    const DEFAULT_CACHE_DURATION = 7200;
+    protected $cacheDuration;
+
     /**
      * @param CacheMultiGet $cache
      * @param FetchStrategyInterface $facetStrategy
+     * @param int $cacheDuration
      */
-    public function __construct(CacheMultiGet $cache, FetchStrategyInterface $facetStrategy)
+    public function __construct(CacheMultiGet $cache, FetchStrategyInterface $facetStrategy, $cacheDuration = self::DEFAULT_CACHE_DURATION)
     {
         $this->cache = $cache;
         $this->chainedFetchStrategy = $facetStrategy;
+        $this->cacheDuration = max($cacheDuration, 1);
     }
 
     /**
@@ -31,11 +38,40 @@ class DoctrineMultiGetCacheStrategy implements FetchStrategyInterface
      */
     public function fetch($facetIds)
     {
-//        $keys = $this->generateCacheKeys($facetIds)
-//        $cachedFacets = $this->cache->fetchMulti();
-        $factes = $this->chainedFetchStrategy->fetch($facetIds);
+        $keys = $this->generateCacheKeys($facetIds);
+        $cachedFacets = $this->cache->fetchMulti($keys);
+        $missedIds = $this->getIds(array_diff($keys, array_keys($cachedFacets)));
 
-        return $factes;
+        $fetchedfactes = $this->chainedFetchStrategy->fetch($missedIds);
+
+        $facets = array_merge($cachedFacets, $fetchedfactes);
+
+        return $facets;
+    }
+
+    /**
+     * @param string[] $uniqueKeys
+     * @return interger[][]
+     */
+    public function getIds($uniqueKeys)
+    {
+        $ids = array();
+        foreach ($uniqueKeys as $uniqueKey) {
+            list($groupId, $facteId) = explode(':', $uniqueKey);
+            $ids[$groupId][] = $facteId;
+        }
+
+        return $ids;
+    }
+
+    /**
+     * @param Facet[] $facets
+     */
+    public function saveMulti($facets)
+    {
+        foreach ($facets as $facet) {
+            $this->cache->save($facet->getUnique(), $facet, 1);
+        }
     }
 
     /**
@@ -43,14 +79,14 @@ class DoctrineMultiGetCacheStrategy implements FetchStrategyInterface
      *
      * @return string[]
      */
-    public function generateCacheKeys($facetIds)
+    public function generateCacheKeys($ids)
     {
-        $cacheKeyNamespace = '\\Collins\\ShopApi\\' . (Constants::SDK_VERSION) . '\\Facet#';
+//        $cacheKeyNamespace = '\\Collins\\ShopApi\\' . (Constants::SDK_VERSION) . '\\Facet#';
         $keys = array();
 
-        foreach ($facetIds as $groupId => $facetIds) {
+        foreach ($ids as $groupId => $facetIds) {
             foreach ($facetIds as $facetId) {
-                $keys[] = $cacheKeyNamespace . Facet::uniqueKey($groupId, $facetId);
+                $keys[] = /*$cacheKeyNamespace .*/ Facet::uniqueKey($groupId, $facetId);
             }
         }
 

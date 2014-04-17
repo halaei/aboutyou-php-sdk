@@ -11,9 +11,20 @@ class DefaultFacetManager extends AbstractFacetManager
     /** @var FetchStrategyInterface */
     protected $fetchStrategy;
 
+    /**
+     * @param FetchStrategyInterface $fetchStrategy
+     */
     public function __construct(FetchStrategyInterface $fetchStrategy)
     {
         $this->fetchStrategy = $fetchStrategy;
+    }
+
+    /**
+     * @return FetchStrategyInterface
+     */
+    public function getFetchStratey()
+    {
+        return $this->fetchStrategy;
     }
 
     protected function preFetch()
