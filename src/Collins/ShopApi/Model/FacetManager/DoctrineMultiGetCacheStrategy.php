@@ -84,7 +84,8 @@ class DoctrineMultiGetCacheStrategy implements FetchStrategyInterface
     {
         $criteria = $shopApi->getProductSearchCriteria('DoctrineMultiGetCacheStrategy')
             ->setLimit(0)
-            ->selectAllFacets(ShopApi\Criteria\ProductSearchCriteria::FACETS_UNLIMITED)
+            ->selectFacetsByGroupId(172, 3)
+//            ->selectAllFacets(ShopApi\Criteria\ProductSearchCriteria::FACETS_UNLIMITED)
         ;
 
         $productSearchResult = $shopApi->fetchProductSearch($criteria);
