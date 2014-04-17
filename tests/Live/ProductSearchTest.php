@@ -85,8 +85,24 @@ class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTe
 
         $this->assertInternalType('int', $result->getProductCount());
         $this->assertCount(5, $result->getProducts());
-    } 
-    
+    }
+
+    /**
+     * @group live
+     */
+    public function testProductSearchProductBoosts()
+    {
+        $api = $this->getShopApi();
+        $criteria = $this->getSearchCriteria()
+            ->boostProducts(array(1))
+            ->setLimit(2)
+        ;
+
+        $result = $api->fetchProductSearch($criteria);
+
+        $this->assertInternalType('int', $result->getProductCount());
+    }
+
     /**
      * @group live
      */
