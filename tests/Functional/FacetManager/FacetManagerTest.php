@@ -6,6 +6,8 @@ use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
+use Collins\ShopApi;
+use Doctrine\Common\Cache\ArrayCache;
 
 /**
  * @group facet-manager
@@ -114,7 +116,7 @@ class FacetManagerTest extends AbstractShopApiTest
         $order = $shopApi->fetchOrder('dummy');
     }
 
-    protected function getShopApiWithResultFile($filename, $expectedMuilitGet)
+    protected function getShopApiWithResultFile($filename, $expectedMultiGet)
     {
 //        $shopApi = parent::getShopApiWithResultFiles(array(
 //            $filename,
@@ -128,7 +130,7 @@ class FacetManagerTest extends AbstractShopApiTest
         $cacheMock = $this->getMockForAbstractClass('Doctrine\\Common\\Cache\\CacheMultiGet');
         $cacheMock->expects($this->atLeastOnce())
             ->method('fetchMulti')
-            ->with($expectedMuilitGet)
+            ->with($expectedMultiGet)
 //            ->will($this->returnValue($this->getFacets()))
         ;
         $facetManager->setCache($cacheMock);
@@ -136,14 +138,15 @@ class FacetManagerTest extends AbstractShopApiTest
         return $shopApi;
     }
 
+    public function testCacheStrategy()
+    {
+        $cache   = new ArrayCache();
+        $shopApi = new ShopApi('id', 'pw', ShopApi\Constants::API_ENVIRONMENT_LIVE, null, null, $cache);
+    }
+
     protected function getJsonStringFromFile($filepath)
     {
-        if (strpos($filepath, '/') !== 0) {
-            $filepath = __DIR__.'/testData/' . $filepath;
-        }
-        $jsonString = file_get_contents($filepath);
-
-        return $jsonString;
+        return parent::getJsonStringFromFile($filepath, __DIR__);
     }
 
     public function getFacets()

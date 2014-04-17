@@ -27,7 +27,10 @@ abstract class AbstractFacetManager implements FacetManagerInterface
     /** @var Facet[][] */
     protected $facets = array();
 
-    /** @var  \Collins\ShopApi */
+    /**
+     * @var  \Collins\ShopApi
+     * @deprecated should be implementation of fetch strategy
+     */
     protected $shopApi;
 
     /**
@@ -39,6 +42,7 @@ abstract class AbstractFacetManager implements FacetManagerInterface
     protected $missingFacetGroupIdsAndFacetIds = array();
 
     /**
+     * @deprecated should be implementation of fetch strategy
      * @param \Collins\ShopApi $shopApi
      */
     public function setShopApi(ShopApi $shopApi)
@@ -165,6 +169,8 @@ abstract class AbstractFacetManager implements FacetManagerInterface
      * @param integer[][] $facetGroupIds array with the structure array(<group id> => array(<facet id>,...),...)
      *
      * @return string[]
+     *
+     * @deprecated should be implementation of cache strategy
      */
     public function generateCacheKeys($facetGroupIds)
     {

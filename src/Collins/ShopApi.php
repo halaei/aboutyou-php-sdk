@@ -9,6 +9,7 @@ use Collins\ShopApi\Factory\ResultFactoryInterface;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
+use Collins\ShopApi\Model\FacetManager\DoctrineMultiGetCacheStrategy;
 use Collins\ShopApi\Model\FacetManager\FetchSingleFacetStrategy;
 use Collins\ShopApi\Model\ProductsEansResult;
 use Collins\ShopApi\Model\ProductSearchResult;
@@ -63,12 +64,17 @@ class ShopApi
         $appPassword,
         $apiEndPoint = Constants::API_ENVIRONMENT_LIVE,
         ResultFactoryInterface $resultFactory = null,
-        LoggerInterface $logger = null
+        LoggerInterface $logger = null,
+        $facetManagerCache = null
     ) {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $logger);
 
         if ($resultFactory === null) {
-            $this->facetManager    = new DefaultFacetManager(new FetchSingleFacetStrategy($this));
+            $strategy = new FetchSingleFacetStrategy($this);
+            if ($facetManagerCache) {
+                $strategy = new DoctrineMultiGetCacheStrategy($facetManagerCache, $strategy);
+            }
+            $this->facetManager    = new DefaultFacetManager($strategy);
             $this->eventDispatcher = new EventDispatcher();
             $this->modelFactory    = new DefaultModelFactory($this, $this->facetManager, $this->eventDispatcher);
         }

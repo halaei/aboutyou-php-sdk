@@ -58,10 +58,10 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
         return json_decode($this->getJsonStringFromFile($filepath));
     }
 
-    protected function getJsonStringFromFile($filepath)
+    protected function getJsonStringFromFile($filepath, $baseDir = __DIR__)
     {
         if (strpos($filepath, '/') !== 0) {
-            $filepath = __DIR__.'/testData/' . $filepath;
+            $filepath = $baseDir . '/testData/' . $filepath;
         }
         $jsonString = file_get_contents($filepath);
 
