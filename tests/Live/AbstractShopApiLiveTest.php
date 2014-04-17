@@ -35,9 +35,8 @@ abstract class AbstractShopApiLiveTest extends \Collins\ShopApi\Test\ShopSdkTest
     {
         $config = $this->getConfig();
         
-        if(!isset($this->api)) {
-            $this->api = new ShopApi($config['user'], $config['password']);
-            $this->api->setApiEndpoint($config['endpoint']);
+        if (!isset($this->api)) {
+            $this->api = new ShopApi($config['user'], $config['password'], $config['endpoint']);
         }
         
         return $this->api;
