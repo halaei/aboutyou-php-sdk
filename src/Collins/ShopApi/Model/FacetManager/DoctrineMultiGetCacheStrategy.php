@@ -6,7 +6,9 @@
 
 namespace Collins\ShopApi\Model\FacetManager;
 
+use Collins\ShopApi;
 use Collins\ShopApi\Model\Facet;
+use Collins\ShopApi\Model\ProductSearchResult\FacetCounts;
 use Doctrine\Common\Cache\CacheMultiGet;
 
 class DoctrineMultiGetCacheStrategy implements FetchStrategyInterface
@@ -72,6 +74,39 @@ class DoctrineMultiGetCacheStrategy implements FetchStrategyInterface
         foreach ($facets as $facet) {
             $this->cache->save($facet->getUnique(), $facet, 1);
         }
+    }
+
+    /**
+     * This Method is useful to to store all Facets in a cache like memcache, redis or apc
+     * @param ShopApi $shopApi
+     */
+    public function cacheAllUsedFacets(ShopApi $shopApi)
+    {
+        $criteria = $shopApi->getProductSearchCriteria('DoctrineMultiGetCacheStrategy')
+            ->setLimit(0)
+            ->selectAllFacets(ShopApi\Criteria\ProductSearchCriteria::FACETS_UNLIMITED)
+        ;
+
+        $productSearchResult = $shopApi->fetchProductSearch($criteria);
+        $facetCounts = $productSearchResult->getFacets();
+
+        $this->saveMultiFacetCounts($facetCounts);
+    }
+
+    /**
+     * @param FacetCounts[] $facetsCounts
+     */
+    public function saveMultiFacetCounts($facetsCounts)
+    {
+        $facets = array();
+        foreach ($facetsCounts as $facetCounts) {
+            foreach ($facetCounts->getFacetCounts() as $facetCount) {
+                $facet = $facetCount->getFacet();
+                $facets[$facet->getUniqueKey()] = $facet;
+            }
+        }
+
+        $this->saveMulti($facets);
     }
 
     /**
