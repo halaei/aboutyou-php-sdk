@@ -98,13 +98,12 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
                 if (isset($this->groups[$groupId])) {
                     $group = $this->groups[$groupId];
                 } else {
-                    // @todo: Cannot we save one function call per iteration if we use $groupId instead of  $facet->getGroupId()?
-                    $group = new FacetGroup($facet->getGroupId(), $facet->getGroupName());
+                    $group = new FacetGroup($groupId, $facet->getGroupName());
                     $this->groups[$groupId] = $group;
                 }
 
                 $group->addFacet($facet);
-                $this->facets["$groupId:$facetId"] = $facet;
+                $this->facets[$facet->getUniqueKey()] = $facet;
             }
         }
     }

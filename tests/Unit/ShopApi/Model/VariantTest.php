@@ -48,6 +48,7 @@ class VariantTest extends AbstractModelTest
         $this->assertNull($variant->getCreatedDate());
         $this->assertNull($variant->getUpdatedDate());
     }
+
     /**
      * @depends testFromJson
      */
@@ -90,4 +91,55 @@ class VariantTest extends AbstractModelTest
         $this->assertNotEquals($images[0], $variant->getImageByHash($images[1]->getHash()));
         $this->assertNull($variant->getImageByHash('unknown'));
     }
+
+    /**
+     * @depends testFromJson
+     */
+    public function testGetSize(Variant $variant)
+    {
+        $facetManager = $this->getFacetManager('facets-all.json');
+        ShopApi\Model\FacetGroupSet::setFacetManager($facetManager);
+
+        $size = $variant->getSize();
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroup', $size);
+        $this->assertEquals('XS', $size->getFacetNames());
+    }
+
+    protected function getFacetManager($filename)
+    {
+        $jsonObject = $this->getJsonObject($filename);
+        if (isset($jsonObject[0]->facets->facet)) {
+            $jsonFacets = $jsonObject[0]->facets->facet;
+        } else {
+            $jsonFacets = $jsonObject[0]->facet;
+        }
+        $facets = array();
+        foreach ($jsonFacets as $jsonFacet) {
+            $facet = ShopApi\Model\Facet::createFromJson($jsonFacet);
+            $facets[] = $facet;
+        }
+
+        $facetManager = new ShopApi\Model\FacetManager\StaticFacetManager($facets);
+
+        return $facetManager;
+    }
+
+
+//    2014-04-21 nils.droege: not finish yet
+//
+//    protected function getFacetManagerMock($facetsData)
+//    {
+//        $facetsMap = array();
+//        foreach ($facetsData as $facetData) {
+//            $facet = new ShopApi\Model\Facet($facetData[0], $facetData[1], '', $facetData[2], $facetData[3]);
+//            $facetsMap[$facet->getUniqueKey()] = $facet;
+//        }
+//        $facetManager = $this->getMockForAbstractClass('\\Collins\\ShopApi\\Model\\FacetManager\\FacetManagerInterface');
+//        $facetManager->expects($this->any())
+//            ->method('getFacet')
+//            ->with($this->returnValueMap($facetsMap))
+//        ;
+//
+//        return $facetManager;
+//    }
 }
