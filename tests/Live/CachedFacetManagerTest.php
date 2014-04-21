@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class CachedFacetManagerTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
-    public function testCacheAllUsedFacets()
+    public function testCacheAllFacets()
     {
         $cache   = new ArrayCache();
         $shopApi = $this->getShopApi(null, null, $cache);
@@ -57,12 +57,11 @@ class CachedFacetManagerTest extends \Collins\ShopApi\Test\Live\AbstractShopApiL
 
         $criteria = $shopApi->getProductSearchCriteria('DoctrineMultiGetCacheStrategy')
             ->setLimit(0)
-            ->selectFacetsByGroupId(172, 3)
-//            ->selectAllFacets(ShopApi\Criteria\ProductSearchCriteria::FACETS_UNLIMITED)
+//            ->selectFacetsByGroupId(172, 3)
+            ->selectAllFacets(\Collins\ShopApi\Criteria\ProductSearchCriteria::FACETS_UNLIMITED)
         ;
 
         $productSearchResult = $shopApi->fetchProductSearch($criteria);
         $facetCounts = $productSearchResult->getFacets();
-
     }
 }
