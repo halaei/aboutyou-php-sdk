@@ -84,38 +84,53 @@ class DoctrineMultiGetCacheStrategy implements FetchStrategyInterface
         }
     }
 
+//    2014-04-21 by nils.droege: The facet query fails with: "is too long"
+//
+//    /**
+//     * This Method is useful to to store all Facets in a cache like memcache, redis or apc
+//     * @param ShopApi $shopApi
+//     */
+//    public function cacheAllUsedFacets(ShopApi $shopApi)
+//    {
+//        $criteria = $shopApi->getProductSearchCriteria('DoctrineMultiGetCacheStrategy')
+//            ->setLimit(0)
+////            ->selectFacetsByGroupId(0, 100)
+//            ->selectAllFacets(ShopApi\Criteria\ProductSearchCriteria::FACETS_UNLIMITED)
+//        ;
+//
+//        // will be cached implicit
+//        $productSearchResult = $shopApi->fetchProductSearch($criteria);
+//
+////        $facetCounts = $productSearchResult->getFacets();
+//
+////        $this->saveMultiFacetCounts($facetCounts);
+//    }
+//
+//    /**
+//     * @param FacetCounts[] $facetsCounts
+//     */
+//    public function saveMultiFacetCounts($facetsCounts)
+//    {
+//        $facets = array();
+//        foreach ($facetsCounts as $facetCounts) {
+//            foreach ($facetCounts->getFacetCounts() as $facetCount) {
+//                $facet = $facetCount->getFacet();
+//                $facets[$facet->getUniqueKey()] = $facet;
+//            }
+//        }
+//
+//        $this->saveMulti($facets);
+//    }
+
     /**
      * This Method is useful to to store all Facets in a cache like memcache, redis or apc
      * @param ShopApi $shopApi
      */
-    public function cacheAllUsedFacets(ShopApi $shopApi)
+    public function cacheAllFacets(ShopApi $shopApi)
     {
-        $criteria = $shopApi->getProductSearchCriteria('DoctrineMultiGetCacheStrategy')
-            ->setLimit(0)
-//            ->selectFacetsByGroupId(0, 100)
-            ->selectAllFacets(ShopApi\Criteria\ProductSearchCriteria::FACETS_UNLIMITED)
-        ;
+        $groupIds = $shopApi->fetchFacetTypes();
 
-        // will be cached implicit
-        $productSearchResult = $shopApi->fetchProductSearch($criteria);
-
-//        $facetCounts = $productSearchResult->getFacets();
-
-//        $this->saveMultiFacetCounts($facetCounts);
-    }
-
-    /**
-     * @param FacetCounts[] $facetsCounts
-     */
-    public function saveMultiFacetCounts($facetsCounts)
-    {
-        $facets = array();
-        foreach ($facetsCounts as $facetCounts) {
-            foreach ($facetCounts->getFacetCounts() as $facetCount) {
-                $facet = $facetCount->getFacet();
-                $facets[$facet->getUniqueKey()] = $facet;
-            }
-        }
+        $facets = $shopApi->fetchFacets($groupIds);
 
         $this->saveMulti($facets);
     }

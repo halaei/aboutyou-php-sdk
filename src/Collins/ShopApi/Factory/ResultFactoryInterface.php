@@ -53,6 +53,13 @@ interface ResultFactoryInterface
     public function createFacetsList(\stdClass $jsonObject);
 
     /**
+     * @param array $jsonArray
+     *
+     * @return mixed
+     */
+    public function createFacetTypes(array $jsonArray);
+
+    /**
      * @param \stdClass $jsonObject
      *
      * @return mixed

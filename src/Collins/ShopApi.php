@@ -472,6 +472,15 @@ class ShopApi
         return $query->executeSingle();
     }
 
+    public function fetchFacetTypes()
+    {
+        $query = $this->getQuery()
+            ->fetchFacetTypes()
+        ;
+
+        return $query->executeSingle();
+    }
+
     /**
      * @param string|integer $orderId the order id
      *
