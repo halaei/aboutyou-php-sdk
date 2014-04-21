@@ -41,9 +41,6 @@ class ShopApi
     /** @var ModelFactoryInterface */
     protected $modelFactory;
 
-    /** @var FacetManagerInterface */
-    protected $facetManager;
-
     /** @var LoggerInterface */
     protected $logger;
 
@@ -58,6 +55,7 @@ class ShopApi
      * @param string $apiEndPoint Constants::API_ENVIRONMENT_LIVE for live environment, Constants::API_ENVIRONMENT_STAGE for staging
      * @param ResultFactoryInterface $resultFactory if null it will use the DefaultModelFactory with the DefaultFacetManager
      * @param LoggerInterface $logger
+     * @param \Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
      */
     public function __construct(
         $appId,
@@ -74,9 +72,13 @@ class ShopApi
             if ($facetManagerCache) {
                 $strategy = new DoctrineMultiGetCacheStrategy($facetManagerCache, $strategy);
             }
-            $this->facetManager    = new DefaultFacetManager($strategy);
-            $this->eventDispatcher = new EventDispatcher();
-            $this->modelFactory    = new DefaultModelFactory($this, $this->facetManager, $this->eventDispatcher);
+            $this->setResultFactory(
+                new DefaultModelFactory(
+                    $this,
+                    new DefaultFacetManager($strategy),
+                    new EventDispatcher()
+                )
+            );
         }
 
         if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
@@ -125,23 +127,6 @@ class ShopApi
     public function setApiEndpoint($apiEndPoint)
     {
         $this->shopApiClient->setApiEndpoint($apiEndPoint);
-    }
-
-    /**
-     * @param \Collins\FacetManagerInterface $facetManager
-     */
-    public function setFacetManager($facetManager)
-    {
-        $this->facetManager = $facetManager;
-        $this->modelFactory->setFacetManager($facetManager);
-    }
-
-    /**
-     * @return \Collins\FacetManagerInterface
-     */
-    public function getFacetManager()
-    {
-        return $this->facetManager;
     }
 
     /**
@@ -435,11 +420,15 @@ class ShopApi
      */
     public function setResultFactory(ResultFactoryInterface $modelFactory)
     {
+        if ($modelFactory instanceof DefaultModelFactory) {
+            $this->eventDispatcher = $modelFactory->getEventDispatcher();
+        }
+
         $this->modelFactory = $modelFactory;
     }
 
     /**
-     * @return ResultFactoryInterface
+     * @return ResultFactoryInterface|DefaultModelFactory
      */
     public function getResultFactory()
     {

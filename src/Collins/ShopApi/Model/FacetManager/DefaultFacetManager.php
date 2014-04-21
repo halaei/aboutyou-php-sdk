@@ -27,6 +27,14 @@ class DefaultFacetManager extends AbstractFacetManager
         return $this->fetchStrategy;
     }
 
+    /**
+     * @param FetchStrategyInterface
+     */
+    public function setFetchStrategy(FetchStrategyInterface $fetchStrategy)
+    {
+        $this->fetchStrategy = $fetchStrategy;
+    }
+
     protected function preFetch()
     {
         $this->facets += $this->fetchStrategy->fetch($this->missingFacetGroupIdsAndFacetIds);

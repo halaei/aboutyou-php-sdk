@@ -39,6 +39,7 @@ class FetchSingleFacetStrategy implements FetchStrategyInterface
                 $apiQueryParams[] = array('id' => (int)$facetId, 'group_id' => $groupId);
             }
         }
+        $query = $this->shopApi->getQuery()->fetchFacet($apiQueryParams);
 
         return $this->shopApi->fetchFacet($apiQueryParams);
     }

@@ -42,9 +42,17 @@ class DoctrineMultiGetCacheStrategy implements FetchStrategyInterface
     {
         $keys = $this->generateCacheKeys($facetIds);
         $cachedFacets = $this->cache->fetchMulti($keys);
-        $missedIds = $this->getIds(array_diff($keys, array_keys($cachedFacets)));
+        $missedKeys = array_diff($keys, array_keys($cachedFacets));
+
+        if (empty($missedKeys)) {
+            return $cachedFacets;
+        }
+
+        $missedIds = $this->getIds($missedKeys);
+        unset($missedKeys);
 
         $fetchedfactes = $this->chainedFetchStrategy->fetch($missedIds);
+        $this->saveMulti($fetchedfactes);
 
         $facets = array_merge($cachedFacets, $fetchedfactes);
 
@@ -72,7 +80,7 @@ class DoctrineMultiGetCacheStrategy implements FetchStrategyInterface
     public function saveMulti($facets)
     {
         foreach ($facets as $facet) {
-            $this->cache->save($facet->getUnique(), $facet, 1);
+            $this->cache->save($facet->getUniqueKey(), $facet, $this->cacheDuration);
         }
     }
 
@@ -84,14 +92,16 @@ class DoctrineMultiGetCacheStrategy implements FetchStrategyInterface
     {
         $criteria = $shopApi->getProductSearchCriteria('DoctrineMultiGetCacheStrategy')
             ->setLimit(0)
-            ->selectFacetsByGroupId(172, 3)
-//            ->selectAllFacets(ShopApi\Criteria\ProductSearchCriteria::FACETS_UNLIMITED)
+//            ->selectFacetsByGroupId(0, 100)
+            ->selectAllFacets(ShopApi\Criteria\ProductSearchCriteria::FACETS_UNLIMITED)
         ;
 
+        // will be cached implicit
         $productSearchResult = $shopApi->fetchProductSearch($criteria);
-        $facetCounts = $productSearchResult->getFacets();
 
-        $this->saveMultiFacetCounts($facetCounts);
+//        $facetCounts = $productSearchResult->getFacets();
+
+//        $this->saveMultiFacetCounts($facetCounts);
     }
 
     /**
