@@ -6,9 +6,6 @@
 
 namespace Collins\ShopApi;
 
-
-use Collins\Cache\CacheInterface;
-use Collins\Cache\NoCache;
 use Collins\ShopApi\Exception\ApiErrorException;
 use Collins\ShopApi\Exception\MalformedJsonException;
 use Guzzle\Http\Client;
@@ -35,11 +32,9 @@ class ShopApiClient
     /** @var string */
     protected $logTemplate;
 
-    /** @var CacheInterface */
-    protected $cache;
-
     /** @var string */
     protected $appId = null;
+
     /** @var string */
     protected $appPassword = null;
 
@@ -56,14 +51,12 @@ class ShopApiClient
      * @param string $appId
      * @param string $appPassword
      * @param string $apiEndPoint
-     * @param CacheInterface $cache
      * @param LoggerInterface $logger
      */
-    public function __construct($appId, $appPassword, $apiEndPoint = 'stage', CacheInterface $cache = null, LoggerInterface $logger = null)
+    public function __construct($appId, $appPassword, $apiEndPoint = 'stage', LoggerInterface $logger = null)
     {
         $this->setAppCredentials($appId, $appPassword);
         $this->setApiEndpoint($apiEndPoint);
-        $this->setCache($cache ?: new NoCache());
         $this->setLogger($logger ?: new NullLogger());
     }
 
@@ -102,22 +95,6 @@ class ShopApiClient
             default:
                 $this->apiEndPoint = $apiEndPoint;
         }
-    }
-
-    /**
-     * @param CacheInterface $cache
-     */
-    public function setCache(CacheInterface $cache)
-    {
-        $this->cache = $cache;
-    }
-
-    /**
-     * @return CacheInterface
-     */
-    public function getCache()
-    {
-        return $this->cache;
     }
 
     /**
@@ -181,23 +158,13 @@ class ShopApiClient
      * Executes the API request.
      *
      * @param string $body the queries as json string
-     * @param integer $cacheDuration how long to save the response in the cache (if enabled) - 0 = no caching
      *
      * @return \Guzzle\Http\Message\Response response object
      *
      * @throws ApiErrorException will be thrown if response was invalid
      */
-    public function request($body, $cacheDuration = 0)
+    public function request($body)
     {
-        if ($cacheDuration) {
-            $cacheKey = md5($body);
-
-            $response = $this->cache->get($cacheKey);
-            if ($response) {
-                return $response;
-            }
-        }
-
         $apiClient = $this->getClient();
 
         /** @var EntityEnclosingRequestInterface $request */
@@ -213,10 +180,6 @@ class ShopApiClient
         }
 
         $response = $request->send();
-
-        if ($cacheDuration) {
-            $this->cache->set($cacheKey, $response, $cacheDuration);
-        }
 
         try {
             if (!$response->isSuccessful()) {
@@ -244,5 +207,4 @@ class ShopApiClient
 
         return $response;
     }
-
 }

@@ -1,7 +1,7 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @author nils.droege@project-collins.com
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi\Model\FacetManager;
@@ -13,6 +13,7 @@ interface FacetManagerInterface extends EventSubscriberInterface
 {
     /**
      * @param \Collins\ShopApi $shopApi
+     * @deprecated the FetchStrategy implemention may need this information
      */
     public function setShopApi(ShopApi $shopApi);
 

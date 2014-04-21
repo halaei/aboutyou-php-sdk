@@ -1,17 +1,20 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @author nils.droege@project-collins.com
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi\Model\FacetManager;
 
+use Collins\ShopApi;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Model\Facet;
 use Collins\ShopApi\Model\Product;
-use Collins\ShopApi;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
+/**
+ * @deprecated will merge into the DefaultFacetManager
+ */
 abstract class AbstractFacetManager implements FacetManagerInterface
 {
     /**
@@ -24,7 +27,10 @@ abstract class AbstractFacetManager implements FacetManagerInterface
     /** @var Facet[][] */
     protected $facets = array();
 
-    /** @var  \Collins\ShopApi */
+    /**
+     * @var  \Collins\ShopApi
+     * @deprecated should be implementation of fetch strategy
+     */
     protected $shopApi;
 
     /**
@@ -36,6 +42,7 @@ abstract class AbstractFacetManager implements FacetManagerInterface
     protected $missingFacetGroupIdsAndFacetIds = array();
 
     /**
+     * @deprecated should be implementation of fetch strategy
      * @param \Collins\ShopApi $shopApi
      */
     public function setShopApi(ShopApi $shopApi)
@@ -162,6 +169,8 @@ abstract class AbstractFacetManager implements FacetManagerInterface
      * @param integer[][] $facetGroupIds array with the structure array(<group id> => array(<facet id>,...),...)
      *
      * @return string[]
+     *
+     * @deprecated should be implementation of cache strategy
      */
     public function generateCacheKeys($facetGroupIds)
     {

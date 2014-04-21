@@ -6,6 +6,8 @@ use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
+use Collins\ShopApi;
+use Doctrine\Common\Cache\ArrayCache;
 
 /**
  * @group facet-manager
@@ -101,7 +103,7 @@ class FacetManagerTest extends AbstractShopApiTest
     }
 
     /**
-     * ensure, that the FacetManager isn't catched or doesn't throw a different error
+     * ensure, that the FacetManager isn't called or does not throw a different error
      * @expectedException \Collins\ShopApi\Exception\ResultErrorException
      */
     public function testGetOrderFailed()
@@ -114,40 +116,44 @@ class FacetManagerTest extends AbstractShopApiTest
         $order = $shopApi->fetchOrder('dummy');
     }
 
-    protected function getShopApiWithResultFile($filename, $expectedMuilitGet)
+    public function testCacheStrategy()
     {
-//        $shopApi = parent::getShopApiWithResultFiles(array(
-//            $filename,
-//            'facets-all.json'
-//        ));
-        $shopApi = parent::getShopApiWithResultFile(
-            $filename
-        );
+        $cache   = new ArrayCache();
+        $shopApi = new ShopApi('id', 'pw', ShopApi\Constants::API_ENVIRONMENT_STAGE, null, null, $cache);
+        /** @var ShopApi\Model\FacetManager\DefaultFacetManager $facetManager */
         $facetManager = $shopApi->getResultFactory()->getFacetManager();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\AbstractFacetManager', $facetManager);
-        $cacheMock = $this->getMockForAbstractClass('Doctrine\\Common\\Cache\\CacheMultiGet');
-        $cacheMock->expects($this->atLeastOnce())
-            ->method('fetchMulti')
-            ->with($expectedMuilitGet)
-//            ->will($this->returnValue($this->getFacets()))
-        ;
-        $facetManager->setCache($cacheMock);
-
-        return $shopApi;
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\DoctrineMultiGetCacheStrategy', $facetManager->getFetchStratey());
     }
 
     protected function getJsonStringFromFile($filepath)
     {
-        if (strpos($filepath, '/') !== 0) {
-            $filepath = __DIR__.'/testData/' . $filepath;
-        }
-        $jsonString = file_get_contents($filepath);
-
-        return $jsonString;
+        return parent::getJsonStringFromFile($filepath, __DIR__);
     }
 
-    public function getFacets()
-    {
-        return array();
-    }
+//    protected function getShopApiWithResultFile($filename, $expectedMultiGet)
+//    {
+////        $shopApi = parent::getShopApiWithResultFiles(array(
+////            $filename,
+////            'facets-all.json'
+////        ));
+//        $shopApi = parent::getShopApiWithResultFile(
+//            $filename
+//        );
+//        $facetManager = $shopApi->getResultFactory()->getFacetManager();
+//        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\AbstractFacetManager', $facetManager);
+//        $cacheMock = $this->getMockForAbstractClass('Doctrine\\Common\\Cache\\CacheMultiGet');
+//        $cacheMock->expects($this->atLeastOnce())
+//            ->method('fetchMulti')
+//            ->with($expectedMultiGet)
+////            ->will($this->returnValue($this->getFacets()))
+//        ;
+//        $facetManager->setCache($cacheMock);
+//
+//        return $shopApi;
+//    }
+//
+//    public function getFacets()
+//    {
+//        return array();
+//    }
 }

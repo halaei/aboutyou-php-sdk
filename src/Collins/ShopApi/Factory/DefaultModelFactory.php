@@ -217,6 +217,16 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      *
+     * @return integer[]
+     */
+    public function createFacetTypes(array $jsonArray)
+    {
+        return $jsonArray;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @return ShopApi\Model\Image
      */
     public function createImage(\stdClass $jsonObject)

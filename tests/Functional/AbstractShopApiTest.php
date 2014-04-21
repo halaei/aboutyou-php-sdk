@@ -13,6 +13,9 @@ use Guzzle\Service\Client;
 abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
 {
     /**
+     * @param string|string[] $jsonString
+     * @param string|null $exceptedRequestBody
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|Client
      */
     protected function getGuzzleClient($jsonString, $exceptedRequestBody = null)
@@ -55,10 +58,10 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
         return json_decode($this->getJsonStringFromFile($filepath));
     }
 
-    protected function getJsonStringFromFile($filepath)
+    protected function getJsonStringFromFile($filepath, $baseDir = __DIR__)
     {
         if (strpos($filepath, '/') !== 0) {
-            $filepath = __DIR__.'/testData/' . $filepath;
+            $filepath = $baseDir . '/testData/' . $filepath;
         }
         $jsonString = file_get_contents($filepath);
 
@@ -83,7 +86,7 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
     }
 
     /**
-     * @param string $jsonString
+     * @param string|string[] $jsonString
      * @param string $exceptedRequestBody
      *
      * @return ShopApi
@@ -111,8 +114,9 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
     }
 
     /**
-     * @param string $jsonString
-     * @param string $exceptedRequestBody
+     * @param array $methods
+     * @param string|string[] $jsonString
+     * @param string|null $exceptedRequestBody
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|ShopApi
      */

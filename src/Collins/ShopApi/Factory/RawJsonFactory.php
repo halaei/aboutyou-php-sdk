@@ -68,6 +68,14 @@ class RawJsonFactory implements ResultFactoryInterface
     /**
      * {@inheritdoc}
      */
+    public function createFacetTypes(array $jsonArray)
+    {
+        return $jsonArray;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function createProductsResult(\stdClass $jsonObject)
     {
         return $jsonObject;
