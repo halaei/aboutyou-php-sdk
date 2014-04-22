@@ -6,6 +6,8 @@
 
 namespace Collins\ShopApi\Model\FacetManager;
 
+use Collins\ShopApi;
+
 class FetchFacetGroupStrategy implements FetchStrategyInterface
 {
     /** @var ShopApi */
