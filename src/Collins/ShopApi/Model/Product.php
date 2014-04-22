@@ -83,7 +83,7 @@ class Product extends AbstractModel
      *
      * @throws \Collins\ShopApi\Exception\MalformedJsonException
      */
-    public static function createFromJson($jsonObject, ModelFactoryInterface $factory)
+    public static function createFromJson($jsonObject, ModelFactoryInterface $factory, $appId)
     {
         $product = new static($jsonObject, $factory);
 
@@ -109,7 +109,8 @@ class Product extends AbstractModel
         $product->variants         = self::parseVariants($jsonObject, $factory);
         $product->styles           = self::parseStyles($jsonObject, $factory);
 
-        $product->categoryIdPaths  = self::parseCategoryIdPaths($jsonObject);
+        $key = 'categories.' . $appId;
+        $product->categoryIdPaths  = isset($jsonObject->$key) ? $jsonObject->$key : array();
 
         $product->facetIds     = self::parseFacetIds($jsonObject);
 

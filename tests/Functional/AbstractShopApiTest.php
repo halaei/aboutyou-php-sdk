@@ -97,7 +97,7 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
         $client = $this->getGuzzleClient($jsonString, $exceptedRequestBody);
 
         if(is_null($this->_____shopApi)) {
-            $this->_____shopApi = new ShopApi('id', 'token');
+            $this->_____shopApi = new ShopApi('98', 'token');
         }
         #$shopApi = new ShopApi('id', 'token');
         $shopApi = $this->_____shopApi;

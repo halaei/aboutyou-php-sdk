@@ -241,7 +241,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createProduct(\stdClass $jsonObject)
     {
-        return ShopApi\Model\Product::createFromJson($jsonObject, $this);
+        return ShopApi\Model\Product::createFromJson($jsonObject, $this, $this->shopApi->getAppId());
     }
 
     /**

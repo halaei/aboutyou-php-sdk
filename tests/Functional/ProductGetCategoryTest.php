@@ -22,7 +22,7 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
     public function getProduct($filname)
     {
         $json = $this->getJsonObjectFromFile('product/' . $filname);
-        $product = Product::createFromJson($json, $this->shopApi->getResultFactory());
+        $product = Product::createFromJson($json, $this->shopApi->getResultFactory(), 98);
 
         return $product;
     }
@@ -30,7 +30,7 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
     public function testGetCategoryIdHierachies()
     {
         $json = $this->getJsonObjectFromFile('product/product-with-categories.json');
-        $product = Product::createFromJson($json, $this->shopApi->getResultFactory());
+        $product = Product::createFromJson($json, $this->shopApi->getResultFactory(), 98);
 
         $this->assertEquals(
             array(array(19080,123),array(19000),array(16080),array(19084),array(19097)),
@@ -41,7 +41,7 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
     public function testGetCategoryIdsEmpty()
     {
         $json = $this->getJsonObjectFromFile('product/product-with-attributes.json');
-        $product = Product::createFromJson($json, $this->shopApi->getResultFactory());
+        $product = Product::createFromJson($json, $this->shopApi->getResultFactory(), 98);
 
         $this->assertEquals(array(), $product->getCategoryIdHierachies());
     }
@@ -65,22 +65,23 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
         }
     }
 
-    public function testGetFirstCategory()
+    public function testGetLeafCategories()
     {
-        $this->markTestIncomplete();
         $product = $this->getProduct('product-with-categories.json');
-        $category = $product->getFirstCategory();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
-        $this->assertEquals(19080, $category->getId());
-    }
+        $categories = $product->getLeafCategories(false);
+        $this->assertInternalType('array', $categories);
+        $this->assertCount(4, $categories);
+        foreach ($categories as $category) {
+            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+        }
 
-    public function testGetFirstActiveCategory()
-    {
-        $this->markTestIncomplete();
         $product = $this->getProduct('product-with-categories.json');
-        $category = $product->getFirstActiveCategory();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
-        $this->assertEquals(16080, $category->getId());
+        $categories = $product->getLeafCategories();
+        $this->assertInternalType('array', $categories);
+        $this->assertCount(3, $categories);
+        foreach ($categories as $category) {
+            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+        }
     }
 
     public function testGetCategory()
