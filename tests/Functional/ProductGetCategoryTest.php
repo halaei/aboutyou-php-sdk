@@ -99,9 +99,21 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
     public function testGetCategory()
     {
         $product = $this->getProduct('product-with-categories.json');
+        $category = $product->getCategory(false);
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+        $this->assertEquals(21, $category->getId());
+
         $category = $product->getCategory();
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
         $this->assertEquals(21, $category->getId());
+    }
+
+    public function testGetCategoryWithLongestActivePath()
+    {
+        $product = $this->getProduct('product-with-categories.json');
+        $category = $product->getCategoryWithLongestActivePath();
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+        $this->assertEquals(121, $category->getId());
     }
 
     public function testGetCategoryNull()

@@ -94,6 +94,16 @@ class Category extends AbstractModel
     }
 
     /**
+     * @return boolean
+     */
+    public function isPathActive()
+    {
+        $parent = $this->getParent();
+
+        return $this->isActive && ($parent === null || $parent->isPathActive());
+    }
+
+    /**
      * @return string
      */
     public function getName()

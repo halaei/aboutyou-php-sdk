@@ -353,6 +353,35 @@ class Product extends AbstractModel
     }
 
     /**
+     * @return Category|null
+     */
+    public function getCategoryWithLongestActivePath()
+    {
+        if (empty($this->categoryIdPaths)) {
+            return;
+        }
+
+        $this->fetchAndParseCategories();
+
+        // get reverse sorted category pathes
+        $pathLengths = array_map('count', $this->categoryIdPaths);
+        arsort($pathLengths);
+
+        foreach ($pathLengths as $index => $pathLength) {
+            $categoryPath = $this->categoryIdPaths[$index];
+            $leafId = end($categoryPath);
+            if (!isset($this->activeLeafCategories[$leafId])) continue;
+            $category = $this->activeLeafCategories[$leafId];
+
+            if ($category->isPathActive()) {
+                return $category;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Returns array of categories without subcategories. E.g. of the product is in the category
      * Damen > Schuhe > Absatzschuhe and Damen > Schuhe > Stiefelleten then
      * [Absatzschuhe, Stiefelleten] will be returned
@@ -365,10 +394,10 @@ class Product extends AbstractModel
     {
         $this->fetchAndParseCategories();
 
-        return $activeOnly ?
+        return array_values($activeOnly ?
             $this->activeLeafCategories :
             $this->leafCategories
-        ;
+        );
     }
 
     public function getCategories($activeOnly = true)
@@ -385,10 +414,10 @@ class Product extends AbstractModel
     {
         $this->fetchAndParseCategories();
 
-        return $activeOnly ?
+        return array_values($activeOnly ?
             $this->activeRootCategories :
             $this->rootCategories
-        ;
+        );
     }
 
     protected function fetchAndParseCategories()
@@ -429,14 +458,11 @@ class Product extends AbstractModel
 
             $leafId = end($categoryIdPath);
             $leafCategory = $flattenCategories[$leafId];
-            $this->leafCategories[] = $leafCategory;
+            $this->leafCategories[$leafId] = $leafCategory;
             if ($leafCategory->isActive()) {
-                $this->activeLeafCategories[] = $leafCategory;
+                $this->activeLeafCategories[$leafId] = $leafCategory;
             }
         }
-
-        $this->rootCategories       = array_values($this->rootCategories);
-        $this->activeRootCategories = array_values($this->activeRootCategories);
     }
 
 
