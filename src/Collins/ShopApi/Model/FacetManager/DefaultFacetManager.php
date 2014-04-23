@@ -22,7 +22,7 @@ class DefaultFacetManager extends AbstractFacetManager
     /**
      * @return FetchStrategyInterface
      */
-    public function getFetchStratey()
+    public function getFetchStrategy()
     {
         return $this->fetchStrategy;
     }

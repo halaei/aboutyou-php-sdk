@@ -196,7 +196,7 @@ class FacetManagerTest extends AbstractShopApiTest
         $shopApi = new ShopApi('id', 'pw', ShopApi\Constants::API_ENVIRONMENT_STAGE, null, null, $cache);
         /** @var ShopApi\Model\FacetManager\DefaultFacetManager $facetManager */
         $facetManager = $shopApi->getResultFactory()->getFacetManager();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\DoctrineMultiGetCacheStrategy', $facetManager->getFetchStratey());
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\DoctrineMultiGetCacheStrategy', $facetManager->getFetchStrategy());
     }
 
     protected function getJsonStringFromFile($filepath)

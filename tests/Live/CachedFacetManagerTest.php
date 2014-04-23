@@ -22,7 +22,7 @@ class CachedFacetManagerTest extends \Collins\ShopApi\Test\Live\AbstractShopApiL
         /** @var DefaultFacetManager $facetManager */
         $facetManager = $shopApi->getResultFactory()->getFacetManager();
         /** @var DoctrineMultiGetCacheStrategy $doctrineMultiGetCacheStrategy */
-        $doctrineMultiGetCacheStrategy = $facetManager->getFetchStratey();
+        $doctrineMultiGetCacheStrategy = $facetManager->getFetchStrategy();
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\DoctrineMultiGetCacheStrategy', $doctrineMultiGetCacheStrategy);
 
         $doctrineMultiGetCacheStrategy->cacheAllFacets($shopApi);
