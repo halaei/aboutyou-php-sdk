@@ -31,13 +31,16 @@ abstract class AbstractShopApiLiveTest extends \Collins\ShopApi\Test\ShopSdkTest
     /**
      * @return ShopApi 
      */
-    protected function getShopApi()
+    protected function getShopApi(
+        ResultFactoryInterface $resultFactory = null,
+        LoggerInterface $logger = null,
+        $facetManagerCache = null
+    )
     {
         $config = $this->getConfig();
         
-        if(!isset($this->api)) {
-            $this->api = new ShopApi($config['user'], $config['password']);
-            $this->api->setApiEndpoint($config['endpoint']);
+        if (!isset($this->api)) {
+            $this->api = new ShopApi($config['user'], $config['password'], $config['endpoint'], $resultFactory, $logger, $facetManagerCache);
         }
         
         return $this->api;

@@ -1,13 +1,19 @@
 <?php
 /**
- * @auther nils.droege@antevorte.org
- * (c) Antevorte GmbH & Co KG
+ * @author nils.droege@project-collins.com
+ * (c) Collins GmbH & Co KG
  */
 
 namespace Collins\ShopApi\Model\FacetManager;
 
+/**
+ * @deprecated use DefaultFacetManager with FetchSingleFacetStrategy instead
+ */
 class SingleFacetManager extends AbstractFacetManager
 {
+    /** @var  \Collins\ShopApi */
+    protected $shopApi;
+
     protected function preFetch()
     {
         if (empty($this->missingFacetGroupIdsAndFacetIds)) {

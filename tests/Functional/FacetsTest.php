@@ -1,7 +1,6 @@
 <?php
 namespace Collins\ShopApi\Test\Functional;
 
-use Collins\Cache\ArrayCache;
 use Collins\ShopApi;
 use Guzzle\Http\Message\Response;
 

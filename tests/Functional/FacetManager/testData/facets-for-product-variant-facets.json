@@ -1,5 +1,6 @@
 [
     {
+        "facets": {
             "facet": [
                 {
                     "name": "rot",
@@ -118,6 +119,7 @@
                     "group_name": "brand"
                 }
            ],
-            "hits": 7007
+           "hits": 7007
+        }
     }
 ]

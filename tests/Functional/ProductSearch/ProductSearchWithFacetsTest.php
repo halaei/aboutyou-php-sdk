@@ -108,7 +108,7 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFiles(array(
             'result-product-search-with-facets.json',
             'category-all.json',
-                'facet-result.json'
+            'facet-result.json'
         ));
 
         // get all available products

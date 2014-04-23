@@ -402,7 +402,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         }, $ids);
 
         $ids = array_values(array_unique($ids));
-        $this->result['boost'] = $ids;
+        $this->result['boosts'] = $ids;
 
         return $this;
     }

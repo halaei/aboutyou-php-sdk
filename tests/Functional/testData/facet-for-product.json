@@ -1,5 +1,6 @@
 [
     {
+        "facets": {
         "facet": [
             {
                 "name": "10",
@@ -144,6 +145,8 @@
                 "name": "TOM TAILOR",
                 "group_name": "brand"
             }
-       ]
+       ],
+            "hits": 4473
+        }
     }
 ]

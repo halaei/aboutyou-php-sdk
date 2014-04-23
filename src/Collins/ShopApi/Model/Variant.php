@@ -197,7 +197,10 @@ class Variant extends AbstractModel
      */
     public function getQuantity()
     {
-        return $this->jsonObject->quantity;
+        return isset($this->jsonObject->quantity) ?
+            $this->jsonObject->quantity :
+            0
+        ;
     }
 
     protected static function parseFacetIds($jsonObject)
@@ -252,19 +255,47 @@ class Variant extends AbstractModel
     }
 
     /**
-     * @return string
+     * @return \DateTime|null
      */
     public function getFirstActiveDate()
     {
-        return $this->jsonObject->first_active_date;
+        return isset($this->jsonObject->first_active_date) ?
+            new \DateTime($this->jsonObject->first_active_date) :
+            null
+        ;
     }
 
     /**
-     * @return string
+     * @return \DateTime|null
      */
     public function getFirstSaleDate()
     {
-        return $this->jsonObject->first_sale_date;
+        return isset($this->jsonObject->first_sale_date) ?
+            new \DateTime($this->jsonObject->first_sale_date) :
+            null
+        ;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getCreatedDate()
+    {
+        return isset($this->jsonObject->created_date) ?
+            new \DateTime($this->jsonObject->created_date) :
+            null
+        ;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getUpdatedDate()
+    {
+        return isset($this->jsonObject->updated_date) ?
+            new \DateTime($this->jsonObject->updated_date) :
+            null
+        ;
     }
 
     /**

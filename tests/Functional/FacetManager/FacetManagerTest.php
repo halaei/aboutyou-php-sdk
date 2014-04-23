@@ -2,24 +2,54 @@
 
 namespace Collins\ShopApi\Test\Functional;
 
-use Collins\ShopApi\Criteria\ProductSearchCriteria;
+use Collins\ShopApi;
 use Collins\ShopApi\Model\Basket;
-use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
+use Collins\ShopApi\Model\FacetManager;
+use Doctrine\Common\Cache\ArrayCache;
 
 /**
  * @group facet-manager
  */
 class FacetManagerTest extends AbstractShopApiTest
 {
-    public function testProductSearch()
+    protected function getShopApiWithGroupFacetStrategy($filename)
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
-            'product_search-result.json',
+            $filename,
             'facets-for-product-variant-facets.json',
         ));
 
-        $k = $shopApi->getResultFactory()->getFacetManager();
+        return $shopApi;
+    }
+
+    protected function getShopApiWithSingleFacetStrategy($filename)
+    {
+        $shopApi = $this->getShopApiWithResultFiles(array(
+            $filename,
+            'facet-for-product-variant-facets.json',
+        ));
+        $facetManager =  new FacetManager\DefaultFacetManager(new FacetManager\FetchSingleFacetStrategy($shopApi));
+        $shopApi->getResultFactory()->setFacetManager($facetManager);
+
+        return $shopApi;
+    }
+
+    public function testProductSearch()
+    {
+        $shopApi = $this->getShopApiWithSingleFacetStrategy(
+            'product_search-result.json'
+        );
+
+        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $products = $productSearchResult->getProducts();
+
+        $brand = $products[0]->getBrand();
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+
+        $shopApi = $this->getShopApiWithGroupFacetStrategy(
+            'product_search-result.json'
+        );
 
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
         $products = $productSearchResult->getProducts();
@@ -30,10 +60,19 @@ class FacetManagerTest extends AbstractShopApiTest
 
     public function testProductByEans()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
-            'products_eans-result.json',
-            'facets-for-product-variant-facets.json',
-        ));
+        $shopApi = $this->getShopApiWithSingleFacetStrategy(
+            'products_eans-result.json'
+        );
+
+        $productEansResult = $shopApi->fetchProductsByEans(array('dummy'));
+        $products = $productEansResult->getProducts();
+
+        $brand = $products[0]->getBrand();
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+
+        $shopApi = $this->getShopApiWithGroupFacetStrategy(
+            'products_eans-result.json'
+        );
 
         $productEansResult = $shopApi->fetchProductsByEans(array('dummy'));
         $products = $productEansResult->getProducts();
@@ -44,10 +83,19 @@ class FacetManagerTest extends AbstractShopApiTest
 
     public function testProductByIds()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
-            'products-result.json',
-            'facets-for-product-variant-facets.json',
-        ));
+        $shopApi = $this->getShopApiWithSingleFacetStrategy(
+            'products-result.json'
+        );
+
+        $productResult = $shopApi->fetchProductsByIds(array('dummy'));
+        $products      = $productResult->getProducts();
+
+        $brand = $products[301673]->getBrand();
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+
+        $shopApi = $this->getShopApiWithGroupFacetStrategy(
+            'products-result.json'
+        );
 
         $productResult = $shopApi->fetchProductsByIds(array('dummy'));
         $products      = $productResult->getProducts();
@@ -58,10 +106,19 @@ class FacetManagerTest extends AbstractShopApiTest
 
     public function testAutocomplete()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
-            'autocompletion-result.json',
-            'facets-for-product-variant-facets.json'
-        ));
+        $shopApi = $this->getShopApiWithSingleFacetStrategy(
+            'autocompletion-result.json'
+        );
+
+        $autocompletionResult = $shopApi->fetchAutocomplete('dummy');
+        $products = $autocompletionResult->getProducts();
+
+        $brand = $products[0]->getBrand();
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+
+        $shopApi = $this->getShopApiWithGroupFacetStrategy(
+            'autocompletion-result.json'
+        );
 
         $autocompletionResult = $shopApi->fetchAutocomplete('dummy');
         $products = $autocompletionResult->getProducts();
@@ -72,10 +129,20 @@ class FacetManagerTest extends AbstractShopApiTest
 
     public function testBasket()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
-            'basket-result.json',
-            'facets-for-product-variant-facets.json',
-        ));
+        $shopApi = $this->getShopApiWithSingleFacetStrategy(
+            'basket-result.json'
+        );
+
+        $basket = $shopApi->fetchBasket('dummy');
+        $products = $basket->getProducts();
+        $product = reset($products);
+
+        $brand = $product->getBrand();
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+
+        $shopApi = $this->getShopApiWithGroupFacetStrategy(
+            'basket-result.json'
+        );
 
         $basket = $shopApi->fetchBasket('dummy');
         $products = $basket->getProducts();
@@ -87,10 +154,20 @@ class FacetManagerTest extends AbstractShopApiTest
 
     public function testGetOrder()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
-            'get_order-result.json',
-            'facets-for-product-variant-facets.json',
-        ));
+        $shopApi = $this->getShopApiWithSingleFacetStrategy(
+            'get_order-result.json'
+        );
+
+        $order = $shopApi->fetchOrder('dummy');
+        $products = $order->getBasket()->getProducts();
+        $product = reset($products);
+
+        $brand = $product->getBrand();
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+
+        $shopApi = $this->getShopApiWithGroupFacetStrategy(
+            'get_order-result.json'
+        );
 
         $order = $shopApi->fetchOrder('dummy');
         $products = $order->getBasket()->getProducts();
@@ -101,53 +178,29 @@ class FacetManagerTest extends AbstractShopApiTest
     }
 
     /**
-     * ensure, that the FacetManager isn't catched or doesn't throw a different error
+     * ensure, that the FacetManager isn't called or does not throw a different error
      * @expectedException \Collins\ShopApi\Exception\ResultErrorException
      */
     public function testGetOrderFailed()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
-            'get_order-failed.json',
-            'facets-for-product-variant-facets.json',
-        ));
+        $shopApi = $this->getShopApiWithSingleFacetStrategy(
+            'get_order-failed.json'
+        );
 
         $order = $shopApi->fetchOrder('dummy');
     }
 
-    protected function getShopApiWithResultFile($filename, $expectedMuilitGet)
+    public function testCacheStrategy()
     {
-//        $shopApi = parent::getShopApiWithResultFiles(array(
-//            $filename,
-//            'facets-all.json'
-//        ));
-        $shopApi = parent::getShopApiWithResultFile(
-            $filename
-        );
+        $cache   = new ArrayCache();
+        $shopApi = new ShopApi('id', 'pw', ShopApi\Constants::API_ENVIRONMENT_STAGE, null, null, $cache);
+        /** @var ShopApi\Model\FacetManager\DefaultFacetManager $facetManager */
         $facetManager = $shopApi->getResultFactory()->getFacetManager();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\AbstractFacetManager', $facetManager);
-        $cacheMock = $this->getMockForAbstractClass('Doctrine\\Common\\Cache\\CacheMultiGet');
-        $cacheMock->expects($this->atLeastOnce())
-            ->method('fetchMulti')
-            ->with($expectedMuilitGet)
-//            ->will($this->returnValue($this->getFacets()))
-        ;
-        $facetManager->setCache($cacheMock);
-
-        return $shopApi;
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\DoctrineMultiGetCacheStrategy', $facetManager->getFetchStrategy());
     }
 
     protected function getJsonStringFromFile($filepath)
     {
-        if (strpos($filepath, '/') !== 0) {
-            $filepath = __DIR__.'/testData/' . $filepath;
-        }
-        $jsonString = file_get_contents($filepath);
-
-        return $jsonString;
-    }
-
-    public function getFacets()
-    {
-        return array();
+        return parent::getJsonStringFromFile($filepath, __DIR__);
     }
 }
