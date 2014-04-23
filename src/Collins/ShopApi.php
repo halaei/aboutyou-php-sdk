@@ -114,6 +114,14 @@ class ShopApi
     /**
      * @return string
      */
+    public function getAppId()
+    {
+        return $this->appId;
+    }
+
+    /**
+     * @return string
+     */
     public function getApiEndPoint()
     {
         return $this->shopApiClient->getApiEndPoint();
