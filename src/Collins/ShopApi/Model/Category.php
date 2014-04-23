@@ -181,13 +181,22 @@ class Category extends AbstractModel
 
     /**
      * Sets the parent category of this category
-     * @return void
+     *
+     * @param Category $parent
+     * @param bool $doAddChild
      */
-    public function setParent(Category $parent)
+    public function setParent(Category $parent, $doAddChild = false)
     {
         $this->parent = $parent;
+
+        if ($doAddChild) {
+            $parent->addChild($this);
+        }
     }
 
+    /**
+     * @param Category $child
+     */
     public function addChild(Category $child)
     {
         $this->allSubCategories[] = $child;
@@ -197,11 +206,14 @@ class Category extends AbstractModel
         }
     }
 
-    public function setSubCategories($categories)
+    /**
+     * @param Category[] $categories
+     */
+    public function setSubCategories(array $categories)
     {
         $this->allSubCategories = $categories;
 
-        foreach($categories as $category) {
+        foreach ($categories as $category) {
             if($category->isActive()) {
                 $this->activeSubCategories[] = $category;
             }
@@ -213,6 +225,8 @@ class Category extends AbstractModel
      *
      * @param Category[] categories
      * @return array
+     *
+     * @deprecated
      */
     public static function buildTree($categories)
     {
@@ -232,6 +246,8 @@ class Category extends AbstractModel
      * @param Category $category
      * @param array $tree
      * @return bool true if category could be added
+     *
+     * @deprecated
      */
     protected static function addToTree($category, &$tree) {
         $added = false;

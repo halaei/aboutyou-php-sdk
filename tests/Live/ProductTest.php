@@ -11,6 +11,6 @@ class ProductTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
     {
         $product = $this->getProduct(1);
         
-        $this->assertInternalType('array', $product->getCategories());
+        $this->assertInternalType('array', $product->getRootCategories());
     }
 }

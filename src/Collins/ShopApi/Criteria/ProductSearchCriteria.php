@@ -26,7 +26,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     const FACETS_UNLIMITED = -1;
 
     const FILTER_SALE          = 'sale';
-    const FILTER_CATEGORY_IDS  = 'categories';
+    const FILTER_CATEGORY_IDS  = 'rootCategories';
     const FILTER_PRICE         = 'prices';
     const FILTER_SEARCHWORD    = 'searchword';
     const FILTER_ATTRIBUTES    = 'facets';
