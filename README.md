@@ -20,7 +20,7 @@ curl -sS https://getcomposer.org/installer | php
             }
         ],
         "require": {
-            "collins/shop-sdk": "dev-master"
+            "collins/shop-sdk": "~0.9.4"
         }
     }
 ```
@@ -42,7 +42,7 @@ use Monolog\Handler\StreamHandler;
     $logger = new Logger('name');
     $logger->pushHandler(new StreamHandler(Yii::app()->getRuntimePath(). '/mono.log', Logger::DEBUG));
 
-    $shopApi = new ShopApi($appId, $appPassword, $shopApiHost, null, $logger);
+    $shopApi = new ShopApi($appId, $appPassword, $shopApiHost, $logger);
     if (YII_DEBUG) {
         $shopApi->setLogTemplate(\Guzzle\Log\MessageFormatter::DEBUG_FORMAT);
     } else {
@@ -50,8 +50,33 @@ use Monolog\Handler\StreamHandler;
     }
 ```
 
+Example how to use the shop-api-sdk with apc cache.
+
+```php
+    $cache = new \Doctrine\Common\Cache\ApcCache();
+    $shopApi = new \Collins\ShopApi($appId, $appPassword, $shopApiHost, null, null, $cache);
+```
+
+To precache facets per cron (hourly pre caching is preferred), write a new php file with
+
+```php
+#/usr/bin/env php
+<?php
+// filename precache-cron.php
+require 'myconfig.php';
+require 'vendor/autoload.php';
+
+$cache = new \Doctrine\Common\Cache\ApcCache();
+$shopApi = new \Collins\ShopApi($appId, $appPassword, $shopApiHost, null, null, $cache);
+/** @var DefaultFacetManager $facetManager */
+$facetManager = $shopApi->getResultFactory()->getFacetManager();
+/** @var DoctrineMultiGetCacheStrategy $doctrineMultiGetCacheStrategy */
+$doctrineMultiGetCacheStrategy = $facetManager->getFetchStrategy();
+
+$doctrineMultiGetCacheStrategy->cacheAllFacets($shopApi);
+```
 
 ## Testing
 ```bash
-php vendor/phpunit/phpunit/phpunit.php
+vendor/bin/phpunit
 ```
