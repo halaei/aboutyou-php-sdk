@@ -338,15 +338,16 @@ class Product extends AbstractModel
      * Returns the first active category and, if non active, then it return the first category
      
      * @param bool $activeOnly return only categories that are active
+     *
      * @return Category|null
      */
     public function getCategory($active = true)
     {
-        $categories = $this->getLeafCategories($active);
-
-        if (empty($categories)) {
-            return null;
+        if (empty($this->categoryIdPaths)) {
+            return;
         }
+
+        $categories = $this->getLeafCategories($active);
 
         return reset($categories);
     }
@@ -367,7 +368,7 @@ class Product extends AbstractModel
         return $activeOnly ?
             $this->activeLeafCategories :
             $this->leafCategories
-            ;
+        ;
     }
 
     public function getCategories($activeOnly = true)
