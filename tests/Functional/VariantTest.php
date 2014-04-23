@@ -13,10 +13,10 @@ class VariantTest extends AbstractShopApiTest
 {
     public function testGetSize()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
+        $shopApi = $this->getShopApiWithResultFileAndFacets(
             'result/products-374469-with-variants.json',
             'result/facet-for-product-374469.json'
-        ));
+        );
         $products = $shopApi->fetchProductsByIds(array(1234))->getProducts();
         /** @var Product $product */
         $product = reset($products);

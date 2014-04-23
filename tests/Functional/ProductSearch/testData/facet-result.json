@@ -1,5 +1,6 @@
 [
     {
+        "facets": {
         "facet": [
             {
                 "facet_id": 121,
@@ -52,5 +53,6 @@
                 "group_name": "color"
             }
         ]
+        }
     }
 ]

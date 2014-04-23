@@ -68,6 +68,37 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
         return $jsonString;
     }
 
+    protected function getStaticFacetManagerFromFile($filename)
+    {
+        $jsonObject = $this->getJsonObjectFromFile($filename);
+        if (isset($jsonObject[0]->facets->facet)) {
+            $jsonFacets = $jsonObject[0]->facets->facet;
+        } else {
+            $jsonFacets = $jsonObject[0]->facet;
+        }
+        $facets = array();
+        foreach ($jsonFacets as $jsonFacet) {
+            $facet = ShopApi\Model\Facet::createFromJson($jsonFacet);
+            $facets[] = $facet;
+        }
+
+        $facetManager = new ShopApi\Model\FacetManager\StaticFacetManager($facets);
+
+        return $facetManager;
+    }
+
+    protected function getShopApiWithResultFileAndFacets($filepath, $facetsFile)
+    {
+        $jsonString = $this->getJsonStringFromFile($filepath);
+
+        $shopApi = $this->getShopApiWithResult($jsonString);
+
+        $facetManager = $this->getStaticFacetManagerFromFile($facetsFile);
+        $shopApi->getResultFactory()->setFacetManager($facetManager);
+
+        return $shopApi;
+    }
+
     protected function getShopApiWithResultFile($filepath, $exceptedRequestBody = null)
     {
         $jsonString = $this->getJsonStringFromFile($filepath);

@@ -10,6 +10,7 @@ use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
 use Collins\ShopApi\Model\FacetManager\DoctrineMultiGetCacheStrategy;
+use Collins\ShopApi\Model\FacetManager\FetchFacetGroupStrategy;
 use Collins\ShopApi\Model\FacetManager\FetchSingleFacetStrategy;
 use Collins\ShopApi\Model\ProductsEansResult;
 use Collins\ShopApi\Model\ProductSearchResult;
@@ -68,7 +69,7 @@ class ShopApi
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $logger);
 
         if ($resultFactory === null) {
-            $strategy = new FetchSingleFacetStrategy($this);
+            $strategy = new FetchFacetGroupStrategy($this);
             if ($facetManagerCache) {
                 $strategy = new DoctrineMultiGetCacheStrategy($facetManagerCache, $strategy);
             }
