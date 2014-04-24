@@ -1,4 +1,7 @@
 /index.php
+.buildpath
+.project
+.settings
 .DS_STORE
 coverage
 test
