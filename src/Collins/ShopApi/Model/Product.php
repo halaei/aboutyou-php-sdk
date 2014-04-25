@@ -67,7 +67,7 @@ class Product extends AbstractModel
 
     /** @var Category[] */
     protected $rootCategories;
-    
+
     /** @var Category[] */
     protected $activeRootCategories;
 
@@ -336,7 +336,7 @@ class Product extends AbstractModel
 
     /**
      * Returns the first active category and, if non active, then it return the first category
-     
+
      * @param bool $activeOnly return only categories that are active
      *
      * @return Category|null
@@ -436,7 +436,9 @@ class Product extends AbstractModel
         }
 
         // put all category ids in an array to fetch by ids
-        $categoryIds = array_unique(call_user_func_array('array_merge', $this->categoryIdPaths));
+        $categoryIds = array_values(array_unique(
+            call_user_func_array('array_merge', $this->categoryIdPaths)
+        ));
 
         // fetch all necessary categories from API
         $flattenCategories = $this->getShopApi()->fetchCategoriesByIds($categoryIds)->getCategories();
