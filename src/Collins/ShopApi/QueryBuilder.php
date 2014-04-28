@@ -7,6 +7,7 @@
 namespace Collins\ShopApi;
 
 
+use Collins\ShopApi\Criteria\ProductFields;
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Model\Basket;
 
@@ -26,6 +27,8 @@ class QueryBuilder
      * @param array  $types      Array of types to search for (Constants::TYPE_...).
      *
      * @return $this
+     *
+     * @throws \InvalidArgumentException
      */
     public function fetchAutocomplete(
         $searchword,
@@ -302,8 +305,8 @@ class QueryBuilder
 
         $this->query[] = array(
             'products' => array(
-                'ids' => $ids,
-                'fields' => $fields
+                'ids'    => $ids,
+                'fields' => ProductFields::filterFields($fields)
             )
         );
 
@@ -322,8 +325,8 @@ class QueryBuilder
     ) {
         $this->query[] = array(
             'products_eans' => array(
-                'eans' => $eans,
-                'fields' => $fields
+                'eans'   => $eans,
+                'fields' => ProductFields::filterFields($fields)
             )
         );
 
@@ -331,7 +334,7 @@ class QueryBuilder
     }
 
    /**
-     * @param string|int $id
+     * @param string|int $orderId
      *
      * @return $this
      */

@@ -24,4 +24,22 @@ class ProductFields
     const DEFAULT_IMAGE     = "default_image";
     const ATTRIBUTES_MERGED = "attributes_merged";
     const CATEGORIES        = "categories";
+
+    public static function filterFields(array $fields)
+    {
+        $fields = array_values(array_unique($fields));
+
+        // this simplify parsing on (pre)fetching facets
+        if (
+            !in_array(self::ATTRIBUTES_MERGED, $fields) && (
+                in_array(self::BRAND, $fields) ||
+                in_array(self::VARIANTS, $fields) ||
+                in_array(self::DEFAULT_VARIANT, $fields)
+            )
+        ) {
+            $fields[] = ProductFields::ATTRIBUTES_MERGED;
+        }
+
+        return $fields;
+    }
 }
