@@ -1,4 +1,7 @@
 /index.php
+.buildpath
+.project
+.settings
 .DS_STORE
 coverage
 test
@@ -15,3 +18,7 @@ composer.phar
 composer.lock
 composer-test.lock
 vendor/
+
+/nbproject
+/tests/Live/config/config.ini
+

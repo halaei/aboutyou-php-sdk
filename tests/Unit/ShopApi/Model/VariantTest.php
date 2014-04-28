@@ -11,17 +11,11 @@ use Collins\ShopApi;
 
 class VariantTest extends AbstractModelTest
 {
-    public function setup()
-    {
-        // setup DefaultModelFactory
-        new ShopApi('app id', 'app token');
-    }
-
     public function testFromJson()
     {
         $jsonObject = $this->getJsonObject('variant.json');
 
-        $variant = new Variant($jsonObject);
+        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory());
 
         $this->assertEquals(5145543, $variant->getId());
         $this->assertEquals('ean1', $variant->getEan());
@@ -30,8 +24,10 @@ class VariantTest extends AbstractModelTest
         $this->assertEquals(0, $variant->getOldPrice());
         $this->assertEquals(3995, $variant->getRetailPrice());
         $this->assertEquals(5, $variant->getQuantity());
-        $this->assertEquals('2014-02-14 18:09:38', $variant->getFirstActiveDate());
-        $this->assertEquals('2014-01-10 10:10:00', $variant->getFirstSaleDate());
+        $this->assertEquals(new \DateTime('2014-02-14 18:09:38'), $variant->getFirstActiveDate());
+        $this->assertEquals(new \DateTime('2014-01-10 10:10:00'), $variant->getFirstSaleDate());
+        $this->assertEquals(new \DateTime('2014-01-11 10:11:00'), $variant->getCreatedDate());
+        $this->assertEquals(new \DateTime('2014-01-12 10:12:00'), $variant->getUpdatedDate());
 
         $images = $variant->getImages();
         $this->assertCount(2, $images);
@@ -42,10 +38,21 @@ class VariantTest extends AbstractModelTest
         return $variant;
     }
 
+    public function testFromJson2()
+    {
+        $jsonObject = $this->getJsonObject('variant2.json');
+
+        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory());
+        $this->assertNull($variant->getFirstActiveDate());
+        $this->assertNull($variant->getFirstSaleDate());
+        $this->assertNull($variant->getCreatedDate());
+        $this->assertNull($variant->getUpdatedDate());
+    }
+
     /**
      * @depends testFromJson
      */
-    public function testVariantWithAttributs(Variant $variant)
+    public function testVariantWithAttributes(Variant $variant)
     {
         $facetGroupSet = $variant->getFacetGroupSet();
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroupSet', $facetGroupSet);
@@ -61,12 +68,12 @@ class VariantTest extends AbstractModelTest
     public function testFromJsonAdditionalInfo()
     {
         $jsonObject = json_decode('{"additional_info":null}');
-        $variant = new Variant($jsonObject);
+        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory());
         $this->assertEquals(null, $variant->getAdditionalInfo());
 
         $expected = json_decode('{"some":"data"}');
         $jsonObject = json_decode('{"additional_info":{"some":"data"}}');
-        $variant = new Variant($jsonObject);
+        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory());
         $this->assertEquals($expected, $variant->getAdditionalInfo());
         $this->assertEquals("data", $variant->getAdditionalInfo()->some);
 
@@ -84,4 +91,55 @@ class VariantTest extends AbstractModelTest
         $this->assertNotEquals($images[0], $variant->getImageByHash($images[1]->getHash()));
         $this->assertNull($variant->getImageByHash('unknown'));
     }
+
+    /**
+     * @depends testFromJson
+     */
+    public function testGetSize(Variant $variant)
+    {
+        $facetManager = $this->getFacetManager('facets-all.json');
+        ShopApi\Model\FacetGroupSet::setFacetManager($facetManager);
+
+        $size = $variant->getSize();
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroup', $size);
+        $this->assertEquals('XS', $size->getFacetNames());
+    }
+
+    protected function getFacetManager($filename)
+    {
+        $jsonObject = $this->getJsonObject($filename);
+        if (isset($jsonObject[0]->facets->facet)) {
+            $jsonFacets = $jsonObject[0]->facets->facet;
+        } else {
+            $jsonFacets = $jsonObject[0]->facet;
+        }
+        $facets = array();
+        foreach ($jsonFacets as $jsonFacet) {
+            $facet = ShopApi\Model\Facet::createFromJson($jsonFacet);
+            $facets[] = $facet;
+        }
+
+        $facetManager = new ShopApi\Model\FacetManager\StaticFacetManager($facets);
+
+        return $facetManager;
+    }
+
+
+//    2014-04-21 nils.droege: not finish yet
+//
+//    protected function getFacetManagerMock($facetsData)
+//    {
+//        $facetsMap = array();
+//        foreach ($facetsData as $facetData) {
+//            $facet = new ShopApi\Model\Facet($facetData[0], $facetData[1], '', $facetData[2], $facetData[3]);
+//            $facetsMap[$facet->getUniqueKey()] = $facet;
+//        }
+//        $facetManager = $this->getMockForAbstractClass('\\Collins\\ShopApi\\Model\\FacetManager\\FacetManagerInterface');
+//        $facetManager->expects($this->any())
+//            ->method('getFacet')
+//            ->with($this->returnValueMap($facetsMap))
+//        ;
+//
+//        return $facetManager;
+//    }
 }

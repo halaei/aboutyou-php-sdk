@@ -7,6 +7,9 @@
 namespace Collins\ShopApi\Model;
 
 
+use Collins\ShopApi\Constants;
+use Collins\ShopApi\Factory\ModelFactoryInterface;
+
 class Variant extends AbstractModel
 {
     protected $jsonObject;
@@ -17,19 +20,32 @@ class Variant extends AbstractModel
     /** @var FacetGroupSet */
     protected $facetGroups;
 
+    /** @var ModelFactoryInterface */
+    private $factory;
+
     /**
      * @var Image
      */
     protected $selectedImage = null;
 
-    public function __construct($jsonObject)
+    protected function __construct()
     {
-        $this->fromJson($jsonObject);
     }
 
-    public function fromJson($jsonObject)
+    /**
+     * @param \stdClass $jsonObject
+     * @param ModelFactoryInterface $factory
+     *
+     * @return static
+     */
+    public static function createFromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
-        $this->jsonObject = $jsonObject;
+        $variant = new static();
+
+        $variant->factory    = $factory;
+        $variant->jsonObject = $jsonObject;
+
+        return $variant;
     }
 
     /**
@@ -49,7 +65,7 @@ class Variant extends AbstractModel
         if ($this->images === null) {
             $this->images = array();
             if (!empty($this->jsonObject->images)) {
-                $factory = $this->getModelFactory();
+                $factory = $this->factory;
 
                 foreach ($this->jsonObject->images as $image) {
                     $this->images[] = $factory->createImage($image);
@@ -176,12 +192,15 @@ class Variant extends AbstractModel
      * Please mind, that this quantity doesn't need to be up to date.
      * You should check via live_variant for the real quantity before
      * adding a product into the cart.
-     * 
+     *
      * @return int
      */
     public function getQuantity()
     {
-        return $this->jsonObject->quantity;
+        return isset($this->jsonObject->quantity) ?
+            $this->jsonObject->quantity :
+            0
+        ;
     }
 
     protected static function parseFacetIds($jsonObject)
@@ -201,6 +220,14 @@ class Variant extends AbstractModel
     {
         $ids = self::parseFacetIds($this->jsonObject);
         $this->facetGroups = new FacetGroupSet($ids);
+    }
+
+    /**
+     * @return array
+     */
+    public function getFacetIds()
+    {
+        return self::parseFacetIds($this->jsonObject);
     }
 
     /**
@@ -228,19 +255,110 @@ class Variant extends AbstractModel
     }
 
     /**
-     * @return string
+     * @return \DateTime|null
      */
     public function getFirstActiveDate()
     {
-        return $this->jsonObject->first_active_date;
+        return isset($this->jsonObject->first_active_date) ?
+            new \DateTime($this->jsonObject->first_active_date) :
+            null
+        ;
     }
 
     /**
-     * @return string
+     * @return \DateTime|null
      */
     public function getFirstSaleDate()
     {
-        return $this->jsonObject->first_sale_date;
+        return isset($this->jsonObject->first_sale_date) ?
+            new \DateTime($this->jsonObject->first_sale_date) :
+            null
+        ;
     }
 
+    /**
+     * @return \DateTime|null
+     */
+    public function getCreatedDate()
+    {
+        return isset($this->jsonObject->created_date) ?
+            new \DateTime($this->jsonObject->created_date) :
+            null
+        ;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getUpdatedDate()
+    {
+        return isset($this->jsonObject->updated_date) ?
+            new \DateTime($this->jsonObject->updated_date) :
+            null
+        ;
+    }
+
+    /**
+     * @return FacetGroup|null
+     */
+    public function getColor()
+    {
+        return $this->getFacetGroup(Constants::FACET_COLOR);
+    }
+
+    /**
+     * @return FacetGroup|null
+     */
+    public function getLength()
+    {
+        return $this->getFacetGroup(Constants::FACET_LENGTH);
+    }
+
+    /**
+     * @return FacetGroup|null
+     */
+    public function getSize()
+    {
+        /**
+         * @todo: Instance level caching
+         */
+        $groupId = $this->getSizeGroupId();
+
+        if (!empty($groupId)) {
+            return $this->getFacetGroup($groupId);
+        }
+    }
+
+    /**
+     * @return integer|null
+     */
+    private function getSizeGroupId()
+    {
+        $keys = array();
+
+        $groups = $this->getFacetGroupSet()->getGroups();
+
+        foreach ($groups as $group) {
+            $keys[$group->getName()] = $group->getGroupId();
+        }
+
+        $sizeRun = $this->getFacetGroup(Constants::FACET_SIZE_RUN);
+
+        if (!empty($sizeRun)) {
+            foreach ($sizeRun->getFacets() as $facet) {
+                $groupName = $facet->getValue();
+                if (isset($keys[$groupName])) {
+                    return $keys[$groupName];
+                }
+            }
+        }
+        if (isset($keys['size'])) {
+            return $keys['size'];
+        }
+        if (isset($keys['size_run'])) {
+            return $keys['size_run'];
+        }
+
+        return null;
+    }
 }

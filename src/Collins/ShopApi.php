@@ -1,19 +1,25 @@
 <?php
 namespace Collins;
 
-use Collins\Cache\CacheInterface;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
-use Collins\ShopApi\Criteria\CriteriaInterface;
 use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Factory\ResultFactoryInterface;
+use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
+use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
+use Collins\ShopApi\Model\FacetManager\DoctrineMultiGetCacheStrategy;
+use Collins\ShopApi\Model\FacetManager\FetchFacetGroupStrategy;
+use Collins\ShopApi\Model\FacetManager\FetchSingleFacetStrategy;
+use Collins\ShopApi\Model\ProductsEansResult;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
 use Collins\ShopApi\Query;
 use Collins\ShopApi\ShopApiClient;
 use Psr\Log\LoggerInterface;
+use Rhumsaa\Uuid\Uuid;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Provides access to the Collins Frontend Platform.
@@ -41,31 +47,56 @@ class ShopApi
 
     protected $appId;
 
+    /** @var EventDispatcher */
+    protected $eventDispatcher;
+
     /**
      * @param string $appId
      * @param string $appPassword
      * @param string $apiEndPoint Constants::API_ENVIRONMENT_LIVE for live environment, Constants::API_ENVIRONMENT_STAGE for staging
-     * @param CacheInterface $cache
+     * @param ResultFactoryInterface $resultFactory if null it will use the DefaultModelFactory with the DefaultFacetManager
      * @param LoggerInterface $logger
+     * @param \Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
      */
-    public function __construct($appId, $appPassword, $apiEndPoint = Constants::API_ENVIRONMENT_LIVE, CacheInterface $cache = null, LoggerInterface $logger = null)
-    {
-        $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $cache, $logger);
+    public function __construct(
+        $appId,
+        $appPassword,
+        $apiEndPoint = Constants::API_ENVIRONMENT_LIVE,
+        ResultFactoryInterface $resultFactory = null,
+        LoggerInterface $logger = null,
+        $facetManagerCache = null
+    ) {
+        $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $logger);
 
-        $this->modelFactory = new DefaultModelFactory($this);
-
-        $this->baseImageUrl = self::IMAGE_URL_LIVE;
-        switch($apiEndPoint) {
-            case Constants::API_ENVIRONMENT_STAGE:
-                $this->baseImageUrl = self::IMAGE_URL_STAGE;
-                break;
+        if ($resultFactory === null) {
+            $strategy = new FetchFacetGroupStrategy($this);
+            if ($facetManagerCache) {
+                $strategy = new DoctrineMultiGetCacheStrategy($facetManagerCache, $strategy);
+            }
+            $this->setResultFactory(
+                new DefaultModelFactory(
+                    $this,
+                    new DefaultFacetManager($strategy),
+                    new EventDispatcher()
+                )
+            );
         }
 
+        if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
+            $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
+        } else {
+            $this->setBaseImageUrl(self::IMAGE_URL_LIVE);
+        }
 
         $this->logger = $logger;
         $this->appId  = $appId;
     }
 
+
+
+    /**
+     * @return ShopApiClient
+     */
     public function getApiClient()
     {
         return $this->shopApiClient;
@@ -84,6 +115,14 @@ class ShopApi
     /**
      * @return string
      */
+    public function getAppId()
+    {
+        return $this->appId;
+    }
+
+    /**
+     * @return string
+     */
     public function getApiEndPoint()
     {
         return $this->shopApiClient->getApiEndPoint();
@@ -97,22 +136,6 @@ class ShopApi
     public function setApiEndpoint($apiEndPoint)
     {
         $this->shopApiClient->setApiEndpoint($apiEndPoint);
-    }
-
-    /**
-     * @param CacheInterface $cache
-     */
-    public function setCache(CacheInterface $cache)
-    {
-        $this->shopApiClient->setCache($cache);
-    }
-
-    /**
-     * @return CacheInterface
-     */
-    public function getCache()
-    {
-        return $this->shopApiClient->getCache();
     }
 
     /**
@@ -162,6 +185,8 @@ class ShopApi
         } else {
             $this->baseImageUrl = '';
         }
+
+        $this->modelFactory->setBaseImageUrl($this->baseImageUrl);
     }
 
     /**
@@ -170,6 +195,16 @@ class ShopApi
     public function getBaseImageUrl()
     {
         return $this->baseImageUrl;
+    }
+
+    /**
+     * @return Query
+     */
+    public function getQuery()
+    {
+        $query = new Query($this->shopApiClient, $this->modelFactory, $this->eventDispatcher);
+
+        return $query;
     }
 
     /**
@@ -198,13 +233,6 @@ class ShopApi
         return $query->executeSingle();
     }
 
-    public function getQuery()
-    {
-        $query = new Query($this->shopApiClient, $this->modelFactory);
-
-        return $query;
-    }
-
     /**
      * Fetch the basket of the given sessionId.
      *
@@ -223,88 +251,74 @@ class ShopApi
     }
 
     /**
-     * Add product variants into the basket.
-     *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param ShopApi\Model\BasketItem[] $items
-     *
-     * @return \Collins\ShopApi\Model\Basket
-     */
-    public function addItemsToBasket($sessionId, array $items)
-    {
-        $query = $this->getQuery()->addItemsToBasket($sessionId, $items);
-        return $query->executeSingle();
-    }
-
-    
-    /**
-     * Adds sets of item sets into the basket.
-     *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param ShopApi\Model\BasketItemSet[] array of sets of basket items
-     *
-     * @return \Collins\ShopApi\Model\Basket
-     */
-    public function addItemSetsToBasket($sessionId, $itemSets)
-    {
-        $query = $this->getQuery()
-            ->addItemSetsToBasket($sessionId, $itemSets)
-        ;
-
-        return $query->executeSingle();
-    }
-    
-    /**
      * Adds a single item into the basket.
-     * You can specifiy an amount. Please mind, that an amount > 1 will result in #amount basket positions.
+     * You can specify an amount. Please mind, that an amount > 1 will result in #amount basket positions.
      * So if you read out the basket again later, it's your job to merge the positions again.
-     * 
+     *
+     * It is highly recommend to use the basket update method, to manage your items.
+     *
      * @param string $sessionId
-     * @param \Collins\ShopApi\Model\BasketItem $item
+     * @param integer $variantId
      * @param integer $amount
      *
      * @return Basket
+     *
+     * @throws \InvalidArgumentException
      */
-    public function addItemToBasket($sessionId, ShopApi\Model\BasketItem $item, $amount = 1)
+    public function addItemToBasket($sessionId, $variantId, $amount = 1)
     {
-        $items = array();
-        $idPrefix = $item->getId();
-        
-        for ($i=0; $i<$amount; $i++) {
-            $id = $i== 0 ? $idPrefix : ($idPrefix.'-'.($i+1));
-
-            $clone = clone $item;
-            $clone->setId($id);
-            $items[] = $clone;
+        if (!is_long($variantId)) {
+            if (is_string($variantId) && ctype_digit($variantId)) {
+                $variantId = intval($variantId);
+            } else {
+                throw new \InvalidArgumentException('the variant id must be an integer or sting with digits');
+            }
         }
-        
-        return $this->addItemsToBasket($sessionId, $items);
+
+        $basket = new Basket();
+
+        for ($i=0; $i < $amount; $i++) {
+            $item = new Basket\BasketItem($this->generateBasketItemId(), $variantId);
+            $basket->updateItem($item);
+        }
+
+        return $this->updateBasket($sessionId, $basket);
     }
-    
-    /**
-     * Adds set of product variants into the basket.
-     *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param ShopApi\Model\BasketItemSet[] array of sets of basket items
-     *
-     * @return \Collins\ShopApi\Model\Basket
-     */
-    public function addItemSetToBasket($sessionId, ShopApi\Model\BasketItemSet $itemSet)
+
+    public function generateBasketItemId()
     {
-        return $this->addItemSetsToBasket($sessionId, array($itemSet));
+        $id = 'i_' . Uuid::uuid4();
+
+        return $id;
     }
 
     /**
      * Remove basket item.
      *
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param int[] $ids array of basket item ids to delete
+     * @param string $sessionId     Free to choose ID of the current website visitor.
+     * @param string[] $itemIds     array of basket item ids to delete, this can be sets or single items
      *
      * @return \Collins\ShopApi\Model\Basket
      */
-    public function removeFromBasket($sessionId, $ids)
+    public function removeItemsFromBasket($sessionId, $itemIds)
     {
-        $query = $this->getQuery()->removeFromBasket($sessionId, $ids);
+        $basket = new Basket();
+        $basket->deleteItems($itemIds);
+
+        return $this->updateBasket($sessionId, $basket);
+    }
+
+    /**
+     * @param string $sessionId
+     * @param Basket $basket
+     *
+     * @return \Collins\ShopApi\Model\Basket
+     */
+    public function updateBasket($sessionId, Basket $basket)
+    {
+        $query = $this->getQuery()
+            ->updateBasket($sessionId, $basket)
+        ;
 
         return $query->executeSingle();
     }
@@ -388,10 +402,10 @@ class ShopApi
     }
 
     /**
-     * @param integer[] $eans
+     * @param string[] $eans
      * @param string[] $fields
      *
-     * @return ProductsResult
+     * @return ProductsEansResult
      *
      * @throws ShopApi\Exception\MalformedJsonException
      * @throws ShopApi\Exception\UnexpectedResultException
@@ -415,11 +429,15 @@ class ShopApi
      */
     public function setResultFactory(ResultFactoryInterface $modelFactory)
     {
+        if ($modelFactory instanceof DefaultModelFactory) {
+            $this->eventDispatcher = $modelFactory->getEventDispatcher();
+        }
+
         $this->modelFactory = $modelFactory;
     }
 
     /**
-     * @return ResultFactoryInterface
+     * @return ResultFactoryInterface|DefaultModelFactory
      */
     public function getResultFactory()
     {
@@ -458,6 +476,15 @@ class ShopApi
     {
         $query = $this->getQuery()
             ->fetchFacets($groupIds)
+        ;
+
+        return $query->executeSingle();
+    }
+
+    public function fetchFacetTypes()
+    {
+        $query = $this->getQuery()
+            ->fetchFacetTypes()
         ;
 
         return $query->executeSingle();
@@ -604,5 +631,36 @@ class ShopApi
         $tag = '<script type="text/javascript" src="' . self::getJavaScriptURL() . '"></script>';
 
         return $tag;
+    }
+
+    /**
+     * @private
+     * @return array
+     */
+    public function getFacetGroups()
+    {
+        return array(
+            0   => 'brand',
+            1   => 'color',
+            5   => 'length',
+            206 => 'size_code',
+            172 => 'size_run',
+            211 => 'channel',
+            247 => 'care_symbol',
+            173 => 'clothing_unisex_int',
+            204 => 'clothing_unisex_onesize',
+            175 => 'clothing_womens_de',
+            180 => 'clothing_womens_inch',
+            194 => 'shoes_unisex_eur',
+            189 => 'clothing_mens_inch',
+            185 => 'clothing_womens_scotchsoda_81hours',
+            187 => 'clothing_mens_de',
+            178 => 'clothing_womens_uk',
+            183 => 'clothing_womens_us',
+            181 => 'clothing_womens_belts_cm',
+            190 => 'clothing_mens_belts_cm',
+            176 => 'clothing_womens_it',
+            192 => 'clothing_mens_acc'
+        );
     }
 }

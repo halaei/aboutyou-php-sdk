@@ -1,28 +1,36 @@
 <?php
 namespace Collins\ShopApi\Model;
 
+use Collins\ShopApi\Factory\ModelFactoryInterface;
+
 /**
  *
  */
-class CategoriesResult extends AbstractModel implements \IteratorAggregate, \ArrayAccess, \Countable
+class CategoriesResult implements \IteratorAggregate, \ArrayAccess, \Countable
 {
     /** @var Category[] */
     protected $categories = array();
 
     protected $categoriesNotFound = array();
 
-    public function __construct($jsonObject, $orderByIds = null)
+    protected function __construct()
     {
-        $this->fromJson($jsonObject, $orderByIds);
     }
 
-    public function fromJson($jsonObject, $orderByIds = null)
+    /**
+     * @param $jsonObject
+     * @param null $orderByIds
+     * @param ModelFactoryInterface $factory
+     *
+     * @return static
+     */
+    public static function createFromJson($jsonObject, $orderByIds = null, ModelFactoryInterface $factory)
     {
+        $categoriesResult = new static();
+
         if ($orderByIds === null) {
             $orderByIds = array_keys(get_object_vars($jsonObject));
         }
-
-        $factory = $this->getModelFactory();
 
         foreach ($orderByIds as $id) {
             if (!isset($jsonObject->$id) ) {
@@ -31,11 +39,13 @@ class CategoriesResult extends AbstractModel implements \IteratorAggregate, \Arr
 
             $jsonCategory = $jsonObject->$id;
             if (isset($jsonCategory->error_code)) {
-                $this->categoriesNotFound[] = $id;
+                $categoriesResult->categoriesNotFound[] = $id;
             } else {
-                $this->categories[$id] = $factory->createCategory($jsonCategory);
+                $categoriesResult->categories[$id] = $factory->createCategory($jsonCategory);
             }
         }
+
+        return $categoriesResult;
     }
 
     /**

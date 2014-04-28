@@ -8,7 +8,7 @@ namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi;
 
-class CategoryTestAbstract extends AbstractShopApiTest
+class CategoryTest extends AbstractShopApiTest
 {
     /**
      * @var $category \Collins\ShopApi\Model\Category
@@ -17,10 +17,30 @@ class CategoryTestAbstract extends AbstractShopApiTest
 
     public function setUp()
     {
-        $this->getShopApiWithResult(''); // Init DefaultModelFactory
+        $shopApi = $this->getShopApiWithResult(''); // Init DefaultModelFactory
         $json = json_decode(file_get_contents(__DIR__ . '/testData/category-tree.json'));
-        $this->category = new \Collins\ShopApi\Model\Category($json[0]->category_tree[1]);
+        $this->category = \Collins\ShopApi\Model\Category::createFromJson($json[0]->category_tree[1], $shopApi->getResultFactory());
     }
+    
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFetchCategoryTreeWithDepthGreaterThan10()
+    {
+        $shopApi = $this->getShopApiWithResult('category-tree.json');
+        
+        $shopApi->fetchCategoryTree(1000);
+    }
+    
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFetchCategoryTreeWithDepthLessThanMiuns1()
+    {
+        $shopApi = $this->getShopApiWithResult('category-tree.json');
+        
+        $shopApi->fetchCategoryTree(-1000);
+    }         
 
     /**
      *
@@ -28,6 +48,7 @@ class CategoryTestAbstract extends AbstractShopApiTest
     public function testBreadcrumb()
     {
         $breadcrumb = $this->category->getBreadcrumb();
+//        echo '<pre>', __LINE__, ') ', __METHOD__, ': <b>$breadcrumb</b>=', var_export($breadcrumb), '</pre>', PHP_EOL;
         $this->assertCount(1, $breadcrumb);
         $this->assertEquals(200, $breadcrumb[0]->getId());
 

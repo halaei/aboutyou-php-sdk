@@ -6,11 +6,14 @@
 
 namespace Collins\ShopApi\Model;
 
+use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Model\ProductSearchResult\FacetCounts;
 use Collins\ShopApi\Model\ProductSearchResult\PriceRange;
 use Collins\ShopApi\Model\ProductSearchResult\SaleCounts;
+use Collins\ShopApi;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
-class ProductSearchResult extends AbstractModel
+class ProductSearchResult
 {
     /** @var Product[] */
     protected $products;
@@ -31,7 +34,7 @@ class ProductSearchResult extends AbstractModel
     protected $facets;
 
     /** @var Category[] */
-    protected $categories;
+    protected $categories = array();
 
     /**
      * @var array
@@ -39,26 +42,32 @@ class ProductSearchResult extends AbstractModel
      */
     protected $rawFacets;
 
-    public function __construct($jsonObject)
+    protected function __construct()
     {
         $this->products = array();
-        $this->fromJson($jsonObject);
     }
 
-    public function fromJson(\stdClass $jsonObject)
+    /**
+     * @param \stdClass $jsonObject
+     * @param ModelFactoryInterface $factory
+     *
+     * @return static
+     */
+    public static function createFromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
-        // workaround for SHOPAPI-278
-        $this->pageHash = isset($jsonObject->pageHash) ? $jsonObject->pageHash : null;
-        $this->productCount = $jsonObject->product_count;
-        $this->rawFacets = $jsonObject->facets;
+        $productSearchResult = new static();
 
-        $factory = $this->getModelFactory();
+        $productSearchResult->pageHash = $jsonObject->pageHash;
+        $productSearchResult->productCount = $jsonObject->product_count;
+        $productSearchResult->rawFacets = $jsonObject->facets;
 
         foreach ($jsonObject->products as $key => $jsonProduct) {
-            $this->products[$key] = $factory->createProduct($jsonProduct);
+            $productSearchResult->products[$key] = $factory->createProduct($jsonProduct);
         }
 
-        $this->parseFacets($jsonObject->facets);
+        $productSearchResult->parseFacets($jsonObject->facets, $factory);
+
+        return $productSearchResult;
     }
 
     /**
@@ -77,10 +86,8 @@ class ProductSearchResult extends AbstractModel
         return $this->products;
     }
 
-    protected function parseFacets($jsonObject)
+    protected function parseFacets($jsonObject, ModelFactoryInterface $factory)
     {
-        $factory = $this->getModelFactory();
-
         if (isset($jsonObject->categories)) {
             $this->categories = $factory->createCategoriesFacets($jsonObject->categories);
             unset($jsonObject->categories);
@@ -116,6 +123,14 @@ class ProductSearchResult extends AbstractModel
     }
 
     /**
+     * @return ProductSearchResult\FacetCounts[]
+     */
+    public function getFacets()
+    {
+        return $this->facets;
+    }
+
+    /**
      * @return PriceRange[]
      */
     public function getPriceRanges()
@@ -144,6 +159,7 @@ class ProductSearchResult extends AbstractModel
     {
         if (empty($this->priceRanges)) return null;
 
+        $maxPrice = 0;
         foreach ($this->priceRanges as $priceRange) {
             if (!$priceRange->getMax()) break;
             $maxPrice = $priceRange->getMax();

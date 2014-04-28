@@ -31,6 +31,18 @@ class SaleCounts extends TermsCounts
         return $this->productCountNotInSale;
     }
 
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return static
+     */
+    public static function createFromJson(\stdClass $jsonObject)
+    {
+        $self = new static($jsonObject->total, $jsonObject->other, $jsonObject->missing);
+        $self->parseTerms($jsonObject->terms);
+
+        return $self;
+    }
 
     /**
      * {@inheritdoc}

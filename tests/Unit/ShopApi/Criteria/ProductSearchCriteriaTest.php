@@ -12,6 +12,7 @@ use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Model\FacetGroup;
 use Collins\ShopApi\Model\Facet;
 use Collins\ShopApi\Model\FacetGroupSet;
+use Collins\ShopApi\Model\Product;
 
 class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
 {
@@ -34,7 +35,7 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
 
         $criteria = $this->getCriteria()
             ->boostProducts(array(1,2,3));
-        $this->assertEquals('{"session_id":"my","result":{"boost":[1,2,3]}}', json_encode($criteria->toArray()));
+        $this->assertEquals('{"session_id":"my","result":{"boosts":[1,2,3]}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
             ->selectCategories();
@@ -73,7 +74,10 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
 
         $criteria = $this->getCriteria()
             ->selectProductFields(array(ProductFields::BRAND, ProductFields::IS_ACTIVE));
-        $this->assertEquals('{"session_id":"my","result":{"fields":["brand_id","active"]}}', json_encode($criteria->toArray()));
+        $this->assertEquals('{"session_id":"my","result":{"fields":["brand_id","active","attributes_merged"]}}', json_encode($criteria->toArray()));
+        $criteria = $this->getCriteria()
+            ->selectProductFields(array(ProductFields::BRAND, ProductFields::ATTRIBUTES_MERGED, ProductFields::IS_ACTIVE));
+        $this->assertEquals('{"session_id":"my","result":{"fields":["brand_id","attributes_merged","active"]}}', json_encode($criteria->toArray()));
 
         $criteria = new ProductSearchCriteria('12345');
         $this->assertEquals(array('session_id' => '12345'), $criteria->toArray());
@@ -94,6 +98,9 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
         $this->assertEquals(array('session_id' => '12345', 'filter' => array('categories' => array(789, 456, 123))), $criteria->toArray());
         $this->assertEquals('{"session_id":"12345","filter":{"categories":[789,456,123]}}', json_encode($criteria->toArray()));
         $this->assertEquals(array(789, 456, 123), $criteria->getCategoryFilter());
+        $criteria->filterByCategoryIds(array(123, 456, 123, 789));
+        $this->assertEquals(array('session_id' => '12345', 'filter' => array('categories' => array(123, 456, 789))), $criteria->toArray());
+        $this->assertEquals('{"session_id":"12345","filter":{"categories":[123,456,789]}}', json_encode($criteria->toArray()));
 
         $criteria = ProductSearchCriteria::create('12345')
             ->filterByPriceRange(123);
@@ -120,6 +127,10 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
         $this->assertEquals('word1 word2', $criteria->getSearchwordFilter());
 
         $criteria = ProductSearchCriteria::create('12345')
+            ->boostProducts(array(123,"456",123,789));
+        $this->assertEquals('{"session_id":"12345","result":{"boosts":[123,456,789]}}', json_encode($criteria->toArray()));
+
+        $criteria = ProductSearchCriteria::create('12345')
             ->filterBySearchword('word')
             ->filterBySale(null);
         $this->assertEquals(array('session_id' => '12345', 'filter' => array('searchword' => 'word', 'sale' => null)), $criteria->toArray());
@@ -136,6 +147,9 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
         $this->assertEquals('{"session_id":"12345","filter":{"facets":{"2":[123,456]}}}', json_encode($criteria->toArray()));
         $criteria->filterByFacetIds(array(1 => array(123)), true);
         $this->assertEquals('{"session_id":"12345","filter":{"facets":{"2":[123,456],"1":[123]}}}', json_encode($criteria->toArray()));
+        $criteria->filterByFacetIds(array(2 => array(789,123)), true);
+        $criteria->filterByFacetIds(array(2 => array(789)), true);
+        $this->assertEquals('{"session_id":"12345","filter":{"facets":{"2":[123,456,789],"1":[123]}}}', json_encode($criteria->toArray()));
 
         $criteria = ProductSearchCriteria::create('12345')
             ->filterByFacetGroupSet(new FacetGroupSet(array(0 => array(264))));

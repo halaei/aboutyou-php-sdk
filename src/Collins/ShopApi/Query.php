@@ -8,6 +8,8 @@ namespace Collins\ShopApi;
 
 use Collins\ShopApi\Exception\UnexpectedResultException;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Query extends QueryBuilder
 {
@@ -17,14 +19,19 @@ class Query extends QueryBuilder
     /** @var ModelFactoryInterface */
     protected $factory;
 
+    /** @var EventDispatcher */
+    protected $eventDispatcher;
+
     /**
      * @param ShopApiClient       $client
      * @param ModelFactoryInterface $factory
+     * @param EventDispatcher $eventDispatcher
      */
-    public function __construct(ShopApiClient $client, ModelFactoryInterface $factory)
+    public function __construct(ShopApiClient $client, ModelFactoryInterface $factory, EventDispatcher $eventDispatcher)
     {
-        $this->client  = $client;
-        $this->factory = $factory;
+        $this->client          = $client;
+        $this->factory         = $factory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -40,11 +47,11 @@ class Query extends QueryBuilder
 
         $queryString = $this->getQueryString();
 
-        $response   = $this->client->request($queryString);
+        $response = $this->client->request($queryString);
 
         $jsonResponse = json_decode($response->getBody(true));
 
-        return $this->parseResult($jsonResponse);
+        return $this->parseResult($jsonResponse, count($this->query) > 1);
     }
 
     /**
@@ -55,6 +62,7 @@ class Query extends QueryBuilder
     public function executeSingle()
     {
         $result = $this->execute();
+
         return reset($result);
     }
 
@@ -65,6 +73,7 @@ class Query extends QueryBuilder
         'category_tree'  => 'createCategoryTree',
         'facets'         => 'createFacetsList',
         'facet'          => 'createFacetList',
+        'facet_types'    => 'createFacetTypes',
         'products'       => 'createProductsResult',
         'products_eans'  => 'createProductsEansResult',
         'product_search' => 'createProductSearchResult',
@@ -78,12 +87,13 @@ class Query extends QueryBuilder
      * returns an array of parsed results
      *
      * @param array $jsonResponse the response body as json array
+     * @param bool $isMultiRequest
      *
      * @return array
      *
      * @throws UnexpectedResultException
      */
-    protected function parseResult($jsonResponse)
+    protected function parseResult($jsonResponse, $isMultiRequest=true)
     {
         if ($jsonResponse === false ||
             !is_array($jsonResponse) ||
@@ -101,34 +111,32 @@ class Query extends QueryBuilder
             $queryKey       = key($currentQuery);
 
             if ($resultKey !== $queryKey) {
-                throw new UnexpectedResultException('result ' . $queryKey . ' expected, but '. $resultKey . ' given on position ' . $index);
+                throw new UnexpectedResultException(
+                    'result ' . $queryKey . ' expected, but '. $resultKey . ' given on position ' . $index .
+                    ' - query: ' . json_encode(array($currentQuery))
+                );
             }
-
-            if (isset($jsonObject->error_code)) {
-                $resultKeyClass = preg_replace('/[^a-z]+/i', '', $resultKey); 
-                $resultKeyClass = ucfirst(strtolower($resultKeyClass));
-                $resultKeyClass .= 'ResultException';
-                
-                $namespace = 'Collins\\ShopApi\\Exception\\';
-                $class = $namespace.'ResultException';
-                if(class_exists($namespace.$resultKeyClass)) {
-                    $class = $namespace.$resultKeyClass;
-                }
-                $message = isset($jsonObject->error_message) ? implode(', ',$jsonObject->error_message) : '';
-                $message .= PHP_EOL.PHP_EOL;
-                $message .= 'Query was: '.json_encode($this->query);
-                $message = trim($message);
-                    
-                throw new $class($message, $jsonObject->error_code);
-            }
-
             if (!isset($this->mapping[$resultKey])) {
                 throw new UnexpectedResultException('internal error, '. $resultKey . ' is unknown result');
             }
 
             $factory = $this->factory;
+            
+            if (isset($jsonObject->error_code)) {
+                $result = $factory->preHandleError($jsonObject, $resultKey, $isMultiRequest);
+                if ($result !== false) {
+                    $results[$resultKey] = $result;
+                    continue;
+                }
+            }
+
+            $query = $currentQuery[$queryKey];
+
+            $event = new GenericEvent($jsonObject, array('result' => $resultKey, 'query' => $query));
+            $this->eventDispatcher->dispatch('collins.shop_api.' . $resultKey . '_result.create_model.before', $event);
+
             $method  = $this->mapping[$resultKey];
-            $results[$resultKey] = $factory->$method($jsonObject, $currentQuery[$queryKey]);
+            $results[$resultKey] = $factory->$method($jsonObject, $query);
         }
 
         return $results;

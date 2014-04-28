@@ -6,26 +6,37 @@
 
 namespace Collins\ShopApi\Model;
 
+use Collins\ShopApi\Factory\ModelFactoryInterface;
+use Collins\ShopApi;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 class ProductsResult extends AbstractProductsResult
 {
     protected $productsNotFound = array();
 
-    public function fromJson(\stdClass $jsonObject)
+    /**
+     * @param \stdClass $jsonObject
+     * @param ModelFactoryInterface $factory
+     *
+     * @return static
+     */
+    public static function createFromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
-        $this->pageHash = isset($jsonObject->pageHash) ? $jsonObject->pageHash : null;
+        $productsResult = new static();
 
-        $factory = $this->getModelFactory();
+        $productsResult->pageHash = isset($jsonObject->pageHash) ? $jsonObject->pageHash : null;
 
         if (isset($jsonObject->ids)) {
             foreach ($jsonObject->ids as $key => $jsonProduct) {
                 if (isset($jsonProduct->error_code)) {
-                    $this->productsNotFound[] = $key;
+                    $productsResult->productsNotFound[] = $key;
                     continue;
                 }
-                $this->products[$key] = $factory->createProduct($jsonProduct);
+                $productsResult->products[$key] = $factory->createProduct($jsonProduct);
             }
         }
+
+        return $productsResult;
     }
 
     /**

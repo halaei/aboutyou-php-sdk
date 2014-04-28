@@ -1,0 +1,58 @@
+[
+    {
+        "facets": {
+        "facet": [
+            {
+                "facet_id": 121,
+                "options": [
+                    {
+                        "key": "logo_extension",
+                        "value": "png"
+                    }
+                ],
+                "id": 0,
+                "name": "BEST CONNECTION",
+                "group_name": "brand"
+            },
+            {
+                "facet_id": 1122,
+                "options": [
+                    {
+                        "key": "logo_extension",
+                        "value": "png"
+                    }
+                ],
+                "id": 0,
+                "name": "JACK & JONES",
+                "group_name": "brand"
+            },
+            {
+                "facet_id": 266,
+                "options": [
+                    {
+                        "key": "logo_extension",
+                        "value": "png"
+                    }
+                ],
+                "id": 0,
+                "name": "LASCANA",
+                "group_name": "brand"
+            },
+            {
+                "name": "Blau",
+                "facet_id": 1,
+                "id": 1,
+                "value": "blau",
+                "group_name": "color"
+            },
+            {
+                "name": "Schwarz",
+                "facet_id": 11,
+                "id": 1,
+                "value": "schwarz",
+                "group_name": "color"
+            }
+        ]
+        }
+    }
+]

@@ -6,7 +6,6 @@
 
 namespace Collins\ShopApi\Criteria;
 
-use Collins\ShopApi\Exception\InvalidParameterException;
 use Collins\ShopApi\Model\FacetGetGroupInterface;
 use Collins\ShopApi\Model\FacetGroup;
 use Collins\ShopApi\Model\FacetGroupSet;
@@ -145,7 +144,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         if ($append && isset($this->filter[self::FILTER_CATEGORY_IDS])) {
             $categoryIds = array_merge($this->filter[self::FILTER_CATEGORY_IDS], $categoryIds);
         }
-        $categoryIds = array_unique($categoryIds);
+        $categoryIds = array_values(array_unique($categoryIds));
 
         return $this->filterBy(self::FILTER_CATEGORY_IDS, $categoryIds);
     }
@@ -317,13 +316,13 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return $this
      *
-     * @throws \Collins\ShopApi\Exception\InvalidParameterException
+     * @throws \InvalidArgumentException
      */
     public function selectFacetsByGroupId($groupId, $limit)
     {
         $this->checkFacetLimit($limit);
         if (!is_long($groupId) && !ctype_digit($groupId)) {
-            throw new InvalidParameterException();
+            throw new \InvalidArgumentException();
         }
 
         if (!isset($this->result['facets'])) {
@@ -364,10 +363,10 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     protected function checkFacetLimit($limit)
     {
         if (!is_long($limit)) {
-            throw new InvalidParameterException('limit must be an integer');
+            throw new \InvalidArgumentException('limit must be an integer');
         }
         if ($limit < -1) {
-            throw new InvalidParameterException('limit must be positive or -1 for unlimited facets');
+            throw new \InvalidArgumentException('limit must be positive or -1 for unlimited facets');
         }
     }
 
@@ -395,19 +394,15 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     public function boostProducts(array $ids)
     {
         $ids = array_map(function($val) {
-            if($val instanceof Product) {
+            if ($val instanceof Product) {
                 return $val->getId();
             }
 
             return intval($val);
         }, $ids);
 
-        if (empty($this->result['boost'])) {
-            unset($this->result['boost']);
-        }
-
-        $ids = array_unique(array_map('intval', $ids));
-        $this->result['boost'] = $ids;
+        $ids = array_values(array_unique($ids));
+        $this->result['boosts'] = $ids;
 
         return $this;
     }
@@ -419,6 +414,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      */
     public function selectProductFields(array $fields)
     {
+        // attributes_merged is required by (pre)fetching facets
+        $fields[] = ProductFields::ATTRIBUTES_MERGED;
+
         $this->result['fields'] = array_unique($fields);
 
         return $this;

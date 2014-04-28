@@ -7,12 +7,17 @@
 namespace Collins\ShopApi\Model;
 
 
-class Image extends AbstractModel
+use Collins\ShopApi;
+use Symfony\Component\EventDispatcher\GenericEvent;
+
+class Image
 {
     const MIN_WIDTH  = 50;
     const MIN_HEIGHT = 50;
     const MAX_WIDTH  = 1400;
     const MAX_HEIGHT = 2000;
+
+    private static $baseUrl = '';
 
     /** @var string */
     protected $hash;
@@ -32,20 +37,28 @@ class Image extends AbstractModel
     /** @var array|null */
     protected $tags;
 
-    public function __construct($jsonObject)
+    protected function __construct()
     {
-        $this->fromJson($jsonObject);
     }
 
-    public function fromJson($jsonObject)
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return static
+     */
+    public static function createFromJson(\stdClass $jsonObject)
     {
-        $this->hash     = $jsonObject->hash;
-        $this->filesize = (int)$jsonObject->size;
-        $this->ext      = $jsonObject->ext;
-        $this->mimetype = $jsonObject->mime;
-        $this->tags     = isset($jsonObject->tags) ? $jsonObject->tags : null;
+        $image = new static();
 
-        $this->imageSize = new ImageSize((int)$jsonObject->image->width, (int)$jsonObject->image->height);
+        $image->hash     = $jsonObject->hash;
+        $image->filesize = (int)$jsonObject->size;
+        $image->ext      = $jsonObject->ext;
+        $image->mimetype = $jsonObject->mime;
+        $image->tags     = isset($jsonObject->tags) ? $jsonObject->tags : null;
+
+        $image->imageSize = new ImageSize((int)$jsonObject->image->width, (int)$jsonObject->image->height);
+
+        return $image;
     }
 
     /**
@@ -98,9 +111,12 @@ class Image extends AbstractModel
 
     public function getBaseUrl()
     {
-        $api = $this->getShopApi();
+        return self::$baseUrl;
+    }
 
-        return $api ? $api->getBaseImageUrl() : '';
+    public static function setBaseUrl($baseUrl = '')
+    {
+        self::$baseUrl = $baseUrl ?: '';
     }
 
     /**

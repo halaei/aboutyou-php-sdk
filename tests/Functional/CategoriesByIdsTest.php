@@ -6,8 +6,50 @@ use Collins\ShopApi;
 /**
  *
  */
-class CategoriesByIdsTestAbstract extends AbstractShopApiTest
+class CategoriesByIdsTest extends AbstractShopApiTest
 {
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFetchCategoriesWithWrongIds()
+    {
+        $shopApi = $this->getShopApiWithResultFile('category.json');
+
+        $categoriesResult = $shopApi->fetchCategoriesByIds(array('kfd', false,  null, 212312, ));        
+    }
+    
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFetchCategoriesWithStringIdsAndFalse()
+    {
+        $shopApi = $this->getShopApiWithResultFile('category.json');
+
+        $categoriesResult = $shopApi->fetchCategoriesByIds(array('1', '2', false));        
+    }   
+    
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFetchCategoriesWithNegativeIds()
+    {
+        $shopApi = $this->getShopApiWithResultFile('category.json');
+
+        $categoriesResult = $shopApi->fetchCategoriesByIds(array(-1, -2, -4));        
+    }     
+    
+    public function testFetchCategoriesWithStringIds()
+    {
+        $categoryIds = array('16080', '16138', '123');
+        $shopApi = $this->getShopApiWithResultFile('category.json');
+
+        $categoriesResult = $shopApi->fetchCategoriesByIds($categoryIds);
+
+        $categories = $categoriesResult->getCategories();
+        
+        $this->assertCount(2, $categories);        
+    }     
+    
     public function testFetchCategories()
     {
         $categoryIds = array(16080, 16138, 123);

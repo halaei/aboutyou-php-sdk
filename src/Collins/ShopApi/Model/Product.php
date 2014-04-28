@@ -8,6 +8,8 @@ namespace Collins\ShopApi\Model;
 
 use Collins\ShopApi;
 use Collins\ShopApi\Exception\MalformedJsonException;
+use Collins\ShopApi\Factory\ModelFactoryInterface;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Product extends AbstractModel
 {
@@ -64,46 +66,61 @@ class Product extends AbstractModel
     protected $facetGroups;
 
     /** @var Category[] */
-    protected $categories;
-    
-    /** @var Category[] */
-    protected $activeCategories;
+    protected $rootCategories;
 
-    public function __construct($jsonObject)
+    /** @var Category[] */
+    protected $activeRootCategories;
+
+    /** @var Category[] */
+    protected $leafCategories;
+
+    /** @var Category[] */
+    protected $activeLeafCategories;
+
+    protected function __construct()
     {
-        $this->fromJson($jsonObject);
     }
 
-    public function fromJson($jsonObject)
+    /**
+     * @param $jsonObject
+     * @param ModelFactoryInterface $factory
+     *
+     * @return static
+     *
+     * @throws \Collins\ShopApi\Exception\MalformedJsonException
+     */
+    public static function createFromJson($jsonObject, ModelFactoryInterface $factory, $appId)
     {
+        $product = new static($jsonObject, $factory);
+
         // these are required fields
         if (!isset($jsonObject->id) || !isset($jsonObject->name)) {
             throw new MalformedJsonException();
         }
-        $this->id   = $jsonObject->id;
-        $this->name = $jsonObject->name;
 
-        $this->isSale            = isset($jsonObject->sale) ? $jsonObject->sale : false;
-        $this->descriptionShort  = isset($jsonObject->description_short) ? $jsonObject->description_short : '';
-        $this->descriptionLong   = isset($jsonObject->description_long) ? $jsonObject->description_long : '';
-        $this->isActive          = isset($jsonObject->active) ? $jsonObject->active : true;
-        $this->brandId           = isset($jsonObject->brand_id) ? $jsonObject->brand_id : null;
+        $product->id   = $jsonObject->id;
+        $product->name = $jsonObject->name;
 
-        $this->minPrice         = isset($jsonObject->min_price) ? $jsonObject->min_price : null;
-        $this->maxPrice         = isset($jsonObject->max_price) ? $jsonObject->max_price : null;
+        $product->isSale            = isset($jsonObject->sale) ? $jsonObject->sale : false;
+        $product->descriptionShort  = isset($jsonObject->description_short) ? $jsonObject->description_short : '';
+        $product->descriptionLong   = isset($jsonObject->description_long) ? $jsonObject->description_long : '';
+        $product->isActive          = isset($jsonObject->active) ? $jsonObject->active : true;
+        $product->brandId           = isset($jsonObject->brand_id) ? $jsonObject->brand_id : null;
 
-        if (isset($jsonObject->default_image) || isset($jsonObject->default_variant) || isset($jsonObject->variants) || !empty($jsonObject->styles)) {
-            $factory = $this->getModelFactory();
+        $product->minPrice         = isset($jsonObject->min_price) ? $jsonObject->min_price : null;
+        $product->maxPrice         = isset($jsonObject->max_price) ? $jsonObject->max_price : null;
 
-            $this->defaultImage     = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
-            $this->defaultVariant   = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant) : null;
+        $product->defaultImage     = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
+        $product->defaultVariant   = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant) : null;
+        $product->variants         = self::parseVariants($jsonObject, $factory);
+        $product->styles           = self::parseStyles($jsonObject, $factory);
 
-            $this->variants         = self::parseVariants($jsonObject, $factory);
-            $this->styles           = self::parseStyles($jsonObject, $factory);
-        }
-        $this->categoryIdPaths  = self::parseCategoryIdPaths($jsonObject);
+        $key = 'categories.' . $appId;
+        $product->categoryIdPaths  = isset($jsonObject->$key) ? $jsonObject->$key : array();
 
-        $this->facetIds     = self::parseFacetIds($jsonObject);
+        $product->facetIds     = self::parseFacetIds($jsonObject);
+
+        return $product;
     }
 
     protected static function parseVariants($jsonObject, ShopApi\Factory\ModelFactoryInterface $factory)
@@ -144,20 +161,69 @@ class Product extends AbstractModel
         return $paths;
     }
 
-    protected static function parseFacetIds($jsonObject)
+    public static function parseFacetIds($jsonObject)
+    {
+        $ids = self::parseFacetIdsInAttributesMerged($jsonObject);
+        if ($ids === null) {
+            $ids = self::parseFacetIdsInVariants($jsonObject);
+        }
+        if ($ids === null) {
+            $ids = self::parseFacetIdsInBrand($jsonObject);
+        }
+
+        return ($ids !== null) ? $ids : array();
+    }
+
+    public static function parseFacetIdsInAttributesMerged($jsonObject)
+    {
+        if (empty($jsonObject->attributes_merged)) {
+            return null;
+        }
+
+        return self::parseAttributesJson($jsonObject->attributes_merged);
+    }
+
+    public static function parseAttributesJson($AttributesJsonObject)
     {
         $ids = array();
-        if (!empty($jsonObject->attributes_merged)) {
-            foreach ($jsonObject->attributes_merged as $group => $facetIds) {
-                $gid = substr($group, 11); // rm prefix "attributes"
 
-                // TODO: Remove Workaround for Ticket ???
-                settype($facetIds, 'array');
-                $ids[$gid] = $facetIds;
-            }
+        foreach ($AttributesJsonObject as $group => $facetIds) {
+            $gid = substr($group, 11); // rm prefix "attributes"
+
+            // TODO: Remove Workaround for Ticket ???
+            settype($facetIds, 'array');
+            $ids[$gid] = $facetIds;
         }
 
         return $ids;
+    }
+
+    public static function parseFacetIdsInVariants($jsonObject)
+    {
+        if (isset($jsonObject->variants)) {
+            $ids = array();
+            foreach ($jsonObject->variants as $variant) {
+                $ids[] = self::parseAttributesJson($variant->attributes);
+            }
+            $ids = FacetGroupSet::mergeFacetIds($ids);
+
+            return $ids;
+        } else if (isset($jsonObject->default_variant)) {
+            $ids = self::parseAttributesJson($jsonObject->default_variant->attributes);
+
+            return $ids;
+        }
+
+        return null;
+    }
+
+    public static function parseFacetIdsInBrand($jsonObject)
+    {
+        if (!isset($jsonObject->brand_id)) {
+            return null;
+        }
+
+        return array('0' => array($jsonObject->brand_id));
     }
 
     /**
@@ -270,17 +336,46 @@ class Product extends AbstractModel
 
     /**
      * Returns the first active category and, if non active, then it return the first category
-     
+
      * @param bool $activeOnly return only categories that are active
+     *
      * @return Category|null
      */
     public function getCategory($active = true)
     {
+        if (empty($this->categoryIdPaths)) {
+            return;
+        }
+
         $categories = $this->getLeafCategories($active);
 
-        if (count($categories)) {
-            return reset($categories);
+        return reset($categories);
+    }
 
+    /**
+     * @return Category|null
+     */
+    public function getCategoryWithLongestActivePath()
+    {
+        if (empty($this->categoryIdPaths)) {
+            return;
+        }
+
+        $this->fetchAndParseCategories();
+
+        // get reverse sorted category pathes
+        $pathLengths = array_map('count', $this->categoryIdPaths);
+        arsort($pathLengths);
+
+        foreach ($pathLengths as $index => $pathLength) {
+            $categoryPath = $this->categoryIdPaths[$index];
+            $leafId = end($categoryPath);
+            if (!isset($this->activeLeafCategories[$leafId])) continue;
+            $category = $this->activeLeafCategories[$leafId];
+
+            if ($category->isPathActive()) {
+                return $category;
+            }
         }
 
         return null;
@@ -292,69 +387,86 @@ class Product extends AbstractModel
      * [Absatzschuhe, Stiefelleten] will be returned
      *
      * @param bool $activeOnly return only categories that are active
+     *
      * @return Category[]
      */
-    public function getLeafCategories($activeOnly = true) {
-        $categories = $this->getCategories($activeOnly);
-        
-        $leafCategories = array();
+    public function getLeafCategories($activeOnly = true)
+    {
+        $this->fetchAndParseCategories();
 
-        $c = 0;
-        while(count($categories) && $c<100) {
-            $c++;
-            $category = array_shift($categories);
-            
-            if($category->isActive() || ! $activeOnly) {
-                $subCategories = $category->getSubCategories();
+        return array_values($activeOnly ?
+            $this->activeLeafCategories :
+            $this->leafCategories
+        );
+    }
 
-                if(!count($subCategories) && !isset($leafCategories[$category->getId()])) {
-                    $leafCategories[$category->getId()] = $category;
-                }
-                else {
-                    $categories = array_merge($categories, $subCategories);
-                }
-            } 
-            
-        }
-
-        return array_values($leafCategories);
+    public function getCategories($activeOnly = true)
+    {
+        return $this->getRootCategories($activeOnly);
     }
 
     /**
      * @param bool $activeOnly  return only active categories
+     *
      * @return Category[]
      */
-    public function getCategories($activeOnly = true)
+    public function getRootCategories($activeOnly = true)
     {
-        if (!$this->categories) {
-            // put all category ids in an array to fetch by ids
-            $flattened = array();
-            foreach($this->categoryIdPaths as $path) {
-                foreach($path as $categoryId) {
-                    $flattened[] = $categoryId;
-                }
-            }
+        $this->fetchAndParseCategories();
 
-            // fetch all necessary categories from API
-            $flattenCategories = $this->getShopApi()->fetchCategoriesByIds($flattened)->getCategories();
-            $flattenActiveCategories = array();
-            
-            foreach($flattenCategories as $category) {
-                if($category->isActive()) {
-                    $flattenActiveCategories[] = clone $category;
-                }
-            }
-
-            $this->categories = Category::buildTree($flattenCategories);
-            $this->activeCategories = Category::buildTree($flattenActiveCategories);
-        }
-        
-        if($activeOnly) {
-            return $this->activeCategories;
-        }
-
-        return $this->categories;
+        return array_values($activeOnly ?
+            $this->activeRootCategories :
+            $this->rootCategories
+        );
     }
+
+    protected function fetchAndParseCategories()
+    {
+        if ($this->rootCategories !== null) {
+            return;
+        }
+
+        $this->rootCategories = array();
+        $this->activeRootCategories = array();
+        $this->leafCategories = array();
+        $this->activeLeafCategories = array();
+
+        if (empty($this->categoryIdPaths)) {
+            return;
+        }
+
+        // put all category ids in an array to fetch by ids
+        $categoryIds = array_values(array_unique(
+            call_user_func_array('array_merge', $this->categoryIdPaths)
+        ));
+
+        // fetch all necessary categories from API
+        $flattenCategories = $this->getShopApi()->fetchCategoriesByIds($categoryIds)->getCategories();
+
+        foreach ($flattenCategories as $category) {
+            $parentId = $category->getParentId();
+            if ($parentId !== null && isset($flattenCategories[$parentId])) {
+                $category->setParent($flattenCategories[$parentId], true);
+            }
+        }
+
+        foreach ($this->categoryIdPaths as $categoryIdPath) {
+            $rootId = $categoryIdPath[0];
+            $rootCategory = $flattenCategories[$rootId];
+            $this->rootCategories[$rootId] = $rootCategory;
+            if ($rootCategory->isActive()) {
+                $this->activeRootCategories[$rootId] = $rootCategory;
+            }
+
+            $leafId = end($categoryIdPath);
+            $leafCategory = $flattenCategories[$leafId];
+            $this->leafCategories[$leafId] = $leafCategory;
+            if ($leafCategory->isActive()) {
+                $this->activeLeafCategories[$leafId] = $leafCategory;
+            }
+        }
+    }
+
 
     /**
      * Get facets of given group id.
@@ -373,7 +485,7 @@ class Product extends AbstractModel
     }
 
     /**
-     * Returns all FacetGroups from all Variants
+     * Returns all unique FacetGroups from all Variants
      *
      * @param integer $groupId
      *
@@ -386,7 +498,57 @@ class Product extends AbstractModel
             $groups = $variant->getFacetGroupSet()->getGroups();
             foreach ($groups as $group) {
                 if ($group->getId() === $groupId) {
-                    $allGroups[] = $group;
+                    $allGroups[$group->getUniqueKey()] = $group;
+                }
+            }
+        }
+
+        return $allGroups;
+    }
+
+    /**
+     * Returns all FacetGroups, which matches the current facet group set
+     * for example:
+     * [['color'] => 'rot'] =>
+     *
+     * @param FacetGroupSet $selectedFacetGroupSet
+     *
+     * @return FacetGroup[][]
+     *
+     * @throws \Collins\ShopApi\Exception\RuntimeException
+     */
+    public function getSelectableFacetGroups(FacetGroupSet $selectedFacetGroupSet)
+    {
+        /** @var FacetGroup[] $allGroups */
+        $allGroups = array();
+        $selectedGroupIds = $selectedFacetGroupSet->getGroupIds();
+
+        foreach ($this->getVariants() as $variant) {
+            $facetGroupSet = $variant->getFacetGroupSet();
+            $ids = $facetGroupSet->getGroupIds();
+
+            if ($facetGroupSet->contains($selectedFacetGroupSet)) {
+                foreach ($ids as $groupId) {
+                    if (in_array($groupId, $selectedGroupIds)) continue;
+
+                    $group = $facetGroupSet->getGroup($groupId);
+                    if ($group === null) {
+                        throw new ShopApi\Exception\RuntimeException('group for id ' . $groupId . ' not found');
+                    }
+                    $allGroups[$groupId][$group->getUniqueKey()] = clone $group;
+                }
+            }
+        }
+
+        foreach ($selectedGroupIds as $groupId) {
+            $ids = $selectedFacetGroupSet->getIds();
+            unset($ids[$groupId]);
+            $myFacetGroupSet = new FacetGroupSet($ids);
+            foreach ($this->getVariants() as $variant) {
+                $facetGroupSet = $variant->getFacetGroupSet();
+                if ($facetGroupSet->contains($myFacetGroupSet)) {
+                    $group = $facetGroupSet->getGroup($groupId);
+                    $allGroups[$groupId][$group->getUniqueKey()] = clone $group;
                 }
             }
         }
@@ -403,7 +565,7 @@ class Product extends AbstractModel
      *
      * @return FacetGroup[]
      */
-    public function getSelectableFacetGroups(FacetGroupSet $selectedFacetGroupSet)
+    public function getExcludedFacetGroups(FacetGroupSet $selectedFacetGroupSet)
     {
         /** @var FacetGroup[] $allGroups */
         $allGroups = array();
@@ -421,6 +583,9 @@ class Product extends AbstractModel
                 if (in_array($groupId, $selectedGroupIds)) continue;
 
                 $group  = $facetGroupSet->getGroup($groupId);
+                if ($group === null) {
+                    throw new ShopApi\Exception\RuntimeException('group for id ' . $groupId . ' not found');
+                }
                 $facets = $group->getFacets();
                 if (empty($facets)) continue;
 
@@ -448,9 +613,7 @@ class Product extends AbstractModel
      */
     public function getBrand()
     {
-        $key = Facet::uniqueKey(ShopApi\Constants::FACET_BRAND, $this->brandId);
-
-        return $this->getFacetGroupSet()->getFacetByKey($key);
+        return $this->getFacetGroupSet()->getFacet(ShopApi\Constants::FACET_BRAND, $this->brandId);
     }
 
     /**

@@ -15,8 +15,8 @@ class ImageTest extends AbstractModelTest
     {
         $jsonObject = $this->getJsonObject('image.json');
 
-        $image = new Image($jsonObject);
-        $this->assertNull($image->getShopApi());
+        $image = Image::createFromJson($jsonObject);
+        $this->assertNotNull($image->getBaseUrl());
 
         $this->assertEquals('hash1', $image->getHash());
         $this->assertEquals('.jpg', $image->getExt());
@@ -29,18 +29,25 @@ class ImageTest extends AbstractModelTest
         $this->assertEquals(1400, $imageSize->getWidth());
         $this->assertEquals(2000, $imageSize->getHeight());
 
+        $image->setBaseUrl();
+        $this->assertStringStartsWith('/hash1', $image->getUrl());
+        $image->setBaseUrl(false);
+        $this->assertStringStartsWith('/hash1', $image->getUrl());
+        $image->setBaseUrl(null);
+        $this->assertStringStartsWith('/hash1', $image->getUrl());
+        $image->setBaseUrl('');
         $this->assertStringStartsWith('/hash1', $image->getUrl());
         $this->assertStringStartsWith('/hash1?width=123&height=456', $image->getUrl(123, 456));
 
-        Image::setShopApi(new ShopApi('appid', 'pw'));
+        $shopApi = new ShopApi('appid', 'pw');
         $this->assertStringStartsWith(ShopApi::IMAGE_URL_LIVE . '/hash1', $image->getUrl());
-        $image->getShopApi()->setBaseImageUrl('http://domain.tld');
+        $shopApi->setBaseImageUrl('http://domain.tld');
         $this->assertStringStartsWith('http://domain.tld/hash1', $image->getUrl());
-        $image->getShopApi()->setBaseImageUrl('http://domain.tld/');
+        $shopApi->setBaseImageUrl('http://domain.tld/');
         $this->assertStringStartsWith('http://domain.tld/hash1', $image->getUrl());
-        $image->getShopApi()->setBaseImageUrl(false);
+        $shopApi->setBaseImageUrl(false);
         $this->assertStringStartsWith('/hash1', $image->getUrl());
-        $image->getShopApi()->setBaseImageUrl(null);
+        $shopApi->setBaseImageUrl(null);
         $this->assertStringStartsWith(ShopApi::IMAGE_URL_LIVE . '/hash1', $image->getUrl());
     }
 }

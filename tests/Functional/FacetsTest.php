@@ -1,7 +1,6 @@
 <?php
 namespace Collins\ShopApi\Test\Functional;
 
-use Collins\Cache\ArrayCache;
 use Collins\ShopApi;
 use Guzzle\Http\Message\Response;
 
@@ -37,33 +36,13 @@ class FacetsTestAbstract extends AbstractShopApiTest
     }
 
     /**
-     * @expectedException \Collins\ShopApi\Exception\InvalidParameterException
+     * @expectedException \InvalidArgumentException
      */
     public function testNotAllowFetchAllFacets()
     {
         $shopApi = $this->getShopApiWithResultFile('facets-206.json');
 
         $shopApi->fetchFacets(array());
-    }
-
-    public function testFacetCaching()
-    {
-        $jsonString = $this->getJsonStringFromFile('facets-206.json');
-        $client = $this->getGuzzleClientCalledOnce($jsonString);
-        $shopApi = new ShopApi('id', 'token');
-
-        $shopApi->getApiClient()->setClient($client);
-
-        $shopApi->setCache(new ArrayCache());
-        $facets = $shopApi->fetchFacets(array(206));
-        $this->assertInternalType('array', $facets);
-
-        $facets = $shopApi->fetchFacets(array(206));
-        $this->assertInternalType('array', $facets);
-
-        $this->markTestIncomplete('TODO: optimize facet caching');
-        $facets = $shopApi->fetchFacets(array(206,0));
-        $this->assertInternalType('array', $facets);
     }
 
     /**

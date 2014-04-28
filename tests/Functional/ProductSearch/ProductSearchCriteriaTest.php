@@ -4,7 +4,7 @@
  * (c) Collins GmbH & Co KG
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace Collins\ShopApi\Test\Functional\ProductSearch;
 
 use Collins\ShopApi;
 use Collins\ShopApi\Criteria\ProductFields;
@@ -16,7 +16,7 @@ use Collins\ShopApi\Criteria\ProductSearchCriteria;
  *
  * @see tests/unit/ShopApi/Criteria/ProductSearchCriteriaTestAbstract.php
  */
-class ProductSearchCriteriaTestAbstract extends AbstractShopApiTest
+class ProductSearchCriteriaTestAbstract extends ShopApi\Test\Functional\AbstractShopApiTest
 {
     public function testGetSearchCriteria()
     {
@@ -38,7 +38,7 @@ class ProductSearchCriteriaTestAbstract extends AbstractShopApiTest
             ->selectCategories(true)
             ->filterByPriceRange(0,1000);
 
-        $expected = '{"session_id":"my session","result":{"fields":["default_image","default_variant"],"sort":{"by":"price","direction":"desc"},"limit":40,"offset":0,"categories":true},"filter":{"prices":{"to":1000}}}';
+        $expected = '{"session_id":"my session","result":{"fields":["default_image","default_variant","attributes_merged"],"sort":{"by":"price","direction":"desc"},"limit":40,"offset":0,"categories":true},"filter":{"prices":{"to":1000}}}';
         $this->assertEquals($expected, json_encode($criteria->toArray()));
     }
 

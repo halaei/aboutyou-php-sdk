@@ -6,6 +6,7 @@
 
 namespace Collins\ShopApi\Model;
 
+use Collins\ShopApi\Factory\ModelFactoryInterface;
 
 class Category extends AbstractModel
 {
@@ -39,37 +40,41 @@ class Category extends AbstractModel
     /** @var integer */
     protected $productCount;
 
-    /**
-     * @param object        $jsonObject  json as object tree
-     * @param Category|null $parent
-     */
-    public function __construct($jsonObject, $parent = null)
+    protected function __construct()
     {
         $this->allSubCategories = array();
         $this->activeSubCategories = array();
-        $this->parent = $parent;
-        $this->fromJson($jsonObject);
     }
 
-    public function fromJson($jsonObject)
+    /**
+     * @param object        $jsonObject  json as object tree
+     * @param ModelFactoryInterface $factory
+     * @param Category|null $parent
+     *
+     * @return static
+     */
+    public static function createFromJson($jsonObject, ModelFactoryInterface $factory, $parent = null)
     {
-        $this->parentId = $jsonObject->parent;
-        $this->id       = $jsonObject->id;
-        $this->name     = $jsonObject->name;
-        $this->isActive = $jsonObject->active;
-        $this->position = $jsonObject->position;
+        $category = new static();
+
+        $category->parent   = $parent;
+        $category->parentId = $jsonObject->parent;
+        $category->id       = $jsonObject->id;
+        $category->name     = $jsonObject->name;
+        $category->isActive = $jsonObject->active;
+        $category->position = $jsonObject->position;
 
         if (isset($jsonObject->sub_categories)) {
-            $factory = $this->getModelFactory();
-
             foreach ($jsonObject->sub_categories as $jsonSubCategory) {
-                $category = $factory->createCategory($jsonSubCategory, $this);
-                $this->allSubCategories[] = $category;
-                if ($category->isActive) {
-                    $this->activeSubCategories[] = $category;
+                $subCategory = $factory->createCategory($jsonSubCategory, $category);
+                $category->allSubCategories[] = $subCategory;
+                if ($subCategory->isActive) {
+                    $category->activeSubCategories[] = $subCategory;
                 }
             }
         }
+
+        return $category;
     }
 
     /**
@@ -86,6 +91,16 @@ class Category extends AbstractModel
     public function isActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPathActive()
+    {
+        $parent = $this->getParent();
+
+        return $this->isActive && ($parent === null || $parent->isPathActive());
     }
 
     /**
@@ -133,18 +148,17 @@ class Category extends AbstractModel
      */
     public function getParent()
     {
-        if($this->parent) {
+        if ($this->parent) {
             return $this->parent;
         }
 
-        if(!$this->getParentId()) {
+        if (!$this->getParentId()) {
             return null;
         }
 
         $parents = $this->getShopApi()->fetchCategoriesByIds(array($this->getParentId()))->getCategories();
-        if(count($parents)) {
-            $array_parents = array_values($parents); 
-            $this->parent = $array_parents[0];
+        if (count($parents)) {
+            $this->parent = reset($parents);
         }
 
         return $this->parent;
@@ -169,7 +183,7 @@ class Category extends AbstractModel
      */
     public function getBreadcrumb()
     {
-        $breadcrumb = $this->parent ? $this->parent->getBreadcrumb() : array();
+        $breadcrumb = $this->getParent() ? $this->getParent()->getBreadcrumb() : array();
         $breadcrumb[] = $this;
 
         return $breadcrumb;
@@ -177,13 +191,22 @@ class Category extends AbstractModel
 
     /**
      * Sets the parent category of this category
-     * @return void
+     *
+     * @param Category $parent
+     * @param bool $doAddChild
      */
-    public function setParent(Category $parent)
+    public function setParent(Category $parent, $doAddChild = false)
     {
         $this->parent = $parent;
+
+        if ($doAddChild) {
+            $parent->addChild($this);
+        }
     }
 
+    /**
+     * @param Category $child
+     */
     public function addChild(Category $child)
     {
         $this->allSubCategories[] = $child;
@@ -193,11 +216,14 @@ class Category extends AbstractModel
         }
     }
 
-    public function setSubCategories($categories)
+    /**
+     * @param Category[] $categories
+     */
+    public function setSubCategories(array $categories)
     {
         $this->allSubCategories = $categories;
 
-        foreach($categories as $category) {
+        foreach ($categories as $category) {
             if($category->isActive()) {
                 $this->activeSubCategories[] = $category;
             }
@@ -209,6 +235,8 @@ class Category extends AbstractModel
      *
      * @param Category[] categories
      * @return array
+     *
+     * @deprecated
      */
     public static function buildTree($categories)
     {
@@ -228,6 +256,8 @@ class Category extends AbstractModel
      * @param Category $category
      * @param array $tree
      * @return bool true if category could be added
+     *
+     * @deprecated
      */
     protected static function addToTree($category, &$tree) {
         $added = false;

@@ -1,16 +1,20 @@
 <?php
 
-namespace Collins\ShopApi\Test\Functional;
+namespace Collins\ShopApi\Test\Functional\ProductSearch;
 
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Model\Product;
 use Collins\ShopApi\Model\ProductSearchResult;
+use Collins\ShopApi\Test\Functional\AbstractShopApiTest;
 
 class ProductSearchTest extends AbstractShopApiTest
 {
     public function testProductSearch()
     {
-        $shopApi = $this->getShopApiWithResultFile('product_search.json');
+        $shopApi = $this->getShopApiWithResultFileAndFacets(
+            'product_search.json',
+            'facet-result.json'
+        );
 
         // get all available products
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
@@ -19,7 +23,10 @@ class ProductSearchTest extends AbstractShopApiTest
 
     public function testProductSearchSort()
     {
-        $shopApi = $this->getShopApiWithResultFile('product_search.json');
+        $shopApi = $this->getShopApiWithResultFileAndFacets(
+            'product_search.json',
+            'facet-result.json'
+        );
 
         // search products and sort
         $criteria = $shopApi->getProductSearchCriteria('12345')
@@ -63,7 +70,10 @@ class ProductSearchTest extends AbstractShopApiTest
 
     public function testProductSearchPagination()
     {
-        $shopApi = $this->getShopApiWithResultFile('product_search.json');
+        $shopApi = $this->getShopApiWithResultFileAndFacets(
+            'product_search.json',
+            'facet-result.json'
+        );
 
         $pagination = array(
             'limit' => 20,
@@ -74,6 +84,44 @@ class ProductSearchTest extends AbstractShopApiTest
         ;
         $products = $shopApi->fetchProductSearch($criteria);
         $this->checkProductSearchResult($products);
+    }
+
+    public function testProductGetEmptyCategoryTree()
+    {
+        $shopApi = $this->getShopApiWithResultFileAndFacets(
+            'product_search.json',
+            'facet-result.json'
+        );
+        
+        $pagination = array(
+            'limit' => 20,
+            'offset' => 21,
+        );
+        $criteria = $shopApi->getProductSearchCriteria('12345')
+            ->setLimit($pagination['limit'], $pagination['offset'])
+        ;
+        $products = $shopApi->fetchProductSearch($criteria);
+        
+        $this->assertInternalType('array', $products->getCategoryTree());
+    }
+    
+    public function testProductGetCategoryGetParent()
+    {
+        $shopApi = $this->getShopApiWithResultFiles(array(
+            'product-search-result-with-product-categories.json',
+            'category-all.json'
+        ));
+
+        // get all available products
+        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $products = $productSearchResult->getProducts();
+
+        $product = $products[0];
+        $category = $product->getCategory();
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category->getParent());
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category->getParent()->getParent());
+        $this->assertNull($category->getParent()->getParent()->getParent());
     }
 
     /***************************************************/
