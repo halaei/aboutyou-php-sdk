@@ -5,12 +5,14 @@ namespace Collins\ShopApi\Test\Live;
 use Collins\ShopApi;
 use Collins\ShopApi\Model\Basket;
 
+
+/**
+ * @group live
+ */
 class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
-    
     /**
      * @expectedException \InvalidArgumentException
-     * @group live
      */
     public function testFetchBasketWithFalseSessionId()
     {
@@ -20,7 +22,6 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
     
     /**
      * @expectedException \InvalidArgumentException
-     * @group live
      */
     public function testFetchBasketWithIntSessionId()
     {
@@ -28,9 +29,6 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $api->fetchBasket(123456);      
     }    
     
-    /**
-     * @group live
-     */
     public function testEmptyBasket()
     {        
         $this->clearBasket();
@@ -44,7 +42,6 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
     }
         
     /**
-     * @group live     
      * @depends testEmptyBasket
      */
     public function testAddProductToBasket()
@@ -55,7 +52,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(2));
         $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(3), 3);
         
-        $set = new Basket\BasketSet("123456", ['image_url' => "http://", 'description' => 'Hallo']);
+        $set = new Basket\BasketSet("123456", array('image_url' => "http://", 'description' => 'Hallo'));
         $item = new Basket\BasketSetItem($this->getVariantId(4));
         
         $set->addItem($item);
@@ -69,29 +66,41 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
     }
     
     /**
-     * @group live     
      * @depends testAddProductToBasket
      */
     public function testRemoveAllProductsInBasket($basket)
     {
         $api = $this->getShopApi(); 
         $basket->deleteAllItems();
+
+        $basket = $api->updateBasket($this->getSessionId(), $basket);
         
-        $result = $api->updateBasket($this->getSessionId(), $basket);
-        
-        $this->assertEquals(0, $result->getTotalAmount());
+        $this->assertEquals(0, $basket->getTotalAmount());
     }
-    
+
     /**
-     * @group live
+     * @depends testRemoveAllProductsInBasket
      */
+    public function testAddItemWithVariantNotFound()
+    {
+        $api = $this->getShopApi();
+
+        $basket = $api->addItemToBasket($this->getSessionId(), 1);
+
+        $this->assertEquals(0, $basket->getTotalAmount());
+        $this->assertTrue($basket->hasErrors());
+        $this->assertCount(0, $basket->getProducts());
+    }
+
     public function testAddOneItemToBasket()
     {
         $api = $this->getShopApi();
         
-        $item = new Basket\BasketItem('1234', $this->getVariantId(1), array('description' => 'test',
-                                                                            'image_url' => 'http://www.google.de',
-                                                                            'foo' => 'bar'));
+        $item = new Basket\BasketItem('1234', $this->getVariantId(1), array(
+            'description' => 'test',
+            'image_url' => 'http://www.google.de',
+            'foo' => 'bar')
+        );
         
         $basket = new Basket();
         $basket->updateItem($item);
@@ -112,9 +121,6 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $api->updateBasket($this->getSessionId(), $basket);
     }
     
-    /**
-     * @group live
-     */
     public function testAddOneItemSetToBasket()
     {
         $api = $this->getShopApi();
@@ -149,9 +155,6 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $api->updateBasket($this->getSessionId(), $basket);        
     }
     
-    /**
-     * @group live
-     */
     public function testAddItemToBasketWithProductID()
     {
         $api = $this->getShopApi();        
@@ -160,15 +163,12 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $this->assertTrue($basket->hasErrors());
     } 
     
-    /**
-     * @group live
-     */
     public function testAddItemSetToBasketWithProductID()
     {
         $shopApi = $this->getShopApi();        
         $basket = new Basket();
         
-        $set = new Basket\BasketSet('A123567', ['description' => 'test', 'image_url' => 'http://img-url']);                
+        $set = new Basket\BasketSet('A123567', array('description' => 'test', 'image_url' => 'http://img-url'));
         $item = new Basket\BasketSetItem($this->getProductId(1));
         
         $set->addItem($item);
@@ -188,4 +188,3 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $basket = $api->updateBasket($this->getSessionId(), $basket);       
     }    
 }
-
