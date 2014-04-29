@@ -73,19 +73,18 @@ class Autocomplete
      */
     protected static function parseCategories(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
-        if ($jsonObject->categories === null) {
-            return array();
+        if (!property_exists($jsonObject, 'categories')) {
+            return self::NOT_REQUESTED;
         }
 
-        if (!isset($jsonObject->categories)) {
-            return self::NOT_REQUESTED;
+        if ($jsonObject->categories === null) {
+            return array();
         }
 
         $categories = array();
         foreach ($jsonObject->categories as $category) {
             $categories[] = $factory->createCategory($category);
         }
-
 
         return $categories;
     }
@@ -100,12 +99,12 @@ class Autocomplete
      */
     protected static function parseProducts(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
-        if ($jsonObject->products === null) {
-            return array();
+        if (!property_exists($jsonObject, 'products')) {
+            return self::NOT_REQUESTED;
         }
 
-        if (!isset($jsonObject->products)) {
-            return self::NOT_REQUESTED;
+        if ($jsonObject->products === null) {
+            return array();
         }
 
         $products = array();
