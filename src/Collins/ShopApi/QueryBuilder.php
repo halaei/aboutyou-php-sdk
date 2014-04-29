@@ -39,8 +39,9 @@ class QueryBuilder
             throw new \InvalidArgumentException('searchword must be a string');
         }
 
+        // strtolower is a workaround of ticket SAPI-532
         $options = array(
-            'searchword' => $searchword,
+            'searchword' => mb_strtolower($searchword),
         );
 
         if ($limit !== null) {

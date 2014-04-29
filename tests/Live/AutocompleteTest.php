@@ -42,6 +42,10 @@ class AutocompelteTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTes
         $autocomplete = $shopApi->fetchAutocomplete('damen', 1, array(Constants::TYPE_CATEGORIES));
         $this->assertEquals(Autocomplete::NOT_REQUESTED, $autocomplete->getProducts());
         $this->assertCount(1, $autocomplete->getCategories());
+
+        $autocomplete = $shopApi->fetchAutocomplete('Damen', 1);
+        $this->assertCount(1, $autocomplete->getProducts());
+        $this->assertCount(1, $autocomplete->getCategories());
     }
     
     /**
