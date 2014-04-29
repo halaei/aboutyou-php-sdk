@@ -6,6 +6,7 @@
 
 namespace Collins\ShopApi\Test\Unit\ShopApi;
 
+use Collins\ShopApi\Constants;
 use Collins\ShopApi\QueryBuilder;
 
 class QueryBuilderTest extends \PHPUnit_Framework_TestCase
@@ -39,6 +40,47 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $expected = '[{"category_tree":{}}]';
 
         $this->assertEquals($expected, $query->getQueryString());
+    }
+
+    public function testFetchAutocomplete()
+    {
+        $query = (new QueryBuilder())->fetchAutocomplete('term');
+        $expected = '[{"autocompletion":{"searchword":"term"}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+
+        $query = (new QueryBuilder())->fetchAutocomplete('term', 10);
+        $expected = '[{"autocompletion":{"searchword":"term","limit":10}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+
+        $query = (new QueryBuilder())->fetchAutocomplete('term', null, array(Constants::TYPE_CATEGORIES));
+        $expected = '[{"autocompletion":{"searchword":"term","types":["categories"]}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+
+        $query = (new QueryBuilder())->fetchAutocomplete('term', 15, array(Constants::TYPE_CATEGORIES, Constants::TYPE_PRODUCTS));
+        $expected = '[{"autocompletion":{"searchword":"term","limit":15,"types":["categories","products"]}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+
+        $query = (new QueryBuilder())->fetchAutocomplete('term', "12", array());
+        $expected = '[{"autocompletion":{"searchword":"term","limit":12}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @dataProvider fetchAutocompleteThrowsInvalidArgumentExceptionProvider
+     */
+    public function testFetchAutocompleteThrowsInvalidArgumentException()
+    {
+        call_user_func_array(array(new QueryBuilder(), 'fetchAutocomplete'), func_get_args());
+    }
+
+    public function fetchAutocompleteThrowsInvalidArgumentExceptionProvider()
+    {
+        return array(
+            array(124),
+            array('term', 'all'),
+            array('term', 10.0),
+        );
     }
 
     /**

@@ -32,23 +32,29 @@ class QueryBuilder
      */
     public function fetchAutocomplete(
         $searchword,
-        $limit = 50,
-        $types = array(
-            Constants::TYPE_PRODUCTS,
-            Constants::TYPE_CATEGORIES
-        )
+        $limit = null,
+        array $types = null
     ) {
         if (!is_string($searchword)) {
-            throw new \InvalidArgumentException('$searchword must be a string');
+            throw new \InvalidArgumentException('searchword must be a string');
+        }
+
+        $options = array(
+            'searchword' => $searchword,
+        );
+
+        if ($limit !== null) {
+            if (!is_int($limit) && !ctype_digit($limit)) {
+                throw new \InvalidArgumentException('limit must be an integer');
+            }
+            $options['limit'] = intval($limit);
+        }
+
+        if (!empty($types)) {
+            $options['types'] = $types;
         }
         
-        $this->query[] = array(
-            'autocompletion' => array(
-                'searchword' => $searchword,
-                'types' => $types,
-                'limit' => $limit
-            )
-        );
+        $this->query[] = array('autocompletion' => $options);
 
         return $this;
     }
