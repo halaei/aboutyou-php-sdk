@@ -55,7 +55,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(2));
         $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(3), 3);
         
-        $set = new Basket\BasketSet("123456", ['image_url' => "http://", 'description' => 'Hallo']);
+        $set = new Basket\BasketSet("123456", array('image_url' => "http://", 'description' => 'Hallo'));
         $item = new Basket\BasketSetItem($this->getVariantId(4));
         
         $set->addItem($item);
@@ -168,7 +168,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $shopApi = $this->getShopApi();        
         $basket = new Basket();
         
-        $set = new Basket\BasketSet('A123567', ['description' => 'test', 'image_url' => 'http://img-url']);                
+        $set = new Basket\BasketSet('A123567', array('description' => 'test', 'image_url' => 'http://img-url'));
         $item = new Basket\BasketSetItem($this->getProductId(1));
         
         $set->addItem($item);
