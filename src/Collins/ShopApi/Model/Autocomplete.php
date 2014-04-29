@@ -73,7 +73,7 @@ class Autocomplete
      */
     protected static function parseCategories(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
-        if (!isset($jsonObject->categories)) {
+        if (!property_exists($jsonObject, 'categories')) {
             return self::NOT_REQUESTED;
         }
 
@@ -99,7 +99,7 @@ class Autocomplete
      */
     protected static function parseProducts(\stdClass $jsonObject, ModelFactoryInterface $factory)
     {
-        if (!isset($jsonObject->products)) {
+        if (!property_exists($jsonObject, 'products')) {
             return self::NOT_REQUESTED;
         }
 
