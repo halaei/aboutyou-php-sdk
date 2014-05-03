@@ -1,7 +1,6 @@
 <?php
 namespace Collins;
 
-use Collins\Cache\CacheInterface;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Factory\DefaultModelFactory;
@@ -9,8 +8,10 @@ use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Factory\ResultFactoryInterface;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
-use Collins\ShopApi\Model\FacetManager;
-use Collins\ShopApi\Model\FacetManager\SingleFacetManager;
+use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
+use Collins\ShopApi\Model\FacetManager\DoctrineMultiGetCacheStrategy;
+use Collins\ShopApi\Model\FacetManager\FetchFacetGroupStrategy;
+use Collins\ShopApi\Model\FacetManager\FetchSingleFacetStrategy;
 use Collins\ShopApi\Model\ProductsEansResult;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
@@ -32,12 +33,6 @@ class ShopApi
     const IMAGE_URL_STAGE = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file';
     const IMAGE_URL_LIVE = 'http://cdn.mary-paul.de/file';
 
-    // basket and product by ids must not be cached, facets should use a different caching strategy
-    const NO_QUERY_CACHE = 0;
-
-    // TODO: replace with cache configuration
-    protected $queryCacheDuration = 300;
-
     /** @var ShopApiClient */
     protected $shopApiClient;
 
@@ -46,9 +41,6 @@ class ShopApi
 
     /** @var ModelFactoryInterface */
     protected $modelFactory;
-
-    /** @var FacetManagerInterface */
-    protected $facetManager;
 
     /** @var LoggerInterface */
     protected $logger;
@@ -62,16 +54,33 @@ class ShopApi
      * @param string $appId
      * @param string $appPassword
      * @param string $apiEndPoint Constants::API_ENVIRONMENT_LIVE for live environment, Constants::API_ENVIRONMENT_STAGE for staging
-     * @param CacheInterface $cache
+     * @param ResultFactoryInterface $resultFactory if null it will use the DefaultModelFactory with the DefaultFacetManager
      * @param LoggerInterface $logger
+     * @param \Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
      */
-    public function __construct($appId, $appPassword, $apiEndPoint = Constants::API_ENVIRONMENT_LIVE, CacheInterface $cache = null, LoggerInterface $logger = null)
-    {
-        $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $cache, $logger);
+    public function __construct(
+        $appId,
+        $appPassword,
+        $apiEndPoint = Constants::API_ENVIRONMENT_LIVE,
+        ResultFactoryInterface $resultFactory = null,
+        LoggerInterface $logger = null,
+        $facetManagerCache = null
+    ) {
+        $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $logger);
 
-        $this->eventDispatcher = new EventDispatcher();
-        $this->facetManager = new SingleFacetManager($this->eventDispatcher);
-        $this->modelFactory = new DefaultModelFactory($this, $this->facetManager, $this->eventDispatcher);
+        if ($resultFactory === null) {
+            $strategy = new FetchFacetGroupStrategy($this);
+            if ($facetManagerCache) {
+                $strategy = new DoctrineMultiGetCacheStrategy($facetManagerCache, $strategy);
+            }
+            $this->setResultFactory(
+                new DefaultModelFactory(
+                    $this,
+                    new DefaultFacetManager($strategy),
+                    new EventDispatcher()
+                )
+            );
+        }
 
         if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
@@ -82,6 +91,8 @@ class ShopApi
         $this->logger = $logger;
         $this->appId  = $appId;
     }
+
+
 
     /**
      * @return ShopApiClient
@@ -104,6 +115,14 @@ class ShopApi
     /**
      * @return string
      */
+    public function getAppId()
+    {
+        return $this->appId;
+    }
+
+    /**
+     * @return string
+     */
     public function getApiEndPoint()
     {
         return $this->shopApiClient->getApiEndPoint();
@@ -117,40 +136,6 @@ class ShopApi
     public function setApiEndpoint($apiEndPoint)
     {
         $this->shopApiClient->setApiEndpoint($apiEndPoint);
-    }
-
-    /**
-     * @param CacheInterface $cache
-     */
-    public function setCache(CacheInterface $cache)
-    {
-        $this->shopApiClient->setCache($cache);
-    }
-
-    /**
-     * @return CacheInterface
-     */
-    public function getCache()
-    {
-        return $this->shopApiClient->getCache();
-    }
-
-
-    /**
-     * @param \Collins\FacetManagerInterface $facetManager
-     */
-    public function setFacetManager($facetManager)
-    {
-        $this->facetManager = $facetManager;
-        $this->modelFactory->setFacetManager($facetManager);
-    }
-
-    /**
-     * @return \Collins\FacetManagerInterface
-     */
-    public function getFacetManager()
-    {
-        return $this->facetManager;
     }
 
     /**
@@ -245,7 +230,7 @@ class ShopApi
             ->fetchAutocomplete($searchword, $limit, $types)
         ;
 
-        return $query->executeSingle($this->queryCacheDuration);
+        return $query->executeSingle();
     }
 
     /**
@@ -262,7 +247,7 @@ class ShopApi
     {
         $query = $this->getQuery()->fetchBasket($sessionId);
 
-        return $query->executeSingle(self::NO_QUERY_CACHE);
+        return $query->executeSingle();
     }
 
     /**
@@ -335,7 +320,7 @@ class ShopApi
             ->updateBasket($sessionId, $basket)
         ;
 
-        return $query->executeSingle(self::NO_QUERY_CACHE);
+        return $query->executeSingle();
     }
 
 
@@ -359,7 +344,7 @@ class ShopApi
             ->fetchCategoriesByIds($ids)
         ;
 
-        $result = $query->executeSingle($this->queryCacheDuration);
+        $result = $query->executeSingle();
 
         $notFound = $result->getCategoriesNotFound();
         if (!empty($notFound) && $this->logger) {
@@ -383,7 +368,7 @@ class ShopApi
             ->fetchCategoryTree($maxDepth)
         ;
 
-        return $query->executeSingle($this->queryCacheDuration);
+        return $query->executeSingle();
     }
 
     /**
@@ -406,7 +391,7 @@ class ShopApi
             ->fetchProductsByIds($ids, $fields)
         ;
 
-        $result = $query->executeSingle(self::NO_QUERY_CACHE);
+        $result = $query->executeSingle();
 
         $productsNotFound = $result->getProductsNotFound();
         if (!empty($productsNotFound) && $this->logger) {
@@ -436,7 +421,7 @@ class ShopApi
             ->fetchProductsByEans($eans, $fields)
         ;
 
-        return $query->executeSingle($this->queryCacheDuration);
+        return $query->executeSingle();
     }
 
     /**
@@ -444,11 +429,15 @@ class ShopApi
      */
     public function setResultFactory(ResultFactoryInterface $modelFactory)
     {
+        if ($modelFactory instanceof DefaultModelFactory) {
+            $this->eventDispatcher = $modelFactory->getEventDispatcher();
+        }
+
         $this->modelFactory = $modelFactory;
     }
 
     /**
-     * @return ResultFactoryInterface
+     * @return ResultFactoryInterface|DefaultModelFactory
      */
     public function getResultFactory()
     {
@@ -470,7 +459,7 @@ class ShopApi
             ->fetchProductSearch($criteria)
         ;
 
-        return $query->executeSingle($this->queryCacheDuration);
+        return $query->executeSingle();
     }
 
     /**
@@ -489,7 +478,16 @@ class ShopApi
             ->fetchFacets($groupIds)
         ;
 
-        return $query->executeSingle(self::NO_QUERY_CACHE);
+        return $query->executeSingle();
+    }
+
+    public function fetchFacetTypes()
+    {
+        $query = $this->getQuery()
+            ->fetchFacetTypes()
+        ;
+
+        return $query->executeSingle();
     }
 
     /**
@@ -503,7 +501,7 @@ class ShopApi
             ->fetchOrder($orderId)
         ;
 
-        return $query->executeSingle(self::NO_QUERY_CACHE);
+        return $query->executeSingle();
     }
 
     /**
@@ -524,7 +522,7 @@ class ShopApi
             ->initiateOrder($sessionId, $successUrl, $cancelUrl, $errorUrl)
         ;
 
-        return $query->executeSingle(self::NO_QUERY_CACHE);
+        return $query->executeSingle();
     }
 
     /**
@@ -548,7 +546,7 @@ class ShopApi
             ->fetchFacet($params)
         ;
 
-        return $query->executeSingle(self::NO_QUERY_CACHE);
+        return $query->executeSingle();
     }
 
     /**
@@ -566,7 +564,7 @@ class ShopApi
             ->fetchSuggest($searchword)
         ;
 
-        return $query->executeSingle($this->queryCacheDuration);
+        return $query->executeSingle();
     }
 
     /**
@@ -580,7 +578,7 @@ class ShopApi
             ->fetchChildApps()
         ;
 
-        return $query->executeSingle($this->queryCacheDuration);
+        return $query->executeSingle();
     }
 
     /**

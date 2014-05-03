@@ -217,6 +217,16 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      *
+     * @return integer[]
+     */
+    public function createFacetTypes(array $jsonArray)
+    {
+        return $jsonArray;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @return ShopApi\Model\Image
      */
     public function createImage(\stdClass $jsonObject)
@@ -231,7 +241,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createProduct(\stdClass $jsonObject)
     {
-        return ShopApi\Model\Product::createFromJson($jsonObject, $this);
+        return ShopApi\Model\Product::createFromJson($jsonObject, $this, $this->shopApi->getAppId());
     }
 
     /**

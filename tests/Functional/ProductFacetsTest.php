@@ -9,32 +9,27 @@ namespace Collins\ShopApi\Test\Functional;
 use Collins\ShopApi;
 use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Model\Product;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class ProductFacetsTest extends AbstractShopApiTest
 {
-    /** @var Product */
-    private $product;
-
-    /** @var ShopApi */
-    private $shopApi;
-
-    public function setup()
-    {
-        $this->shopApi = $this->getShopApiWithResultFile('facet-for-product.json');
-    }
-
     /**
+     * @param string $facetsFile
+     *
      * @return ShopApi\Factory\DefaultModelFactory
      */
-    public function getFactory()
+    public function getFactory($facetsFile)
     {
-        return $this->shopApi->getResultFactory();
+        $facetManager = $this->getStaticFacetManagerFromFile($facetsFile);
+        $factory = new DefaultModelFactory(new ShopApi('id', 'token'), $facetManager, new EventDispatcher());
+
+        return $factory;
     }
 
-    public function getProduct($filename = 'product/product-with-attributes.json')
+    public function getProduct($filename = 'product/product-with-attributes.json', $facetsFile = 'facet-for-product.json')
     {
         $json = $this->getJsonObjectFromFile($filename);
-        $product = $this->getFactory()->createSingleProduct($json);
+        $product = $this->getFactory($facetsFile)->createSingleProduct($json);
 
         return $product;
     }
@@ -180,9 +175,9 @@ class ProductFacetsTest extends AbstractShopApiTest
      */
     public function testGetSelectableFacetGroups($ids, $expectedValues)
     {
-        $this->getShopApiWithResultFile('facets-for-product-variant-facets.json');
+//        $this->getShopApiWithResultFile('facets-for-product-variant-facets.json');
 
-        $product = $this->getProduct('product/product-variant-facets.json');
+        $product = $this->getProduct('product/product-variant-facets.json', 'facets-for-product-variant-facets.json');
 
 
         $facetGroupSet = new ShopApi\Model\FacetGroupSet($ids);
@@ -264,9 +259,9 @@ class ProductFacetsTest extends AbstractShopApiTest
      */
     public function testGetExcludedFacetGroups($ids, $expectedValues)
     {
-        $this->getShopApiWithResultFile('facets-for-product-variant-facets.json');
+//        $this->getShopApiWithResultFile('facets-for-product-variant-facets.json');
 
-        $product = $this->getProduct('product/product-variant-facets.json');
+        $product = $this->getProduct('product/product-variant-facets.json', 'facets-for-product-variant-facets.json');
 
         $facetGroupSet = new ShopApi\Model\FacetGroupSet($ids);
         $groups = $product->getExcludedFacetGroups($facetGroupSet);

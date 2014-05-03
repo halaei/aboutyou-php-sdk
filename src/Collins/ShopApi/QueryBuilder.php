@@ -427,6 +427,16 @@ class QueryBuilder
     }
 
     /**
+     * @return $this
+     */
+    public function fetchFacetTypes()
+    {
+        $this->query[] = array('facet_types' => null);
+
+        return $this;
+    }
+
+    /**
      * @param string $searchword The search string to search for.
      *
      * @return $this

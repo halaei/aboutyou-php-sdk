@@ -50,8 +50,8 @@
     "retail_price": 3995,
     "id": 5145543,
     "quantity": 5,
-    "first_active_date": "2014-02-14 18:09:38",
-    "first_sale_date": "2014-01-10 10:10:00",
-    "created_date": "2014-01-11 10:11:00",
-    "updated_date": "2014-01-12 10:12:00"
+    "first_active_date": null,
+    "first_sale_date": null,
+    "created_date": null,
+    "updated_date": null
 }

@@ -13,6 +13,9 @@ use Guzzle\Service\Client;
 abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
 {
     /**
+     * @param string|string[] $jsonString
+     * @param string|null $exceptedRequestBody
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|Client
      */
     protected function getGuzzleClient($jsonString, $exceptedRequestBody = null)
@@ -55,14 +58,45 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
         return json_decode($this->getJsonStringFromFile($filepath));
     }
 
-    protected function getJsonStringFromFile($filepath)
+    protected function getJsonStringFromFile($filepath, $baseDir = __DIR__)
     {
         if (strpos($filepath, '/') !== 0) {
-            $filepath = __DIR__.'/testData/' . $filepath;
+            $filepath = $baseDir . '/testData/' . $filepath;
         }
         $jsonString = file_get_contents($filepath);
 
         return $jsonString;
+    }
+
+    protected function getStaticFacetManagerFromFile($filename)
+    {
+        $jsonObject = $this->getJsonObjectFromFile($filename);
+        if (isset($jsonObject[0]->facets->facet)) {
+            $jsonFacets = $jsonObject[0]->facets->facet;
+        } else {
+            $jsonFacets = $jsonObject[0]->facet;
+        }
+        $facets = array();
+        foreach ($jsonFacets as $jsonFacet) {
+            $facet = ShopApi\Model\Facet::createFromJson($jsonFacet);
+            $facets[] = $facet;
+        }
+
+        $facetManager = new ShopApi\Model\FacetManager\StaticFacetManager($facets);
+
+        return $facetManager;
+    }
+
+    protected function getShopApiWithResultFileAndFacets($filepath, $facetsFile)
+    {
+        $jsonString = $this->getJsonStringFromFile($filepath);
+
+        $shopApi = $this->getShopApiWithResult($jsonString);
+
+        $facetManager = $this->getStaticFacetManagerFromFile($facetsFile);
+        $shopApi->getResultFactory()->setFacetManager($facetManager);
+
+        return $shopApi;
     }
 
     protected function getShopApiWithResultFile($filepath, $exceptedRequestBody = null)
@@ -83,7 +117,7 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
     }
 
     /**
-     * @param string $jsonString
+     * @param string|string[] $jsonString
      * @param string $exceptedRequestBody
      *
      * @return ShopApi
@@ -94,7 +128,7 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
         $client = $this->getGuzzleClient($jsonString, $exceptedRequestBody);
 
         if(is_null($this->_____shopApi)) {
-            $this->_____shopApi = new ShopApi('id', 'token');
+            $this->_____shopApi = new ShopApi('98', 'token');
         }
         #$shopApi = new ShopApi('id', 'token');
         $shopApi = $this->_____shopApi;
@@ -111,8 +145,9 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
     }
 
     /**
-     * @param string $jsonString
-     * @param string $exceptedRequestBody
+     * @param array $methods
+     * @param string|string[] $jsonString
+     * @param string|null $exceptedRequestBody
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|ShopApi
      */
