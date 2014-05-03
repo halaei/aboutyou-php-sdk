@@ -379,8 +379,9 @@ class DefaultModelFactory implements ModelFactoryInterface
         $facetCounts = array();
         foreach ($jsonTerms as $jsonTerm) {
             $id    = (int)$jsonTerm->term;
-            $count = $jsonTerm->count;
             $facet = $facetManager->getFacet($groupId, $id);
+            if ($facet === null) continue; // TODO: Handle error, write test
+            $count = $jsonTerm->count;
             $facetCounts[] = new ShopApi\Model\ProductSearchResult\FacetCount($facet, $count);
         }
 
