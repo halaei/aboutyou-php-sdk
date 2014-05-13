@@ -171,6 +171,7 @@ class ShopApiClient
         $request = $apiClient->post();
         $request->setBody($body);
         $request->setAuth($this->appId, $this->appPassword);
+        $request->setHeader('Accept-Encoding', 'gzip,deflate');
 
         if ($this->logger) {
             $adapter = new \Guzzle\Log\PsrLogAdapter($this->logger);
