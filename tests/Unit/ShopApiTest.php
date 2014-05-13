@@ -11,7 +11,7 @@ use Collins\ShopApi\Constants;
 
 class ShopApiTest extends \PHPUnit_Framework_TestCase
 {
-    public function testConsturct()
+    public function testConstructor()
     {
         $appId = '123';
         $appPassword = 'abc';
@@ -60,6 +60,7 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
          */
         $this->assertEquals($shopApi::IMAGE_URL_STAGE, $shopApi->getBaseImageUrl());
     }
+
     /**
      * 
      * @return \Collins\ShopApi
@@ -75,6 +76,7 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
              $appPassword, 
              $apiEndPoint
         );
+
         return $shopApi ;
     }
     
@@ -88,7 +90,7 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Collins\ShopApi\Query', $query);
     }
     
-    /*
+    /**
      * Testing getter for shop api client and if it initialized correctly
      */
     public function testGetApiClient()
