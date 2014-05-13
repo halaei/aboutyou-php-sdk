@@ -16,24 +16,29 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
         $appId = '123';
         $appPassword = 'abc';
         $apiEndPoint = 'http://localhost.dev/api';        
-        $cacheInterfaceImplementation = $this->getMock('\Collins\Cache\CacheInterface');
-        $loggerInterfaceImplementation = $this->getMock('\Psr\Log\LoggerInterface');
+        $loggerInterfaceImplementation = $this->getMock('\\Psr\\Log\\LoggerInterface');
+        $cacheInterfaceMock = $this->getMock('\\Doctrine\\Common\\Cache\\CacheMultiGet');
         
         $shopApi = new ShopApi(
-             $appId, 
-             $appPassword, 
-             $apiEndPoint, 
-             $cacheInterfaceImplementation,
-             $loggerInterfaceImplementation
+            $appId,
+            $appPassword,
+            $apiEndPoint,
+            null,
+            $loggerInterfaceImplementation,
+            $cacheInterfaceMock
         );
         
         $this->assertEquals($apiEndPoint, $shopApi->getApiEndPoint());
         $this->assertEquals($loggerInterfaceImplementation, $shopApi->getLogger());
-        $this->assertEquals($cacheInterfaceImplementation, $shopApi->getCache());
+        $factory = $shopApi->getResultFactory();
+        $this->assertInstanceOf('Collins\\ShopApi\\Factory\\DefaultModelFactory', $factory);
+        $facetManager = $factory->getFacetManager();
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\DefaultFacetManager', $facetManager);
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\DoctrineMultiGetCacheStrategy', $facetManager->getFetchStrategy());
          /**
          * relies on internal configuration of live image url as constant
          */
-        //$this->assertEquals(ShopApi::IMAGE_URL_LIVE, $shopApi->getBaseImageUrl());
+        $this->assertEquals(ShopApi::IMAGE_URL_LIVE, $shopApi->getBaseImageUrl());
     }
     
     /**
@@ -87,7 +92,7 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
     {
         $shopApi = $this->getTestObject();
         $query = $shopApi->getQuery();
-        $this->assertInstanceOf('Collins\ShopApi\Query', $query);
+        $this->assertInstanceOf('Collins\\ShopApi\\Query', $query);
     }
     
     /**
@@ -97,14 +102,14 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
     {
         $shopApi = $this->getTestObject();
         $shopApiClient = $shopApi->getApiClient();        
-        $this->assertInstanceOf('Collins\ShopApi\ShopApiClient', $shopApiClient);
+        $this->assertInstanceOf('Collins\\ShopApi\\ShopApiClient', $shopApiClient);
     }
     
     public function testGetModelFactory()
     {
         $shopApi = $this->getTestObject();
         $modelFactory = $shopApi->getResultFactory();
-        $this->assertInstanceOf('Collins\ShopApi\Factory\ResultFactoryInterface', $modelFactory);
+        $this->assertInstanceOf('Collins\\ShopApi\\Factory\\ResultFactoryInterface', $modelFactory);
     }
     
 }
