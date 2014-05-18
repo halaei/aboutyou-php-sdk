@@ -16,7 +16,17 @@ class FetchFacetGroupStrategy implements FetchStrategyInterface
     /**
      * @param ShopApi $shopApi
      */
-    public function __construct(ShopApi $shopApi)
+    public function __construct(ShopApi $shopApi=null)
+    {
+        if(!empty($shopApi)) {
+            $this->setShopApi($shopApi);
+        }
+    }
+
+    /**
+     * @param ShopApi $shopApi
+     */
+    public function setShopApi(ShopApi $shopApi)
     {
         $this->shopApi = $shopApi;
     }
