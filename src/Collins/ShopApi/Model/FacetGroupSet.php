@@ -136,6 +136,16 @@ class FacetGroupSet extends AbstractModel implements FacetUniqueKeyInterface
     }
 
     /**
+     * @param $groupId
+     * @return bool
+     */
+    public function hasGroup($groupId)
+    {
+        return(isset($this->ids[$groupId]) && !empty($this->ids[$groupId]));
+    }
+
+
+    /**
      * @param string $key
      *
      * @return Facet|null
