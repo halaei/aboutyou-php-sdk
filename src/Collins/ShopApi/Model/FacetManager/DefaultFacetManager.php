@@ -37,7 +37,13 @@ class DefaultFacetManager extends AbstractFacetManager
 
     protected function preFetch()
     {
-        $this->facets += $this->fetchStrategy->fetch($this->missingFacetGroupIdsAndFacetIds);
-        $this->missingFacetGroupIdsAndFacetIds = array();
+        if(!empty($this->missingFacetGroupIdsAndFacetIds)) {
+            foreach($this->missingFacetGroupIdsAndFacetIds as $groupId => $facetIds) {
+                $this->missingFacetGroupIdsAndFacetIds[$groupId] = array_values(array_unique($facetIds));
+            }
+
+            $this->facets += $this->fetchStrategy->fetch($this->missingFacetGroupIdsAndFacetIds);
+            $this->missingFacetGroupIdsAndFacetIds = array();
+        }
     }
 } 
