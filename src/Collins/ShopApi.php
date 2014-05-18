@@ -68,7 +68,9 @@ class ShopApi
     ) {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $logger);
 
-        if ($resultFactory === null) {
+        if ($resultFactory !== null) {
+            $this->setResultFactory($resultFactory);
+        } else {
             $strategy = new FetchFacetGroupStrategy($this);
             if ($facetManagerCache) {
                 $strategy = new DoctrineMultiGetCacheStrategy($facetManagerCache, $strategy);

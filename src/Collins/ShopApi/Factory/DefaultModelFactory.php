@@ -27,15 +27,23 @@ class DefaultModelFactory implements ModelFactoryInterface
      * @param FacetManagerInterface $facetManager
      * @param EventDispatcher $eventDispatcher
      */
-    public function __construct(ShopApi $shopApi, FacetManagerInterface $facetManager, EventDispatcher $eventDispatcher)
+    public function __construct(ShopApi $shopApi=null, FacetManagerInterface $facetManager, EventDispatcher $eventDispatcher)
+    {
+        if(!empty($shopApi)) {
+            $this->setShopApi($shopApi);
+        }
+
+        $this->eventDispatcher = $eventDispatcher;
+        $this->setFacetManager($facetManager);
+    }
+
+    public function setShopApi(ShopApi $shopApi)
     {
         ShopApi\Model\Category::setShopApi($shopApi);
         ShopApi\Model\Product::setShopApi($shopApi);
         ShopApi\Model\FacetGroupSet::setShopApi($shopApi);
 
         $this->shopApi = $shopApi;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->setFacetManager($facetManager);
     }
 
     /**
