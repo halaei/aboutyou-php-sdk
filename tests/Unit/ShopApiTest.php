@@ -6,12 +6,16 @@
 
 namespace Collins\ShopApi\Test\Unit;
 
+use Antevorte\Core\Models\ShopApiModelFactory;
 use Collins\ShopApi;
 use Collins\ShopApi\Constants;
+use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
+use Collins\ShopApi\Model\FacetManager\DoctrineMultiGetCacheStrategy;
+use Collins\ShopApi\Model\FacetManager\FetchSingleFacetStrategy;
 
 class ShopApiTest extends \PHPUnit_Framework_TestCase
 {
-    public function testConstructor()
+    public function testConstructorWithDefaultStrategy()
     {
         $appId = '123';
         $appPassword = 'abc';
@@ -33,14 +37,65 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
         $factory = $shopApi->getResultFactory();
         $this->assertInstanceOf('Collins\\ShopApi\\Factory\\DefaultModelFactory', $factory);
         $facetManager = $factory->getFacetManager();
+
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\DefaultFacetManager', $facetManager);
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\DoctrineMultiGetCacheStrategy', $facetManager->getFetchStrategy());
+        $this->assertInstanceOf('Doctrine\\Common\\Cache\\CacheMultiGet', $facetManager->getFetchStrategy()->cache);
+        $this->assertInstanceOf('Collins\ShopApi\Model\FacetManager\FetchFacetGroupStrategy', \PHPUnit_Framework_Assert::readAttribute($facetManager->getFetchStrategy(), 'chainedFetchStrategy'));
+
          /**
          * relies on internal configuration of live image url as constant
          */
         $this->assertEquals(ShopApi::IMAGE_URL_LIVE, $shopApi->getBaseImageUrl());
     }
-    
+
+    public function testConstructorWithOwnStrategy()
+    {
+        $appId = '123';
+        $appPassword = 'abc';
+        $apiEndPoint = 'http://localhost.dev/api';
+        $loggerInterfaceImplementation = $this->getMock('\\Psr\\Log\\LoggerInterface');
+        $cacheInterfaceMock = $this->getMock('\\Doctrine\\Common\\Cache\\ArrayCache');
+
+        $shopApi = new ShopApi(
+            $appId,
+            $appPassword,
+            $apiEndPoint,
+            null,
+            $loggerInterfaceImplementation,
+            $cacheInterfaceMock
+        );
+
+        $this->assertEquals($apiEndPoint, $shopApi->getApiEndPoint());
+        $this->assertEquals($loggerInterfaceImplementation, $shopApi->getLogger());
+
+
+        $factory = $shopApi->getResultFactory();
+        $this->assertInstanceOf('Collins\\ShopApi\\Factory\\DefaultModelFactory', $factory);
+
+        /** @var Collins\\ShopApi\\Model\\FacetManager\\DefaultFacetManager $facetManager */
+        $facetManager = $factory->getFacetManager();
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\DefaultFacetManager', $facetManager);
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\DoctrineMultiGetCacheStrategy', $facetManager->getFetchStrategy());
+        $this->assertInstanceOf('Doctrine\\Common\\Cache\\ArrayCache', $facetManager->getFetchStrategy()->cache);
+
+        $strategy = new FetchSingleFacetStrategy($shopApi);
+        $strategy = new DoctrineMultiGetCacheStrategy($cacheInterfaceMock, $strategy);
+
+        $modelFactory = new ShopApiModelFactory(
+            $shopApi,
+            new DefaultFacetManager($strategy),
+            $factory->getEventDispatcher()
+        );
+        $shopApi->setResultFactory($modelFactory);
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\DoctrineMultiGetCacheStrategy', $facetManager->getFetchStrategy());
+
+        $factory = $shopApi->getResultFactory();
+        $facetManager = $factory->getFacetManager();
+        $this->assertInstanceOf('Collins\ShopApi\Model\FacetManager\FetchSingleFacetStrategy', \PHPUnit_Framework_Assert::readAttribute($facetManager->getFetchStrategy(), 'chainedFetchStrategy'));
+
+    }
+
     /**
      * Testing the constructor with setting the stage environment constant as api endpoint
      * and overwriting 
