@@ -116,5 +116,12 @@ class FacetGroupSetTest extends AbstractModelTest
         $this->markTestIncomplete('implement me');
         $facetGroupSet->getGroups();
     }
+
+    public function testHasGroup()
+    {
+        $facetGroupSet = new FacetGroupSet(array(4 => array(3,2)));
+        $this->assertTrue($facetGroupSet->hasGroup(4));
+        $this->assertFalse($facetGroupSet->hasGroup(3));
+    }
 }
  
