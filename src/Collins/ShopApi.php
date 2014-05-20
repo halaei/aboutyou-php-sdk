@@ -42,6 +42,11 @@ class ShopApi
     /** @var ModelFactoryInterface */
     protected $modelFactory;
 
+    /**
+     * @var \Doctrine\Common\Cache\CacheMultiGet|null
+     */
+    protected $facetManagerCache;
+
     /** @var LoggerInterface */
     protected $logger;
 
@@ -68,10 +73,7 @@ class ShopApi
     ) {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $logger);
 
-        if ($resultFactory === null) {
-            $resultFactory = $this->initDefaultFactory($facetManagerCache);
-        }
-        $this->setResultFactory($resultFactory);
+        $this->facetManagerCache = $facetManagerCache;
 
         if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
@@ -175,7 +177,7 @@ class ShopApi
             $this->baseImageUrl = '';
         }
 
-        $this->modelFactory->setBaseImageUrl($this->baseImageUrl);
+        $this->getResultFactory()->setBaseImageUrl($this->baseImageUrl);
     }
 
     /**
@@ -191,7 +193,7 @@ class ShopApi
      */
     public function getQuery()
     {
-        $query = new Query($this->shopApiClient, $this->modelFactory, $this->eventDispatcher);
+        $query = new Query($this->shopApiClient, $this->getResultFactory(), $this->eventDispatcher);
 
         return $query;
     }
@@ -430,6 +432,9 @@ class ShopApi
      */
     public function getResultFactory()
     {
+        if(is_null($this->modelFactory)) {
+            $this->initDefaultFactory();
+        }
         return $this->modelFactory;
     }
 
@@ -654,22 +659,22 @@ class ShopApi
     }
 
     /**
-     * @param \Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
-     *
      * @return DefaultModelFactory
      */
-    protected function initDefaultFactory(\Doctrine\Common\Cache\CacheMultiGet $facetManagerCache = null)
+    protected function initDefaultFactory()
     {
         $strategy = new FetchFacetGroupStrategy($this);
-        if ($facetManagerCache) {
-            $strategy = new DoctrineMultiGetCacheStrategy($facetManagerCache, $strategy);
+
+        if ($this->facetManagerCache) {
+            $strategy = new DoctrineMultiGetCacheStrategy($this->facetManagerCache, $strategy);
         }
+
         $resultFactory = new DefaultModelFactory(
             $this,
             new DefaultFacetManager($strategy),
             new EventDispatcher()
         );
 
-        return $resultFactory;
+        $this->setResultFactory($resultFactory);
     }
 }
