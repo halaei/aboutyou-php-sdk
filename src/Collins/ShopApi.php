@@ -68,21 +68,10 @@ class ShopApi
     ) {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $logger);
 
-        if ($resultFactory !== null) {
-            $this->setResultFactory($resultFactory);
-        } else {
-            $strategy = new FetchFacetGroupStrategy($this);
-            if ($facetManagerCache) {
-                $strategy = new DoctrineMultiGetCacheStrategy($facetManagerCache, $strategy);
-            }
-            $this->setResultFactory(
-                new DefaultModelFactory(
-                    $this,
-                    new DefaultFacetManager($strategy),
-                    new EventDispatcher()
-                )
-            );
+        if ($resultFactory === null) {
+            $resultFactory = $this->initDefaultFactory($facetManagerCache);
         }
+        $this->setResultFactory($resultFactory);
 
         if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
@@ -93,8 +82,6 @@ class ShopApi
         $this->logger = $logger;
         $this->appId  = $appId;
     }
-
-
 
     /**
      * @return ShopApiClient
@@ -664,5 +651,25 @@ class ShopApi
             176 => 'clothing_womens_it',
             192 => 'clothing_mens_acc'
         );
+    }
+
+    /**
+     * @param \Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
+     *
+     * @return DefaultModelFactory
+     */
+    protected function initDefaultFactory(\Doctrine\Common\Cache\CacheMultiGet $facetManagerCache = null)
+    {
+        $strategy = new FetchFacetGroupStrategy($this);
+        if ($facetManagerCache) {
+            $strategy = new DoctrineMultiGetCacheStrategy($facetManagerCache, $strategy);
+        }
+        $resultFactory = new DefaultModelFactory(
+            $this,
+            new DefaultFacetManager($strategy),
+            new EventDispatcher()
+        );
+
+        return $resultFactory;
     }
 }
