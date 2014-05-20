@@ -6,9 +6,9 @@
 
 namespace Collins\ShopApi\Test\Unit;
 
-use Antevorte\Core\Models\ShopApiModelFactory;
 use Collins\ShopApi;
 use Collins\ShopApi\Constants;
+use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
 use Collins\ShopApi\Model\FacetManager\DoctrineMultiGetCacheStrategy;
 use Collins\ShopApi\Model\FacetManager\FetchSingleFacetStrategy;
@@ -91,7 +91,7 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
         $strategy = new FetchSingleFacetStrategy($shopApi);
         $strategy = new DoctrineMultiGetCacheStrategy($cacheInterfaceMock, $strategy);
 
-        $modelFactory = new ShopApiModelFactory(
+        $modelFactory = new DefaultModelFactory(
             $shopApi,
             new DefaultFacetManager($strategy),
             $factory->getEventDispatcher()
