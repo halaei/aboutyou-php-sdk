@@ -41,7 +41,7 @@ class QueryBuilder
 
         // strtolower is a workaround of ticket SAPI-532
         $options = array(
-            'searchword' => mb_strtolower($searchword),
+            'searchword' => mb_strtolower($searchword)
         );
 
         if ($limit !== null) {
@@ -54,7 +54,7 @@ class QueryBuilder
         if (!empty($types)) {
             $options['types'] = $types;
         }
-        
+
         $this->query[] = array('autocompletion' => $options);
 
         return $this;
@@ -200,11 +200,11 @@ class QueryBuilder
         $this->checkSessionId($sessionId);
 
         $orderLines = array();
-        
+
         foreach ($itemIds as $id) {
             $orderLines[] = array('delete' => $id);
         }
-        
+
         $this->query[] = array(
             'basket' => array(
                 'session_id' => $sessionId,
@@ -253,7 +253,7 @@ class QueryBuilder
         } else {
             // we allow to pass a single ID instead of an array
             settype($ids, 'array');
-            
+
             foreach ($ids as $id) {
                 if (!is_long($id) && !ctype_digit($id)) {
                     throw new \InvalidArgumentException('A single category ID must be an integer or a numeric string');
@@ -401,10 +401,10 @@ class QueryBuilder
      *
      * @throws \InvalidArgumentException
      */
-    public function fetchFacets(array $groupIds)
+    public function fetchFacets(array $groupIds = [])
     {
         if (empty($groupIds)) {
-            throw new \InvalidArgumentException('no groupId given');
+            $groupIds = [];
         }
 
         $groupIds = array_map('intval', $groupIds);

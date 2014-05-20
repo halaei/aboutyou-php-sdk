@@ -127,7 +127,7 @@ abstract class AbstractFacetManager implements FacetManagerInterface
 
     protected function collectFacetIds(\stdClass $productJsonObject)
     {
-        if (!isset($productJsonObject->id) || isset($this->knownProductIds[$productJsonObject->id])) {
+        if (!isset($productJsonObject->id)) {
             return;
         }
 
@@ -185,4 +185,4 @@ abstract class AbstractFacetManager implements FacetManagerInterface
 
         return $keys;
     }
-} 
+}
