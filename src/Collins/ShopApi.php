@@ -42,6 +42,11 @@ class ShopApi
     /** @var ModelFactoryInterface */
     protected $modelFactory;
 
+    /**
+     * @var \Doctrine\Common\Cache\CacheMultiGet|null
+     */
+    protected $facetManagerCache;
+
     /** @var LoggerInterface */
     protected $logger;
 
@@ -68,21 +73,7 @@ class ShopApi
     ) {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $logger);
 
-        if ($resultFactory !== null) {
-            $this->setResultFactory($resultFactory);
-        } else {
-            $strategy = new FetchFacetGroupStrategy($this);
-            if ($facetManagerCache) {
-                $strategy = new DoctrineMultiGetCacheStrategy($facetManagerCache, $strategy);
-            }
-            $this->setResultFactory(
-                new DefaultModelFactory(
-                    $this,
-                    new DefaultFacetManager($strategy),
-                    new EventDispatcher()
-                )
-            );
-        }
+        $this->facetManagerCache = $facetManagerCache;
 
         if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
@@ -93,8 +84,6 @@ class ShopApi
         $this->logger = $logger;
         $this->appId  = $appId;
     }
-
-
 
     /**
      * @return ShopApiClient
@@ -188,7 +177,7 @@ class ShopApi
             $this->baseImageUrl = '';
         }
 
-        $this->modelFactory->setBaseImageUrl($this->baseImageUrl);
+        $this->getResultFactory()->setBaseImageUrl($this->baseImageUrl);
     }
 
     /**
@@ -204,7 +193,7 @@ class ShopApi
      */
     public function getQuery()
     {
-        $query = new Query($this->shopApiClient, $this->modelFactory, $this->eventDispatcher);
+        $query = new Query($this->shopApiClient, $this->getResultFactory(), $this->eventDispatcher);
 
         return $query;
     }
@@ -443,6 +432,9 @@ class ShopApi
      */
     public function getResultFactory()
     {
+        if(is_null($this->modelFactory)) {
+            $this->initDefaultFactory();
+        }
         return $this->modelFactory;
     }
 
@@ -664,5 +656,25 @@ class ShopApi
             176 => 'clothing_womens_it',
             192 => 'clothing_mens_acc'
         );
+    }
+
+    /**
+     * @return DefaultModelFactory
+     */
+    protected function initDefaultFactory()
+    {
+        $strategy = new FetchFacetGroupStrategy($this);
+
+        if ($this->facetManagerCache) {
+            $strategy = new DoctrineMultiGetCacheStrategy($this->facetManagerCache, $strategy);
+        }
+
+        $resultFactory = new DefaultModelFactory(
+            $this,
+            new DefaultFacetManager($strategy),
+            new EventDispatcher()
+        );
+
+        $this->setResultFactory($resultFactory);
     }
 }

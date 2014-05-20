@@ -16,15 +16,7 @@ class FetchSingleFacetStrategy implements FetchStrategyInterface
     /**
      * @param ShopApi $shopApi
      */
-    public function __construct(ShopApi $shopApi=null)
-    {
-        $this->shopApi = $shopApi;
-    }
-
-    /**
-     * @param ShopApi $shopApi
-     */
-    public function setShopApi(ShopApi $shopApi)
+    public function __construct(ShopApi $shopApi)
     {
         $this->shopApi = $shopApi;
     }
