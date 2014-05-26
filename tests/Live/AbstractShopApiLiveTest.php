@@ -60,17 +60,21 @@ abstract class AbstractShopApiLiveTest extends \Collins\ShopApi\Test\ShopSdkTest
      * @param int $offset
      * @return ShopApi\Model\Product
      */
-    public function getProduct($offset = 1)
+    public function getProduct($offset = 1, array $fields = null)
     {
         if ($offset < 1) {
             $offset = 1;
+        }
+
+        if ($fields === null) {
+            $fields = array(\Collins\ShopApi\Criteria\ProductFields::DEFAULT_VARIANT);
         }
         
         $api = $this->getShopApi();
         
         $criteria = $this->getSearchCriteria();
         $criteria->setLimit(1, $offset);
-        $criteria->selectProductFields(array(\Collins\ShopApi\Criteria\ProductFields::DEFAULT_VARIANT));        
+        $criteria->selectProductFields($fields);
         
         $result = $api->fetchProductSearch($criteria);
         $products = $result->getProducts();
