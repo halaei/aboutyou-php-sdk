@@ -7,7 +7,6 @@
 namespace Collins\ShopApi;
 
 
-use Collins\ShopApi\Criteria\ProductFields;
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Model\Basket;
 
@@ -200,11 +199,11 @@ class QueryBuilder
         $this->checkSessionId($sessionId);
 
         $orderLines = array();
-        
+
         foreach ($itemIds as $id) {
             $orderLines[] = array('delete' => $id);
         }
-        
+
         $this->query[] = array(
             'basket' => array(
                 'session_id' => $sessionId,
@@ -253,7 +252,7 @@ class QueryBuilder
         } else {
             // we allow to pass a single ID instead of an array
             settype($ids, 'array');
-            
+
             foreach ($ids as $id) {
                 if (!is_long($id) && !ctype_digit($id)) {
                     throw new \InvalidArgumentException('A single category ID must be an integer or a numeric string');
@@ -401,12 +400,8 @@ class QueryBuilder
      *
      * @throws \InvalidArgumentException
      */
-    public function fetchFacets(array $groupIds)
+    public function fetchFacets(array $groupIds = array())
     {
-        if (empty($groupIds)) {
-            throw new \InvalidArgumentException('no groupId given');
-        }
-
         $groupIds = array_map('intval', $groupIds);
 
         $this->query[] = array(
