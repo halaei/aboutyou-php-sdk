@@ -17,7 +17,7 @@ class ShopApiClient
     const DEFAULT_BASE_IMAGE_URL = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file/';
 
     const API_END_POINT_STAGE = 'http://ant-core-staging-s-api1.wavecloud.de/api';
-    const API_END_POINT_LIVE  = 'http://ant-shop-api-lb1.antevortenet.de/api';
+    const API_END_POINT_LIVE  = 'https://shop-api.aboutyou.de/api';
 
     /**
      * Guzzle client that is needed to execute API requests.

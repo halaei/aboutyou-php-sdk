@@ -33,8 +33,6 @@ class FetchSingleFacetStrategy implements FetchStrategyInterface
         $apiQueryParams = array();
 
         foreach ($ids as $groupId => $facetIds) {
-            $facetIds = array_values(array_unique($facetIds));
-
             foreach ($facetIds as $facetId) {
                 $apiQueryParams[] = array('id' => (int)$facetId, 'group_id' => $groupId);
             }
