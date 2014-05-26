@@ -41,7 +41,7 @@ class QueryBuilder
 
         // strtolower is a workaround of ticket SAPI-532
         $options = array(
-            'searchword' => mb_strtolower($searchword)
+            'searchword' => mb_strtolower($searchword),
         );
 
         if ($limit !== null) {
@@ -401,8 +401,12 @@ class QueryBuilder
      *
      * @throws \InvalidArgumentException
      */
-    public function fetchFacets(array $groupIds = array())
+    public function fetchFacets(array $groupIds = [])
     {
+        if (empty($groupIds)) {
+            $groupIds = [];
+        }
+
         $groupIds = array_map('intval', $groupIds);
 
         $this->query[] = array(
