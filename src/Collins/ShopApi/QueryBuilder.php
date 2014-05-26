@@ -7,6 +7,7 @@
 namespace Collins\ShopApi;
 
 
+use Collins\ShopApi\Criteria\ProductFields;
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Model\Basket;
 
