@@ -401,12 +401,8 @@ class QueryBuilder
      *
      * @throws \InvalidArgumentException
      */
-    public function fetchFacets(array $groupIds = [])
+    public function fetchFacets(array $groupIds = array())
     {
-        if (empty($groupIds)) {
-            $groupIds = [];
-        }
-
         $groupIds = array_map('intval', $groupIds);
 
         $this->query[] = array(
