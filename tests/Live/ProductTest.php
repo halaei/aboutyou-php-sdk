@@ -3,17 +3,42 @@
 namespace Collins\ShopApi\Test\Live;
 
 use Collins\ShopApi\Criteria\ProductFields;
+use Collins\ShopApi\Model\Product;
 
+/**
+ * @group live
+ */
 class ProductTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
-    /**
-     * @group live
-     */
-    public function testGetCategories()
+    public function testGetProduct()
     {
-        $product = $this->getProduct(1);
-        
+        $product = $this->getProduct(1, array(
+            ProductFields::MIN_PRICE,
+            ProductFields::MAX_PRICE,
+            ProductFields::VARIANTS
+        ));
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\Product', $product);
+
+        return $product;
+    }
+
+    /**
+     * @depends testGetProduct
+     */
+    public function testGetCategories(Product $product)
+    {
         $this->assertInternalType('array', $product->getRootCategories());
+    }
+
+    /**
+     * @depends testGetProduct
+     */
+    public function testGetMxxPrice(Product $product)
+    {
+        $this->assertNotNull($product->getMinPrice());
+        $this->assertInternalType('int', $product->getMinPrice());
+        $this->assertNotNull($product->getMaxPrice());
+        $this->assertInternalType('int', $product->getMaxPrice());
     }
 
 //      TODO: search for a product with no length, eg. shows

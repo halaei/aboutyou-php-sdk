@@ -28,14 +28,4 @@ class FacetTestAbstract extends AbstractShopApiTest
             $this->assertEquals(0, $facet->getGroupId());
         }
     }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testFacetsEmptyParams()
-    {
-        $shopApi = $this->getShopApiWithResultFile('fetch-facet.json');
-
-        $shopApi->fetchFacets(array());
-    }
 }
