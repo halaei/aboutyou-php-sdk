@@ -40,12 +40,7 @@ class ShopApi
     protected $baseImageUrl;
 
     /** @var ModelFactoryInterface */
-    protected $modelFactory;
-
-    /**
-     * @var \Doctrine\Common\Cache\CacheMultiGet|null
-     */
-    protected $facetManagerCache;
+    protected $modelFactory = null;
 
     /** @var LoggerInterface */
     protected $logger;
@@ -73,7 +68,11 @@ class ShopApi
     ) {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $logger);
 
-        $this->facetManagerCache = $facetManagerCache;
+        if ($facetManagerCache) {
+            $this->modelFactory = function ($scope) use ($facetManagerCache) {
+                return $scope->initDefaultFactory($facetManagerCache);
+            };
+        }
 
         if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
@@ -432,9 +431,13 @@ class ShopApi
      */
     public function getResultFactory()
     {
-        if(is_null($this->modelFactory)) {
+        if ($this->modelFactory === null) {
             $this->initDefaultFactory();
+        } else if ($this->modelFactory instanceof \Closure) {
+            $closure = $this->modelFactory;
+            $closure($this);
         }
+
         return $this->modelFactory;
     }
 
@@ -659,14 +662,16 @@ class ShopApi
     }
 
     /**
+     * @param \Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
+     *
      * @return DefaultModelFactory
      */
-    protected function initDefaultFactory()
+    public function initDefaultFactory($facetManagerCache = null)
     {
         $strategy = new FetchFacetGroupStrategy($this);
 
-        if ($this->facetManagerCache) {
-            $strategy = new DoctrineMultiGetCacheStrategy($this->facetManagerCache, $strategy);
+        if ($facetManagerCache) {
+            $strategy = new DoctrineMultiGetCacheStrategy($facetManagerCache, $strategy);
         }
 
         $resultFactory = new DefaultModelFactory(
