@@ -73,7 +73,19 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
         $this->assertEquals('{"session_id":"my","result":{"facets":{"0":{"limit":4},"206":{"limit":5}}}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
+            ->selectProductFields(array(ProductFields::IS_ACTIVE));
+        $this->assertEquals('{"session_id":"my","result":{"fields":["active"]}}', json_encode($criteria->toArray()));
+        $criteria = $this->getCriteria()
             ->selectProductFields(array(ProductFields::BRAND, ProductFields::IS_ACTIVE));
+        $this->assertEquals('{"session_id":"my","result":{"fields":["brand_id","active","attributes_merged"]}}', json_encode($criteria->toArray()));
+        $criteria = $this->getCriteria()
+            ->selectProductFields(array(ProductFields::VARIANTS));
+        $this->assertEquals('{"session_id":"my","result":{"fields":["variants","attributes_merged"]}}', json_encode($criteria->toArray()));
+        $criteria = $this->getCriteria()
+            ->selectProductFields(array(ProductFields::DEFAULT_VARIANT));
+        $this->assertEquals('{"session_id":"my","result":{"fields":["default_variant","attributes_merged"]}}', json_encode($criteria->toArray()));
+        $criteria = $this->getCriteria()
+            ->selectProductFields(array(ProductFields::BRAND, ProductFields::IS_ACTIVE, ProductFields::BRAND));
         $this->assertEquals('{"session_id":"my","result":{"fields":["brand_id","active","attributes_merged"]}}', json_encode($criteria->toArray()));
         $criteria = $this->getCriteria()
             ->selectProductFields(array(ProductFields::BRAND, ProductFields::ATTRIBUTES_MERGED, ProductFields::IS_ACTIVE));

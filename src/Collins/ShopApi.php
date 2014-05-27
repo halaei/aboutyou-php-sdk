@@ -615,7 +615,7 @@ class ShopApi
      */
     public function getJavaScriptURL()
     {
-        $url = '//devcenter.mary-paul.de/apps/js/api.js';
+        $url = '//developer.aboutyou.de/apps/js/api.js';
 
         return $url;
     }

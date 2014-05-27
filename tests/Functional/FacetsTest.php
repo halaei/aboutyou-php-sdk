@@ -4,7 +4,7 @@ namespace Collins\ShopApi\Test\Functional;
 use Collins\ShopApi;
 use Guzzle\Http\Message\Response;
 
-class FacetsTestAbstract extends AbstractShopApiTest
+class FacetsTest extends AbstractShopApiTest
 {
     /**
      *
@@ -33,16 +33,6 @@ class FacetsTestAbstract extends AbstractShopApiTest
         $this->assertEquals($facet, reset($facets));
         $this->assertEquals(2353, $facet->getId());
         $this->assertEquals('01', $facet->getName());
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testNotAllowFetchAllFacets()
-    {
-        $shopApi = $this->getShopApiWithResultFile('facets-206.json');
-
-        $shopApi->fetchFacets(array());
     }
 
     /**

@@ -63,7 +63,7 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
 
         $item->jsonObject = $jsonObject;
                 
-        if ($jsonObject->product_id !== null) {
+        if (!empty($jsonObject->product_id)) {
             if (isset($products[$jsonObject->product_id])) {
                 $item->setProduct($products[$jsonObject->product_id]);
             } else {
