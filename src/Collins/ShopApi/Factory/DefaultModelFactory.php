@@ -27,15 +27,26 @@ class DefaultModelFactory implements ModelFactoryInterface
      * @param FacetManagerInterface $facetManager
      * @param EventDispatcher $eventDispatcher
      */
-    public function __construct(ShopApi $shopApi, FacetManagerInterface $facetManager, EventDispatcher $eventDispatcher)
+    public function __construct(
+        ShopApi $shopApi = null,
+        FacetManagerInterface $facetManager,
+        EventDispatcher $eventDispatcher
+    ) {
+        if (!empty($shopApi)) {
+            $this->setShopApi($shopApi);
+        }
+
+        $this->eventDispatcher = $eventDispatcher;
+        $this->setFacetManager($facetManager);
+    }
+
+    public function setShopApi(ShopApi $shopApi)
     {
         ShopApi\Model\Category::setShopApi($shopApi);
         ShopApi\Model\Product::setShopApi($shopApi);
         ShopApi\Model\FacetGroupSet::setShopApi($shopApi);
 
         $this->shopApi = $shopApi;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->setFacetManager($facetManager);
     }
 
     /**
@@ -197,7 +208,7 @@ class DefaultModelFactory implements ModelFactoryInterface
         $facets = array();
         foreach ($jsonArray as $jsonFacet) {
             $facet = $this->createFacet($jsonFacet);
-            $key   = $facet->getUniqueKey();
+            $key = $facet->getUniqueKey();
             $facets[$key] = $facet;
         }
 
@@ -338,7 +349,7 @@ class DefaultModelFactory implements ModelFactoryInterface
         $apps = array();
         foreach ($jsonObject->child_apps as $jsonApp) {
             $app = $this->createApp($jsonApp);
-            $key   = $app->getId();
+            $key = $app->getId();
             $apps[$key] = $app;
         }
 
@@ -363,10 +374,16 @@ class DefaultModelFactory implements ModelFactoryInterface
         $facetsCounts = array();
 
         foreach ($jsonObject as $groupId => $jsonResultFacet) {
-            if (!ctype_digit($groupId)) continue;
+            if (!ctype_digit($groupId)) {
+                continue;
+            }
             $facetCounts = $this->getTermFacets($groupId, $jsonResultFacet->terms);
 
-            $facetsCounts[$groupId] = ShopApi\Model\ProductSearchResult\FacetCounts::createFromJson($groupId, $jsonResultFacet, $facetCounts);
+            $facetsCounts[$groupId] = ShopApi\Model\ProductSearchResult\FacetCounts::createFromJson(
+                $groupId,
+                $jsonResultFacet,
+                $facetCounts
+            );
         }
 
         return $facetsCounts;
@@ -378,9 +395,11 @@ class DefaultModelFactory implements ModelFactoryInterface
 
         $facetCounts = array();
         foreach ($jsonTerms as $jsonTerm) {
-            $id    = (int)$jsonTerm->term;
+            $id = (int)$jsonTerm->term;
             $facet = $facetManager->getFacet($groupId, $id);
-            if ($facet === null) continue; // TODO: Handle error, write test
+            if ($facet === null) {
+                continue;
+            } // TODO: Handle error, write test
             $count = $jsonTerm->count;
             $facetCounts[] = new ShopApi\Model\ProductSearchResult\FacetCount($facet, $count);
         }
