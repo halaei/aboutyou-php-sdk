@@ -54,6 +54,10 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $expected = '[{"autocompletion":{"searchword":"term"}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
+        $query = $queryFactory()->fetchAutocomplete('Gürtel');
+        $expected = '[{"autocompletion":{"searchword":"g\u00fcrtel"}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+
         $query = $queryFactory()->fetchAutocomplete('term', 10);
         $expected = '[{"autocompletion":{"searchword":"term","limit":10}}]';
         $this->assertEquals($expected, $query->getQueryString());
