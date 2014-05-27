@@ -61,8 +61,8 @@ class AutocompelteTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTes
     public function testUmlaut()
     {
         $shopApi = $this->getShopApi();
-        $autocomplete = $shopApi->fetchAutocomplete("Gürtel");
+        $autocomplete = $shopApi->fetchAutocomplete('Gürtel');
         
-        $this->assertInstanceOf("Collins\ShopApi\Model\Autocomplete", $autocomplete);
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Autocomplete', $autocomplete);
     }
 }
