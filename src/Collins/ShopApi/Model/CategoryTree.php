@@ -10,17 +10,20 @@ use Collins\ShopApi\Factory\ModelFactoryInterface;
 
 class CategoryTree implements \IteratorAggregate, \Countable
 {
-    /** @var Category[] */
-    protected $allCategories;
+    /** @var StdClass[] */
+    private $jsonObject;
 
     /** @var Category[] */
-    protected $activeCategories;
+    private $categoryInstances;
 
-    protected function __construct()
-    {
-        $this->allCategories = array();
-        $this->activeCategories = array();
-    }
+    /** @var  Category[] */
+    private $activeCategoryInstances;
+
+    /** @var ModelFactoryInterface */
+    private $factoryInstance;
+
+
+
 
     /**
      * @param array $jsonArray
@@ -28,19 +31,18 @@ class CategoryTree implements \IteratorAggregate, \Countable
      *
      * @return static
      */
-    public static function createFromJson(array $jsonArray, ModelFactoryInterface $factory)
+    public static function createFromJson($jsonArray, ModelFactoryInterface $factory)
     {
         $categoryTree = new static();
-
-        foreach ($jsonArray as $jsonCategory) {
-            $category = $factory->createCategory($jsonCategory);
-            $categoryTree->allCategories[] = $category;
-            if ($category->isActive()) {
-                $categoryTree->activeCategories[] = $category;
-            }
-        }
-
+        $categoryTree->jsonObject = $jsonArray;
+        $categoryTree->categoryInstances = array();
+        $categoryTree->factoryInstance = $factory;
         return $categoryTree;
+    }
+
+    protected function __construct()
+    {
+
     }
 
     /**
@@ -50,10 +52,54 @@ class CategoryTree implements \IteratorAggregate, \Countable
      */
     public function getCategories($activeOnly = true)
     {
-        if ($activeOnly) {
-            return $this->activeCategories;
+        if(!is_null($this->activeCategoryInstances)) {
+            return($this->activeCategoryInstances);
         }
-        return $this->allCategories;
+
+        $result = array();
+
+        if(!isset($this->jsonObject->parent_child) || !isset($this->jsonObject->parent_child->{"0"})) {
+            return($result);
+        }
+
+        foreach($this->jsonObject->parent_child->{"0"} as $categoryId) {
+            $result[] = $this->getCategory($categoryId, $activeOnly);
+        }
+
+        $result = array_filter($result);
+
+        if($activeOnly) {
+            $this->activeCategoryInstances = $result;
+        }
+
+        return($result);
+    }
+
+    public function getCategory($id, $activeOnly=true)
+    {
+        if(!isset($this->jsonObject->ids->{$id})) {
+            return null;
+        }
+
+        $rawObject = $this->jsonObject->ids->{$id};
+
+        if($activeOnly && $rawObject->active===false) {
+            return(null);
+        }
+
+
+        if(!isset($this->categoryInstances[$id])) {
+            if(!empty($rawObject->parent) &&
+                isset($this->categoryInstances[$rawObject->parent])) {
+                $parentObject = $this->categoryInstances[$rawObject->parent];
+            } else {
+                $parentObject = null;
+            }
+
+            $this->categoryInstances[$id] = $this->factoryInstance->createCategory($rawObject, $parentObject);
+        }
+
+        return($this->categoryInstances[$id]);
     }
 
     /**
@@ -64,7 +110,7 @@ class CategoryTree implements \IteratorAggregate, \Countable
      * @return Iterator
      */
     public function getIterator() {
-        return new \ArrayIterator($this->activeCategories);
+        return new \ArrayIterator($this->getCategories());
     }
 
     /**
@@ -74,6 +120,6 @@ class CategoryTree implements \IteratorAggregate, \Countable
      */
     public function count()
     {
-        return count($this->allCategories);
+        return count($this->getCategories());
     }
 }

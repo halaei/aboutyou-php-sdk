@@ -22,6 +22,9 @@ class DefaultModelFactory implements ModelFactoryInterface
     /** @var EventDispatcher */
     protected $eventDispatcher;
 
+    /** @var  CategoryManagerInterface */
+    protected $categoryManager;
+
     /**
      * @param ShopApi $shopApi
      * @param FacetManagerInterface $facetManager
@@ -93,6 +96,18 @@ class DefaultModelFactory implements ModelFactoryInterface
     public function getFacetManager()
     {
         return $this->facetManager;
+    }
+
+    public function setCategoryManager()
+    {
+
+    }
+
+    public function getCategoryManager()
+    {
+        if(!is_null($this->categoryManager)) {
+
+        }
     }
 
     public function setBaseImageUrl($baseUrl)
@@ -183,7 +198,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return ShopApi\Model\CategoryTree
      */
-    public function createCategoryTree(array $jsonArray)
+    public function createCategoryTree($jsonArray)
     {
         return ShopApi\Model\CategoryTree::createFromJson($jsonArray, $this);
     }
@@ -444,19 +459,10 @@ class DefaultModelFactory implements ModelFactoryInterface
         }
 
         // fetch all categories from API
-        $flattenCategories = $this->getShopApi()->fetchCategoriesByIds()->getCategories();
+        $flattenCategories = $this->getShopApi()->getCategoryManager()->getCategories(array_keys($counts), false);
 
         foreach ($flattenCategories as $id => $category) {
-            if (isset($counts[$category->getId()])) {
-                $category->setProductCount($counts[$category->getId()]);
-                if ($category->getParentId()) {
-                    $parent = $flattenCategories[$category->getParentId()];
-                    $parent->addChild($category);
-                    $category->setParent($parent);
-                }
-            } else {
-                unset($flattenCategories[$id]);
-            }
+            $category->setProductCount($counts[$category->getId()]);
         }
 
         return $flattenCategories;

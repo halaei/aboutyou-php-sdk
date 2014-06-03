@@ -288,6 +288,9 @@ class QueryBuilder
         } else {
             $params = new \stdClass();
         }
+
+        $params->version = "2";
+
         $this->query[] = array(
             'category_tree' => $params,
         );

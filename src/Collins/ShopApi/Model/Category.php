@@ -148,17 +148,9 @@ class Category extends AbstractModel
      */
     public function getParent()
     {
-        if ($this->parent) {
-            return $this->parent;
-        }
+        if (!$this->parent && $this->getParentId()) {
+            $this->parent = $this->getShopApi()->getCategoryManager()->getCategory($this->getParentId());
 
-        if (!$this->getParentId()) {
-            return null;
-        }
-
-        $parents = $this->getShopApi()->fetchCategoriesByIds(array($this->getParentId()))->getCategories();
-        if (count($parents)) {
-            $this->parent = reset($parents);
         }
 
         return $this->parent;

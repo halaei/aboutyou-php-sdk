@@ -36,7 +36,7 @@ interface ResultFactoryInterface
      *
      * @return mixed
      */
-    public function createCategoryTree(array $jsonArray);
+    public function createCategoryTree($jsonArray);
 
     /**
      * @param array $jsonArray

@@ -7,6 +7,8 @@ use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Factory\ResultFactoryInterface;
 use Collins\ShopApi\Model\Basket;
+use Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface;
+use Collins\ShopApi\Model\CategoryManager\DefaultCategoryManager;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
 use Collins\ShopApi\Model\FacetManager\DoctrineMultiGetCacheStrategy;
@@ -41,6 +43,9 @@ class ShopApi
 
     /** @var ModelFactoryInterface */
     protected $modelFactory = null;
+
+    /** @var  CategoryManagerInterface */
+    protected $categoryManager;
 
     /** @var LoggerInterface */
     protected $logger;
@@ -439,6 +444,25 @@ class ShopApi
         }
 
         return $this->modelFactory;
+    }
+
+    /**
+     * @param CategoryManagerInterface $categoryManager
+     */
+    public function setCategoryManager(CategoryManagerInterface $categoryManager) {
+        $this->categoryManager = $categoryManager;
+    }
+
+    /**
+     * @return CategoryManagerInterface|DefaultCategoryManager
+     */
+    public function getCategoryManager()
+    {
+        if(is_null($this->categoryManager)) {
+            $this->categoryManager = new DefaultCategoryManager($this);
+        }
+
+        return($this->categoryManager);
     }
 
     /**

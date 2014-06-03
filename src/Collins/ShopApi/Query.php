@@ -37,7 +37,7 @@ class Query extends QueryBuilder
     /**
      * request the queries and returns an array of the results
      *
-     * @return array
+     * @return \Collins\ShopApi\Model\AbstractModel[]
      */
     public function execute()
     {
@@ -89,7 +89,7 @@ class Query extends QueryBuilder
      * @param array $jsonResponse the response body as json array
      * @param bool $isMultiRequest
      *
-     * @return array
+     * @return \Collins\ShopApi\Model\AbstractModel[]
      *
      * @throws UnexpectedResultException
      */
