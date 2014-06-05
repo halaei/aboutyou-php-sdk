@@ -338,8 +338,10 @@ class Variant extends AbstractModel
 
         $groups = $this->getFacetGroupSet()->getGroups();
 
-        foreach ($groups as $group) {
-            $keys[$group->getName()] = $group->getGroupId();
+        if (is_array($groups)) {
+            foreach ($groups as $group) {
+                $keys[$group->getName()] = $group->getGroupId();
+            }
         }
 
         $sizeRun = $this->getFacetGroup(Constants::FACET_SIZE_RUN);
