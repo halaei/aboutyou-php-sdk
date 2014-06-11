@@ -30,8 +30,9 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class ShopApi
 {
-    const IMAGE_URL_STAGE = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file';
-    const IMAGE_URL_LIVE = 'http://cdn.mary-paul.de/file';
+    const IMAGE_URL_STAGE   = 'http://mndb.staging.aboutyou.de/mmdb/file';
+    const IMAGE_URL_SANDBOX = 'http://mndb.sandbox.aboutyou.de/mmdb/file';
+    const IMAGE_URL_LIVE    = 'http://cdn.mary-paul.de/file';
 
     /** @var ShopApiClient */
     protected $shopApiClient;
@@ -76,6 +77,8 @@ class ShopApi
 
         if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
+        } else if ($apiEndPoint === Constants::API_ENVIRONMENT_SANDBOX) {
+            $this->setBaseImageUrl(self::IMAGE_URL_SANDBOX);
         } else {
             $this->setBaseImageUrl(self::IMAGE_URL_LIVE);
         }
