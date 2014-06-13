@@ -30,6 +30,10 @@
         {
             "type": "git",
             "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-auth-sdk.git"
+        },
+        {
+            "type": "git",
+            "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-jws.git"
         }
     ],
     "require": {
