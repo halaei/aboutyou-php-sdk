@@ -1,6 +1,8 @@
 <?php
 namespace Collins;
 
+use AuthSDK\AuthSDK;
+use AuthSDK\SessionStorage;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Factory\DefaultModelFactory;
@@ -30,8 +32,9 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class ShopApi
 {
-    const IMAGE_URL_STAGE = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file';
-    const IMAGE_URL_LIVE = 'http://cdn.mary-paul.de/file';
+    const IMAGE_URL_STAGE   = 'http://mndb.staging.aboutyou.de/mmdb/file';
+    const IMAGE_URL_SANDBOX = 'http://mndb.sandbox.aboutyou.de/mmdb/file';
+    const IMAGE_URL_LIVE    = 'http://cdn.mary-paul.de/file';
 
     /** @var ShopApiClient */
     protected $shopApiClient;
@@ -40,12 +43,17 @@ class ShopApi
     protected $baseImageUrl;
 
     /** @var ModelFactoryInterface */
-    protected $modelFactory;
+    protected $modelFactory = null;
 
     /** @var LoggerInterface */
     protected $logger;
 
+    /** @var string */
     protected $appId;
+    /** @var string */
+    protected $appPassword;
+    /** @var AuthSDK */
+    protected $authSdk;
 
     /** @var EventDispatcher */
     protected $eventDispatcher;
@@ -68,31 +76,24 @@ class ShopApi
     ) {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $logger);
 
-        if ($resultFactory === null) {
-            $strategy = new FetchFacetGroupStrategy($this);
-            if ($facetManagerCache) {
-                $strategy = new DoctrineMultiGetCacheStrategy($facetManagerCache, $strategy);
-            }
-            $this->setResultFactory(
-                new DefaultModelFactory(
-                    $this,
-                    new DefaultFacetManager($strategy),
-                    new EventDispatcher()
-                )
-            );
+        if ($facetManagerCache) {
+            $this->modelFactory = function ($scope) use ($facetManagerCache) {
+                return $scope->initDefaultFactory($facetManagerCache);
+            };
         }
 
         if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
+        } else if ($apiEndPoint === Constants::API_ENVIRONMENT_SANDBOX) {
+            $this->setBaseImageUrl(self::IMAGE_URL_SANDBOX);
         } else {
             $this->setBaseImageUrl(self::IMAGE_URL_LIVE);
         }
 
-        $this->logger = $logger;
-        $this->appId  = $appId;
+        $this->logger      = $logger;
+        $this->appId       = $appId;
+        $this->appPassword = $appPassword;
     }
-
-
 
     /**
      * @return ShopApiClient
@@ -108,7 +109,8 @@ class ShopApi
      */
     public function setAppCredentials($appId, $appPassword)
     {
-        $this->appId = $appId;
+        $this->appId       = $appId;
+        $this->appPassword = $appPassword;
         $this->shopApiClient->setAppCredentials($appId, $appPassword);
     }
 
@@ -186,7 +188,7 @@ class ShopApi
             $this->baseImageUrl = '';
         }
 
-        $this->modelFactory->setBaseImageUrl($this->baseImageUrl);
+        $this->getResultFactory()->setBaseImageUrl($this->baseImageUrl);
     }
 
     /**
@@ -202,7 +204,7 @@ class ShopApi
      */
     public function getQuery()
     {
-        $query = new Query($this->shopApiClient, $this->modelFactory, $this->eventDispatcher);
+        $query = new Query($this->shopApiClient, $this->getResultFactory(), $this->eventDispatcher);
 
         return $query;
     }
@@ -441,6 +443,13 @@ class ShopApi
      */
     public function getResultFactory()
     {
+        if ($this->modelFactory === null) {
+            $this->initDefaultFactory();
+        } else if ($this->modelFactory instanceof \Closure) {
+            $closure = $this->modelFactory;
+            $closure($this);
+        }
+
         return $this->modelFactory;
     }
 
@@ -662,5 +671,156 @@ class ShopApi
             176 => 'clothing_womens_it',
             192 => 'clothing_mens_acc'
         );
+    }
+
+    /**
+     * @param \Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
+     *
+     * @return DefaultModelFactory
+     */
+    public function initDefaultFactory($facetManagerCache = null)
+    {
+        $strategy = new FetchFacetGroupStrategy($this);
+
+        if ($facetManagerCache) {
+            $strategy = new DoctrineMultiGetCacheStrategy($facetManagerCache, $strategy);
+        }
+
+        $resultFactory = new DefaultModelFactory(
+            $this,
+            new DefaultFacetManager($strategy),
+            new EventDispatcher()
+        );
+
+        $this->setResultFactory($resultFactory);
+    }
+
+    /*
+     * AuthSdk integration
+     * @experimental
+     */
+
+    /**
+     * Initialize the Auth API
+     *
+     * The Auth SDK requires additional parameters
+     *
+     * @param string $appSecret                The App Secret can be found in the DevCenter
+     * @param string $callbackUrl              The User will redirect to this URL, if the is logged in succesful. The Auth SDK will then request the access token
+     * @param bool   $usePopupLayout           If want to open the login page not in a popup, set this to false
+     */
+    public function initAuthApi(
+        $appSecret,
+        $callbackUrl,
+        $usePopupLayout = true
+    ) {
+        $this->authSdk = new AuthSDK(array(
+            'clientId'     => $this->getAppId(),
+            'clientToken'  => $this->appPassword,
+            'clientSecret' => $appSecret,
+            'redirectUri'  => $callbackUrl,
+            'popup'        => $usePopupLayout
+        ), new SessionStorage());
+
+        return $this->handleOAuth2Request();
+    }
+
+    protected function handleOAuth2Request()
+    {
+        $parsed = $this->authSdk->parseRedirectResponse();
+        if (isset($_GET['state'], $_GET['code']) || isset($_GET['logout'])) {
+            $redirectUrl = $this->authSdk->getState('redirectUrl');
+
+            return $this->redirectAfterOAuth2Request($redirectUrl);
+        }
+    }
+
+    protected function redirectAfterOAuth2Request($redirectUrl)
+    {
+        return $redirectUrl;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAuthApiInitialized()
+    {
+        return $this->authSdk !== null;
+    }
+
+    /**
+     * @throws \RuntimeException
+     */
+    protected function checkAuthSdk()
+    {
+        if (!$this->isAuthApiInitialized()) {
+            throw new \RuntimeException('The Auth API must be initialized, please call initAuthApi() first');
+        }
+    }
+
+    /**
+     * @return bool
+     *
+     * @throws \RuntimeException
+     */
+    public function isLoggedIn()
+    {
+        $this->checkAuthSdk();
+
+        $authResult = $this->authSdk->getUser();
+
+        return $authResult->hasErrors() === false;
+    }
+
+    /**
+     * Returns a json object, if logged in or null, if not
+     *
+     * @return \stdClass|null
+     *
+     * @throws \RuntimeException
+     */
+    public function getUserData()
+    {
+        $this->checkAuthSdk();
+
+        $authResult = $this->authSdk->getUser();
+        if ($authResult->hasErrors()) {
+            return null;
+        }
+        $result = $authResult->getResult();
+        $user = isset($result->response) ? json_decode($result->response) : false;
+
+        return $user ? $user : null;
+    }
+
+    /**
+     * @param string $redirectUrl
+     *
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    public function getLoginUrl($redirectUrl = null)
+    {
+        $this->checkAuthSdk();
+        if (!empty($redirectUrl)) {
+            $this->authSdk->setState('redirectUrl', $redirectUrl);
+        }
+
+        return $this->authSdk->getLoginUrl();
+    }
+
+    /**
+     * @param string $redirectUrl
+     *
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    public function getLogoutUrl($redirectUrl = null)
+    {
+        $this->checkAuthSdk();
+
+        return $this->authSdk->getLogoutUrl($redirectUrl);
     }
 }

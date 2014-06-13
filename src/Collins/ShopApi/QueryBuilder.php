@@ -41,7 +41,7 @@ class QueryBuilder
 
         // strtolower is a workaround of ticket SAPI-532
         $options = array(
-            'searchword' => mb_strtolower($searchword),
+            'searchword' => mb_strtolower($searchword, 'UTF-8'),
         );
 
         if ($limit !== null) {
@@ -54,7 +54,7 @@ class QueryBuilder
         if (!empty($types)) {
             $options['types'] = $types;
         }
-        
+
         $this->query[] = array('autocompletion' => $options);
 
         return $this;

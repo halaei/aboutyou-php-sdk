@@ -44,27 +44,33 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testFetchAutocomplete()
     {
-        $query = (new QueryBuilder())->fetchAutocomplete('term');
+        $queryFactory = function () {return new QueryBuilder();};
+
+        $query = $queryFactory()->fetchAutocomplete('term');
         $expected = '[{"autocompletion":{"searchword":"term"}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
-        $query = (new QueryBuilder())->fetchAutocomplete('Term');
+        $query = $queryFactory()->fetchAutocomplete('Term');
         $expected = '[{"autocompletion":{"searchword":"term"}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
-        $query = (new QueryBuilder())->fetchAutocomplete('term', 10);
+        $query = $queryFactory()->fetchAutocomplete('Gürtel');
+        $expected = '[{"autocompletion":{"searchword":"g\u00fcrtel"}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+
+        $query = $queryFactory()->fetchAutocomplete('term', 10);
         $expected = '[{"autocompletion":{"searchword":"term","limit":10}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
-        $query = (new QueryBuilder())->fetchAutocomplete('term', null, array(Constants::TYPE_CATEGORIES));
+        $query = $queryFactory()->fetchAutocomplete('term', null, array(Constants::TYPE_CATEGORIES));
         $expected = '[{"autocompletion":{"searchword":"term","types":["categories"]}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
-        $query = (new QueryBuilder())->fetchAutocomplete('term', 15, array(Constants::TYPE_CATEGORIES, Constants::TYPE_PRODUCTS));
+        $query = $queryFactory()->fetchAutocomplete('term', 15, array(Constants::TYPE_CATEGORIES, Constants::TYPE_PRODUCTS));
         $expected = '[{"autocompletion":{"searchword":"term","limit":15,"types":["categories","products"]}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
-        $query = (new QueryBuilder())->fetchAutocomplete('term', "12", array());
+        $query = $queryFactory()->fetchAutocomplete('term', "12", array());
         $expected = '[{"autocompletion":{"searchword":"term","limit":12}}]';
         $this->assertEquals($expected, $query->getQueryString());
     }

@@ -8,13 +8,13 @@
         {
             "name": "Christian Kilb",
             "email": "christian.kilb@project-collins.com",
-            "homepage": "https://devcenter.mary-paul.de/",
+            "homepage": "https://developer.aboutyou.de/",
             "role": "Technical Director"
         },
         {
             "name": "Nils Dröge",
             "email": "nils.droege@project-collins.com",
-            "homepage": "https://devcenter.mary-paul.de/",
+            "homepage": "https://developer.aboutyou.de/",
             "role": "Developer"
         }
     ],
@@ -26,6 +26,10 @@
         {
             "type": "git",
             "url": "https://github.com/goetas/cache.git"
+        },
+        {
+            "type": "git",
+            "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-auth-sdk.git"
         }
     ],
     "require": {
@@ -38,12 +42,14 @@
     "suggest" : {
         "monolog/monolog" : ".",
         "doctrine/cache": "dev-multiget",
+        "collins/php-auth-sdk": "~0.3",
         "ext-zlib" : "Allows handling gzip compressed responses.",
         "lib-curl" : "Allows using cURL as a request backend.",
         "lib-openssl" : "Allows handling SSL requests when not using cURL."
     },
     "require-dev": {
         "doctrine/cache": "dev-multiget",
+        "collins/php-auth-sdk": "~0.3",
         "monolog/monolog": "1.*",
         "phpunit/phpunit": "3.7.*"
     },

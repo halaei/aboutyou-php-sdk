@@ -33,14 +33,15 @@ class FetchSingleFacetStrategy implements FetchStrategyInterface
         $apiQueryParams = array();
 
         foreach ($ids as $groupId => $facetIds) {
-            $facetIds = array_values(array_unique($facetIds));
-
             foreach ($facetIds as $facetId) {
                 $apiQueryParams[] = array('id' => (int)$facetId, 'group_id' => $groupId);
             }
         }
-        $query = $this->shopApi->getQuery()->fetchFacet($apiQueryParams);
 
-        return $this->shopApi->fetchFacet($apiQueryParams);
+        if(isset($apiQueryParams[200])) { # We can request max 200 single items at once
+            return $this->shopApi->fetchFacets(array_keys($ids));
+        } else {
+            return $this->shopApi->fetchFacet($apiQueryParams);
+        }
     }
 }
