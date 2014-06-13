@@ -41,19 +41,17 @@
         "psr/log": "1.0.*",
         "symfony/event-dispatcher": ">=2.1",
         "guzzle/guzzle": "~3.7",
-        "rhumsaa/uuid": "~2.7"
+        "rhumsaa/uuid": "~2.7",
+        "doctrine/cache": "dev-multiget",
+        "collins/php-auth-sdk": "~0.3"
     },
     "suggest" : {
         "monolog/monolog" : ".",
-        "doctrine/cache": "dev-multiget",
-        "collins/php-auth-sdk": "~0.3",
         "ext-zlib" : "Allows handling gzip compressed responses.",
         "lib-curl" : "Allows using cURL as a request backend.",
         "lib-openssl" : "Allows handling SSL requests when not using cURL."
     },
     "require-dev": {
-        "doctrine/cache": "dev-multiget",
-        "collins/php-auth-sdk": "~0.3",
         "monolog/monolog": "1.*",
         "phpunit/phpunit": "3.7.*"
     },
