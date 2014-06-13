@@ -16,11 +16,23 @@ curl -sS https://getcomposer.org/installer | php
         "repositories": [
             {
                 "type": "git",
-                "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-shop-sdk.git"
+                "url": "https://github.com/aboutyou/PHP-SDK.git"
+            },
+             {
+                "type": "git",
+                "url": "https://github.com/goetas/cache.git"
+            },
+            {
+                "type": "git",
+                "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-auth-sdk.git"
+            },
+            {
+                "type": "git",
+                "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-jws.git"
             }
         ],
         "require": {
-            "collins/shop-sdk": "~0.9.4"
+            "collins/shop-sdk": "0.0.*"
         }
     }
 ```
