@@ -1,6 +1,8 @@
 <?php
 namespace Collins;
 
+use AuthSDK\AuthSDK;
+use AuthSDK\SessionStorage;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Factory\DefaultModelFactory;
@@ -46,7 +48,12 @@ class ShopApi
     /** @var LoggerInterface */
     protected $logger;
 
+    /** @var string */
     protected $appId;
+    /** @var string */
+    protected $appPassword;
+    /** @var AuthSDK */
+    protected $authSdk;
 
     /** @var EventDispatcher */
     protected $eventDispatcher;
@@ -83,8 +90,9 @@ class ShopApi
             $this->setBaseImageUrl(self::IMAGE_URL_LIVE);
         }
 
-        $this->logger = $logger;
-        $this->appId  = $appId;
+        $this->logger      = $logger;
+        $this->appId       = $appId;
+        $this->appPassword = $appPassword;
     }
 
     /**
@@ -101,7 +109,8 @@ class ShopApi
      */
     public function setAppCredentials($appId, $appPassword)
     {
-        $this->appId = $appId;
+        $this->appId       = $appId;
+        $this->appPassword = $appPassword;
         $this->shopApiClient->setAppCredentials($appId, $appPassword);
     }
 
@@ -684,5 +693,128 @@ class ShopApi
         );
 
         $this->setResultFactory($resultFactory);
+    }
+
+    /*
+     * AuthSdk integration
+     * @experimental
+     */
+
+    /**
+     * Initialize the Auth API
+     *
+     * The Auth SDK requires additional parameters
+     *
+     * @param SessionStorage $sessionStorage   A Session is required to identify the user across multiple requests
+     * @param string $appSecret                The App Secret can be found in the DevCenter
+     * @param string $redirectUrl              The User will redirect to this URL, if the is logged in succesful. The Auth SDK will then request the access token
+     * @param bool   $openLoginInPopup         If want to open the login page not in a popup, set this to false
+     */
+    public function initAuthApi(
+        SessionStorage $sessionStorage,
+        $appSecret,
+        $redirectUrl,
+        $openLoginInPopup = true
+    ) {
+        $this->authSdk = new AuthSDK(array(
+            'clientId'     => $this->getAppId(),
+            'clientToken'  => $this->appPassword,
+            'clientSecret' => $appSecret,
+            'redirectUri'  => $redirectUrl,
+            'popup'        => $openLoginInPopup
+        ), $sessionStorage);
+
+        $this->handleOAuth2Request();
+    }
+
+    protected function handleOAuth2Request()
+    {
+        $parsed = $this->authSdk->parseRedirectResponse();
+        if (isset($_GET['state'],$_GET['code']) || isset($_GET['logout'])) {
+            $this->redirectAfterOAuth2Request();
+        }
+    }
+
+    protected function redirectAfterOAuth2Request()
+    {
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAuthApiInitialized()
+    {
+        return $this->authSdk !== null;
+    }
+
+    /**
+     * @throws \RuntimeException
+     */
+    protected function checkAuthSdk()
+    {
+        if (!$this->isAuthApiInitialized()) {
+            throw new \RuntimeException('The Auth API must be initialized, please call initAuthApi() first');
+        }
+    }
+
+    /**
+     * @return bool
+     *
+     * @throws \RuntimeException
+     */
+    public function isLoggedIn()
+    {
+        $this->checkAuthSdk();
+
+        $authResult = $this->authSdk->getUser();
+
+        return $authResult->hasErrors() === false;
+    }
+
+    /**
+     * Returns a json object, if logged in or null, if not
+     *
+     * @return \stdClass|null
+     *
+     * @throws \RuntimeException
+     */
+    public function getUserData()
+    {
+        $this->checkAuthSdk();
+
+        $authResult = $this->authSdk->getUser();
+        if ($authResult->hasErrors()) {
+            return null;
+        }
+        $result = $authResult->getResult();
+        $user = isset($result->response) ? json_decode($result->response) : false;
+
+        return $user ? $user : null;
+    }
+
+    /**
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    public function getLoginUrl()
+    {
+        $this->checkAuthSdk();
+
+        return $this->authSdk->getLoginUrl();
+    }
+
+    /**
+     * @param string $redirectUrl
+     *
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    public function getLogoutUrl($redirectUrl = null)
+    {
+        $this->checkAuthSdk();
+
+        return $this->authSdk->getLogoutUrl($redirectUrl);
     }
 }
