@@ -14,10 +14,6 @@ curl -sS https://getcomposer.org/installer | php
 ```json
     {
         "repositories": [
-            {
-                "type": "git",
-                "url": "https://github.com/aboutyou/PHP-SDK.git"
-            },
              {
                 "type": "git",
                 "url": "https://github.com/goetas/cache.git"
@@ -29,12 +25,20 @@ curl -sS https://getcomposer.org/installer | php
             {
                 "type": "git",
                 "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-jws.git"
+            },
+            {
+                "type": "git",
+                "url": "https://github.com/aboutyou/PHP-SDK.git"
             }
+
         ],
         "require": {
-            "collins/shop-sdk": "0.0.*"
+            "collins/shop-sdk": "0.0.*",
+            "collins/php-auth-sdk": "0.*",
+            "doctrine/cache": "dev-multiget"
         }
     }
+
 ```
 After installing, you need to require Composer's autoloader:
 
