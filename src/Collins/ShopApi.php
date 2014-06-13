@@ -705,38 +705,39 @@ class ShopApi
      *
      * The Auth SDK requires additional parameters
      *
-     * @param SessionStorage $sessionStorage   A Session is required to identify the user across multiple requests
      * @param string $appSecret                The App Secret can be found in the DevCenter
-     * @param string $redirectUrl              The User will redirect to this URL, if the is logged in succesful. The Auth SDK will then request the access token
-     * @param bool   $openLoginInPopup         If want to open the login page not in a popup, set this to false
+     * @param string $callbackUrl              The User will redirect to this URL, if the is logged in succesful. The Auth SDK will then request the access token
+     * @param bool   $usePopupLayout           If want to open the login page not in a popup, set this to false
      */
     public function initAuthApi(
-        SessionStorage $sessionStorage,
         $appSecret,
-        $redirectUrl,
-        $openLoginInPopup = true
+        $callbackUrl,
+        $usePopupLayout = true
     ) {
         $this->authSdk = new AuthSDK(array(
             'clientId'     => $this->getAppId(),
             'clientToken'  => $this->appPassword,
             'clientSecret' => $appSecret,
-            'redirectUri'  => $redirectUrl,
-            'popup'        => $openLoginInPopup
-        ), $sessionStorage);
+            'redirectUri'  => $callbackUrl,
+            'popup'        => $usePopupLayout
+        ), new SessionStorage());
 
-        $this->handleOAuth2Request();
+        return $this->handleOAuth2Request();
     }
 
     protected function handleOAuth2Request()
     {
         $parsed = $this->authSdk->parseRedirectResponse();
-        if (isset($_GET['state'],$_GET['code']) || isset($_GET['logout'])) {
-            $this->redirectAfterOAuth2Request();
+        if (isset($_GET['state'], $_GET['code']) || isset($_GET['logout'])) {
+            $redirectUrl = $this->authSdk->getState('redirectUrl');
+
+            return $this->redirectAfterOAuth2Request($redirectUrl);
         }
     }
 
-    protected function redirectAfterOAuth2Request()
+    protected function redirectAfterOAuth2Request($redirectUrl)
     {
+        return $redirectUrl;
     }
 
     /**
@@ -793,13 +794,18 @@ class ShopApi
     }
 
     /**
+     * @param string $redirectUrl
+     *
      * @return string
      *
      * @throws \RuntimeException
      */
-    public function getLoginUrl()
+    public function getLoginUrl($redirectUrl = null)
     {
         $this->checkAuthSdk();
+        if (!empty($redirectUrl)) {
+            $this->authSdk->setState('redirectUrl', $redirectUrl);
+        }
 
         return $this->authSdk->getLoginUrl();
     }
