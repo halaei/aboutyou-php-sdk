@@ -6,7 +6,7 @@ namespace Collins\ShopApi\Test\Live;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Model\Autocomplete;
 
-class AutocompelteTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
+class AutocompleteTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
 
     /**
@@ -47,14 +47,25 @@ class AutocompelteTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTes
         $this->assertCount(1, $autocomplete->getProducts());
         $this->assertCount(1, $autocomplete->getCategories());
     }
-    
+
     /**
-     * @group live     
+     * @group live
      * @expectedException \InvalidArgumentException
      */
     public function testFetchAutocompleteWithInt()
     {
         $shopApi = $this->getShopApi();
-        $autocomplete = $shopApi->fetchAutocomplete(false, 10);        
+        $autocomplete = $shopApi->fetchAutocomplete(false, 10);
+    }
+
+    /**
+     * @group live
+     */
+    public function testUmlaut()
+    {
+        $shopApi = $this->getShopApi();
+        $autocomplete = $shopApi->fetchAutocomplete('Gürtel');
+
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Autocomplete', $autocomplete);
     }
 }

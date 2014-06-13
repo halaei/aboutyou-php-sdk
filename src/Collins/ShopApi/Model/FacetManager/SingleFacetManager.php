@@ -26,8 +26,6 @@ class SingleFacetManager extends AbstractFacetManager
         foreach ($this->missingFacetGroupIdsAndFacetIds as $groupId => $facetIds) {
             unset($this->missingFacetGroupIdsAndFacetIds[$groupId]);
 
-            $facetIds = array_values(array_unique($facetIds));
-
             foreach ($facetIds as $facetId) {
                 $apiQueryParams[] = array('id' => $facetId, 'group_id' => $groupId);
             }
