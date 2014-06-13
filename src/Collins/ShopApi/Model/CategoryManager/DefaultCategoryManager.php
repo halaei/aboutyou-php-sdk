@@ -7,30 +7,60 @@
 namespace Collins\ShopApi\Model\CategoryManager;
 
 use Collins\ShopApi;
+use Collins\ShopApi\Factory\ResultFactoryInterface;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 class DefaultCategoryManager implements CategoryManagerInterface
 {
-    protected $categoryTree;
+    protected $jsonObject;
 
-    private $shopApi;
+    /** @var ResultFactoryInterface */
+    private $factory;
 
+    /** @var Category[] */
+    private $categoryInstances;
 
-    public function __construct(ShopApi $shopApi)
-    {
-        $this->shopApi = $shopApi;
+    public function __construct(ResultFactoryInterface $factory) {
+        $this->factory = $factory;
+
     }
 
-    public function setCategoryTree($categoryTree) {
-        $this->categoryTree = $categoryTree;
+    /**
+     * @param $jsonObject
+     * @private
+     */
+    public function setRawCategoryTree($jsonObject)
+    {
+        $this->jsonObject = $jsonObject;
+        return $this;
     }
 
-    public function getCategoryTree()
+    public function isEmpty()
     {
-        if(is_null($this->categoryTree)) {
-            $this->categoryTree = $this->shopApi->fetchCategoryTree();
+        return empty($this->jsonObject);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            'collins.shop_api.category_tree.create_model.before' => array('onCategoryTreeFetched', 0),
+        );
+    }
+
+    public function onCategoryTreeFetched(GenericEvent $event) {
+        $this->jsonObject = $event->getSubject();
+    }
+
+    public function getCategoryTree($level = -1)
+    {
+        $jsonObjects = [];
+        foreach($this->jsonObject->parent_child->{"0"} as $categoryId) {
+            $jsonObjects[] = $this->jsonObject->ids->{$categoryId};
         }
-
-        return($this->categoryTree);
+        return $this->factory->createCategoryTree($jsonObjects);
     }
 
     /**
@@ -39,7 +69,29 @@ class DefaultCategoryManager implements CategoryManagerInterface
      * @return ShopApi\Model\Category|null
      */
     public function getCategory($id, $activeOnly=true) {
-        return($this->getCategoryTree()->getCategory($id, $activeOnly));
+        if(!isset($this->jsonObject->ids->{$id})) {
+            return null;
+        }
+
+        $rawObject = $this->jsonObject->ids->{$id};
+
+        if($activeOnly && $rawObject->active===false) {
+            return(null);
+        }
+
+
+        if(!isset($this->categoryInstances[$id])) {
+            if(!empty($rawObject->parent) &&
+                isset($this->categoryInstances[$rawObject->parent])) {
+                $parentObject = $this->categoryInstances[$rawObject->parent];
+            } else {
+                $parentObject = null;
+            }
+
+            $this->categoryInstances[$id] = $this->factory->createCategory($rawObject, $parentObject);
+        }
+
+        return($this->categoryInstances[$id]);
     }
 
     /**

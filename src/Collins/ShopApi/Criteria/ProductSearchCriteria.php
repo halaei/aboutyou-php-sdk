@@ -420,6 +420,14 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     }
 
     /**
+     * @return array
+     */
+    public function getProductFields()
+    {
+        return $this->result['fields'];
+    }
+
+    /**
      * @param string $sessionId
      *
      * @return $this

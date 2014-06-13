@@ -44,9 +44,6 @@ class ShopApi
     /** @var ModelFactoryInterface */
     protected $modelFactory = null;
 
-    /** @var  CategoryManagerInterface */
-    protected $categoryManager;
-
     /** @var LoggerInterface */
     protected $logger;
 
@@ -335,18 +332,8 @@ class ShopApi
             $ids = array($ids);
         }
 
-        $query = $this->getQuery()
-            ->fetchCategoriesByIds($ids)
-        ;
-
-        $result = $query->executeSingle();
-
-        $notFound = $result->getCategoriesNotFound();
-        if (!empty($notFound) && $this->logger) {
-            $this->logger->warning('categories not found: appid=' . $this->appId . ' product ids=[' . join(',', $notFound) . ']');
-        }
-
-        return $result;
+        $this->fetchCategoryTree();
+        return $this->getResultFactory()->getCategoryManager()->getCategories($ids);
     }
 
     /**
@@ -444,25 +431,6 @@ class ShopApi
         }
 
         return $this->modelFactory;
-    }
-
-    /**
-     * @param CategoryManagerInterface $categoryManager
-     */
-    public function setCategoryManager(CategoryManagerInterface $categoryManager) {
-        $this->categoryManager = $categoryManager;
-    }
-
-    /**
-     * @return CategoryManagerInterface|DefaultCategoryManager
-     */
-    public function getCategoryManager()
-    {
-        if(is_null($this->categoryManager)) {
-            $this->categoryManager = new DefaultCategoryManager($this);
-        }
-
-        return($this->categoryManager);
     }
 
     /**

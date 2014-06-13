@@ -7,11 +7,15 @@
 namespace Collins\ShopApi\Model;
 
 use Collins\ShopApi;
+use Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface;
 
 abstract class AbstractModel
 {
     /** @var ShopApi */
     protected static $shopApi;
+
+    /** @var  CategoryManagerInterface */
+    protected static $categoryManager;
 
     /**
      * @param ShopApi $shopApi

@@ -7,6 +7,7 @@
 namespace Collins\ShopApi\Model;
 
 use Collins\ShopApi\Factory\ModelFactoryInterface;
+use Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface;
 
 class Category extends AbstractModel
 {
@@ -40,6 +41,9 @@ class Category extends AbstractModel
     /** @var integer */
     protected $productCount;
 
+    /** @var  ModelFactoryInterface */
+    private $factory;
+
     protected function __construct()
     {
         $this->allSubCategories = array();
@@ -56,6 +60,7 @@ class Category extends AbstractModel
     public static function createFromJson($jsonObject, ModelFactoryInterface $factory, $parent = null)
     {
         $category = new static();
+        $category->factory = $factory;
 
         $category->parent   = $parent;
         $category->parentId = $jsonObject->parent;
@@ -75,6 +80,14 @@ class Category extends AbstractModel
         }
 
         return $category;
+    }
+
+    /**
+     * @return \Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface
+     */
+    private function getCategoryManager()
+    {
+        return $this->factory->getCategoryManager();
     }
 
     /**
@@ -149,7 +162,7 @@ class Category extends AbstractModel
     public function getParent()
     {
         if (!$this->parent && $this->getParentId()) {
-            $this->parent = $this->getShopApi()->getCategoryManager()->getCategory($this->getParentId());
+            $this->parent = $this->getCategoryManager()->getCategory($this->getParentId());
 
         }
 

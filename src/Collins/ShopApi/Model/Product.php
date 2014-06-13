@@ -77,6 +77,9 @@ class Product extends AbstractModel
     /** @var FacetGroupSet */
     protected $facetGroups;
 
+    /** @var  ModelFactoryInterface */
+    private $factory;
+
     protected function __construct()
     {
     }
@@ -97,6 +100,8 @@ class Product extends AbstractModel
         if (!isset($jsonObject->id) || !isset($jsonObject->name)) {
             throw new MalformedJsonException();
         }
+
+        $product->factory = $factory;
 
         $product->id   = $jsonObject->id;
         $product->name = $jsonObject->name;
@@ -341,7 +346,7 @@ class Product extends AbstractModel
      *
      * @return Category|null
      */
-    public function getCategory($active = true)
+    public function getCategory($active = false)
     {
         if (empty($this->categoryIdPaths)) {
             return;
@@ -371,7 +376,7 @@ class Product extends AbstractModel
             $categoryPath = $this->categoryIdPaths[$index];
             $leafId = end($categoryPath);
 
-            $category = $this->getShopApi()->getCategoryManager()->getCategories($leafId, true);
+            $category = $this->getCategoryManager()->getCategories($leafId, true);
 
             if ($category->isPathActive()) {
                 return $category;
@@ -430,7 +435,7 @@ class Product extends AbstractModel
 
         $categoryIds = call_user_func(array($this, "get".ucfirst($categoryType)."CategoryIds"));
 
-        $result = $this->getShopApi()->getCategoryManager()->getCategories($categoryIds, $activeOnly);
+        $result = $this->getCategoryManager()->getCategories($categoryIds, $activeOnly);
 
         if($activeOnly) {
             $this->{$activeAttrName} = $result;
@@ -439,6 +444,14 @@ class Product extends AbstractModel
         }
 
         return($result);
+    }
+
+    /**
+     * @return \Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface
+     */
+    private function getCategoryManager()
+    {
+        return $this->factory->getCategoryManager();
     }
 
     /**

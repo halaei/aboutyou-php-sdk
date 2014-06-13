@@ -7,6 +7,8 @@
 namespace Collins\ShopApi\Factory;
 
 use Collins\ShopApi;
+use Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface;
+use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\FacetManager\FacetManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -45,10 +47,6 @@ class DefaultModelFactory implements ModelFactoryInterface
 
     public function setShopApi(ShopApi $shopApi)
     {
-        ShopApi\Model\Category::setShopApi($shopApi);
-        ShopApi\Model\Product::setShopApi($shopApi);
-        ShopApi\Model\FacetGroupSet::setShopApi($shopApi);
-
         $this->shopApi = $shopApi;
     }
 
@@ -66,6 +64,14 @@ class DefaultModelFactory implements ModelFactoryInterface
         if (!empty($newSubscribedEvents)) {
             $this->getEventDispatcher()->addSubscriber($this->facetManager);
         }
+    }
+
+    protected function subscribeCategoryManagerEvents()
+    {
+//        $newSubscribedEvents = $this->getCategoryManager()->getSubscribedEvents();
+//        if (!empty($newSubscribedEvents)) {
+//            $this->getEventDispatcher()->addSubscriber($this->getCategoryManager());
+//        }
     }
 
     protected function unsubscribeFacetManagerEvents()
@@ -96,18 +102,6 @@ class DefaultModelFactory implements ModelFactoryInterface
     public function getFacetManager()
     {
         return $this->facetManager;
-    }
-
-    public function setCategoryManager()
-    {
-
-    }
-
-    public function getCategoryManager()
-    {
-        if(!is_null($this->categoryManager)) {
-
-        }
     }
 
     public function setBaseImageUrl($baseUrl)
@@ -196,11 +190,35 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\CategoryTree
+     * @return CategoryTree
      */
     public function createCategoryTree($jsonArray)
     {
-        return ShopApi\Model\CategoryTree::createFromJson($jsonArray, $this);
+        $this->getCategoryManager($jsonArray)->getCategoryTree();
+    }
+
+    public function setCategoryManager(CategoryManagerInterface $categoryManager)
+    {
+        $this->categoryManager = $categoryManager;
+    }
+
+    /**
+     * @return CategoryManagerInterface
+     */
+    public function getCategoryManager()
+    {
+        if(empty($this->categoryManager)) {
+            $this->setCategoryManager(new ShopApi\Model\CategoryManager\DefaultCategoryManager($this));
+        }
+
+        return $this->categoryManager;
+    }
+
+    public function initializeCategoryManager($jsonObject)
+    {
+        return $this->getCategoryManager()->
+            setRawCategoryTree($jsonObject)->
+            getCategoryTree();
     }
 
     /**
@@ -459,7 +477,7 @@ class DefaultModelFactory implements ModelFactoryInterface
         }
 
         // fetch all categories from API
-        $flattenCategories = $this->getShopApi()->getCategoryManager()->getCategories(array_keys($counts), false);
+        $flattenCategories = $this->getCategoryManager()->getCategories(array_keys($counts), false);
 
         foreach ($flattenCategories as $id => $category) {
             $category->setProductCount($counts[$category->getId()]);
