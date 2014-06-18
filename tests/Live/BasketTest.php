@@ -51,7 +51,8 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(1));
         $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(2));
         $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(3), 3);
-        
+        $errorCount = count($basket->getErrors());
+
         $set = new Basket\BasketSet("123456", array('image_url' => "http://", 'description' => 'Hallo'));
         $item = new Basket\BasketSetItem($this->getVariantId(4));
         
@@ -59,8 +60,8 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $basket->updateItemSet($set);
         
         $basket = $api->updateBasket($this->getSessionId(), $basket);
-        
-        $this->assertEquals(6, $basket->getTotalAmount());
+
+        $this->assertEquals(6, $basket->getTotalAmount() + $errorCount);
 
         return $basket;
     }
