@@ -1,0 +1,68 @@
+{
+    "name": "aboutyou/app-sdk",
+    "description": "Aboutyou App SDK",
+    "license": "MIT",
+    "type": "library",
+
+    "authors": [
+        {
+            "name": "Christian Kilb",
+            "email": "christian.kilb@project-collins.com",
+            "homepage": "https://developer.aboutyou.de/",
+            "role": "Technical Director"
+        },
+        {
+            "name": "Nils Dröge",
+            "email": "nils.droege@project-collins.com",
+            "homepage": "https://developer.aboutyou.de/",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "support@project-collins.com"
+    },
+
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/goetas/cache.git"
+        },
+        {
+            "type": "git",
+            "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-jws.git"
+        },
+        {
+            "type": "git",
+            "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-auth-sdk.git"
+        }
+    ],
+    "require": {
+        "php": ">=5.3",
+        "psr/log": "1.0.*",
+        "symfony/event-dispatcher": ">=2.1",
+        "guzzle/guzzle": "~3.7",
+        "rhumsaa/uuid": "~2.7"
+    },
+    "suggest" : {
+        "monolog/monolog" : ".",
+        "doctrine/cache": "dev-multiget",
+        "collins/php-auth-sdk": "~0.3",
+        "ext-zlib" : "Allows handling gzip compressed responses.",
+        "lib-curl" : "Allows using cURL as a request backend.",
+        "lib-openssl" : "Allows handling SSL requests when not using cURL."
+    },
+    "require-dev": {
+        "doctrine/cache": "dev-multiget",
+        "collins/php-auth-sdk": "~0.3",
+        "monolog/monolog": "1.*",
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Collins\\": "src/"
+        },
+        "psr-4": {
+            "Collins\\ShopApi\\Test\\": "tests/"
+        }
+    }
+}
