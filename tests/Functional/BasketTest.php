@@ -106,6 +106,20 @@ class BasketTest extends AbstractShopApiTest
         $this->assertTrue($result->hasErrors());
     }
 
+    public function testAddItemSetToBasketAndSingleItemFailed()
+    {
+        $shopApi = $this->getShopApiWithResultFile('basket-set-with-failed-item.json');
+        $basket = new Basket();
+
+        $set = new Basket\BasketSet('A123567', array('description' => 'test', 'image_url' => 'http://img-url'));
+        $set->addItem(new Basket\BasketSetItem(226651));
+
+        $basket->updateItemSet($set);
+        $result = $shopApi->updateBasket('123456xyz', $basket);
+
+        $this->assertTrue($result->hasErrors());
+    }
+
     /**
      * @expectedException \Collins\ShopApi\Exception\ResultErrorException
      */
@@ -132,9 +146,6 @@ class BasketTest extends AbstractShopApiTest
         $shopApi->addItemToBasket('123456xyz', 1543435);              
     }
     
-    /**
-     * @expectedException \Collins\ShopApi\Exception\UnexpectedResultException
-     */
     public function testAddItemToBasketWithWrongProductsResultInSet()
     {
         $shopApi = $this->getShopApiWithResultFile('basket-set-without-product.json');
@@ -145,8 +156,10 @@ class BasketTest extends AbstractShopApiTest
         $set->addItem($item);
         
         $basket->updateItemSet($set);
-        $result = $shopApi->updateBasket('123456xyz', $basket);        
-    }    
+        $result = $shopApi->updateBasket('123456xyz', $basket);
+
+        $this->assertTrue($result->hasErrors());
+    }
     
    
 
