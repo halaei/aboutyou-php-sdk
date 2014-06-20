@@ -1,7 +1,7 @@
 {
     "name": "collins/shop-sdk",
     "description": "Shop API SDK",
-    "license": "proprietary",
+    "license": "MIT",
     "type": "library",
 
     "authors": [
