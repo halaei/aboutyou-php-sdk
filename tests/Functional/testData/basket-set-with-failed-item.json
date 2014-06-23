@@ -1,0 +1,65 @@
+[
+    {
+        "basket": {
+            "total_price": 28092,
+            "total_net": 23607,
+            "total_vat": 4485,
+            "products": {},
+            "order_lines": [
+                {
+                    "total_price": 0,
+                    "error_message": "could not fulfil request",
+                    "total_net": 0,
+                    "total_vat": 0,
+                    "set_items": [
+                        {
+                            "total_price": 11196,
+                            "product_id": 457453,
+                            "tax": 19.0,
+                            "total_net": 9408,
+                            "total_vat": 1788,
+                            "variant_id": 6439666,
+                            "additional_data": {
+                                "description": "Variante 1",
+                                "hello": "world"
+                            }
+                        },
+                        {
+                            "total_price": 11196,
+                            "product_id": 457453,
+                            "tax": 19.0,
+                            "total_net": 9408,
+                            "total_vat": 1788,
+                            "variant_id": 6439666,
+                            "additional_data": {
+                                "description": "Variante 1",
+                                "hello": "world"
+                            }
+                        },
+                        {
+                            "total_price": 0,
+                            "product_id": 457453,
+                            "error_message": "stock reached",
+                            "tax": 19.0,
+                            "total_net": 0,
+                            "total_vat": 0,
+                            "variant_id": 6439666,
+                            "error_code": 410,
+                            "additional_data": {
+                                "description": "Variante 2",
+                                "hello": "universe"
+                            }
+                        }
+                    ],
+                    "additional_data": {
+                        "image_url": "http:\/\/cdn.mary-paul.de\/file\/e40b90464ab4df830f6f2d5eccb0447f",
+                        "description": "Product-Set",
+                        "hello": "multiverse"
+                    },
+                    "error_code": 420,
+                    "id": "i_8e0b29eb-9dae-41b7-b8c7-9bdb53b40efc"
+                }
+            ]
+        }
+    }
+]
