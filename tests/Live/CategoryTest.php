@@ -28,7 +28,7 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
     }
     
     /**
-     * @expectedException Collins\ShopApi\Exception\ResultErrorException
+     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
      * @group live
      */    
     public function testFetchCategoryTreeWithTrueDepth()
@@ -38,7 +38,7 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
     }    
 
     /**
-     * @expectedException Collins\ShopApi\Exception\ResultErrorException
+     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
      * @group live
      */    
     public function testFetchCategoryTreeWithFalseDepth()
@@ -54,8 +54,10 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
     {
         $api = $this->getShopApi();
         $tree = $api->fetchCategoryTree();
-        $categories = $tree->getCategories(); 
+        $categories = $tree->getCategories(false);
         $ids = array();
+
+        $this->assertGreaterThan(0, count($categories), 'please configure at least one category for the app (id: '.$api->getAppId().')');
        
         foreach ($categories as $category) {
             $this->assertInstanceOf('Collins\ShopApi\Model\Category', $category);            
