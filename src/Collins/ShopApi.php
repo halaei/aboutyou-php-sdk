@@ -32,6 +32,9 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class ShopApi
 {
+    const DEVCENTER_API_URL_STAGE = 'http://devcenter.staging.collins.kg/api';
+    const DEVCENTER_API_URL_SANDBOX = 'http://devcenter.staging.collins.kg/api';
+    const DEVCENTER_API_URL_LIVE = 'http://devcenter.staging.collins.kg/api';
     const IMAGE_URL_STAGE   = 'http://mndb.staging.aboutyou.de/mmdb/file';
     const IMAGE_URL_SANDBOX = 'http://mndb.sandbox.aboutyou.de/mmdb/file';
     const IMAGE_URL_LIVE    = 'http://cdn.mary-paul.de/file';
@@ -41,6 +44,9 @@ class ShopApi
 
     /** @var string */
     protected $baseImageUrl;
+
+    /** @var string */
+    protected static $devcenterApiUrl;
 
     /** @var ModelFactoryInterface */
     protected $modelFactory = null;
@@ -86,6 +92,8 @@ class ShopApi
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
         } else if ($apiEndPoint === Constants::API_ENVIRONMENT_SANDBOX) {
             $this->setBaseImageUrl(self::IMAGE_URL_SANDBOX);
+        } else if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
+            $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
         } else {
             $this->setBaseImageUrl(self::IMAGE_URL_LIVE);
         }
@@ -189,6 +197,26 @@ class ShopApi
         }
 
         $this->getResultFactory()->setBaseImageUrl($this->baseImageUrl);
+    }
+
+    /**
+     * @param null|false|string $devCenterApiURL null will reset to the default url, false to get relative urls, otherwise the url prefix
+     */
+    public static function setDevCenterApiUrl($devcenterApiUrl = null)
+    {
+        // if DevCenter API URL endpoint already set, don't overwrite it with
+        // empty or null
+        if (self::$devcenterApiUrl && !$devcenterApiUrl) {
+            return;
+        }
+
+        if ($devcenterApiUrl === null) {
+            self::$devcenterApiUrl = self::DEVCENTER_API_URL_LIVE;
+            } else if (is_string($devcenterApiUrl)) {
+            self::$devcenterApiUrl = rtrim($devcenterApiUrl, '/');
+        } else {
+            self::$devcenterApiUrl = '';
+        }
     }
 
     /**
@@ -822,5 +850,67 @@ class ShopApi
         $this->checkAuthSdk();
 
         return $this->authSdk->getLogoutUrl($redirectUrl);
+    }
+
+    protected static function checkIP($ip)
+    {
+        $regex4 = '/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/';
+        $regex6 = '/(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/';
+
+        $valid = preg_match($regex4, $ip) > 0 || preg_match($regex6, $ip) > 0;
+
+        if (!$valid) {
+            throw new ShopApi\Exception\ApiErrorException(
+                'invalid IP address passed'
+            );
+        }
+    }
+
+    /**
+     *
+     * @param string $ip IPv4 IP address. IPv6 is not supported yet. If null,
+     * the IP from $_SERVER['REMOTE_ADDR'] will be used
+     * @param string $devcenterApiUrl endpoint URL for the DevCenter API
+     */
+    public static function getCountryByIP($ip = null, $devcenterApiUrl = null)
+    {
+        self::setDevCenterApiUrl($devcenterApiUrl);
+
+        if (!$ip) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+
+        self::checkIP($ip);
+
+        $url = self::$devcenterApiUrl.'/country/ip/'.$ip;
+        $client = new \Guzzle\Http\Client($url);
+        $request = $client->get();
+        $response = $request->send();
+
+        try {
+            if (!$response->isSuccessful()) {
+                throw new ApiErrorException(
+                    $response->getReasonPhrase(),
+                    $response->getStatusCode()
+                );
+            }
+            try {
+                if (!is_array($response->json())) {
+                    throw new MalformedJsonException(
+                        'result is not array'
+                    );
+                }
+            } catch (\Exception $e) {
+                throw new MalformedJsonException(
+                    'unknown error occurred', 0, $e
+                );
+            }
+        } catch (\Exception $e) {
+            throw new ApiErrorException(
+                'unknown error occurred', 0, $e
+            );
+        }
+
+        return (object) $response->json();
     }
 }
