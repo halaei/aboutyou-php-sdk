@@ -652,7 +652,7 @@ class ShopApi
      */
     public function getJavaScriptURL()
     {
-        $url = '//developer.aboutyou.de/apps/js/api.js';
+        $url = '//developer.aboutyou.de/appjs/'.$this->appId.'.js';
 
         return $url;
     }
