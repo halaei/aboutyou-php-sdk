@@ -160,8 +160,8 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
     {
         $api = $this->getShopApi();
 
-        $item1 = new Basket\BasketSetItem(6439666, array('description' => 'Variante 1', 'hello' => 'world'));
-        $item2 = new Basket\BasketSetItem(6439666, array('description' => 'Variante 2', 'hello' => 'universe'));
+        $item1 = new Basket\BasketSetItem($this->getVariantId(1), array('description' => 'Variante 1', 'hello' => 'world'));
+        $item2 = new Basket\BasketSetItem($this->getVariantId(2), array('description' => 'Variante 2', 'hello' => 'universe'));
 
         $set = new Basket\BasketSet('set1', array(
             'description' => 'Product-Set',
@@ -186,9 +186,9 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 
         $data = $set->getAdditionalData();
 
-        $this->assertEquals('test', $data['description']);
-        $this->assertEquals('http://www.google.de', $data['image_url']);
-        $this->assertEquals('bar', $data['foo']);
+        $this->assertEquals('Product-Set', $data['description']);
+        $this->assertEquals('http://cdn.mary-paul.de/file/e40b90464ab4df830f6f2d5eccb0447f', $data['image_url']);
+        $this->assertEquals('multiverse', $data['hello']);
 
         $basket->deleteAllItems();
         $api->updateBasket($this->getSessionId(), $basket);
