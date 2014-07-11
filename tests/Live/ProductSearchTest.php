@@ -2,33 +2,32 @@
 
 namespace Collins\ShopApi\Test\Live;
 
+use Collins\ShopApi\Model\ProductSearchResult;
+
+/**
+ * @group live
+ */
 class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
-    /**
-     * @group live
-     */
     public function testProductSearchWithLimit()
     {
-        $api = $this->getShopApi();           
+        $api = $this->getShopApi();
         $criteria = $this->getSearchCriteria();
         $criteria->setLimit(5);
         
         $result = $api->fetchProductSearch($criteria);
         
-        $this->assertInstanceOf('\Collins\ShopApi\Model\ProductSearchResult', $result);         
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\ProductSearchResult', $result);
         $this->assertCount(5, $result->getProducts()); 
         
         foreach($result->getProducts() as $product) {
-            $this->assertInstanceOf('\Collins\ShopApi\Model\Product', $product);
+            $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Product', $product);
         }
     }
     
-    /**
-     * @group live
-     */
     public function testProductSearchWithId()
     {
-        $api = $this->getShopApi();        
+        $api = $this->getShopApi();
         $criteria = $this->getSearchCriteria();
         $criteria->setLimit(5);
         
@@ -37,16 +36,13 @@ class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTe
         $productsArray = $result->getProducts();
         $product = $productsArray[0];
         
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Product', $product);         
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Product', $product);
         
         $resultProduct = $api->fetchProductsByIds(array($product->getId()));
         
-        $this->assertInstanceOf('\Collins\ShopApi\Model\ProductsResult', $resultProduct); 
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\ProductsResult', $resultProduct);
     }
     
-    /**
-     * @group live
-     */
     public function testProductSearchCategoryTree()
     {
         $api = $this->getShopApi();        
@@ -58,12 +54,9 @@ class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTe
         $this->assertInternalType('array', $result->getCategoryTree());
     }
     
-    /**
-     * @group live
-     */
     public function testProductSearchCategory()
     {
-        $api = $this->getShopApi();        
+        $api = $this->getShopApi();
         $criteria = $this->getSearchCriteria();
         $criteria->setLimit(5);
         
@@ -72,9 +65,6 @@ class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTe
         $this->assertInternalType('array', $result->getCategories());
     }    
     
-    /**
-     * @group live
-     */
     public function testProductSearchProductCount()
     {
         $api = $this->getShopApi();        
@@ -87,9 +77,6 @@ class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTe
         $this->assertCount(5, $result->getProducts());
     }
 
-    /**
-     * @group live
-     */
     public function testProductSearchProductBoosts()
     {
         $api = $this->getShopApi();
@@ -103,34 +90,58 @@ class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTe
         $this->assertInternalType('int', $result->getProductCount());
     }
 
-    /**
-     * @group live
-     */
-    public function ProductSearchSort()
+    public function testProductSearchSort()
     {
         $shopApi = $this->getShopApi();
 
         // search products and sort
         $criteria = $shopApi->getProductSearchCriteria($this->getSessionId())
             ->sortBy(
-            \Collins\ShopApi\Criteria\ProductSearchCriteria::SORT_TYPE_MOST_VIEWED
+                \Collins\ShopApi\Criteria\ProductSearchCriteria::SORT_TYPE_MOST_VIEWED
             )
         ;
         $productSearchResult = $shopApi->fetchProductSearch($criteria);
         $this->checkProductSearchResult($productSearchResult);
+    }
 
-        $rawFacets = $productSearchResult->getRawFacets();
-        $this->assertInstanceOf('\stdClass', $rawFacets);
-        $this->assertObjectHasAttribute("0", $rawFacets);
-        $brandFacets = $rawFacets->{"0"};
-        $this->assertInstanceOf('\stdClass', $brandFacets);
-        $this->assertObjectHasAttribute('_type', $brandFacets);
-        $this->assertObjectHasAttribute('total', $brandFacets);
-        $this->assertObjectHasAttribute('terms', $brandFacets);
-        $this->assertObjectHasAttribute('other', $brandFacets);
-        $this->assertObjectHasAttribute('missing', $brandFacets);
-    }    
-    
+    public function testProductSearchWithFacets()
+    {
+        $shopApi = $this->getShopApi();
+
+        // search products and sort
+        $criteria = $shopApi->getProductSearchCriteria($this->getSessionId())
+            ->selectSales()
+            ->selectPriceRanges()
+            ->selectFacetsByGroupId(0, 10)
+        ;
+        $productSearchResult = $shopApi->fetchProductSearch($criteria);
+        $this->checkProductSearchResult($productSearchResult);
+
+        $saleFacets = $productSearchResult->getSaleCounts();
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\ProductSearchResult\\SaleCounts', $saleFacets);
+        $this->assertInternalType('integer', $saleFacets->getProductCountTotal());
+        $this->assertInternalType('integer', $saleFacets->getProductCountInSale());
+        $this->assertInternalType('integer', $saleFacets->getProductCountNotInSale());
+
+        $priceRanges = $productSearchResult->getPriceRanges();
+        $this->assertInternalType('array', $priceRanges);
+
+        $facets =  $productSearchResult->getFacets();
+        $this->assertInternalType('array', $facets);
+        $brandFacets = $facets[0];
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\ProductSearchResult\\FacetCounts', $brandFacets);
+        $this->assertInternalType('integer', $brandFacets->getProductCountTotal());
+        $this->assertEquals(0, $brandFacets->getGroupId());
+        $facetCounts = $brandFacets->getFacetCounts();
+        $this->assertInternalType('array', $facetCounts);
+        $this->assertCount(10, $facetCounts);
+        foreach ($facetCounts as $facetCount) {
+            $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\ProductSearchResult\\FacetCount', $facetCount);
+            $this->assertInternalType('integer', $facetCount->getProductCount());
+            $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $facetCount->getFacet());
+        }
+    }
+
     private function checkProduct(Product $product)
     {
         $this->assertObjectHasAttribute('id', $product);

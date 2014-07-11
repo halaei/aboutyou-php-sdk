@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class CachedFacetManagerTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
-    public function testCacheAllFacets()
+    public function testCacheAllUsedFacets()
     {
         $cache   = new ArrayCache();
         $shopApi = $this->getShopApi(null, null, $cache);

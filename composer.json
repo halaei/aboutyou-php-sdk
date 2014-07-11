@@ -1,7 +1,8 @@
 {
-    "name": "collins/shop-sdk",
-    "description": "Shop API SDK",
+    "name": "aboutyou/app-sdk",
+    "description": "ABOUT YOU app SDK",
     "license": "MIT",
+    "homepage": "https://developer.aboutyou.de/",
     "type": "library",
 
     "authors": [
@@ -19,41 +20,20 @@
         }
     ],
     "support": {
-        "email": "support@project-collins.com"
+        "email": "developer@aboutyou.de"
     },
 
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/goetas/cache.git"
-        },
-        {
-            "type": "git",
-            "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-jws.git"
-        },
-        {
-            "type": "git",
-            "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-auth-sdk.git"
-        },
-        {
-            "type": "git",
-            "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-jws.git"
-        }
-    ],
     "require": {
         "php": ">=5.3",
+        "aboutyou/cache": "~1.4.0",
+        "aboutyou/auth-sdk": "~0.3",
         "psr/log": "1.0.*",
-        "symfony/event-dispatcher": ">=2.1",
+        "symfony/event-dispatcher": "~2.1",
         "guzzle/guzzle": "~3.7",
-        "rhumsaa/uuid": "~2.7",
-        "doctrine/cache": "dev-multiget",
-        "collins/php-auth-sdk": "~0.3"
+        "rhumsaa/uuid": "~2.7"
     },
     "suggest" : {
-        "monolog/monolog" : ".",
-        "ext-zlib" : "Allows handling gzip compressed responses.",
-        "lib-curl" : "Allows using cURL as a request backend.",
-        "lib-openssl" : "Allows handling SSL requests when not using cURL."
+        "monolog/monolog" : "."
     },
     "require-dev": {
         "monolog/monolog": "1.*",
