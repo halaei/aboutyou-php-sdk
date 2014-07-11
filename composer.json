@@ -26,7 +26,7 @@
 
     "require": {
         "php": ">=5.3",
-        "doctrine/cache-multiget": "1.4.x@dev",
+        "aboutyou/cache": "~1.4.0",
         "aboutyou/auth-sdk": "~0.3",
         "psr/log": "1.0.*",
         "symfony/event-dispatcher": "~2.1",
