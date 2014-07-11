@@ -1,7 +1,8 @@
 {
-    "name": "collins/shop-sdk",
-    "description": "Shop API SDK",
+    "name": "aboutyou/app-sdk",
+    "description": "ABOUT YOU app SDK",
     "license": "MIT",
+    "homepage": "https://developer.aboutyou.de/",
     "type": "library",
 
     "authors": [
