@@ -41,7 +41,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Collins\\": "src/"
+            "Collins\\ShopApi": "src/"
         },
         "psr-4": {
             "Collins\\ShopApi\\Test\\": "tests/"
