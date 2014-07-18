@@ -1,6 +1,8 @@
 <?php
 namespace Collins;
 
+use AuthSDK\AuthSDK;
+use AuthSDK\SessionStorage;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Factory\DefaultModelFactory;
@@ -32,8 +34,12 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class ShopApi
 {
-    const IMAGE_URL_STAGE = 'http://ant-core-staging-media2.wavecloud.de/mmdb/file';
-    const IMAGE_URL_LIVE = 'http://cdn.mary-paul.de/file';
+    const DEVCENTER_API_URL_STAGE = 'http://devcenter.staging.collins.kg/api';
+    const DEVCENTER_API_URL_SANDBOX = 'http://devcenter.staging.collins.kg/api';
+    const DEVCENTER_API_URL_LIVE = 'http://devcenter.staging.collins.kg/api';
+    const IMAGE_URL_STAGE   = 'http://mndb.staging.aboutyou.de/mmdb/file';
+    const IMAGE_URL_SANDBOX = 'http://mndb.sandbox.aboutyou.de/mmdb/file';
+    const IMAGE_URL_LIVE    = 'http://cdn.mary-paul.de/file';
 
     /** @var ShopApiClient */
     protected $shopApiClient;
@@ -41,13 +47,21 @@ class ShopApi
     /** @var string */
     protected $baseImageUrl;
 
+    /** @var string */
+    protected static $devcenterApiUrl;
+
     /** @var ModelFactoryInterface */
     protected $modelFactory = null;
 
     /** @var LoggerInterface */
     protected $logger;
 
+    /** @var string */
     protected $appId;
+    /** @var string */
+    protected $appPassword;
+    /** @var AuthSDK */
+    protected $authSdk;
 
     /** @var EventDispatcher */
     protected $eventDispatcher;
@@ -78,12 +92,17 @@ class ShopApi
 
         if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
+        } else if ($apiEndPoint === Constants::API_ENVIRONMENT_SANDBOX) {
+            $this->setBaseImageUrl(self::IMAGE_URL_SANDBOX);
+        } else if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
+            $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
         } else {
             $this->setBaseImageUrl(self::IMAGE_URL_LIVE);
         }
 
-        $this->logger = $logger;
-        $this->appId  = $appId;
+        $this->logger      = $logger;
+        $this->appId       = $appId;
+        $this->appPassword = $appPassword;
     }
 
     /**
@@ -100,7 +119,8 @@ class ShopApi
      */
     public function setAppCredentials($appId, $appPassword)
     {
-        $this->appId = $appId;
+        $this->appId       = $appId;
+        $this->appPassword = $appPassword;
         $this->shopApiClient->setAppCredentials($appId, $appPassword);
     }
 
@@ -179,6 +199,26 @@ class ShopApi
         }
 
         $this->getResultFactory()->setBaseImageUrl($this->baseImageUrl);
+    }
+
+    /**
+     * @param null|false|string $devCenterApiURL null will reset to the default url, false to get relative urls, otherwise the url prefix
+     */
+    public static function setDevCenterApiUrl($devcenterApiUrl = null)
+    {
+        // if DevCenter API URL endpoint already set, don't overwrite it with
+        // empty or null
+        if (self::$devcenterApiUrl && !$devcenterApiUrl) {
+            return;
+        }
+
+        if ($devcenterApiUrl === null) {
+            self::$devcenterApiUrl = self::DEVCENTER_API_URL_LIVE;
+            } else if (is_string($devcenterApiUrl)) {
+            self::$devcenterApiUrl = rtrim($devcenterApiUrl, '/');
+        } else {
+            self::$devcenterApiUrl = '';
+        }
     }
 
     /**
@@ -604,7 +644,7 @@ class ShopApi
      */
     public function getJavaScriptURL()
     {
-        $url = '//developer.aboutyou.de/apps/js/api.js';
+        $url = '//developer.aboutyou.de/appjs/'.$this->appId.'.js';
 
         return $url;
     }
@@ -673,5 +713,196 @@ class ShopApi
         );
 
         $this->setResultFactory($resultFactory);
+    }
+
+    /*
+     * AuthSdk integration
+     * @experimental
+     */
+
+    /**
+     * Initialize the Auth API
+     *
+     * The Auth SDK requires additional parameters
+     *
+     * @param string $appSecret                The App Secret can be found in the DevCenter
+     * @param string $callbackUrl              The User will redirect to this URL, if the is logged in succesful. The Auth SDK will then request the access token
+     * @param bool   $usePopupLayout           If want to open the login page not in a popup, set this to false
+     */
+    public function initAuthApi(
+        $appSecret,
+        $callbackUrl,
+        $usePopupLayout = true
+    ) {
+        $this->authSdk = new AuthSDK(array(
+            'clientId'     => $this->getAppId(),
+            'clientToken'  => $this->appPassword,
+            'clientSecret' => $appSecret,
+            'redirectUri'  => $callbackUrl,
+            'popup'        => $usePopupLayout
+        ), new SessionStorage());
+
+        return $this->handleOAuth2Request();
+    }
+
+    protected function handleOAuth2Request()
+    {
+        $parsed = $this->authSdk->parseRedirectResponse();
+        if (isset($_GET['state'], $_GET['code']) || isset($_GET['logout'])) {
+            $redirectUrl = $this->authSdk->getState('redirectUrl');
+
+            return $this->redirectAfterOAuth2Request($redirectUrl);
+        }
+    }
+
+    protected function redirectAfterOAuth2Request($redirectUrl)
+    {
+        return $redirectUrl;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAuthApiInitialized()
+    {
+        return $this->authSdk !== null;
+    }
+
+    /**
+     * @throws \RuntimeException
+     */
+    protected function checkAuthSdk()
+    {
+        if (!$this->isAuthApiInitialized()) {
+            throw new \RuntimeException('The Auth API must be initialized, please call initAuthApi() first');
+        }
+    }
+
+    /**
+     * @return bool
+     *
+     * @throws \RuntimeException
+     */
+    public function isLoggedIn()
+    {
+        $this->checkAuthSdk();
+
+        $authResult = $this->authSdk->getUser();
+
+        return $authResult->hasErrors() === false;
+    }
+
+    /**
+     * Returns a json object, if logged in or null, if not
+     *
+     * @return \stdClass|null
+     *
+     * @throws \RuntimeException
+     */
+    public function getUserData()
+    {
+        $this->checkAuthSdk();
+
+        $authResult = $this->authSdk->getUser();
+        if ($authResult->hasErrors()) {
+            return null;
+        }
+        $result = $authResult->getResult();
+        $user = isset($result->response) ? json_decode($result->response) : false;
+
+        return $user ? $user : null;
+    }
+
+    /**
+     * @param string $redirectUrl
+     *
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    public function getLoginUrl($redirectUrl = null)
+    {
+        $this->checkAuthSdk();
+        if (!empty($redirectUrl)) {
+            $this->authSdk->setState('redirectUrl', $redirectUrl);
+        }
+
+        return $this->authSdk->getLoginUrl();
+    }
+
+    /**
+     * @param string $redirectUrl
+     *
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    public function getLogoutUrl($redirectUrl = null)
+    {
+        $this->checkAuthSdk();
+
+        return $this->authSdk->getLogoutUrl($redirectUrl);
+    }
+
+    protected static function checkIP($ip)
+    {
+        $regex4 = '/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/';
+        $regex6 = '/(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/';
+
+        $valid = preg_match($regex4, $ip) > 0 || preg_match($regex6, $ip) > 0;
+
+        if (!$valid) {
+            throw new ShopApi\Exception\ApiErrorException(
+                'invalid IP address passed'
+            );
+        }
+    }
+
+    /**
+     *
+     * @param string $ip IPv4 IP address. IPv6 is not supported yet. If null,
+     * the IP from $_SERVER['REMOTE_ADDR'] will be used
+     * @param string $devcenterApiUrl endpoint URL for the DevCenter API
+     */
+    public static function getCountryByIP($ip = null, $devcenterApiUrl = null)
+    {
+        self::setDevCenterApiUrl($devcenterApiUrl);
+
+        if (!$ip) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+
+        self::checkIP($ip);
+
+        $url = self::$devcenterApiUrl.'/country/ip/'.$ip;
+        $client = new \Guzzle\Http\Client($url);
+        $request = $client->get();
+        $response = $request->send();
+
+        try {
+            if (!$response->isSuccessful()) {
+                throw new ApiErrorException(
+                    $response->getReasonPhrase(),
+                    $response->getStatusCode()
+                );
+            }
+            try {
+                if (!is_array($response->json())) {
+                    throw new MalformedJsonException(
+                        'result is not array'
+                    );
+                }
+            } catch (\Exception $e) {
+                throw new MalformedJsonException(
+                    'unknown error occurred', 0, $e
+                );
+            }
+        } catch (\Exception $e) {
+            throw new ApiErrorException(
+                'unknown error occurred', 0, $e
+            );
+        }
+
+        return (object) $response->json();
     }
 }

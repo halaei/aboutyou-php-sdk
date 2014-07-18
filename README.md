@@ -1,6 +1,10 @@
-# Shop API SDK
+## ABOUT YOU App SDK
 
-## Installation
+# Documentation
+
+See [ABOUT YOU Developer Center](https://developer.aboutyou.de/) for more Information.
+
+# Installation
 
 The recommended way to install the ShopAPI is through [Composer](http://getcomposer.org).
 
@@ -9,18 +13,13 @@ The recommended way to install the ShopAPI is through [Composer](http://getcompo
 curl -sS https://getcomposer.org/installer | php
 ```
 
-# Add the ShopAPI as a dependency
+# Add the App SDK as a dependency.
+The SDK is available via [Packagist](https://packagist.org/) under the [aboutyou/app-sdk](https://packagist.org/packages/aboutyou/app-sdk) package.
 
 ```json
     {
-        "repositories": [
-            {
-                "type": "git",
-                "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-shop-sdk.git"
-            }
-        ],
         "require": {
-            "collins/shop-sdk": "~0.9.4"
+            "aboutyou/app-sdk": "~0.1"
         }
     }
 ```
@@ -32,7 +31,7 @@ require 'vendor/autoload.php';
 
 ## Usage
 
-Example how to use the shop-api-sdk with the mono logger, the log detail depends on yii debug configuration.
+Example how to use the App SDK with the mono logger, the log detail depends on yii debug configuration.
 
 ```php
 use Collins\ShopApi;
@@ -42,22 +41,22 @@ use Monolog\Handler\StreamHandler;
     $logger = new Logger('name');
     $logger->pushHandler(new StreamHandler(Yii::app()->getRuntimePath(). '/mono.log', Logger::DEBUG));
 
-    $shopApi = new ShopApi($appId, $appPassword, $shopApiHost, $logger);
+    $api = new ShopApi($appId, $appPassword, $apiHost, $logger);
     if (YII_DEBUG) {
-        $shopApi->setLogTemplate(\Guzzle\Log\MessageFormatter::DEBUG_FORMAT);
+        $api->setLogTemplate(\Guzzle\Log\MessageFormatter::DEBUG_FORMAT);
     } else {
-        $shopApi->setLogTemplate(\Guzzle\Log\MessageFormatter::SHORT_FORMAT);
+        $api->setLogTemplate(\Guzzle\Log\MessageFormatter::SHORT_FORMAT);
     }
 ```
 
-Example how to use the shop-api-sdk with apc cache.
+Example how to use the App SDK with the apc cache.
 
 ```php
     $cache = new \Doctrine\Common\Cache\ApcCache();
-    $shopApi = new \Collins\ShopApi($appId, $appPassword, $shopApiHost, null, null, $cache);
+    $api = new \Collins\ShopApi($appId, $appPassword, $apiHost, null, null, $cache);
 ```
 
-To precache facets per cron (hourly pre caching is preferred), write a new php file with
+To precache facets per cron (hourly pre caching is preferred), you can write a new php file to do that
 
 ```php
 #/usr/bin/env php
@@ -77,6 +76,7 @@ $doctrineMultiGetCacheStrategy->cacheAllFacets($shopApi);
 ```
 
 ## Testing
+
 ```bash
 vendor/bin/phpunit
 ```

@@ -9,6 +9,8 @@ namespace Collins\ShopApi\Model\Basket;
 
 class BasketSetItem extends BasketVariantItem
 {
+    const ERROR_CODE_PRODUCT_NOT_INCLUDED = 1001;
+
     /**
      * @param object $jsonObject The basket data.
      * @param Product[] $products
@@ -28,7 +30,8 @@ class BasketSetItem extends BasketVariantItem
             if (isset($products[$jsonObject->product_id])) {
                 $item->setProduct($products[$jsonObject->product_id]);
             } else {
-                throw new \Collins\ShopApi\Exception\UnexpectedResultException('Product with ID '.$jsonObject->product_id.' expected but wasnt received with the basket');
+                $item->errorCode    = self::ERROR_CODE_PRODUCT_NOT_INCLUDED;
+                $item->errorMessage = 'Product with ID '.$jsonObject->product_id.' expected but wasnt received with the basket';
             }
         }        
         unset($jsonObject->variant_id, $jsonObject->additional_data, $jsonObject->product_id);

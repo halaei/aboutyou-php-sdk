@@ -51,7 +51,8 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(1));
         $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(2));
         $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(3), 3);
-        
+        $errorCount = count($basket->getErrors());
+
         $set = new Basket\BasketSet("123456", array('image_url' => "http://", 'description' => 'Hallo'));
         $item = new Basket\BasketSetItem($this->getVariantId(4));
         
@@ -59,8 +60,8 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $basket->updateItemSet($set);
         
         $basket = $api->updateBasket($this->getSessionId(), $basket);
-        
-        $this->assertEquals(6, $basket->getTotalAmount());
+
+        $this->assertEquals(6, $basket->getTotalAmount() + $errorCount);
 
         return $basket;
     }
@@ -155,6 +156,44 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $api->updateBasket($this->getSessionId(), $basket);        
     }
     
+    public function testAddSetWithTwoItemsToBasket()
+    {
+        $api = $this->getShopApi();
+
+        $item1 = new Basket\BasketSetItem($this->getVariantId(1), array('description' => 'Variante 1', 'hello' => 'world'));
+        $item2 = new Basket\BasketSetItem($this->getVariantId(2), array('description' => 'Variante 2', 'hello' => 'universe'));
+
+        $set = new Basket\BasketSet('set1', array(
+            'description' => 'Product-Set',
+            'image_url' => 'http://cdn.mary-paul.de/file/e40b90464ab4df830f6f2d5eccb0447f',
+            'hello' => 'multiverse')
+        );
+        $set->addItem($item1);
+        $set->addItem($item2);
+
+        $basket = new Basket();
+
+        $basket->updateItemSet($set);
+
+        $basket = $api->updateBasket($this->getSessionId(), $basket);
+        $set = $basket->getItem('set1');
+
+        $this->assertEquals(1, $basket->getTotalAmount());
+        $this->assertInstanceOf('\Collins\ShopApi\Model\Basket\BasketSet', $set);
+
+        $items = $set->getItems();
+        $this->assertCount(2, $items);
+
+        $data = $set->getAdditionalData();
+
+        $this->assertEquals('Product-Set', $data['description']);
+        $this->assertEquals('http://cdn.mary-paul.de/file/e40b90464ab4df830f6f2d5eccb0447f', $data['image_url']);
+        $this->assertEquals('multiverse', $data['hello']);
+
+        $basket->deleteAllItems();
+        $api->updateBasket($this->getSessionId(), $basket);
+    }
+
     public function testAddItemToBasketWithProductID()
     {
         $api = $this->getShopApi();        
