@@ -312,9 +312,9 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return ShopApi\Model\Variant
      */
-    public function createVariant(\stdClass $jsonObject)
+    public function createVariant(\stdClass $jsonObject, ShopApi\Model\Product $product)
     {
-        return ShopApi\Model\Variant::createFromJson($jsonObject, $this);
+        return ShopApi\Model\Variant::createFromJson($jsonObject, $this, $product);
     }
 
     /**
