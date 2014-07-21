@@ -120,6 +120,7 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
         $appId = '123';
         $appPassword = 'abc';
         $apiEndPoint = Constants::API_ENVIRONMENT_STAGE;
+        $apiEndPointLive = Constants::API_ENVIRONMENT_LIVE;
 
         $shopApi = new ShopApi(
             $appId,
@@ -134,6 +135,15 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
          * urls as constant, point to refactor but actually needs a test
          */
         $this->assertEquals($shopApi::IMAGE_URL_STAGE, $shopApi->getBaseImageUrl());
+        $this->assertEquals('//devcenter.staging.collins.kg/appjs/123.js', $shopApi->getJavaScriptURL());
+        
+        $shopApiLive = new ShopApi(
+            $appId,
+            $appPassword,
+            $apiEndPointLive
+        );   
+        
+        $this->assertEquals('//developer.aboutyou.de/appjs/123.js', $shopApiLive->getJavaScriptURL());        
     }
 
     /**

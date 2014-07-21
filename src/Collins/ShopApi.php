@@ -53,13 +53,16 @@ class ShopApi
 
     /** @var LoggerInterface */
     protected $logger;
+    
+    /** @var string Constants::API_ENVIRONMENT_LIVE for live environment, Constants::API_ENVIRONMENT_STAGE for staging */
+    protected $environment = Constants::API_ENVIRONMENT_LIVE;
 
     /** @var string */
     protected $appId;
     /** @var string */
     protected $appPassword;
     /** @var AuthSDK */
-    protected $authSdk;
+    protected $authSdk;        
 
     /** @var EventDispatcher */
     protected $eventDispatcher;
@@ -90,8 +93,10 @@ class ShopApi
 
         if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
+            $this->environment = Constants::API_ENVIRONMENT_STAGE;            
         } else if ($apiEndPoint === Constants::API_ENVIRONMENT_SANDBOX) {
             $this->setBaseImageUrl(self::IMAGE_URL_SANDBOX);
+            $this->environment = Constants::API_ENVIRONMENT_SANDBOX;  
         } else if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
         } else {
@@ -652,7 +657,11 @@ class ShopApi
      */
     public function getJavaScriptURL()
     {
-        $url = '//developer.aboutyou.de/appjs/'.$this->appId.'.js';
+        if ($this->environment === Constants::API_ENVIRONMENT_STAGE) {
+            $url = '//devcenter.staging.collins.kg/appjs/'.$this->appId.'.js';            
+        } else {
+            $url = '//developer.aboutyou.de/appjs/'.$this->appId.'.js';            
+        }
 
         return $url;
     }
