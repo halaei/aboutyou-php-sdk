@@ -1,0 +1,2484 @@
+[
+    {
+        "products": {
+            "pageHash": "23438c8c-41e3-404e-a6b7-ce74c3584180",
+            "ids": {
+                "401592": {
+                    "styles": [],
+                    "name": "Jacke in Blouson-Form",
+                    "description_long": "Leichte Hallhuber Jacke aus angenehmer Viskose in trendiger Blouson-Form. Für den typischen Look sorgen Strickbündchen an Armen, Ausschnitt und Saum des Damen Blousons. Zusätzlich verfügt er über schräge Leistentaschen sowie einen Reißverschluss in Goldoptik, der gleichzeitig angesagte Kontraste erzeugt. Der Damen Blouson von Hallhuber ist ein toller Allrounder: Er lässt sich zu Hosen kombinieren, aber auch zum Kleid getragen verleiht er dem Outfit lässigen Charme.<br><br><ul><li>Jacke aus angenehmer Viskose</li><li>Trendige Blouson-Form</li><li>Reißverschluss in Goldoptik</li></ul><br><br>Materialzusammensetzung: 100% Viskose",
+                    "sale": true,
+                    "categories.98": [
+                        [
+                            19367,
+                            19371,
+                            19410
+                        ]
+                    ],
+                    "attributes_merged": {
+                        "attributes_175": [
+                            2240,
+                            2062
+                        ],
+                        "attributes_172": [
+                            1969
+                        ],
+                        "attributes_257": [
+                            3663
+                        ],
+                        "attributes_206": [
+                            2422,
+                            2382
+                        ],
+                        "attributes_258": [
+                            3740
+                        ],
+                        "attributes_2": [
+                            8,
+                            5
+                        ],
+                        "attributes_0": [
+                            163
+                        ],
+                        "attributes_1": [
+                            11
+                        ]
+                    },
+                    "brand_id": 163,
+                    "default_variant": {
+                        "updated_date": "2014-07-10 14:15:15",
+                        "about_number": null,
+                        "ean": "4051878307322",
+                        "default": false,
+                        "first_sale_date": "2014-07-10 01:36:16",
+                        "price": 4995,
+                        "first_active_date": "2014-04-08 16:40:04",
+                        "old_price": 6995,
+                        "additional_info": {},
+                        "created_date": "2014-04-08 16:40:04",
+                        "images": [
+                            {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 1042,
+                                    "height": 1500
+                                },
+                                "hash": "0810c26b252480a95e04f1ee423858bf",
+                                "ext": ".jpg",
+                                "size": 388934
+                            },
+                            {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 1042,
+                                    "height": 1500
+                                },
+                                "hash": "a4e3432965b49b768bac153f4d5435b5",
+                                "ext": ".jpg",
+                                "size": 765333
+                            },
+                            {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 1042,
+                                    "height": 1500
+                                },
+                                "hash": "9c0ab255cc2fd30df4b1d6ee82ba7918",
+                                "ext": ".jpg",
+                                "size": 711040
+                            },
+                            {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 1042,
+                                    "height": 1500
+                                },
+                                "hash": "5bc0cf966ef9b8cb8eba56eefa3655da",
+                                "ext": ".jpg",
+                                "size": 727491
+                            },
+                            {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 762,
+                                    "height": 1100
+                                },
+                                "hash": "364fadb7677c4c13825a67a027ef1d19",
+                                "ext": ".jpg",
+                                "size": 62529
+                            }
+                        ],
+                        "attributes": {
+                            "attributes_175": [
+                                2062
+                            ],
+                            "attributes_172": [
+                                1969
+                            ],
+                            "attributes_257": [
+                                3663
+                            ],
+                            "attributes_206": [
+                                2382
+                            ],
+                            "attributes_258": [
+                                3740
+                            ],
+                            "attributes_2": [
+                                8
+                            ],
+                            "attributes_0": [
+                                163
+                            ],
+                            "attributes_1": [
+                                11
+                            ]
+                        },
+                        "retail_price": 6995,
+                        "id": 6077282,
+                        "quantity": 1
+                    },
+                    "min_price": 4995,
+                    "default_image": {
+                        "mime": "image/jpeg",
+                        "image": {
+                            "width": 1042,
+                            "height": 1500
+                        },
+                        "hash": "0810c26b252480a95e04f1ee423858bf",
+                        "ext": ".jpg",
+                        "size": 388934
+                    },
+                    "active": true,
+                    "variants": [
+                        {
+                            "updated_date": "2014-07-10 14:15:15",
+                            "about_number": null,
+                            "ean": "4051878307322",
+                            "default": false,
+                            "first_sale_date": "2014-07-10 01:36:16",
+                            "price": 4995,
+                            "first_active_date": "2014-04-08 16:40:04",
+                            "old_price": 6995,
+                            "additional_info": {},
+                            "created_date": "2014-04-08 16:40:04",
+                            "images": [
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 1042,
+                                        "height": 1500
+                                    },
+                                    "hash": "0810c26b252480a95e04f1ee423858bf",
+                                    "ext": ".jpg",
+                                    "size": 388934
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 1042,
+                                        "height": 1500
+                                    },
+                                    "hash": "a4e3432965b49b768bac153f4d5435b5",
+                                    "ext": ".jpg",
+                                    "size": 765333
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 1042,
+                                        "height": 1500
+                                    },
+                                    "hash": "9c0ab255cc2fd30df4b1d6ee82ba7918",
+                                    "ext": ".jpg",
+                                    "size": 711040
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 1042,
+                                        "height": 1500
+                                    },
+                                    "hash": "5bc0cf966ef9b8cb8eba56eefa3655da",
+                                    "ext": ".jpg",
+                                    "size": 727491
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 762,
+                                        "height": 1100
+                                    },
+                                    "hash": "364fadb7677c4c13825a67a027ef1d19",
+                                    "ext": ".jpg",
+                                    "size": 62529
+                                }
+                            ],
+                            "attributes": {
+                                "attributes_175": [
+                                    2062
+                                ],
+                                "attributes_172": [
+                                    1969
+                                ],
+                                "attributes_257": [
+                                    3663
+                                ],
+                                "attributes_206": [
+                                    2382
+                                ],
+                                "attributes_258": [
+                                    3740
+                                ],
+                                "attributes_2": [
+                                    8
+                                ],
+                                "attributes_0": [
+                                    163
+                                ],
+                                "attributes_1": [
+                                    11
+                                ]
+                            },
+                            "retail_price": 6995,
+                            "id": 6077282,
+                            "quantity": 1
+                        },
+                        {
+                            "updated_date": "2014-07-10 01:36:17",
+                            "about_number": null,
+                            "ean": "4051878307360",
+                            "default": false,
+                            "first_sale_date": "2014-07-10 01:36:17",
+                            "price": 4995,
+                            "first_active_date": "2014-04-08 16:40:04",
+                            "old_price": 6995,
+                            "additional_info": {},
+                            "created_date": "2014-04-08 16:40:04",
+                            "images": [
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 1042,
+                                        "height": 1500
+                                    },
+                                    "hash": "0810c26b252480a95e04f1ee423858bf",
+                                    "ext": ".jpg",
+                                    "size": 388934
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 1042,
+                                        "height": 1500
+                                    },
+                                    "hash": "a4e3432965b49b768bac153f4d5435b5",
+                                    "ext": ".jpg",
+                                    "size": 765333
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 1042,
+                                        "height": 1500
+                                    },
+                                    "hash": "9c0ab255cc2fd30df4b1d6ee82ba7918",
+                                    "ext": ".jpg",
+                                    "size": 711040
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 1042,
+                                        "height": 1500
+                                    },
+                                    "hash": "5bc0cf966ef9b8cb8eba56eefa3655da",
+                                    "ext": ".jpg",
+                                    "size": 727491
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 762,
+                                        "height": 1100
+                                    },
+                                    "hash": "364fadb7677c4c13825a67a027ef1d19",
+                                    "ext": ".jpg",
+                                    "size": 62529
+                                }
+                            ],
+                            "attributes": {
+                                "attributes_175": [
+                                    2240
+                                ],
+                                "attributes_172": [
+                                    1969
+                                ],
+                                "attributes_257": [
+                                    3663
+                                ],
+                                "attributes_206": [
+                                    2422
+                                ],
+                                "attributes_2": [
+                                    5
+                                ],
+                                "attributes_0": [
+                                    163
+                                ],
+                                "attributes_1": [
+                                    11
+                                ]
+                            },
+                            "retail_price": 6995,
+                            "id": 6077305,
+                            "quantity": 1
+                        }
+                    ],
+                    "max_price": 4995,
+                    "description_short": "",
+                    "id": 401592,
+                    "style_key": "m07_14647HAHU7"
+                },
+                "468754": {
+                    "styles": [
+                        {
+                            "name": "BH-Top, LASCANA",
+                            "description_long": "Mit gepaddeten Cups, eingearbeiteten Bügeln und verstellbaren Spaghettiträgern. Blickfang: edle Raffung am Dekolleté. Länge ca. 60 cm. Weiche, anschmiegsame Microfaser-Qualität aus 92% Polyamid, 8% Elasthan.",
+                            "sale": false,
+                            "max_price": 3499,
+                            "brand_id": 266,
+                            "min_price": 3499,
+                            "categories": {
+                                "98": [
+                                    [
+                                        19367,
+                                        19371,
+                                        19421
+                                    ]
+                                ]
+                            },
+                            "active": false,
+                            "variants": [
+                                {
+                                    "updated_date": "2014-07-07 09:48:50",
+                                    "about_number": null,
+                                    "ean": "374174313",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:30",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:30",
+                                    "images": [],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1095
+                                        ],
+                                        "attributes_2": [
+                                            92
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            11
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501499,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-07 09:48:50",
+                                    "about_number": null,
+                                    "ean": "374174314",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:30",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:30",
+                                    "images": [],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1095
+                                        ],
+                                        "attributes_2": [
+                                            83
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            11
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501500,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-07 09:48:50",
+                                    "about_number": null,
+                                    "ean": "374174312",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:30",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:30",
+                                    "images": [],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1095
+                                        ],
+                                        "attributes_2": [
+                                            105
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            11
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501501,
+                                    "quantity": 999
+                                }
+                            ],
+                            "attributes_merged": {
+                                "attributes_6": [
+                                    1095
+                                ],
+                                "attributes_2": [
+                                    105,
+                                    83,
+                                    92
+                                ],
+                                "attributes_0": [
+                                    266
+                                ],
+                                "attributes_1": [
+                                    11
+                                ]
+                            },
+                            "description_short": "Mit eingenähten Cups und verstellbaren Spaghetti-Trägern. Mit edler Raffung am Decolleté. Weiche anschmiegsame Microfaser-Qualität aus 92% Polyamid und 8% Elasthan. Länge ca. 60cm.",
+                            "id": 468757,
+                            "style_key": "m01_384258863"
+                        },
+                        {
+                            "name": "BH-Top, LASCANA",
+                            "description_long": "Mit gepaddeten Cups, eingearbeiteten Bügeln und verstellbaren Spaghettiträgern. Blickfang: edle Raffung am Dekolleté. Länge ca. 60 cm. Weiche, anschmiegsame Microfaser-Qualität aus 92% Polyamid, 8% Elasthan.",
+                            "sale": false,
+                            "max_price": 3499,
+                            "brand_id": 266,
+                            "min_price": 3499,
+                            "categories": {
+                                "98": [
+                                    [
+                                        19367,
+                                        19371,
+                                        19421
+                                    ]
+                                ]
+                            },
+                            "active": false,
+                            "variants": [
+                                {
+                                    "updated_date": "2014-07-07 09:48:26",
+                                    "about_number": null,
+                                    "ean": "374177632",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:33",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:33",
+                                    "images": [],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1095
+                                        ],
+                                        "attributes_2": [
+                                            83
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            30
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501502,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-07 09:48:26",
+                                    "about_number": null,
+                                    "ean": "374177630",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:33",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:33",
+                                    "images": [],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1095
+                                        ],
+                                        "attributes_2": [
+                                            105
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            30
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501503,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-07 09:48:26",
+                                    "about_number": null,
+                                    "ean": "374177631",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:33",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:33",
+                                    "images": [],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1095
+                                        ],
+                                        "attributes_2": [
+                                            92
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            30
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501504,
+                                    "quantity": 999
+                                }
+                            ],
+                            "attributes_merged": {
+                                "attributes_6": [
+                                    1095
+                                ],
+                                "attributes_2": [
+                                    105,
+                                    83,
+                                    92
+                                ],
+                                "attributes_0": [
+                                    266
+                                ],
+                                "attributes_1": [
+                                    30
+                                ]
+                            },
+                            "description_short": "Mit eingenähten Cups und verstellbaren Spaghetti-Trägern. Mit edler Raffung am Decolleté. Weiche anschmiegsame Microfaser-Qualität aus 92% Polyamid und 8% Elasthan. Länge ca. 60cm.",
+                            "id": 468758,
+                            "style_key": "m01_384258863"
+                        },
+                        {
+                            "name": "BH-Top, LASCANA",
+                            "description_long": "Mit gepaddeten Cups, eingearbeiteten Bügeln und verstellbaren Spaghettiträgern. Blickfang: edle Raffung am Dekolleté. Länge ca. 60 cm. Weiche, anschmiegsame Microfaser-Qualität aus 92% Polyamid, 8% Elasthan.",
+                            "sale": false,
+                            "max_price": 3499,
+                            "brand_id": 266,
+                            "min_price": 3499,
+                            "categories": {
+                                "98": [
+                                    [
+                                        19367,
+                                        19371,
+                                        19421
+                                    ]
+                                ]
+                            },
+                            "active": false,
+                            "variants": [
+                                {
+                                    "updated_date": "2014-07-04 13:37:33",
+                                    "about_number": null,
+                                    "ean": "374177667",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:41",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:41",
+                                    "images": [],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1093
+                                        ],
+                                        "attributes_2": [
+                                            83
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            11
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501512,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-04 13:37:33",
+                                    "about_number": null,
+                                    "ean": "374177666",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:41",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:41",
+                                    "images": [],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1093
+                                        ],
+                                        "attributes_2": [
+                                            105
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            11
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501513,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-04 13:37:33",
+                                    "about_number": null,
+                                    "ean": "374177665",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:41",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:41",
+                                    "images": [],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1093
+                                        ],
+                                        "attributes_2": [
+                                            92
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            11
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501514,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-04 13:37:33",
+                                    "about_number": null,
+                                    "ean": "374177664",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:41",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:41",
+                                    "images": [],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1093
+                                        ],
+                                        "attributes_2": [
+                                            113
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            11
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501515,
+                                    "quantity": 999
+                                }
+                            ],
+                            "attributes_merged": {
+                                "attributes_6": [
+                                    1093
+                                ],
+                                "attributes_2": [
+                                    105,
+                                    83,
+                                    92,
+                                    113
+                                ],
+                                "attributes_0": [
+                                    266
+                                ],
+                                "attributes_1": [
+                                    11
+                                ]
+                            },
+                            "description_short": "Mit eingenähten Cups und verstellbaren Spaghetti-Trägern. Mit edler Raffung am Decolleté. Weiche anschmiegsame Microfaser-Qualität aus 92% Polyamid und 8% Elasthan. Länge ca. 60cm.",
+                            "id": 468761,
+                            "style_key": "m01_384258863"
+                        },
+                        {
+                            "name": "BH-Top, LASCANA",
+                            "description_long": "Mit gepaddeten Cups, eingearbeiteten Bügeln und verstellbaren Spaghettiträgern. Blickfang: edle Raffung am Dekolleté. Länge ca. 60 cm. Weiche, anschmiegsame Microfaser-Qualität aus 92% Polyamid, 8% Elasthan.",
+                            "sale": false,
+                            "attributes_merged": {
+                                "attributes_6": [
+                                    1095
+                                ],
+                                "attributes_2": [
+                                    105,
+                                    83,
+                                    92
+                                ],
+                                "attributes_0": [
+                                    266
+                                ],
+                                "attributes_1": [
+                                    48,
+                                    12
+                                ]
+                            },
+                            "brand_id": 266,
+                            "default_variant": {
+                                "updated_date": "2014-07-04 13:37:59",
+                                "about_number": null,
+                                "ean": "384404638",
+                                "default": false,
+                                "first_sale_date": null,
+                                "price": 3499,
+                                "first_active_date": "2014-06-05 22:41:27",
+                                "old_price": 0,
+                                "additional_info": {},
+                                "created_date": "2014-06-05 22:41:27",
+                                "images": [
+                                    {
+                                        "mime": "image/jpeg",
+                                        "image": {
+                                            "width": 672,
+                                            "height": 960
+                                        },
+                                        "hash": "5655fe66606e58fd743a7dcc59687523",
+                                        "ext": ".jpg",
+                                        "size": 71993
+                                    }
+                                ],
+                                "attributes": {
+                                    "attributes_6": [
+                                        1095
+                                    ],
+                                    "attributes_2": [
+                                        83
+                                    ],
+                                    "attributes_0": [
+                                        266
+                                    ],
+                                    "attributes_1": [
+                                        12,
+                                        48
+                                    ]
+                                },
+                                "retail_price": 0,
+                                "id": 6501492,
+                                "quantity": 999
+                            },
+                            "min_price": 3499,
+                            "default_image": {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 672,
+                                    "height": 960
+                                },
+                                "hash": "5655fe66606e58fd743a7dcc59687523",
+                                "ext": ".jpg",
+                                "size": 71993
+                            },
+                            "categories": {
+                                "98": [
+                                    [
+                                        19367,
+                                        19371,
+                                        19421
+                                    ]
+                                ]
+                            },
+                            "active": true,
+                            "variants": [
+                                {
+                                    "updated_date": "2014-07-04 13:37:59",
+                                    "about_number": null,
+                                    "ean": "384404638",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:27",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:27",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "5655fe66606e58fd743a7dcc59687523",
+                                            "ext": ".jpg",
+                                            "size": 71993
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1095
+                                        ],
+                                        "attributes_2": [
+                                            83
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            12,
+                                            48
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501492,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-04 13:37:59",
+                                    "about_number": null,
+                                    "ean": "384404635",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:27",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:27",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "5655fe66606e58fd743a7dcc59687523",
+                                            "ext": ".jpg",
+                                            "size": 71993
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1095
+                                        ],
+                                        "attributes_2": [
+                                            92
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            12,
+                                            48
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501493,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-04 13:37:59",
+                                    "about_number": null,
+                                    "ean": "384404632",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:27",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:27",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "5655fe66606e58fd743a7dcc59687523",
+                                            "ext": ".jpg",
+                                            "size": 71993
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1095
+                                        ],
+                                        "attributes_2": [
+                                            105
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            12,
+                                            48
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501494,
+                                    "quantity": 999
+                                }
+                            ],
+                            "max_price": 3499,
+                            "description_short": "Mit eingenähten Cups und verstellbaren Spaghetti-Trägern. Mit edler Raffung am Decolleté. Weiche anschmiegsame Microfaser-Qualität aus 92% Polyamid und 8% Elasthan. Länge ca. 60cm.",
+                            "id": 468755,
+                            "style_key": "m01_384258863"
+                        },
+                        {
+                            "name": "BH-Top, LASCANA",
+                            "description_long": "Mit gepaddeten Cups, eingearbeiteten Bügeln und verstellbaren Spaghettiträgern. Blickfang: edle Raffung am Dekolleté. Länge ca. 60 cm. Weiche, anschmiegsame Microfaser-Qualität aus 92% Polyamid, 8% Elasthan.",
+                            "sale": false,
+                            "attributes_merged": {
+                                "attributes_6": [
+                                    1095
+                                ],
+                                "attributes_258": [
+                                    3743
+                                ],
+                                "attributes_2": [
+                                    105,
+                                    83,
+                                    92
+                                ],
+                                "attributes_0": [
+                                    266
+                                ],
+                                "attributes_1": [
+                                    204
+                                ]
+                            },
+                            "brand_id": 266,
+                            "default_variant": {
+                                "updated_date": "2014-07-07 09:45:51",
+                                "about_number": null,
+                                "ean": "370090588",
+                                "default": false,
+                                "first_sale_date": null,
+                                "price": 3499,
+                                "first_active_date": "2014-06-05 22:41:42",
+                                "old_price": 0,
+                                "additional_info": {},
+                                "created_date": "2014-06-05 22:41:42",
+                                "images": [
+                                    {
+                                        "mime": "image/jpeg",
+                                        "image": {
+                                            "width": 672,
+                                            "height": 960
+                                        },
+                                        "hash": "4d8daece5cab6bb141ef6dba9060157f",
+                                        "ext": ".jpg",
+                                        "size": 62141
+                                    }
+                                ],
+                                "attributes": {
+                                    "attributes_6": [
+                                        1095
+                                    ],
+                                    "attributes_258": [
+                                        3743
+                                    ],
+                                    "attributes_2": [
+                                        105
+                                    ],
+                                    "attributes_0": [
+                                        266
+                                    ],
+                                    "attributes_1": [
+                                        204
+                                    ]
+                                },
+                                "retail_price": 0,
+                                "id": 6501516,
+                                "quantity": 999
+                            },
+                            "min_price": 3499,
+                            "default_image": {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 672,
+                                    "height": 960
+                                },
+                                "hash": "4d8daece5cab6bb141ef6dba9060157f",
+                                "ext": ".jpg",
+                                "size": 62141
+                            },
+                            "categories": {
+                                "98": [
+                                    [
+                                        19367,
+                                        19371,
+                                        19421
+                                    ]
+                                ]
+                            },
+                            "active": true,
+                            "variants": [
+                                {
+                                    "updated_date": "2014-07-07 09:45:51",
+                                    "about_number": null,
+                                    "ean": "370090588",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:42",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:42",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "4d8daece5cab6bb141ef6dba9060157f",
+                                            "ext": ".jpg",
+                                            "size": 62141
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1095
+                                        ],
+                                        "attributes_258": [
+                                            3743
+                                        ],
+                                        "attributes_2": [
+                                            105
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            204
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501516,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-07 09:45:51",
+                                    "about_number": null,
+                                    "ean": "370090606",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:42",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:42",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "4d8daece5cab6bb141ef6dba9060157f",
+                                            "ext": ".jpg",
+                                            "size": 62141
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1095
+                                        ],
+                                        "attributes_258": [
+                                            3743
+                                        ],
+                                        "attributes_2": [
+                                            83
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            204
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501517,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-07 09:45:51",
+                                    "about_number": null,
+                                    "ean": "370090602",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:42",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:42",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "4d8daece5cab6bb141ef6dba9060157f",
+                                            "ext": ".jpg",
+                                            "size": 62141
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1095
+                                        ],
+                                        "attributes_258": [
+                                            3743
+                                        ],
+                                        "attributes_2": [
+                                            92
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            204
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501518,
+                                    "quantity": 999
+                                }
+                            ],
+                            "max_price": 3499,
+                            "description_short": "Mit eingenähten Cups und verstellbaren Spaghetti-Trägern. Mit edler Raffung am Decolleté. Weiche anschmiegsame Microfaser-Qualität aus 92% Polyamid und 8% Elasthan. Länge ca. 60cm.",
+                            "id": 468762,
+                            "style_key": "m01_384258863"
+                        },
+                        {
+                            "name": "BH-Top, LASCANA",
+                            "description_long": "Mit gepaddeten Cups, eingearbeiteten Bügeln und verstellbaren Spaghettiträgern. Blickfang: edle Raffung am Dekolleté. Länge ca. 60 cm. Weiche, anschmiegsame Microfaser-Qualität aus 92% Polyamid, 8% Elasthan.",
+                            "sale": false,
+                            "attributes_merged": {
+                                "attributes_6": [
+                                    1093
+                                ],
+                                "attributes_258": [
+                                    3743
+                                ],
+                                "attributes_2": [
+                                    113,
+                                    83,
+                                    92,
+                                    105
+                                ],
+                                "attributes_0": [
+                                    266
+                                ],
+                                "attributes_1": [
+                                    204
+                                ]
+                            },
+                            "brand_id": 266,
+                            "default_variant": {
+                                "updated_date": "2014-07-04 13:40:22",
+                                "about_number": null,
+                                "ean": "370085843",
+                                "default": false,
+                                "first_sale_date": null,
+                                "price": 3499,
+                                "first_active_date": "2014-06-05 22:41:24",
+                                "old_price": 0,
+                                "additional_info": {},
+                                "created_date": "2014-06-05 22:41:24",
+                                "images": [
+                                    {
+                                        "mime": "image/jpeg",
+                                        "image": {
+                                            "width": 672,
+                                            "height": 960
+                                        },
+                                        "hash": "4d8daece5cab6bb141ef6dba9060157f",
+                                        "ext": ".jpg",
+                                        "size": 62141
+                                    }
+                                ],
+                                "attributes": {
+                                    "attributes_6": [
+                                        1093
+                                    ],
+                                    "attributes_258": [
+                                        3743
+                                    ],
+                                    "attributes_2": [
+                                        83
+                                    ],
+                                    "attributes_0": [
+                                        266
+                                    ],
+                                    "attributes_1": [
+                                        204
+                                    ]
+                                },
+                                "retail_price": 0,
+                                "id": 6501484,
+                                "quantity": 999
+                            },
+                            "min_price": 3499,
+                            "default_image": {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 672,
+                                    "height": 960
+                                },
+                                "hash": "4d8daece5cab6bb141ef6dba9060157f",
+                                "ext": ".jpg",
+                                "size": 62141
+                            },
+                            "categories": {
+                                "98": [
+                                    [
+                                        19367,
+                                        19371,
+                                        19421
+                                    ]
+                                ]
+                            },
+                            "active": true,
+                            "variants": [
+                                {
+                                    "updated_date": "2014-07-04 13:40:22",
+                                    "about_number": null,
+                                    "ean": "370085843",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:24",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:24",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "4d8daece5cab6bb141ef6dba9060157f",
+                                            "ext": ".jpg",
+                                            "size": 62141
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1093
+                                        ],
+                                        "attributes_258": [
+                                            3743
+                                        ],
+                                        "attributes_2": [
+                                            83
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            204
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501484,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-04 13:40:22",
+                                    "about_number": null,
+                                    "ean": "370085835",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:25",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:25",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "4d8daece5cab6bb141ef6dba9060157f",
+                                            "ext": ".jpg",
+                                            "size": 62141
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1093
+                                        ],
+                                        "attributes_258": [
+                                            3743
+                                        ],
+                                        "attributes_2": [
+                                            92
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            204
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501485,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-04 13:40:22",
+                                    "about_number": null,
+                                    "ean": "370085830",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:25",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:25",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "4d8daece5cab6bb141ef6dba9060157f",
+                                            "ext": ".jpg",
+                                            "size": 62141
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1093
+                                        ],
+                                        "attributes_258": [
+                                            3743
+                                        ],
+                                        "attributes_2": [
+                                            113
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            204
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501486,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-04 13:40:22",
+                                    "about_number": null,
+                                    "ean": "370085838",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:25",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:25",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "4d8daece5cab6bb141ef6dba9060157f",
+                                            "ext": ".jpg",
+                                            "size": 62141
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1093
+                                        ],
+                                        "attributes_258": [
+                                            3743
+                                        ],
+                                        "attributes_2": [
+                                            105
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            204
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501487,
+                                    "quantity": 999
+                                }
+                            ],
+                            "max_price": 3499,
+                            "description_short": "Mit eingenähten Cups und verstellbaren Spaghetti-Trägern. Mit edler Raffung am Decolleté. Weiche anschmiegsame Microfaser-Qualität aus 92% Polyamid und 8% Elasthan. Länge ca. 60cm.",
+                            "id": 468753,
+                            "style_key": "m01_384258863"
+                        },
+                        {
+                            "name": "BH-Top, LASCANA",
+                            "description_long": "Mit gepaddeten Cups, eingearbeiteten Bügeln und verstellbaren Spaghettiträgern. Blickfang: edle Raffung am Dekolleté. Länge ca. 60 cm. Weiche, anschmiegsame Microfaser-Qualität aus 92% Polyamid, 8% Elasthan.",
+                            "sale": false,
+                            "attributes_merged": {
+                                "attributes_6": [
+                                    1093
+                                ],
+                                "attributes_2": [
+                                    113,
+                                    83,
+                                    92,
+                                    105
+                                ],
+                                "attributes_0": [
+                                    266
+                                ],
+                                "attributes_1": [
+                                    30
+                                ]
+                            },
+                            "brand_id": 266,
+                            "default_variant": {
+                                "updated_date": "2014-07-07 09:47:43",
+                                "about_number": null,
+                                "ean": "374187925",
+                                "default": false,
+                                "first_sale_date": null,
+                                "price": 3499,
+                                "first_active_date": "2014-06-05 22:41:36",
+                                "old_price": 0,
+                                "additional_info": {},
+                                "created_date": "2014-06-05 22:41:36",
+                                "images": [
+                                    {
+                                        "mime": "image/jpeg",
+                                        "image": {
+                                            "width": 672,
+                                            "height": 960
+                                        },
+                                        "hash": "5655fe66606e58fd743a7dcc59687523",
+                                        "ext": ".jpg",
+                                        "size": 71993
+                                    }
+                                ],
+                                "attributes": {
+                                    "attributes_6": [
+                                        1093
+                                    ],
+                                    "attributes_2": [
+                                        83
+                                    ],
+                                    "attributes_0": [
+                                        266
+                                    ],
+                                    "attributes_1": [
+                                        30
+                                    ]
+                                },
+                                "retail_price": 0,
+                                "id": 6501505,
+                                "quantity": 999
+                            },
+                            "min_price": 3499,
+                            "default_image": {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 672,
+                                    "height": 960
+                                },
+                                "hash": "5655fe66606e58fd743a7dcc59687523",
+                                "ext": ".jpg",
+                                "size": 71993
+                            },
+                            "categories": {
+                                "98": [
+                                    [
+                                        19367,
+                                        19371,
+                                        19421
+                                    ]
+                                ]
+                            },
+                            "active": true,
+                            "variants": [
+                                {
+                                    "updated_date": "2014-07-07 09:47:43",
+                                    "about_number": null,
+                                    "ean": "374187925",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:36",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:36",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "5655fe66606e58fd743a7dcc59687523",
+                                            "ext": ".jpg",
+                                            "size": 71993
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1093
+                                        ],
+                                        "attributes_2": [
+                                            83
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            30
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501505,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-07 09:47:43",
+                                    "about_number": null,
+                                    "ean": "374187923",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:36",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:36",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "5655fe66606e58fd743a7dcc59687523",
+                                            "ext": ".jpg",
+                                            "size": 71993
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1093
+                                        ],
+                                        "attributes_2": [
+                                            92
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            30
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501506,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-07 09:47:43",
+                                    "about_number": null,
+                                    "ean": "374187922",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:36",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:36",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "5655fe66606e58fd743a7dcc59687523",
+                                            "ext": ".jpg",
+                                            "size": 71993
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1093
+                                        ],
+                                        "attributes_2": [
+                                            113
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            30
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501507,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-07 09:47:43",
+                                    "about_number": null,
+                                    "ean": "374187924",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:36",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:36",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "5655fe66606e58fd743a7dcc59687523",
+                                            "ext": ".jpg",
+                                            "size": 71993
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1093
+                                        ],
+                                        "attributes_2": [
+                                            105
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ],
+                                        "attributes_1": [
+                                            30
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501508,
+                                    "quantity": 999
+                                }
+                            ],
+                            "max_price": 3499,
+                            "description_short": "Mit eingenähten Cups und verstellbaren Spaghetti-Trägern. Mit edler Raffung am Decolleté. Weiche anschmiegsame Microfaser-Qualität aus 92% Polyamid und 8% Elasthan. Länge ca. 60cm.",
+                            "id": 468759,
+                            "style_key": "m01_384258863"
+                        },
+                        {
+                            "name": "BH-Top, LASCANA",
+                            "description_long": "Mit gepaddeten Cups, eingearbeiteten Bügeln und verstellbaren Spaghettiträgern. Blickfang: edle Raffung am Dekolleté. Länge ca. 60 cm. Weiche, anschmiegsame Microfaser-Qualität aus 92% Polyamid, 8% Elasthan.",
+                            "sale": false,
+                            "attributes_merged": {
+                                "attributes_6": [
+                                    1095
+                                ],
+                                "attributes_2": [
+                                    105,
+                                    83,
+                                    92
+                                ],
+                                "attributes_0": [
+                                    266
+                                ]
+                            },
+                            "brand_id": 266,
+                            "default_variant": {
+                                "updated_date": "2014-07-04 13:35:45",
+                                "about_number": null,
+                                "ean": "374178496",
+                                "default": false,
+                                "first_sale_date": null,
+                                "price": 3499,
+                                "first_active_date": "2014-06-05 22:41:38",
+                                "old_price": 0,
+                                "additional_info": {},
+                                "created_date": "2014-06-05 22:41:38",
+                                "images": [
+                                    {
+                                        "mime": "image/jpeg",
+                                        "image": {
+                                            "width": 672,
+                                            "height": 960
+                                        },
+                                        "hash": "a118ebd4157a96cd677527d249ccabe5",
+                                        "ext": ".jpg",
+                                        "size": 36231
+                                    }
+                                ],
+                                "attributes": {
+                                    "attributes_6": [
+                                        1095
+                                    ],
+                                    "attributes_2": [
+                                        105
+                                    ],
+                                    "attributes_0": [
+                                        266
+                                    ]
+                                },
+                                "retail_price": 0,
+                                "id": 6501509,
+                                "quantity": 999
+                            },
+                            "min_price": 3499,
+                            "default_image": {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 672,
+                                    "height": 960
+                                },
+                                "hash": "a118ebd4157a96cd677527d249ccabe5",
+                                "ext": ".jpg",
+                                "size": 36231
+                            },
+                            "categories": {
+                                "98": [
+                                    [
+                                        19367,
+                                        19371,
+                                        19421
+                                    ]
+                                ]
+                            },
+                            "active": true,
+                            "variants": [
+                                {
+                                    "updated_date": "2014-07-04 13:35:45",
+                                    "about_number": null,
+                                    "ean": "374178496",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:38",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:38",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "a118ebd4157a96cd677527d249ccabe5",
+                                            "ext": ".jpg",
+                                            "size": 36231
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1095
+                                        ],
+                                        "attributes_2": [
+                                            105
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501509,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-04 13:35:45",
+                                    "about_number": null,
+                                    "ean": "374178499",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:38",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:38",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "a118ebd4157a96cd677527d249ccabe5",
+                                            "ext": ".jpg",
+                                            "size": 36231
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1095
+                                        ],
+                                        "attributes_2": [
+                                            92
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501510,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-04 13:35:45",
+                                    "about_number": null,
+                                    "ean": "374178500",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:38",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:38",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "a118ebd4157a96cd677527d249ccabe5",
+                                            "ext": ".jpg",
+                                            "size": 36231
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1095
+                                        ],
+                                        "attributes_2": [
+                                            83
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501511,
+                                    "quantity": 999
+                                }
+                            ],
+                            "max_price": 3499,
+                            "description_short": "Mit eingenähten Cups und verstellbaren Spaghetti-Trägern. Mit edler Raffung am Decolleté. Weiche anschmiegsame Microfaser-Qualität aus 92% Polyamid und 8% Elasthan. Länge ca. 60cm.",
+                            "id": 468760,
+                            "style_key": "m01_384258863"
+                        },
+                        {
+                            "name": "BH-Top, LASCANA",
+                            "description_long": "Mit gepaddeten Cups, eingearbeiteten Bügeln und verstellbaren Spaghettiträgern. Blickfang: edle Raffung am Dekolleté. Länge ca. 60 cm. Weiche, anschmiegsame Microfaser-Qualität aus 92% Polyamid, 8% Elasthan.",
+                            "sale": false,
+                            "attributes_merged": {
+                                "attributes_6": [
+                                    1093
+                                ],
+                                "attributes_2": [
+                                    113,
+                                    83,
+                                    92,
+                                    105
+                                ],
+                                "attributes_0": [
+                                    266
+                                ]
+                            },
+                            "brand_id": 266,
+                            "default_variant": {
+                                "updated_date": "2014-07-07 09:48:45",
+                                "about_number": null,
+                                "ean": "374182828",
+                                "default": false,
+                                "first_sale_date": null,
+                                "price": 3499,
+                                "first_active_date": "2014-06-05 22:41:30",
+                                "old_price": 0,
+                                "additional_info": {},
+                                "created_date": "2014-06-05 22:41:30",
+                                "images": [
+                                    {
+                                        "mime": "image/jpeg",
+                                        "image": {
+                                            "width": 672,
+                                            "height": 960
+                                        },
+                                        "hash": "5655fe66606e58fd743a7dcc59687523",
+                                        "ext": ".jpg",
+                                        "size": 71993
+                                    },
+                                    {
+                                        "mime": "image/jpeg",
+                                        "image": {
+                                            "width": 672,
+                                            "height": 960
+                                        },
+                                        "hash": "a118ebd4157a96cd677527d249ccabe5",
+                                        "ext": ".jpg",
+                                        "size": 36231
+                                    }
+                                ],
+                                "attributes": {
+                                    "attributes_6": [
+                                        1093
+                                    ],
+                                    "attributes_2": [
+                                        92
+                                    ],
+                                    "attributes_0": [
+                                        266
+                                    ]
+                                },
+                                "retail_price": 0,
+                                "id": 6501495,
+                                "quantity": 999
+                            },
+                            "min_price": 3499,
+                            "default_image": {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 672,
+                                    "height": 960
+                                },
+                                "hash": "5655fe66606e58fd743a7dcc59687523",
+                                "ext": ".jpg",
+                                "size": 71993
+                            },
+                            "categories": {
+                                "98": [
+                                    [
+                                        19367,
+                                        19371,
+                                        19421
+                                    ]
+                                ]
+                            },
+                            "active": true,
+                            "variants": [
+                                {
+                                    "updated_date": "2014-07-07 09:48:45",
+                                    "about_number": null,
+                                    "ean": "374182828",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:30",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:30",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "5655fe66606e58fd743a7dcc59687523",
+                                            "ext": ".jpg",
+                                            "size": 71993
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "a118ebd4157a96cd677527d249ccabe5",
+                                            "ext": ".jpg",
+                                            "size": 36231
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1093
+                                        ],
+                                        "attributes_2": [
+                                            92
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501495,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-07 09:48:45",
+                                    "about_number": null,
+                                    "ean": "374182827",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:30",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:30",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "5655fe66606e58fd743a7dcc59687523",
+                                            "ext": ".jpg",
+                                            "size": 71993
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "a118ebd4157a96cd677527d249ccabe5",
+                                            "ext": ".jpg",
+                                            "size": 36231
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1093
+                                        ],
+                                        "attributes_2": [
+                                            113
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501496,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-07 09:48:45",
+                                    "about_number": null,
+                                    "ean": "374182829",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:30",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:30",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "5655fe66606e58fd743a7dcc59687523",
+                                            "ext": ".jpg",
+                                            "size": 71993
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "a118ebd4157a96cd677527d249ccabe5",
+                                            "ext": ".jpg",
+                                            "size": 36231
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1093
+                                        ],
+                                        "attributes_2": [
+                                            105
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501497,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-07 09:48:45",
+                                    "about_number": null,
+                                    "ean": "374182830",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 3499,
+                                    "first_active_date": "2014-06-05 22:41:30",
+                                    "old_price": 0,
+                                    "additional_info": {},
+                                    "created_date": "2014-06-05 22:41:30",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "5655fe66606e58fd743a7dcc59687523",
+                                            "ext": ".jpg",
+                                            "size": 71993
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "a118ebd4157a96cd677527d249ccabe5",
+                                            "ext": ".jpg",
+                                            "size": 36231
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1093
+                                        ],
+                                        "attributes_2": [
+                                            83
+                                        ],
+                                        "attributes_0": [
+                                            266
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 6501498,
+                                    "quantity": 999
+                                }
+                            ],
+                            "max_price": 3499,
+                            "description_short": "Mit eingenähten Cups und verstellbaren Spaghetti-Trägern. Mit edler Raffung am Decolleté. Weiche anschmiegsame Microfaser-Qualität aus 92% Polyamid und 8% Elasthan. Länge ca. 60cm.",
+                            "id": 468756,
+                            "style_key": "m01_384258863"
+                        }
+                    ],
+                    "name": "BH-Top, LASCANA",
+                    "description_long": "Mit gepaddeten Cups, eingearbeiteten Bügeln und verstellbaren Spaghettiträgern. Blickfang: edle Raffung am Dekolleté. Länge ca. 60 cm. Weiche, anschmiegsame Microfaser-Qualität aus 92% Polyamid, 8% Elasthan.",
+                    "sale": false,
+                    "categories.98": [
+                        [
+                            19367,
+                            19371,
+                            19421
+                        ]
+                    ],
+                    "attributes_merged": {
+                        "attributes_6": [
+                            1093
+                        ],
+                        "attributes_2": [
+                            113,
+                            83,
+                            92,
+                            105
+                        ],
+                        "attributes_0": [
+                            266
+                        ],
+                        "attributes_1": [
+                            48,
+                            12
+                        ]
+                    },
+                    "brand_id": 266,
+                    "default_variant": {
+                        "updated_date": "2014-07-04 13:37:59",
+                        "about_number": null,
+                        "ean": "384404522",
+                        "default": false,
+                        "first_sale_date": null,
+                        "price": 3499,
+                        "first_active_date": "2014-06-05 22:41:26",
+                        "old_price": 0,
+                        "additional_info": {},
+                        "created_date": "2014-06-05 22:41:26",
+                        "images": [
+                            {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 672,
+                                    "height": 960
+                                },
+                                "hash": "5655fe66606e58fd743a7dcc59687523",
+                                "ext": ".jpg",
+                                "size": 71993
+                            }
+                        ],
+                        "attributes": {
+                            "attributes_6": [
+                                1093
+                            ],
+                            "attributes_2": [
+                                83
+                            ],
+                            "attributes_0": [
+                                266
+                            ],
+                            "attributes_1": [
+                                12,
+                                48
+                            ]
+                        },
+                        "retail_price": 0,
+                        "id": 6501488,
+                        "quantity": 999
+                    },
+                    "min_price": 3499,
+                    "default_image": {
+                        "mime": "image/jpeg",
+                        "image": {
+                            "width": 672,
+                            "height": 960
+                        },
+                        "hash": "5655fe66606e58fd743a7dcc59687523",
+                        "ext": ".jpg",
+                        "size": 71993
+                    },
+                    "active": true,
+                    "variants": [
+                        {
+                            "updated_date": "2014-07-04 13:37:59",
+                            "about_number": null,
+                            "ean": "384404522",
+                            "default": false,
+                            "first_sale_date": null,
+                            "price": 3499,
+                            "first_active_date": "2014-06-05 22:41:26",
+                            "old_price": 0,
+                            "additional_info": {},
+                            "created_date": "2014-06-05 22:41:26",
+                            "images": [
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "5655fe66606e58fd743a7dcc59687523",
+                                    "ext": ".jpg",
+                                    "size": 71993
+                                }
+                            ],
+                            "attributes": {
+                                "attributes_6": [
+                                    1093
+                                ],
+                                "attributes_2": [
+                                    83
+                                ],
+                                "attributes_0": [
+                                    266
+                                ],
+                                "attributes_1": [
+                                    12,
+                                    48
+                                ]
+                            },
+                            "retail_price": 0,
+                            "id": 6501488,
+                            "quantity": 999
+                        },
+                        {
+                            "updated_date": "2014-07-04 13:37:59",
+                            "about_number": null,
+                            "ean": "384404509",
+                            "default": false,
+                            "first_sale_date": null,
+                            "price": 3499,
+                            "first_active_date": "2014-06-05 22:41:26",
+                            "old_price": 0,
+                            "additional_info": {},
+                            "created_date": "2014-06-05 22:41:26",
+                            "images": [
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "5655fe66606e58fd743a7dcc59687523",
+                                    "ext": ".jpg",
+                                    "size": 71993
+                                }
+                            ],
+                            "attributes": {
+                                "attributes_6": [
+                                    1093
+                                ],
+                                "attributes_2": [
+                                    92
+                                ],
+                                "attributes_0": [
+                                    266
+                                ],
+                                "attributes_1": [
+                                    12,
+                                    48
+                                ]
+                            },
+                            "retail_price": 0,
+                            "id": 6501489,
+                            "quantity": 999
+                        },
+                        {
+                            "updated_date": "2014-07-04 13:37:59",
+                            "about_number": null,
+                            "ean": "384404501",
+                            "default": false,
+                            "first_sale_date": null,
+                            "price": 3499,
+                            "first_active_date": "2014-06-05 22:41:26",
+                            "old_price": 0,
+                            "additional_info": {},
+                            "created_date": "2014-06-05 22:41:26",
+                            "images": [
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "5655fe66606e58fd743a7dcc59687523",
+                                    "ext": ".jpg",
+                                    "size": 71993
+                                }
+                            ],
+                            "attributes": {
+                                "attributes_6": [
+                                    1093
+                                ],
+                                "attributes_2": [
+                                    113
+                                ],
+                                "attributes_0": [
+                                    266
+                                ],
+                                "attributes_1": [
+                                    12,
+                                    48
+                                ]
+                            },
+                            "retail_price": 0,
+                            "id": 6501490,
+                            "quantity": 999
+                        },
+                        {
+                            "updated_date": "2014-07-04 13:37:59",
+                            "about_number": null,
+                            "ean": "384404517",
+                            "default": false,
+                            "first_sale_date": null,
+                            "price": 3499,
+                            "first_active_date": "2014-06-05 22:41:26",
+                            "old_price": 0,
+                            "additional_info": {},
+                            "created_date": "2014-06-05 22:41:26",
+                            "images": [
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "5655fe66606e58fd743a7dcc59687523",
+                                    "ext": ".jpg",
+                                    "size": 71993
+                                }
+                            ],
+                            "attributes": {
+                                "attributes_6": [
+                                    1093
+                                ],
+                                "attributes_2": [
+                                    105
+                                ],
+                                "attributes_0": [
+                                    266
+                                ],
+                                "attributes_1": [
+                                    12,
+                                    48
+                                ]
+                            },
+                            "retail_price": 0,
+                            "id": 6501491,
+                            "quantity": 999
+                        }
+                    ],
+                    "max_price": 3499,
+                    "description_short": "Mit eingenähten Cups und verstellbaren Spaghetti-Trägern. Mit edler Raffung am Decolleté. Weiche anschmiegsame Microfaser-Qualität aus 92% Polyamid und 8% Elasthan. Länge ca. 60cm.",
+                    "id": 468754,
+                    "style_key": "m01_384258863"
+                }
+            }
+        }
+    }
+]
