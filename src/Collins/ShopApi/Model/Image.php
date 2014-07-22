@@ -6,9 +6,7 @@
 
 namespace Collins\ShopApi\Model;
 
-
 use Collins\ShopApi;
-use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Image
 {
