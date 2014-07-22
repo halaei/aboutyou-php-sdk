@@ -7,10 +7,10 @@
 namespace Collins\ShopApi\Test\Unit\Model\FacetManager;
 
 use Collins\ShopApi\Model\Facet;
-use Collins\ShopApi\Model\FacetManager\DoctrineMultiGetCacheStrategy;
+use Collins\ShopApi\Model\FacetManager\AboutyouCacheStrategy;
 use Collins\ShopApi\Test\Unit\Model\AbstractModelTest;
 
-class DoctrineMultiGetCacheStrategyTest extends AbstractModelTest
+class AboutyouCacheStrategyTest extends AbstractModelTest
 {
     public function testFetch()
     {
@@ -41,7 +41,7 @@ class DoctrineMultiGetCacheStrategyTest extends AbstractModelTest
             $size40->getGroupId() => array($size40->getId())
         );
 
-        $cacheMock = $this->getMockForAbstractClass('Doctrine\\Common\\Cache\\CacheMultiGet');
+        $cacheMock = $this->getMockForAbstractClass('Aboutyou\\Common\\Cache\\CacheMultiGet');
         $cacheMock->expects($this->atLeastOnce())
             ->method('fetchMulti')
             ->with($expectedMultiGet)
@@ -58,7 +58,7 @@ class DoctrineMultiGetCacheStrategyTest extends AbstractModelTest
             $brand123->getGroupId() => array($brand123->getId(), $brand456->getId(), $brand798->getId()),
             $size30->getGroupId()   => array($size30->getId(), $size40->getId())
         );
-        $strategy = new DoctrineMultiGetCacheStrategy($cacheMock, $strategyMock);
+        $strategy = new AboutyouCacheStrategy($cacheMock, $strategyMock);
         $facets = $strategy->fetch($facetIds);
         $this->assertCount(5, $facets);
     }
