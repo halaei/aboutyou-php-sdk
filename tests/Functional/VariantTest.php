@@ -147,6 +147,7 @@ class VariantTest extends AbstractShopApiTest
         foreach ($variants as $variant) {
             $this->assertInstanceOf('Collins\ShopApi\Model\Product', $variant->getProduct());
             $this->assertEquals(374469, $variant->getProduct()->getId());
+            $this->assertEquals($product, $variant->getProduct());
         }
     }
 }

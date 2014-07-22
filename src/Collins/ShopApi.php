@@ -11,9 +11,8 @@ use Collins\ShopApi\Factory\ResultFactoryInterface;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
-use Collins\ShopApi\Model\FacetManager\DoctrineMultiGetCacheStrategy;
+use Collins\ShopApi\Model\FacetManager\AboutyouCacheStrategy;
 use Collins\ShopApi\Model\FacetManager\FetchFacetGroupStrategy;
-use Collins\ShopApi\Model\FacetManager\FetchSingleFacetStrategy;
 use Collins\ShopApi\Model\ProductsEansResult;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
@@ -73,7 +72,7 @@ class ShopApi
      * @param string $apiEndPoint Constants::API_ENVIRONMENT_LIVE for live environment, Constants::API_ENVIRONMENT_STAGE for staging
      * @param ResultFactoryInterface $resultFactory if null it will use the DefaultModelFactory with the DefaultFacetManager
      * @param LoggerInterface $logger
-     * @param \Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
+     * @param \Aboutyou\Common\Cache\CacheMultiGet|\Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
      */
     public function __construct(
         $appId,
@@ -739,7 +738,7 @@ class ShopApi
     }
 
     /**
-     * @param \Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
+     * @param \Aboutyou\Common\Cache\CacheMultiGet|\Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
      *
      * @return DefaultModelFactory
      */
@@ -748,7 +747,7 @@ class ShopApi
         $strategy = new FetchFacetGroupStrategy($this);
 
         if ($facetManagerCache) {
-            $strategy = new DoctrineMultiGetCacheStrategy($facetManagerCache, $strategy);
+            $strategy = new AboutyouCacheStrategy($facetManagerCache, $strategy);
         }
 
         $resultFactory = new DefaultModelFactory(
