@@ -22,6 +22,9 @@ class Variant extends AbstractModel
 
     /** @var ModelFactoryInterface */
     private $factory;
+    
+    /** @var Product */
+    protected $product;
 
     /**
      * @var Image
@@ -38,15 +41,16 @@ class Variant extends AbstractModel
      *
      * @return static
      */
-    public static function createFromJson(\stdClass $jsonObject, ModelFactoryInterface $factory)
+    public static function createFromJson(\stdClass $jsonObject, ModelFactoryInterface $factory, Product $product)
     {
         $variant = new static();
 
         $variant->factory    = $factory;
         $variant->jsonObject = $jsonObject;
+        $variant->product = $product;
 
         return $variant;
-    }
+    }        
 
     /**
      * @return integer
@@ -76,7 +80,15 @@ class Variant extends AbstractModel
 
         return $this->images;
     }
-
+    
+    /**
+     * @return Product
+     */
+    public function getProduct()
+    {
+        return $this->product;
+    }
+  
     /**
      * Get image by given hash.
      *

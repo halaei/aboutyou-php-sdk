@@ -47,5 +47,29 @@ class VariantTest extends AbstractShopApiTest
         $this->assertEquals('XL', $facetGroup->getFacetNames());
         $this->assertEquals('clothing_unisex_int', $facetGroup->getName());
     }
+    
+    
+    public function testGetProductFromVariant()
+    {
+        $shopApi = $this->getShopApiWithResultFileAndFacets(
+            'result/products-374469-with-variants.json',
+            'result/facet-for-product-374469.json'
+        );
+        
+        $products = $shopApi->fetchProductsByIds(array(1234))->getProducts();
+        /** @var Product $product */
+        $product = reset($products);
+        
+        $variants = $product->getVariants();
+        /** @var Variant $variant */
+        
+        $this->assertCount(5, $variants);
+        
+        foreach ($variants as $variant) {
+            $this->assertInstanceOf('Collins\ShopApi\Model\Product', $variant->getProduct());
+            $this->assertEquals(374469, $variant->getProduct()->getId());
+            $this->assertEquals($product, $variant->getProduct());
+        }
+    }
 }
  

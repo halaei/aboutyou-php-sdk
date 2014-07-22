@@ -68,13 +68,13 @@ class DefaultModelFactory implements ModelFactoryInterface
         }
     }
 
-    protected function subscribeCategoryManagerEvents()
-    {
+//    protected function subscribeCategoryManagerEvents()
+//    {
 //        $newSubscribedEvents = $this->getCategoryManager()->getSubscribedEvents();
 //        if (!empty($newSubscribedEvents)) {
 //            $this->getEventDispatcher()->addSubscriber($this->getCategoryManager());
 //        }
-    }
+//    }
 
     protected function unsubscribeFacetManagerEvents()
     {
@@ -345,9 +345,9 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\Variant
      */
-    public function createVariant(\stdClass $jsonObject)
+    public function createVariant(\stdClass $jsonObject, ShopApi\Model\Product $product)
     {
-        return Model\Variant::createFromJson($jsonObject, $this);
+        return Model\Variant::createFromJson($jsonObject, $this, $product);
     }
 
     /**

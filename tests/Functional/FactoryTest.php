@@ -19,7 +19,7 @@ class FactoryTestAbstract extends AbstractShopApiTest
         $this->assertInstanceOf('Collins\\ShopApi\\Factory\\ModelFactoryInterface', $factory);
         $this->assertInstanceOf('Collins\\ShopApi\\Factory\\ResultFactoryInterface', $factory);
 
-        $variant = $factory->createVariant(json_decode('{}'));
+        $variant = $factory->createVariant(json_decode('{}'), $this->getProduct());
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\Variant', $variant);
 
         $json = $this->getJsonObjectFromFile('facet.json');
@@ -52,4 +52,17 @@ class FactoryTestAbstract extends AbstractShopApiTest
         $result = $factory->createProductsResult($json[0]->products);
         $this->assertInstanceOf('\stdClass', $result);
     }
+    
+    private function getProduct() 
+    {
+        $productIds = array(123, 456);
+
+        $shopApi = $this->getShopApiWithResultFile('result/products.json');
+
+        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $products = $productResult->getProducts();
+
+        
+        return $products[123];        
+    }    
 }

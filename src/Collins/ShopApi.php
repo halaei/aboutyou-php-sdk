@@ -13,9 +13,8 @@ use Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface;
 use Collins\ShopApi\Model\CategoryManager\DefaultCategoryManager;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
-use Collins\ShopApi\Model\FacetManager\DoctrineMultiGetCacheStrategy;
+use Collins\ShopApi\Model\FacetManager\AboutyouCacheStrategy;
 use Collins\ShopApi\Model\FacetManager\FetchFacetGroupStrategy;
-use Collins\ShopApi\Model\FacetManager\FetchSingleFacetStrategy;
 use Collins\ShopApi\Model\ProductsEansResult;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\ProductsResult;
@@ -55,13 +54,16 @@ class ShopApi
 
     /** @var LoggerInterface */
     protected $logger;
+    
+    /** @var string Constants::API_ENVIRONMENT_LIVE for live environment, Constants::API_ENVIRONMENT_STAGE for staging */
+    protected $environment = Constants::API_ENVIRONMENT_LIVE;
 
     /** @var string */
     protected $appId;
     /** @var string */
     protected $appPassword;
     /** @var AuthSDK */
-    protected $authSdk;
+    protected $authSdk;        
 
     /** @var EventDispatcher */
     protected $eventDispatcher;
@@ -72,7 +74,7 @@ class ShopApi
      * @param string $apiEndPoint Constants::API_ENVIRONMENT_LIVE for live environment, Constants::API_ENVIRONMENT_STAGE for staging
      * @param ResultFactoryInterface $resultFactory if null it will use the DefaultModelFactory with the DefaultFacetManager
      * @param LoggerInterface $logger
-     * @param \Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
+     * @param \Aboutyou\Common\Cache\CacheMultiGet|\Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
      */
     public function __construct(
         $appId,
@@ -92,8 +94,10 @@ class ShopApi
 
         if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
+            $this->environment = Constants::API_ENVIRONMENT_STAGE;            
         } else if ($apiEndPoint === Constants::API_ENVIRONMENT_SANDBOX) {
             $this->setBaseImageUrl(self::IMAGE_URL_SANDBOX);
+            $this->environment = Constants::API_ENVIRONMENT_SANDBOX;  
         } else if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
             $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
         } else {
@@ -655,7 +659,11 @@ class ShopApi
      */
     public function getJavaScriptURL()
     {
-        $url = '//developer.aboutyou.de/appjs/'.$this->appId.'.js';
+        if ($this->environment === Constants::API_ENVIRONMENT_STAGE) {
+            $url = '//devcenter.staging.collins.kg/appjs/'.$this->appId.'.js';            
+        } else {
+            $url = '//developer.aboutyou.de/appjs/'.$this->appId.'.js';            
+        }
 
         return $url;
     }
@@ -705,7 +713,7 @@ class ShopApi
     }
 
     /**
-     * @param \Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
+     * @param \Aboutyou\Common\Cache\CacheMultiGet|\Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
      *
      * @return DefaultModelFactory
      */
@@ -714,7 +722,7 @@ class ShopApi
         $strategy = new FetchFacetGroupStrategy($this);
 
         if ($facetManagerCache) {
-            $strategy = new DoctrineMultiGetCacheStrategy($facetManagerCache, $strategy);
+            $strategy = new AboutyouCacheStrategy($facetManagerCache, $strategy);
         }
 
         $resultFactory = new DefaultModelFactory(

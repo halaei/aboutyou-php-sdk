@@ -116,24 +116,24 @@ class Product extends AbstractModel
         $product->maxPrice         = isset($jsonObject->max_price) ? $jsonObject->max_price : null;
 
         $product->defaultImage     = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
-        $product->defaultVariant   = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant) : null;
-        $product->variants         = self::parseVariants($jsonObject, $factory);
+        $product->defaultVariant   = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant, $product) : null;
+        $product->variants         = self::parseVariants($jsonObject, $factory, $product);
         $product->styles           = self::parseStyles($jsonObject, $factory);
 
         $key = 'categories.' . $appId;
         $product->categoryIdPaths  = isset($jsonObject->$key) ? $jsonObject->$key : array();
 
         $product->facetIds     = self::parseFacetIds($jsonObject);
-
+        
         return $product;
     }
 
-    protected static function parseVariants($jsonObject, ShopApi\Factory\ModelFactoryInterface $factory)
+    protected static function parseVariants($jsonObject, ShopApi\Factory\ModelFactoryInterface $factory, Product $product)
     {
         $variants = array();
         if (!empty($jsonObject->variants)) {
             foreach ($jsonObject->variants as $variant) {
-                $variants[$variant->id] = $factory->createVariant($variant);
+                $variants[$variant->id] = $factory->createVariant($variant, $product);
             }
         }
 
