@@ -6,21 +6,33 @@
 
 namespace Collins\ShopApi\Model\CategoryManager;
 
-use Collins\ShopApi;
+use Collins\ShopApi\Model\Category;
 
 interface CategoryManagerInterface
 {
-
     /**
-     * @param $id
-     * @return ShopApi\Model\Category|null
+     * @param integer $id
+     *
+     * @return Category|null
      */
     public function getCategory($id);
 
     /**
-     * @param array $ids
-     * @return ShopApi\Model\Category[]
+     * @param integer[] $ids
+     *
+     * @return Category[]
      */
     public function getCategories(array $ids);
 
+    /**
+     * @param integer $id
+     *
+     * @return Category[]
+     */
+    public function getSubCategories($id);
+
+    /**
+     * @return Category[]
+     */
+    public function getCategoryTree();
 }

@@ -11,23 +11,11 @@ use Collins\ShopApi;
 class CategoryTest extends AbstractShopApiTest
 {
     /**
-     * @var $category \Collins\ShopApi\Model\Category
-     */
-    protected $category;
-
-    public function setUp()
-    {
-        $shopApi = $this->getShopApiWithResult(''); // Init DefaultModelFactory
-        $json = json_decode(file_get_contents(__DIR__ . '/testData/category-tree.json'));
-        $this->category = \Collins\ShopApi\Model\Category::createFromJson($json[0]->category_tree[1], $shopApi->getResultFactory());
-    }
-    
-    /**
      * @expectedException \InvalidArgumentException
      */
     public function testFetchCategoryTreeWithDepthGreaterThan10()
     {
-        $shopApi = $this->getShopApiWithResult('category-tree.json');
+        $shopApi = $this->getShopApiWithResult('category-tree-v2.json');
         
         $shopApi->fetchCategoryTree(1000);
     }
@@ -37,7 +25,7 @@ class CategoryTest extends AbstractShopApiTest
      */
     public function testFetchCategoryTreeWithDepthLessThanMiuns1()
     {
-        $shopApi = $this->getShopApiWithResult('category-tree.json');
+        $shopApi = $this->getShopApiWithResult('category-tree-v2.json');
         
         $shopApi->fetchCategoryTree(-1000);
     }         
@@ -47,15 +35,20 @@ class CategoryTest extends AbstractShopApiTest
      */
     public function testBreadcrumb()
     {
-        $breadcrumb = $this->category->getBreadcrumb();
-//        echo '<pre>', __LINE__, ') ', __METHOD__, ': <b>$breadcrumb</b>=', var_export($breadcrumb), '</pre>', PHP_EOL;
-        $this->assertCount(1, $breadcrumb);
-        $this->assertEquals(200, $breadcrumb[0]->getId());
+        $shopApi = $this->getShopApiWithResult(''); // Init DefaultModelFactory
+        $categoryManager = $shopApi->getResultFactory()->getCategoryManager();
+        $json = $this->getJsonObjectFromFile('category-tree-v2.json');
+        $categoryManager->parseJson($json[0]->category_tree, $shopApi->getResultFactory());
+        $category = \Collins\ShopApi\Model\Category::createFromJson(reset($json[0]->category_tree->ids), $categoryManager);
 
-        $subcategories = $this->category->getSubCategories();
+        $breadcrumb = $category->getBreadcrumb();
+        $this->assertCount(1, $breadcrumb);
+        $this->assertEquals(74415, $breadcrumb[0]->getId());
+
+        $subcategories = $category->getSubCategories();
         $breadcrumb = $subcategories[0]->getBreadcrumb();
         $this->assertCount(2, $breadcrumb);
-        $this->assertEquals(200, $breadcrumb[0]->getId());
-        $this->assertEquals(210, $breadcrumb[1]->getId());
+        $this->assertEquals(74415, $breadcrumb[0]->getId());
+        $this->assertEquals(74417, $breadcrumb[1]->getId());
     }
 }

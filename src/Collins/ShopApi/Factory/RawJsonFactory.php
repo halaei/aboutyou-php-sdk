@@ -44,7 +44,7 @@ class RawJsonFactory implements ResultFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function createCategoryTree(array $jsonArray)
+    public function createCategoryTree($jsonArray)
     {
         return $jsonArray;
     }

@@ -372,8 +372,7 @@ class ShopApi
             $ids = array($ids);
         }
 
-        $this->fetchCategoryTree();
-        return $this->getResultFactory()->getCategoryManager()->getCategories($ids);
+        return $this->getCategoryManager()->getCategories($ids);
     }
 
     /**
@@ -386,11 +385,23 @@ class ShopApi
      */
     public function fetchCategoryTree($maxDepth = -1)
     {
-        $query = $this->getQuery()
-            ->fetchCategoryTree($maxDepth)
-        ;
+        $this->getCategoryManager();
 
-        return $query->executeSingle();
+        return $this->getResultFactory()->createCategoryTree();
+    }
+
+    public function getCategoryManager($fetchIfEmpty = true)
+    {
+        $categoryManager = $this->getResultFactory()->getCategoryManager();
+
+        if ($fetchIfEmpty && $categoryManager->isEmpty()) {
+            $query = $this->getQuery()
+                ->fetchCategoryTree()
+                ->executeSingle()
+            ;
+        }
+
+        return $categoryManager;
     }
 
     /**

@@ -13,7 +13,7 @@ class CategoriesByIdsTest extends AbstractShopApiTest
      */
     public function testFetchCategoriesWithWrongIds()
     {
-        $shopApi = $this->getShopApiWithResultFile('category.json');
+        $shopApi = $this->getShopApiWithResultFile('category-tree-v2.json');
 
         $categoriesResult = $shopApi->fetchCategoriesByIds(array('kfd', false,  null, 212312, ));        
     }
@@ -23,7 +23,7 @@ class CategoriesByIdsTest extends AbstractShopApiTest
      */
     public function testFetchCategoriesWithStringIdsAndFalse()
     {
-        $shopApi = $this->getShopApiWithResultFile('category.json');
+        $shopApi = $this->getShopApiWithResultFile('category-tree-v2.json');
 
         $categoriesResult = $shopApi->fetchCategoriesByIds(array('1', '2', false));        
     }   
@@ -33,7 +33,7 @@ class CategoriesByIdsTest extends AbstractShopApiTest
      */
     public function testFetchCategoriesWithNegativeIds()
     {
-        $shopApi = $this->getShopApiWithResultFile('category.json');
+        $shopApi = $this->getShopApiWithResultFile('category-tree-v2.json');
 
         $categoriesResult = $shopApi->fetchCategoriesByIds(array(-1, -2, -4));        
     }     
@@ -41,7 +41,7 @@ class CategoriesByIdsTest extends AbstractShopApiTest
     public function testFetchCategoriesWithStringIds()
     {
         $categoryIds = array('16080', '16138', '123');
-        $shopApi = $this->getShopApiWithResultFile('category.json');
+        $shopApi = $this->getShopApiWithResultFile('category-tree-v2.json');
 
         $categoriesResult = $shopApi->fetchCategoriesByIds($categoryIds);
 
@@ -54,7 +54,7 @@ class CategoriesByIdsTest extends AbstractShopApiTest
     {
         $categoryIds = array(16080, 16138, 123);
 
-        $shopApi = $this->getShopApiWithResultFile('category.json');
+        $shopApi = $this->getShopApiWithResultFile('category-tree-v2.json');
 
         $categoriesResult = $shopApi->fetchCategoriesByIds($categoryIds);
         $categories = $categoriesResult->getCategories();

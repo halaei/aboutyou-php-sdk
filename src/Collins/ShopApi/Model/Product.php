@@ -366,8 +366,6 @@ class Product extends AbstractModel
             return;
         }
 
-        $this->fetchAndParseCategories();
-
         // get reverse sorted category pathes
         $pathLengths = array_map('count', $this->categoryIdPaths);
         arsort($pathLengths);

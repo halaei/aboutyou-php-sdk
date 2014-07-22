@@ -14,9 +14,6 @@ abstract class AbstractModel
     /** @var ShopApi */
     protected static $shopApi;
 
-    /** @var  CategoryManagerInterface */
-    protected static $categoryManager;
-
     /**
      * @param ShopApi $shopApi
      */

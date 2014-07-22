@@ -22,11 +22,11 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
     public function testMultiQuery()
     {
         $query = $this->queryBuilder
-            ->fetchCategoryTree(0)
+            ->fetchCategoryTree()
             ->fetchSuggest('foo')
         ;
 
-        $expected = '[{"category_tree":{"max_depth":0}},{"suggest":{"searchword":"foo"}}]';
+        $expected = '[{"category_tree":{"version":"2"}},{"suggest":{"searchword":"foo"}}]';
 
         $this->assertEquals($expected, $query->getQueryString());
     }
@@ -37,7 +37,7 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
             ->fetchCategoryTree()
         ;
 
-        $expected = '[{"category_tree":{}}]';
+        $expected = '[{"category_tree":{"version":"2"}}]';
 
         $this->assertEquals($expected, $query->getQueryString());
     }

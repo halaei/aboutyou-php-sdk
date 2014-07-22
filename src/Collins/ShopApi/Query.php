@@ -53,7 +53,7 @@ class Query extends QueryBuilder
     ) {
         parent::fetchAutocomplete($searchword, $limit, $types);
 
-        if($this->factory->getCategoryManager()->isEmpty()) {
+        if ($this->factory->getCategoryManager()->isEmpty()) {
             $this->fetchCategoryTree();
         }
 
@@ -69,7 +69,7 @@ class Query extends QueryBuilder
     {
         parent::fetchBasket($sessionId);
 
-        if($this->factory->getCategoryManager()->isEmpty()) {
+        if ($this->factory->getCategoryManager()->isEmpty()) {
             $this->fetchCategoryTree();
         }
 
@@ -88,7 +88,7 @@ class Query extends QueryBuilder
     ) {
         parent::fetchProductsByIds($ids, $fields);
 
-        if($this->factory->getCategoryManager()->isEmpty() && in_array(ProductFields::CATEGORIES, $fields)) {
+        if ($this->factory->getCategoryManager()->isEmpty() && in_array(ProductFields::CATEGORIES, $fields)) {
             $this->fetchCategoryTree();
         }
 
@@ -107,7 +107,7 @@ class Query extends QueryBuilder
     ) {
         parent::fetchProductsByEans($eans, $fields);
 
-        if($this->factory->getCategoryManager()->isEmpty() && in_array(ProductFields::CATEGORIES, $fields)) {
+        if ($this->factory->getCategoryManager()->isEmpty() && in_array(ProductFields::CATEGORIES, $fields)) {
             $this->fetchCategoryTree();
         }
 
@@ -123,7 +123,7 @@ class Query extends QueryBuilder
     {
         parent::fetchProductSearch($criteria);
 
-        if($this->factory->getCategoryManager()->isEmpty() && in_array(ProductFields::CATEGORIES, $criteria->getProductFields())) {
+        if ($this->factory->getCategoryManager()->isEmpty() && in_array(ProductFields::CATEGORIES, $criteria->getProductFields())) {
             $this->fetchCategoryTree();
         }
 

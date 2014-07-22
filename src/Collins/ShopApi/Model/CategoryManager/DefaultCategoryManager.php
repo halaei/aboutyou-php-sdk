@@ -6,110 +6,90 @@
 
 namespace Collins\ShopApi\Model\CategoryManager;
 
-use Collins\ShopApi;
-use Collins\ShopApi\Factory\ResultFactoryInterface;
-use Symfony\Component\EventDispatcher\GenericEvent;
+use Collins\ShopApi\Factory\ModelFactoryInterface;
+use Collins\ShopApi\Model\Category;
 
 class DefaultCategoryManager implements CategoryManagerInterface
 {
-    protected $jsonObject;
-
-    /** @var ResultFactoryInterface */
-    private $factory;
-
     /** @var Category[] */
-    private $categoryInstances;
+    private $categories;
 
-    public function __construct(ResultFactoryInterface $factory) {
-        $this->factory = $factory;
-
-    }
+    /** @var integer[] */
+    private $parentChildIds;
 
     /**
-     * @param $jsonObject
-     * @private
+     * @param \stdObject $jsonObject
+     * @param ModelFactoryInterface $factory
+     *
+     * @return $this
      */
-    public function setRawCategoryTree($jsonObject)
+    public function parseJson($jsonObject, ModelFactoryInterface $factory)
     {
-        $this->jsonObject = $jsonObject;
+        $this->categories = array();
+        // this hack converts the array keys to integers, otherwise $this->parentChildIds[$id] fails
+        $this->parentChildIds = json_decode(json_encode($jsonObject->parent_child), true);
+
+        foreach ($jsonObject->ids as $id => $jsonCategory) {
+            $this->categories[$id] = $factory->createCategory($jsonCategory, $this);
+        }
+
         return $this;
     }
 
     public function isEmpty()
     {
-        return empty($this->jsonObject);
+        return $this->categories === null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public function getCategoryTree()
     {
-        return array(
-            'collins.shop_api.category_tree.create_model.before' => array('onCategoryTreeFetched', 0),
-        );
-    }
-
-    public function onCategoryTreeFetched(GenericEvent $event) {
-        $this->jsonObject = $event->getSubject();
-    }
-
-    public function getCategoryTree($level = -1)
-    {
-        $jsonObjects = [];
-        foreach($this->jsonObject->parent_child->{"0"} as $categoryId) {
-            $jsonObjects[] = $this->jsonObject->ids->{$categoryId};
-        }
-        return $this->factory->createCategoryTree($jsonObjects);
+        return $this->getSubCategories(0);
     }
 
     /**
-     * @param $id
-     * @param bool $activeOnly
-     * @return ShopApi\Model\Category|null
+     * {@inheritdoc}
      */
-    public function getCategory($id, $activeOnly=true) {
-        if(!isset($this->jsonObject->ids->{$id})) {
+    public function getCategory($id)
+    {
+        if (!isset($this->categories[$id])) {
             return null;
         }
 
-        $rawObject = $this->jsonObject->ids->{$id};
-
-        if($activeOnly && $rawObject->active===false) {
-            return(null);
-        }
-
-
-        if(!isset($this->categoryInstances[$id])) {
-            if(!empty($rawObject->parent) &&
-                isset($this->categoryInstances[$rawObject->parent])) {
-                $parentObject = $this->categoryInstances[$rawObject->parent];
-            } else {
-                $parentObject = null;
-            }
-
-            $this->categoryInstances[$id] = $this->factory->createCategory($rawObject, $parentObject);
-        }
-
-        return($this->categoryInstances[$id]);
+        return $this->categories[$id];
     }
 
     /**
-     * @param array $ids
-     * @param bool $activeOnly
-     * @return ShopApi\Model\Category[]
+     * {@inheritdoc}
      */
-    public function getCategories(array $ids, $activeOnly=true)
+    public function getCategories(array $ids)
     {
-        /**
-         *
-         */
-        $result = array();
-
-        foreach($ids as $id) {
-            $result[$id] = $this->getCategory($id, $activeOnly);
+        if (empty($this->categories)) {
+            return array();
         }
 
-        return($result);
+        // may faster then foreach
+        $categories = array_intersect_key(
+            $this->categories,
+            array_flip($ids)
+        );
+
+        return $categories;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSubCategories($id)
+    {
+        if (!isset($this->parentChildIds[$id])) {
+            return array();
+        }
+
+        $ids = $this->parentChildIds[$id];
+
+        return $this->getCategories($ids);
     }
 }

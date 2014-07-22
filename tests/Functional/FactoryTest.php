@@ -33,6 +33,7 @@ class FactoryTestAbstract extends AbstractShopApiTest
 
     public function testGetRawJsonFactory()
     {
+//        $this->markTestIncomplete('fatal error');
         $shopApi = new ShopApi('id', 'dummy');
         $shopApi->setResultFactory(new ShopApi\Factory\RawJsonFactory($shopApi));
 
@@ -40,7 +41,7 @@ class FactoryTestAbstract extends AbstractShopApiTest
         $this->assertInstanceOf('Collins\\ShopApi\\Factory\\ResultFactoryInterface', $factory);
         $this->assertNotInstanceOf('Collins\\ShopApi\\Factory\\ModelFactoryInterface', $factory);
 
-        $tree = $factory->createCategoryTree(json_decode('[]'));
+        $tree = $factory->createCategoryTree(json_decode('{}'));
         $this->assertInternalType('array', $tree);
 
         $json = $this->getJsonObjectFromFile('fetch-facet.json');
