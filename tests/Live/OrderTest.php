@@ -2,13 +2,14 @@
 
 namespace Collins\ShopApi\Test\Live;
 
-
+/**
+ * @group live
+ */
 class OrderTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
     /**
      * @expectedException \Collins\ShopApi\Exception\ResultErrorException
      * @expectedExceptionMessage order_id: False is not of type 'integer'
-     * @group live
      */
     public function testFetchOrderWithWrongId()
     {
@@ -19,7 +20,6 @@ class OrderTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
     /**
      * @expectedException \Collins\ShopApi\Exception\ResultErrorException
      * @expectedExceptionMessage Basket is empty: 123456xyz
-     * @group live
      */
     public function testInitiateOrderWithEmptyBasket()
     {

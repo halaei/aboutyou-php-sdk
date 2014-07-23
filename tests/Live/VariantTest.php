@@ -2,7 +2,9 @@
 
 namespace Collins\ShopApi\Test\Live;
 
-
+/**
+ * @group live
+ */
 class VariantTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
     public function testGetVariantById() 
