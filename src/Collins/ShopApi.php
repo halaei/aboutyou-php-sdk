@@ -307,7 +307,7 @@ class ShopApi
             if (is_string($variantId) && ctype_digit($variantId)) {
                 $variantId = intval($variantId);
             } else {
-                throw new \InvalidArgumentException('the variant id must be an integer or sting with digits');
+                throw new \InvalidArgumentException('the variant id must be an integer or string with digits');
             }
         }
 
@@ -437,6 +437,34 @@ class ShopApi
 
         return $result;
     }
+    
+    /**
+     * @param integer[] $ids
+     *
+     * @return ShopApi\Model\VariantsResult
+     *
+     * @throws ShopApi\Exception\MalformedJsonException
+     * @throws ShopApi\Exception\UnexpectedResultException
+     */
+    public function fetchVariantsByIds(
+            array $ids
+    ) {
+        // we allow to pass a single ID instead of an array
+        settype($ids, 'array');
+
+        $query = $this->getQuery()
+            ->fetchLiveVariantByIds($ids)
+        ;
+
+        $result = $query->executeSingle();
+        
+        $variantsNotFound = $result->getVariantsNotFound();
+        if ($result->hasVariantsNotFound() && $this->logger) {
+            $this->logger->warning('variants or products for variants not found: appid=' . $this->appId . ' variant ids=[' . join(',', $variantsNotFound) . ']');
+        }        
+
+        return $result;
+    }    
 
     /**
      * @param string[] $eans

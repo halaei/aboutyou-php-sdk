@@ -177,7 +177,8 @@ class Query extends QueryBuilder
         'suggest'        => 'createSuggest',
         'get_order'      => 'createOrder',
         'initiate_order' => 'initiateOrder',
-        'child_apps'     => 'createChildApps'
+        'child_apps'     => 'createChildApps',
+        'live_variant'   => 'createVariantsResult'
     );
 
     /**

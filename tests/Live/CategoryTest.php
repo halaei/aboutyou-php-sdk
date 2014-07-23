@@ -4,12 +4,14 @@ namespace Collins\ShopApi\Test\Live;
 
 use Collins\ShopApi;
 
+/**
+ * @group live
+ */
 class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
 {
 
     /**
      * @expectedException \InvalidArgumentException
-     * @group live
      */
     public function testFetchCategoriesByIdWithStrings()
     {
@@ -19,8 +21,7 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
     
     /**
      * @expectedException \InvalidArgumentException
-     * @group live
-     */    
+     */
     public function testFetchCategoryTreeWithDepth()
     {
         $api = $this->getShopApi();
@@ -29,8 +30,7 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
     
     /**
      * @expectedException \Collins\ShopApi\Exception\ResultErrorException
-     * @group live
-     */    
+     */
     public function testFetchCategoryTreeWithTrueDepth()
     {
         $api = $this->getShopApi();
@@ -39,17 +39,13 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
 
     /**
      * @expectedException \Collins\ShopApi\Exception\ResultErrorException
-     * @group live
-     */    
+     */
     public function testFetchCategoryTreeWithFalseDepth()
     {
         $api = $this->getShopApi();
         $tree = $api->fetchCategoryTree(false);
     }    
     
-    /**
-     * @group live
-     */
     public function testFetchCategoriesOverTree()
     {
         $api = $this->getShopApi();
@@ -72,7 +68,6 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
     
     /**
      * @depends testFetchCategoriesOverTree
-     * @group live
      */
     public function testFetchCategoriesByIds($ids)
     {
@@ -81,5 +76,4 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
                
         $this->assertCount($categories->count(), $ids);
     }
-
 }
