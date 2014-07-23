@@ -6,9 +6,9 @@
 
 namespace Collins\ShopApi\Model;
 
-
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
+use Collins\ShopApi\Model\Product;
 
 class Variant extends AbstractModel
 {
@@ -38,6 +38,7 @@ class Variant extends AbstractModel
     /**
      * @param \stdClass $jsonObject
      * @param ModelFactoryInterface $factory
+     * @param Product $product
      *
      * @return static
      */
@@ -47,7 +48,7 @@ class Variant extends AbstractModel
 
         $variant->factory    = $factory;
         $variant->jsonObject = $jsonObject;
-        $variant->product = $product;
+        $variant->product    = $product;
 
         return $variant;
     }        
@@ -80,7 +81,7 @@ class Variant extends AbstractModel
 
         return $this->images;
     }
-    
+
     /**
      * @return Product
      */
@@ -88,7 +89,7 @@ class Variant extends AbstractModel
     {
         return $this->product;
     }
-  
+
     /**
      * Get image by given hash.
      *
