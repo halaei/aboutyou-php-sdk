@@ -8,10 +8,10 @@ namespace Collins\ShopApi\Model\FacetManager;
 
 use Collins\ShopApi;
 use Collins\ShopApi\Model\Facet;
-use Collins\ShopApi\Model\ProductSearchResult\FacetCounts;
-use Doctrine\Common\Cache\CacheMultiGet;
+use Doctrine\Common\Cache\CacheMultiGet as DoctrineCache;
+use Aboutyou\Common\Cache\CacheMultiGet as AboutyouCache;
 
-class DoctrineMultiGetCacheStrategy implements FetchStrategyInterface
+class AboutyouCacheStrategy implements FetchStrategyInterface
 {
     /** @var FetchStrategyInterface */
     protected $chainedFetchStrategy;
@@ -28,8 +28,12 @@ class DoctrineMultiGetCacheStrategy implements FetchStrategyInterface
      * @param FetchStrategyInterface $facetStrategy
      * @param int $cacheDuration
      */
-    public function __construct(CacheMultiGet $cache, FetchStrategyInterface $facetStrategy, $cacheDuration = self::DEFAULT_CACHE_DURATION)
+    public function __construct($cache, FetchStrategyInterface $facetStrategy, $cacheDuration = self::DEFAULT_CACHE_DURATION)
     {
+        if (!($cache instanceof DoctrineCache || $cache instanceof AboutyouCache)) {
+            throw new \InvalidArgumentException('$cache must be an instance of Aboutyou\\Common\\Cache\\CacheMultiGet');
+        }
+
         $this->cache = $cache;
         $this->chainedFetchStrategy = $facetStrategy;
         $this->cacheDuration = max($cacheDuration, 1);
@@ -83,44 +87,6 @@ class DoctrineMultiGetCacheStrategy implements FetchStrategyInterface
             $this->cache->save($facet->getUniqueKey(), $facet, $this->cacheDuration);
         }
     }
-
-//    2014-04-21 by nils.droege: The facet query fails with: "is too long"
-//
-//    /**
-//     * This Method is useful to to store all Facets in a cache like memcache, redis or apc
-//     * @param ShopApi $shopApi
-//     */
-//    public function cacheAllUsedFacets(ShopApi $shopApi)
-//    {
-//        $criteria = $shopApi->getProductSearchCriteria('DoctrineMultiGetCacheStrategy')
-//            ->setLimit(0)
-////            ->selectFacetsByGroupId(0, 100)
-//            ->selectAllFacets(ShopApi\Criteria\ProductSearchCriteria::FACETS_UNLIMITED)
-//        ;
-//
-//        // will be cached implicit
-//        $productSearchResult = $shopApi->fetchProductSearch($criteria);
-//
-////        $facetCounts = $productSearchResult->getFacets();
-//
-////        $this->saveMultiFacetCounts($facetCounts);
-//    }
-//
-//    /**
-//     * @param FacetCounts[] $facetsCounts
-//     */
-//    public function saveMultiFacetCounts($facetsCounts)
-//    {
-//        $facets = array();
-//        foreach ($facetsCounts as $facetCounts) {
-//            foreach ($facetCounts->getFacetCounts() as $facetCount) {
-//                $facet = $facetCount->getFacet();
-//                $facets[$facet->getUniqueKey()] = $facet;
-//            }
-//        }
-//
-//        $this->saveMulti($facets);
-//    }
 
     /**
      * This Method is useful to to store all Facets in a cache like memcache, redis or apc

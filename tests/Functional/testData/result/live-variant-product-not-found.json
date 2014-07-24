@@ -1,0 +1,15 @@
+[
+    {
+        "products": {
+            "pageHash": "9bd7456e-470d-4ecb-b43d-aaf172fa03d0",
+            "ids": {
+                "294475": {
+                    "error_message": [
+                        "product not found"
+                    ],
+                    "error_code": 404
+                }
+            }
+        }
+    }
+]

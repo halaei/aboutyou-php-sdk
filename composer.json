@@ -25,7 +25,7 @@
 
     "require": {
         "php": ">=5.3",
-        "aboutyou/cache": "~1.4.0",
+        "aboutyou/cache": "~1.4.1",
         "aboutyou/auth-sdk": "~0.3",
         "psr/log": "1.0.*",
         "symfony/event-dispatcher": "~2.1",
@@ -41,7 +41,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Collins\\": "src/"
+            "Collins\\ShopApi": "src/"
         },
         "psr-4": {
             "Collins\\ShopApi\\Test\\": "tests/"

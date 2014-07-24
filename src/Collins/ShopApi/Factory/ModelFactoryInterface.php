@@ -63,10 +63,11 @@ interface ModelFactoryInterface extends ResultFactoryInterface
 
     /**
      * @param \stdClass $json
+     * @param \Collins\ShopApi\Model\Product $product
      *
      * @return \Collins\ShopApi\Model\Variant
      */
-    public function createVariant(\stdClass $json);
+    public function createVariant(\stdClass $json, \Collins\ShopApi\Model\Product $product);
 
     /***************************************+
      * ProductSearchResult Facets

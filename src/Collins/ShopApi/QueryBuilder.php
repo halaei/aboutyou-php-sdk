@@ -319,6 +319,26 @@ class QueryBuilder
 
         return $this;
     }
+    
+    /**
+     * @param string[]|int[] $ids
+     *
+     * @return $this
+     */
+    public function fetchLiveVariantByIds(array $ids) {
+        // we allow to pass a single ID instead of an array
+        settype($ids, 'array');
+
+        $ids = array_map('intval', $ids);
+
+        $this->query[] = array(
+            'live_variant' => array(
+                'ids'    => $ids
+            )
+        );
+
+        return $this;
+    }    
 
     /**
      * @param string[] $eans

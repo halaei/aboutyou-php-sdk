@@ -6,7 +6,7 @@ use Collins\ShopApi;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\FacetManager;
-use Doctrine\Common\Cache\ArrayCache;
+use Aboutyou\Common\Cache\ArrayCache;
 
 /**
  * @group facet-manager
@@ -196,7 +196,7 @@ class FacetManagerTest extends AbstractShopApiTest
         $shopApi = new ShopApi('id', 'pw', ShopApi\Constants::API_ENVIRONMENT_STAGE, null, null, $cache);
         /** @var ShopApi\Model\FacetManager\DefaultFacetManager $facetManager */
         $facetManager = $shopApi->getResultFactory()->getFacetManager();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\DoctrineMultiGetCacheStrategy', $facetManager->getFetchStrategy());
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\AboutyouCacheStrategy', $facetManager->getFetchStrategy());
     }
 
     protected function getJsonStringFromFile($filepath)

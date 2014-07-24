@@ -19,7 +19,7 @@ The SDK is available via [Packagist](https://packagist.org/) under the [aboutyou
 ```json
     {
         "require": {
-            "aboutyou/app-sdk": "~0.1"
+            "aboutyou/app-sdk": "~0.9.7"
         }
     }
 ```
@@ -52,7 +52,7 @@ use Monolog\Handler\StreamHandler;
 Example how to use the App SDK with the apc cache.
 
 ```php
-    $cache = new \Doctrine\Common\Cache\ApcCache();
+    $cache = new \Aboutyou\Common\Cache\ApcCache();
     $api = new \Collins\ShopApi($appId, $appPassword, $apiHost, null, null, $cache);
 ```
 
@@ -65,14 +65,14 @@ To precache facets per cron (hourly pre caching is preferred), you can write a n
 require 'myconfig.php';
 require 'vendor/autoload.php';
 
-$cache = new \Doctrine\Common\Cache\ApcCache();
+$cache = new \Aboutyou\Common\Cache\ApcCache();
 $shopApi = new \Collins\ShopApi($appId, $appPassword, $shopApiHost, null, null, $cache);
 /** @var DefaultFacetManager $facetManager */
 $facetManager = $shopApi->getResultFactory()->getFacetManager();
-/** @var DoctrineMultiGetCacheStrategy $doctrineMultiGetCacheStrategy */
-$doctrineMultiGetCacheStrategy = $facetManager->getFetchStrategy();
+/** @var AboutyouCacheStrategy $cacheStrategy */
+$cacheStrategy = $facetManager->getFetchStrategy();
 
-$doctrineMultiGetCacheStrategy->cacheAllFacets($shopApi);
+$cacheStrategy->cacheAllFacets($shopApi);
 ```
 
 ## Testing
