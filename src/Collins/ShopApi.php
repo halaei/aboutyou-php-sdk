@@ -368,15 +368,30 @@ class ShopApi
      * @param mixed $ids either a single category ID as integer or an array of IDs
      *
      * @return \Collins\ShopApi\Model\CategoriesResult
+     *
+     * @deprecated use the CategoryManager instead of
+     * @see getCategoryManager()
      */
     public function fetchCategoriesByIds($ids = null)
     {
+
         // we allow to pass a single ID instead of an array
         if ($ids !== null && !is_array($ids)) {
             $ids = array($ids);
         }
 
-        return $this->getCategoryManager()->getCategories($ids);
+        $query = $this->getQuery()
+            ->fetchCategoriesByIds($ids)
+        ;
+
+        $result = $query->executeSingle();
+
+        $notFound = $result->getCategoriesNotFound();
+        if (!empty($notFound) && $this->logger) {
+            $this->logger->warning('categories not found: appid=' . $this->appId . ' product ids=[' . join(',', $notFound) . ']');
+        }
+
+        return $result;
     }
 
     /**
@@ -386,21 +401,39 @@ class ShopApi
      *
      * @throws ShopApi\Exception\MalformedJsonException
      * @throws ShopApi\Exception\UnexpectedResultException
+     *
+     * @deprecated use the CategoryManager instead of
+     * @see getCategoryManager()
      */
     public function fetchCategoryTree($maxDepth = -1)
     {
-        $this->getCategoryManager();
+        $query = $this->getQuery()
+            ->requireCategoryTree()
+        ;
 
-        return $this->getResultFactory()->createCategoryTree();
+        return $query->executeSingle();
     }
 
+    /**
+     * The Categories will be fetch automatically, if required by any other fetch method
+     *
+     * For Example
+     * $productsResult = $api->fetchProductsByIds([12345], ['categories']);
+     *  will fetch the categories with the same request.
+     * $rootCategories = $api->getCategoryManager()->getCategoryTree();
+     *  will give you all categories for your Menu without an other request
+     *
+     * @param bool $fetchIfEmpty
+     *
+     * @return CategoryManagerInterface
+     */
     public function getCategoryManager($fetchIfEmpty = true)
     {
         $categoryManager = $this->getResultFactory()->getCategoryManager();
 
         if ($fetchIfEmpty && $categoryManager->isEmpty()) {
             $query = $this->getQuery()
-                ->fetchCategoryTree()
+                ->requireCategoryTree()
                 ->executeSingle()
             ;
         }

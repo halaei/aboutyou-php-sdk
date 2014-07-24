@@ -374,7 +374,11 @@ class Product extends AbstractModel
             $categoryPath = $this->categoryIdPaths[$index];
             $leafId = end($categoryPath);
 
-            $category = $this->getCategoryManager()->getCategories($leafId, true);
+            $category = $this->getCategoryManager()->getCategory($leafId, true);
+
+            if (!$category) {
+                throw new ShopApi\Exception\RuntimeException('Missing category with id ' . $leafId);
+            }
 
             if ($category->isPathActive()) {
                 return $category;
@@ -434,6 +438,7 @@ class Product extends AbstractModel
         $categoryIds = call_user_func(array($this, "get".ucfirst($categoryType)."CategoryIds"));
 
         $result = $this->getCategoryManager()->getCategories($categoryIds, $activeOnly);
+        $result = array_values($result);
 
         if($activeOnly) {
             $this->{$activeAttrName} = $result;

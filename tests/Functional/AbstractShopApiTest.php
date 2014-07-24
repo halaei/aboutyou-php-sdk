@@ -12,6 +12,8 @@ use Guzzle\Service\Client;
 
 abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
 {
+    protected $setupCategoryManager = true;
+
     /**
      * @param string|string[] $jsonString
      * @param string|null $exceptedRequestBody
@@ -133,6 +135,9 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
         #$shopApi = new ShopApi('id', 'token');
         $shopApi = $this->_____shopApi;
         $shopApi->getApiClient()->setClient($client);
+        if ($this->setupCategoryManager === true) {
+            $this->setupCategoryManager($shopApi);
+        }
 
         return $shopApi;
     }
@@ -160,5 +165,13 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
         $shopApi->getApiClient()->setClient($client);
 
         return $shopApi;
+    }
+
+    protected function setupCategoryManager($shopApi)
+    {
+        $categoryManager = new ShopApi\Model\CategoryManager\DefaultCategoryManager();
+        $json = $this->getJsonObjectFromFile('category-tree-v2.json');
+        $categoryManager->parseJson($json[0]->category_tree, $shopApi->getResultFactory());
+        $shopApi->getResultFactory()->setCategoryManager($categoryManager);
     }
 }

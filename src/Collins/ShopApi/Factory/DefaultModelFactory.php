@@ -194,9 +194,11 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return CategoryTree
      */
-    public function createCategoryTree()
+    public function createCategoryTree($jsonArray)
     {
-        return $this->getCategoryManager()->getCategoryTree();
+        $this->initializeCategoryManager($jsonArray);
+
+        return new Model\CategoryTree($this->getCategoryManager());
     }
 
     public function setCategoryManager(CategoryManagerInterface $categoryManager)

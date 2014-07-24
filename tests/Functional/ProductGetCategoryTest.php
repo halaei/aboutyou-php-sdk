@@ -9,19 +9,23 @@ namespace Collins\ShopApi\Test\Functional;
 use Collins\ShopApi;
 use Collins\ShopApi\Model\Product;
 
-class ProductGetCategoryTestAbstract extends AbstractShopApiTest
+class ProductGetCategoryTest extends AbstractShopApiTest
 {
+    protected $setupCategoryManager = false;
+
     /** @var ShopApi */
     private $shopApi;
 
     public function setup()
     {
         $this->shopApi = $this->getShopApiWithResultFile('product/category.json');
+        $this->shopApi->getCategoryManager(true);
+
     }
 
-    public function getProduct($filname)
+    public function getProduct($filename)
     {
-        $json = $this->getJsonObjectFromFile('product/' . $filname);
+        $json = $this->getJsonObjectFromFile('product/' . $filename);
         $product = Product::createFromJson($json, $this->shopApi->getResultFactory(), 98);
 
         return $product;
@@ -29,8 +33,7 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
 
     public function testGetCategoryIdHierachies()
     {
-        $json = $this->getJsonObjectFromFile('product/product-with-categories.json');
-        $product = Product::createFromJson($json, $this->shopApi->getResultFactory(), 98);
+        $product = $this->getProduct('product-with-categories.json');
 
         $this->assertEquals(
             array(array(2,21),array(1,12,121),array(1,11),array(3)),
@@ -40,8 +43,7 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
 
     public function testGetCategoryIdsEmpty()
     {
-        $json = $this->getJsonObjectFromFile('product/product-with-attributes.json');
-        $product = Product::createFromJson($json, $this->shopApi->getResultFactory(), 98);
+        $product = $this->getProduct('product-with-attributes.json');
 
         $this->assertEquals(array(), $product->getCategoryIdHierachies());
     }

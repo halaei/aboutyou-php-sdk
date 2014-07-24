@@ -3,11 +3,12 @@ namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi;
 
-/**
- *
- */
 class CategoriesByIdsTest extends AbstractShopApiTest
 {
+    public function setup() {
+        $this->markTestIncomplete();
+    }
+
     /**
      * @expectedException \InvalidArgumentException
      */

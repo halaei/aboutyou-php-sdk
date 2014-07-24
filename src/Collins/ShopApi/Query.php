@@ -53,9 +53,7 @@ class Query extends QueryBuilder
     ) {
         parent::fetchAutocomplete($searchword, $limit, $types);
 
-        if ($this->factory->getCategoryManager()->isEmpty()) {
-            $this->fetchCategoryTree();
-        }
+        $this->requireCategoryTree();
 
         return $this;
     }
@@ -69,9 +67,7 @@ class Query extends QueryBuilder
     {
         parent::fetchBasket($sessionId);
 
-        if ($this->factory->getCategoryManager()->isEmpty()) {
-            $this->fetchCategoryTree();
-        }
+        $this->requireCategoryTree();
 
         return $this;
     }
@@ -88,8 +84,8 @@ class Query extends QueryBuilder
     ) {
         parent::fetchProductsByIds($ids, $fields);
 
-        if ($this->factory->getCategoryManager()->isEmpty() && in_array(ProductFields::CATEGORIES, $fields)) {
-            $this->fetchCategoryTree();
+        if (in_array(ProductFields::CATEGORIES, $fields)) {
+            $this->requireCategoryTree();
         }
 
         return $this;
@@ -107,8 +103,8 @@ class Query extends QueryBuilder
     ) {
         parent::fetchProductsByEans($eans, $fields);
 
-        if ($this->factory->getCategoryManager()->isEmpty() && in_array(ProductFields::CATEGORIES, $fields)) {
-            $this->fetchCategoryTree();
+        if (in_array(ProductFields::CATEGORIES, $fields)) {
+            $this->requireCategoryTree();
         }
 
         return $this;
@@ -123,13 +119,26 @@ class Query extends QueryBuilder
     {
         parent::fetchProductSearch($criteria);
 
-        if ($this->factory->getCategoryManager()->isEmpty() && in_array(ProductFields::CATEGORIES, $criteria->getProductFields())) {
-            $this->fetchCategoryTree();
+        if ($criteria->requiresCategories()) {
+            $this->requireCategoryTree();
         }
 
         return $this;
     }
 
+
+    public function requireCategoryTree($fetchForced = false)
+    {
+        if (!($fetchForced || $this->factory->getCategoryManager()->isEmpty())) {
+            return $this;
+        }
+
+        $this->query[] = array(
+            'category_tree' => array('version' => '2')
+        );
+
+        return $this;
+    }
 
     /**
      * request the queries and returns an array of the results
@@ -167,7 +176,7 @@ class Query extends QueryBuilder
         'autocompletion' => 'createAutocomplete',
         'basket'         => 'createBasket',
         'category'       => 'createCategoriesResult',
-        'category_tree'  => 'initializeCategoryManager',
+        'category_tree'  => 'createCategoryTree',
         'facets'         => 'createFacetsList',
         'facet'          => 'createFacetList',
         'facet_types'    => 'createFacetTypes',

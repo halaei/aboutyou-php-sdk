@@ -3,7 +3,7 @@ namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi;
 
-class SuggestTestAbstract extends AbstractShopApiTest
+class SuggestTest extends AbstractShopApiTest
 {
     public function testSuggest()
     {

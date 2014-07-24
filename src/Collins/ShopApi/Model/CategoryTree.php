@@ -13,7 +13,7 @@ class CategoryTree implements \IteratorAggregate, \Countable
     /** @var CategoryManagerInterface */
     private $categoryManager;
 
-    protected function __construct(CategoryManagerInterface $categoryManager)
+    public function __construct(CategoryManagerInterface $categoryManager)
     {
         $this->categoryManager = $categoryManager;
     }
