@@ -1,0 +1,24 @@
+[
+    {
+        "live_variant": {
+            "6077282": {
+                "available_stock": 1,
+                "price": 4995,
+                "id": 6077282,
+                "product_id": 401592
+            },
+            "6077305": {
+                "available_stock": 1,
+                "price": 4995,
+                "id": 6077305,
+                "product_id": 401592
+            },
+            "6501489": {
+                "available_stock": 999,
+                "price": 3499,
+                "id": 6501489,
+                "product_id": 468754
+            }
+        }
+    }
+]

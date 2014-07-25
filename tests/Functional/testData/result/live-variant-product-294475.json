@@ -1,0 +1,1868 @@
+[
+    {
+        "products": {
+            "pageHash": "6e84253c-439b-4bc7-98b4-e39819fb53fe",
+            "ids": {
+                "294475": {
+                    "styles": [
+                        {
+                            "name": "Boysen's T-Shirt",
+                            "description_long": "Mit hochwertiger, leicht transparenter Spitze am Rundhalsausschnitt. Halblanger Arm mit Krempelaufschlag. Figurbetonende Form. Elastische Jerseyware. Produkttyp: T-Shirt. Passform: Figurbetont. Kragen: Ohne. Bündchen: Keine. Ausschnitt: Rundhals. Ärmelstil: Kurzarm. Stil: Casual. Optik: Uni. Auslieferung: Liegend. Pflegehinweise: Maschinenwäsche. Qualitätshinweise: Hautfreundlich Schadstoffgeprüft. Material: Jersey. Cotton made in Africa: Mit dem Kauf unterstützen Sie den nachhaltigen Baumwollanbau. Besondere Merkmale: Mit transparenter Spitze. Materialzusammensetzung: Obermaterial: 95% Baumwolle, 5% Elasthan.<table class=\"tmpArticleDetailTable\"><tr><td class=\"left\"><div><span>Produkttyp</span></div></td><td>T-Shirt</td></tr><tr><td class=\"left\"><div><span>Passform</span></div></td><td>Figurbetont</td></tr><tr><td class=\"left\"><div><span>Kragen</span></div></td><td>Ohne</td></tr><tr><td class=\"left\"><div><span>Bündchen</span></div></td><td>Keine</td></tr><tr><td class=\"left\"><div><span>Ausschnitt</span></div></td><td>Rundhals</td></tr><tr><td class=\"left\"><div><span>Ärmelstil</span></div></td><td>Kurzarm</td></tr><tr><td class=\"left\"><div><span>Stil</span></div></td><td>Casual</td></tr><tr><td class=\"left\"><div><span>Optik</span></div></td><td>Uni</td></tr><tr><td class=\"left\"><div><span>Auslieferung</span></div></td><td>Liegend</td></tr><tr><td class=\"left\"><div><span>Pflegehinweise</span></div></td><td>Maschinenwäsche</td></tr><tr><td class=\"left\"><div><span>Qualitätshinweise</span></div></td><td>Hautfreundlich Schadstoffgeprüft</td></tr><tr><td class=\"left\"><div><span>Material</span></div></td><td>Jersey</td></tr><tr><td class=\"left\"><div><span>Cotton made in Africa</span></div></td><td>Mit dem Kauf unterstützen Sie den nachhaltigen Baumwollanbau</td></tr><tr><td class=\"left\"><div><span>Besondere Merkmale</span></div></td><td>Mit transparenter Spitze</td></tr><tr><td class=\"left\"><div><span>Materialzusammensetzung</span></div></td><td>Obermaterial: 95% Baumwolle, 5% Elasthan</td></tr></table>",
+                            "sale": false,
+                            "attributes_merged": {
+                                "attributes_6": [
+                                    1533
+                                ],
+                                "attributes_258": [
+                                    3745
+                                ],
+                                "attributes_2": [
+                                    6,
+                                    5,
+                                    22,
+                                    7,
+                                    8,
+                                    10
+                                ],
+                                "attributes_0": [
+                                    524
+                                ],
+                                "attributes_1": [
+                                    1
+                                ]
+                            },
+                            "brand_id": 524,
+                            "default_variant": {
+                                "updated_date": "2014-07-10 10:22:41",
+                                "about_number": null,
+                                "ean": "370307095",
+                                "default": false,
+                                "first_sale_date": null,
+                                "price": 2999,
+                                "first_active_date": "2014-03-05 14:22:03",
+                                "old_price": 2999,
+                                "additional_info": {},
+                                "created_date": "2014-02-14 04:41:35",
+                                "images": [
+                                    {
+                                        "mime": "image/jpeg",
+                                        "image": {
+                                            "width": 672,
+                                            "height": 960
+                                        },
+                                        "hash": "ed23029e16e7dc7063fc957868ed8b7f",
+                                        "ext": ".jpg",
+                                        "size": 74786
+                                    },
+                                    {
+                                        "mime": "image/jpeg",
+                                        "image": {
+                                            "width": 672,
+                                            "height": 960
+                                        },
+                                        "hash": "3b8e2a1997e832c3a1a708bac86ccfe2",
+                                        "ext": ".jpg",
+                                        "size": 59393
+                                    },
+                                    {
+                                        "mime": "image/jpeg",
+                                        "image": {
+                                            "width": 672,
+                                            "height": 960
+                                        },
+                                        "hash": "fc155f30e86a86a1e4782530835008bd",
+                                        "ext": ".jpg",
+                                        "size": 68317
+                                    },
+                                    {
+                                        "mime": "image/jpeg",
+                                        "image": {
+                                            "width": 672,
+                                            "height": 960
+                                        },
+                                        "hash": "820b8f15c7544e9c5aa79d656317aba6",
+                                        "ext": ".jpg",
+                                        "size": 75403
+                                    },
+                                    {
+                                        "mime": "image/jpeg",
+                                        "image": {
+                                            "width": 672,
+                                            "height": 960
+                                        },
+                                        "hash": "96a46bfdfc313238209c486df221b25e",
+                                        "ext": ".jpg",
+                                        "size": 190598
+                                    },
+                                    {
+                                        "mime": "image/jpeg",
+                                        "image": {
+                                            "width": 672,
+                                            "height": 960
+                                        },
+                                        "hash": "9756af3cb861cab3d7ca3b43470bbed6",
+                                        "ext": ".jpg",
+                                        "size": 167654
+                                    },
+                                    {
+                                        "mime": "image/jpeg",
+                                        "image": {
+                                            "width": 672,
+                                            "height": 960
+                                        },
+                                        "hash": "6718fcaa55659c3649e2b91c862921da",
+                                        "ext": ".jpg",
+                                        "size": 74431
+                                    }
+                                ],
+                                "attributes": {
+                                    "attributes_6": [
+                                        1533
+                                    ],
+                                    "attributes_258": [
+                                        3745
+                                    ],
+                                    "attributes_2": [
+                                        6
+                                    ],
+                                    "attributes_0": [
+                                        524
+                                    ],
+                                    "attributes_1": [
+                                        1
+                                    ]
+                                },
+                                "retail_price": 0,
+                                "id": 5444052,
+                                "quantity": 999
+                            },
+                            "min_price": 2999,
+                            "default_image": {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 672,
+                                    "height": 960
+                                },
+                                "hash": "ed23029e16e7dc7063fc957868ed8b7f",
+                                "ext": ".jpg",
+                                "size": 74786
+                            },
+                            "categories": {
+                                "98": [
+                                    [
+                                        19367,
+                                        19371,
+                                        19416
+                                    ]
+                                ]
+                            },
+                            "active": true,
+                            "variants": [
+                                {
+                                    "updated_date": "2014-07-10 10:22:41",
+                                    "about_number": null,
+                                    "ean": "370307095",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 2999,
+                                    "first_active_date": "2014-03-05 14:22:03",
+                                    "old_price": 2999,
+                                    "additional_info": {},
+                                    "created_date": "2014-02-14 04:41:35",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "ed23029e16e7dc7063fc957868ed8b7f",
+                                            "ext": ".jpg",
+                                            "size": 74786
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "3b8e2a1997e832c3a1a708bac86ccfe2",
+                                            "ext": ".jpg",
+                                            "size": 59393
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "fc155f30e86a86a1e4782530835008bd",
+                                            "ext": ".jpg",
+                                            "size": 68317
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "820b8f15c7544e9c5aa79d656317aba6",
+                                            "ext": ".jpg",
+                                            "size": 75403
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "96a46bfdfc313238209c486df221b25e",
+                                            "ext": ".jpg",
+                                            "size": 190598
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "9756af3cb861cab3d7ca3b43470bbed6",
+                                            "ext": ".jpg",
+                                            "size": 167654
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "6718fcaa55659c3649e2b91c862921da",
+                                            "ext": ".jpg",
+                                            "size": 74431
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1533
+                                        ],
+                                        "attributes_258": [
+                                            3745
+                                        ],
+                                        "attributes_2": [
+                                            6
+                                        ],
+                                        "attributes_0": [
+                                            524
+                                        ],
+                                        "attributes_1": [
+                                            1
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 5444052,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-10 10:22:41",
+                                    "about_number": null,
+                                    "ean": "370307093",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 2999,
+                                    "first_active_date": "2014-03-05 14:22:03",
+                                    "old_price": 2999,
+                                    "additional_info": {},
+                                    "created_date": "2014-02-14 04:41:35",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "ed23029e16e7dc7063fc957868ed8b7f",
+                                            "ext": ".jpg",
+                                            "size": 74786
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "3b8e2a1997e832c3a1a708bac86ccfe2",
+                                            "ext": ".jpg",
+                                            "size": 59393
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "fc155f30e86a86a1e4782530835008bd",
+                                            "ext": ".jpg",
+                                            "size": 68317
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "820b8f15c7544e9c5aa79d656317aba6",
+                                            "ext": ".jpg",
+                                            "size": 75403
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "96a46bfdfc313238209c486df221b25e",
+                                            "ext": ".jpg",
+                                            "size": 190598
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "9756af3cb861cab3d7ca3b43470bbed6",
+                                            "ext": ".jpg",
+                                            "size": 167654
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "6718fcaa55659c3649e2b91c862921da",
+                                            "ext": ".jpg",
+                                            "size": 74431
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1533
+                                        ],
+                                        "attributes_258": [
+                                            3745
+                                        ],
+                                        "attributes_2": [
+                                            5
+                                        ],
+                                        "attributes_0": [
+                                            524
+                                        ],
+                                        "attributes_1": [
+                                            1
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 5444053,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-10 10:22:41",
+                                    "about_number": null,
+                                    "ean": "370307084",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 2999,
+                                    "first_active_date": "2014-03-05 14:22:03",
+                                    "old_price": 2999,
+                                    "additional_info": {},
+                                    "created_date": "2014-02-14 04:41:35",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "ed23029e16e7dc7063fc957868ed8b7f",
+                                            "ext": ".jpg",
+                                            "size": 74786
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "3b8e2a1997e832c3a1a708bac86ccfe2",
+                                            "ext": ".jpg",
+                                            "size": 59393
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "fc155f30e86a86a1e4782530835008bd",
+                                            "ext": ".jpg",
+                                            "size": 68317
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "820b8f15c7544e9c5aa79d656317aba6",
+                                            "ext": ".jpg",
+                                            "size": 75403
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "96a46bfdfc313238209c486df221b25e",
+                                            "ext": ".jpg",
+                                            "size": 190598
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "9756af3cb861cab3d7ca3b43470bbed6",
+                                            "ext": ".jpg",
+                                            "size": 167654
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "6718fcaa55659c3649e2b91c862921da",
+                                            "ext": ".jpg",
+                                            "size": 74431
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1533
+                                        ],
+                                        "attributes_258": [
+                                            3745
+                                        ],
+                                        "attributes_2": [
+                                            22
+                                        ],
+                                        "attributes_0": [
+                                            524
+                                        ],
+                                        "attributes_1": [
+                                            1
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 5444057,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-10 10:22:41",
+                                    "about_number": null,
+                                    "ean": "370307090",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 2999,
+                                    "first_active_date": "2014-03-05 14:22:03",
+                                    "old_price": 2999,
+                                    "additional_info": {},
+                                    "created_date": "2014-02-14 04:41:35",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "ed23029e16e7dc7063fc957868ed8b7f",
+                                            "ext": ".jpg",
+                                            "size": 74786
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "3b8e2a1997e832c3a1a708bac86ccfe2",
+                                            "ext": ".jpg",
+                                            "size": 59393
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "fc155f30e86a86a1e4782530835008bd",
+                                            "ext": ".jpg",
+                                            "size": 68317
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "820b8f15c7544e9c5aa79d656317aba6",
+                                            "ext": ".jpg",
+                                            "size": 75403
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "96a46bfdfc313238209c486df221b25e",
+                                            "ext": ".jpg",
+                                            "size": 190598
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "9756af3cb861cab3d7ca3b43470bbed6",
+                                            "ext": ".jpg",
+                                            "size": 167654
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "6718fcaa55659c3649e2b91c862921da",
+                                            "ext": ".jpg",
+                                            "size": 74431
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1533
+                                        ],
+                                        "attributes_258": [
+                                            3745
+                                        ],
+                                        "attributes_2": [
+                                            8
+                                        ],
+                                        "attributes_0": [
+                                            524
+                                        ],
+                                        "attributes_1": [
+                                            1
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 5444058,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-10 10:22:41",
+                                    "about_number": null,
+                                    "ean": "370307098",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 2999,
+                                    "first_active_date": "2014-03-05 14:22:03",
+                                    "old_price": 2999,
+                                    "additional_info": {},
+                                    "created_date": "2014-02-14 04:41:35",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "ed23029e16e7dc7063fc957868ed8b7f",
+                                            "ext": ".jpg",
+                                            "size": 74786
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "3b8e2a1997e832c3a1a708bac86ccfe2",
+                                            "ext": ".jpg",
+                                            "size": 59393
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "fc155f30e86a86a1e4782530835008bd",
+                                            "ext": ".jpg",
+                                            "size": 68317
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "820b8f15c7544e9c5aa79d656317aba6",
+                                            "ext": ".jpg",
+                                            "size": 75403
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "96a46bfdfc313238209c486df221b25e",
+                                            "ext": ".jpg",
+                                            "size": 190598
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "9756af3cb861cab3d7ca3b43470bbed6",
+                                            "ext": ".jpg",
+                                            "size": 167654
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "6718fcaa55659c3649e2b91c862921da",
+                                            "ext": ".jpg",
+                                            "size": 74431
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1533
+                                        ],
+                                        "attributes_258": [
+                                            3745
+                                        ],
+                                        "attributes_2": [
+                                            10
+                                        ],
+                                        "attributes_0": [
+                                            524
+                                        ],
+                                        "attributes_1": [
+                                            1
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 5444059,
+                                    "quantity": 999
+                                },
+                                {
+                                    "updated_date": "2014-07-10 10:22:41",
+                                    "about_number": null,
+                                    "ean": "370307099",
+                                    "default": false,
+                                    "first_sale_date": null,
+                                    "price": 2999,
+                                    "first_active_date": "2014-03-05 14:22:03",
+                                    "old_price": 2999,
+                                    "additional_info": {},
+                                    "created_date": "2014-02-14 04:41:35",
+                                    "images": [
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "ed23029e16e7dc7063fc957868ed8b7f",
+                                            "ext": ".jpg",
+                                            "size": 74786
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "3b8e2a1997e832c3a1a708bac86ccfe2",
+                                            "ext": ".jpg",
+                                            "size": 59393
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "fc155f30e86a86a1e4782530835008bd",
+                                            "ext": ".jpg",
+                                            "size": 68317
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "820b8f15c7544e9c5aa79d656317aba6",
+                                            "ext": ".jpg",
+                                            "size": 75403
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "96a46bfdfc313238209c486df221b25e",
+                                            "ext": ".jpg",
+                                            "size": 190598
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "9756af3cb861cab3d7ca3b43470bbed6",
+                                            "ext": ".jpg",
+                                            "size": 167654
+                                        },
+                                        {
+                                            "mime": "image/jpeg",
+                                            "image": {
+                                                "width": 672,
+                                                "height": 960
+                                            },
+                                            "hash": "6718fcaa55659c3649e2b91c862921da",
+                                            "ext": ".jpg",
+                                            "size": 74431
+                                        }
+                                    ],
+                                    "attributes": {
+                                        "attributes_6": [
+                                            1533
+                                        ],
+                                        "attributes_258": [
+                                            3745
+                                        ],
+                                        "attributes_2": [
+                                            7
+                                        ],
+                                        "attributes_0": [
+                                            524
+                                        ],
+                                        "attributes_1": [
+                                            1
+                                        ]
+                                    },
+                                    "retail_price": 0,
+                                    "id": 5444060,
+                                    "quantity": 999
+                                }
+                            ],
+                            "max_price": 2999,
+                            "description_short": "Mit hochwertiger, leicht transparenter Spitze am Rundhalsausschnitt. Halblanger Arm mit Krempelaufschlag. Figurbetonende Form. Elastische Jerseyware. Produkttyp: T-Shirt. Passform: Figurbetont. Kragen: Ohne. Bündchen: Keine. Ausschnitt: Rundhals. Ärmelstil: Kurzarm. Stil: Casual. Optik: Uni. Auslieferung: Liegend. Pflegehinweise: Maschinenwäsche. Qualitätshinweise: Hautfreundlich Schadstoffgeprüft. Material: Jersey. Cotton made in Africa: Mit dem Kauf unterstützen Sie den nachhaltigen Baumwollanbau. Besondere Merkmale: Mit transparenter Spitze. Materialzusammensetzung: Obermaterial: 95% Baumwolle, 5% Elasthan.",
+                            "id": 299729,
+                            "style_key": "m01_365390367"
+                        }
+                    ],
+                    "name": "Boysen's T-Shirt",
+                    "description_long": "Mit hochwertiger, leicht transparenter Spitze am Rundhalsausschnitt. Halblanger Arm mit Krempelaufschlag. Figurbetonende Form. Elastische Jerseyware. Produkttyp: T-Shirt. Passform: Figurbetont. Kragen: Ohne. Bündchen: Keine. Ausschnitt: Rundhals. Ärmelstil: Kurzarm. Stil: Casual. Optik: Uni. Auslieferung: Liegend. Pflegehinweise: Maschinenwäsche. Qualitätshinweise: Hautfreundlich Schadstoffgeprüft. Material: Jersey. Cotton made in Africa: Mit dem Kauf unterstützen Sie den nachhaltigen Baumwollanbau. Besondere Merkmale: Mit transparenter Spitze. Materialzusammensetzung: Obermaterial: 95% Baumwolle, 5% Elasthan.<table class=\"tmpArticleDetailTable\"><tr><td class=\"left\"><div><span>Produkttyp</span></div></td><td>T-Shirt</td></tr><tr><td class=\"left\"><div><span>Passform</span></div></td><td>Figurbetont</td></tr><tr><td class=\"left\"><div><span>Kragen</span></div></td><td>Ohne</td></tr><tr><td class=\"left\"><div><span>Bündchen</span></div></td><td>Keine</td></tr><tr><td class=\"left\"><div><span>Ausschnitt</span></div></td><td>Rundhals</td></tr><tr><td class=\"left\"><div><span>Ärmelstil</span></div></td><td>Kurzarm</td></tr><tr><td class=\"left\"><div><span>Stil</span></div></td><td>Casual</td></tr><tr><td class=\"left\"><div><span>Optik</span></div></td><td>Uni</td></tr><tr><td class=\"left\"><div><span>Auslieferung</span></div></td><td>Liegend</td></tr><tr><td class=\"left\"><div><span>Pflegehinweise</span></div></td><td>Maschinenwäsche</td></tr><tr><td class=\"left\"><div><span>Qualitätshinweise</span></div></td><td>Hautfreundlich Schadstoffgeprüft</td></tr><tr><td class=\"left\"><div><span>Material</span></div></td><td>Jersey</td></tr><tr><td class=\"left\"><div><span>Cotton made in Africa</span></div></td><td>Mit dem Kauf unterstützen Sie den nachhaltigen Baumwollanbau</td></tr><tr><td class=\"left\"><div><span>Besondere Merkmale</span></div></td><td>Mit transparenter Spitze</td></tr><tr><td class=\"left\"><div><span>Materialzusammensetzung</span></div></td><td>Obermaterial: 95% Baumwolle, 5% Elasthan</td></tr></table>",
+                    "sale": false,
+                    "categories.98": [
+                        [
+                            19367,
+                            19371,
+                            19416
+                        ]
+                    ],
+                    "attributes_merged": {
+                        "attributes_6": [
+                            1533
+                        ],
+                        "attributes_2": [
+                            2,
+                            22,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8,
+                            10,
+                            21
+                        ],
+                        "attributes_0": [
+                            524
+                        ],
+                        "attributes_1": [
+                            18,
+                            14
+                        ]
+                    },
+                    "brand_id": 524,
+                    "default_variant": {
+                        "updated_date": "2014-06-18 22:44:45",
+                        "about_number": null,
+                        "ean": "370317489",
+                        "default": false,
+                        "first_sale_date": null,
+                        "price": 2999,
+                        "first_active_date": "2014-02-27 10:10:45",
+                        "old_price": 2999,
+                        "additional_info": {},
+                        "created_date": "2014-02-12 19:23:44",
+                        "images": [
+                            {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 672,
+                                    "height": 960
+                                },
+                                "hash": "ecc1509b16a42549a76552553e47b9ce",
+                                "ext": ".jpg",
+                                "size": 62181
+                            },
+                            {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 672,
+                                    "height": 960
+                                },
+                                "hash": "4573025565dadc0b58eb54f41cc7fdba",
+                                "ext": ".jpg",
+                                "size": 45030
+                            },
+                            {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 672,
+                                    "height": 960
+                                },
+                                "hash": "0e945f212a3ec637feb99d943276bdd2",
+                                "ext": ".jpg",
+                                "size": 64573
+                            },
+                            {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 672,
+                                    "height": 960
+                                },
+                                "hash": "9489f207dfe8abf57744c56211e73523",
+                                "ext": ".jpg",
+                                "size": 181629
+                            },
+                            {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 672,
+                                    "height": 960
+                                },
+                                "hash": "c61608be4afa1093f5eab40965cb4d4b",
+                                "ext": ".jpg",
+                                "size": 172553
+                            },
+                            {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 672,
+                                    "height": 960
+                                },
+                                "hash": "d135bb6d048fd5ded7c866e052a36023",
+                                "ext": ".jpg",
+                                "size": 69737
+                            },
+                            {
+                                "mime": "image/jpeg",
+                                "image": {
+                                    "width": 672,
+                                    "height": 960
+                                },
+                                "hash": "0a502c012fdd6522520a580ca75847e6",
+                                "ext": ".jpg",
+                                "size": 64408
+                            }
+                        ],
+                        "attributes": {
+                            "attributes_6": [
+                                1533
+                            ],
+                            "attributes_2": [
+                                8
+                            ],
+                            "attributes_0": [
+                                524
+                            ],
+                            "attributes_1": [
+                                14,
+                                18
+                            ]
+                        },
+                        "retail_price": 0,
+                        "id": 5236538,
+                        "quantity": 999
+                    },
+                    "min_price": 2999,
+                    "default_image": {
+                        "mime": "image/jpeg",
+                        "image": {
+                            "width": 672,
+                            "height": 960
+                        },
+                        "hash": "ecc1509b16a42549a76552553e47b9ce",
+                        "ext": ".jpg",
+                        "size": 62181
+                    },
+                    "active": true,
+                    "variants": [
+                        {
+                            "updated_date": "2014-06-18 22:44:45",
+                            "about_number": null,
+                            "ean": "370317489",
+                            "default": false,
+                            "first_sale_date": null,
+                            "price": 2999,
+                            "first_active_date": "2014-02-27 10:10:45",
+                            "old_price": 2999,
+                            "additional_info": {},
+                            "created_date": "2014-02-12 19:23:44",
+                            "images": [
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "ecc1509b16a42549a76552553e47b9ce",
+                                    "ext": ".jpg",
+                                    "size": 62181
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "4573025565dadc0b58eb54f41cc7fdba",
+                                    "ext": ".jpg",
+                                    "size": 45030
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0e945f212a3ec637feb99d943276bdd2",
+                                    "ext": ".jpg",
+                                    "size": 64573
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "9489f207dfe8abf57744c56211e73523",
+                                    "ext": ".jpg",
+                                    "size": 181629
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "c61608be4afa1093f5eab40965cb4d4b",
+                                    "ext": ".jpg",
+                                    "size": 172553
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "d135bb6d048fd5ded7c866e052a36023",
+                                    "ext": ".jpg",
+                                    "size": 69737
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0a502c012fdd6522520a580ca75847e6",
+                                    "ext": ".jpg",
+                                    "size": 64408
+                                }
+                            ],
+                            "attributes": {
+                                "attributes_6": [
+                                    1533
+                                ],
+                                "attributes_2": [
+                                    8
+                                ],
+                                "attributes_0": [
+                                    524
+                                ],
+                                "attributes_1": [
+                                    14,
+                                    18
+                                ]
+                            },
+                            "retail_price": 0,
+                            "id": 5236538,
+                            "quantity": 999
+                        },
+                        {
+                            "updated_date": "2014-06-18 22:44:45",
+                            "about_number": null,
+                            "ean": "370317493",
+                            "default": false,
+                            "first_sale_date": null,
+                            "price": 2999,
+                            "first_active_date": "2014-02-27 10:10:45",
+                            "old_price": 2999,
+                            "additional_info": {},
+                            "created_date": "2014-02-12 19:23:44",
+                            "images": [
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "ecc1509b16a42549a76552553e47b9ce",
+                                    "ext": ".jpg",
+                                    "size": 62181
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "4573025565dadc0b58eb54f41cc7fdba",
+                                    "ext": ".jpg",
+                                    "size": 45030
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0e945f212a3ec637feb99d943276bdd2",
+                                    "ext": ".jpg",
+                                    "size": 64573
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "9489f207dfe8abf57744c56211e73523",
+                                    "ext": ".jpg",
+                                    "size": 181629
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "c61608be4afa1093f5eab40965cb4d4b",
+                                    "ext": ".jpg",
+                                    "size": 172553
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "d135bb6d048fd5ded7c866e052a36023",
+                                    "ext": ".jpg",
+                                    "size": 69737
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0a502c012fdd6522520a580ca75847e6",
+                                    "ext": ".jpg",
+                                    "size": 64408
+                                }
+                            ],
+                            "attributes": {
+                                "attributes_6": [
+                                    1533
+                                ],
+                                "attributes_2": [
+                                    5
+                                ],
+                                "attributes_0": [
+                                    524
+                                ],
+                                "attributes_1": [
+                                    14,
+                                    18
+                                ]
+                            },
+                            "retail_price": 0,
+                            "id": 5236539,
+                            "quantity": 999
+                        },
+                        {
+                            "updated_date": "2014-06-18 22:44:46",
+                            "about_number": null,
+                            "ean": "370317495",
+                            "default": false,
+                            "first_sale_date": null,
+                            "price": 2999,
+                            "first_active_date": "2014-02-27 10:10:45",
+                            "old_price": 2999,
+                            "additional_info": {},
+                            "created_date": "2014-02-12 19:23:44",
+                            "images": [
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "ecc1509b16a42549a76552553e47b9ce",
+                                    "ext": ".jpg",
+                                    "size": 62181
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "4573025565dadc0b58eb54f41cc7fdba",
+                                    "ext": ".jpg",
+                                    "size": 45030
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0e945f212a3ec637feb99d943276bdd2",
+                                    "ext": ".jpg",
+                                    "size": 64573
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "9489f207dfe8abf57744c56211e73523",
+                                    "ext": ".jpg",
+                                    "size": 181629
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "c61608be4afa1093f5eab40965cb4d4b",
+                                    "ext": ".jpg",
+                                    "size": 172553
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "d135bb6d048fd5ded7c866e052a36023",
+                                    "ext": ".jpg",
+                                    "size": 69737
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0a502c012fdd6522520a580ca75847e6",
+                                    "ext": ".jpg",
+                                    "size": 64408
+                                }
+                            ],
+                            "attributes": {
+                                "attributes_6": [
+                                    1533
+                                ],
+                                "attributes_2": [
+                                    6
+                                ],
+                                "attributes_0": [
+                                    524
+                                ],
+                                "attributes_1": [
+                                    14,
+                                    18
+                                ]
+                            },
+                            "retail_price": 0,
+                            "id": 5236540,
+                            "quantity": 999
+                        },
+                        {
+                            "updated_date": "2014-06-18 22:44:45",
+                            "about_number": null,
+                            "ean": "370317497",
+                            "default": false,
+                            "first_sale_date": null,
+                            "price": 2999,
+                            "first_active_date": "2014-02-27 10:10:45",
+                            "old_price": 2999,
+                            "additional_info": {},
+                            "created_date": "2014-02-12 19:23:44",
+                            "images": [
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "ecc1509b16a42549a76552553e47b9ce",
+                                    "ext": ".jpg",
+                                    "size": 62181
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "4573025565dadc0b58eb54f41cc7fdba",
+                                    "ext": ".jpg",
+                                    "size": 45030
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0e945f212a3ec637feb99d943276bdd2",
+                                    "ext": ".jpg",
+                                    "size": 64573
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "9489f207dfe8abf57744c56211e73523",
+                                    "ext": ".jpg",
+                                    "size": 181629
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "c61608be4afa1093f5eab40965cb4d4b",
+                                    "ext": ".jpg",
+                                    "size": 172553
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "d135bb6d048fd5ded7c866e052a36023",
+                                    "ext": ".jpg",
+                                    "size": 69737
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0a502c012fdd6522520a580ca75847e6",
+                                    "ext": ".jpg",
+                                    "size": 64408
+                                }
+                            ],
+                            "attributes": {
+                                "attributes_6": [
+                                    1533
+                                ],
+                                "attributes_2": [
+                                    7
+                                ],
+                                "attributes_0": [
+                                    524
+                                ],
+                                "attributes_1": [
+                                    14,
+                                    18
+                                ]
+                            },
+                            "retail_price": 0,
+                            "id": 5236541,
+                            "quantity": 999
+                        },
+                        {
+                            "updated_date": "2014-06-18 22:44:45",
+                            "about_number": null,
+                            "ean": "370317496",
+                            "default": false,
+                            "first_sale_date": null,
+                            "price": 2999,
+                            "first_active_date": "2014-02-27 10:10:45",
+                            "old_price": 2999,
+                            "additional_info": {},
+                            "created_date": "2014-02-12 19:23:44",
+                            "images": [
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "ecc1509b16a42549a76552553e47b9ce",
+                                    "ext": ".jpg",
+                                    "size": 62181
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "4573025565dadc0b58eb54f41cc7fdba",
+                                    "ext": ".jpg",
+                                    "size": 45030
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0e945f212a3ec637feb99d943276bdd2",
+                                    "ext": ".jpg",
+                                    "size": 64573
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "9489f207dfe8abf57744c56211e73523",
+                                    "ext": ".jpg",
+                                    "size": 181629
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "c61608be4afa1093f5eab40965cb4d4b",
+                                    "ext": ".jpg",
+                                    "size": 172553
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "d135bb6d048fd5ded7c866e052a36023",
+                                    "ext": ".jpg",
+                                    "size": 69737
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0a502c012fdd6522520a580ca75847e6",
+                                    "ext": ".jpg",
+                                    "size": 64408
+                                }
+                            ],
+                            "attributes": {
+                                "attributes_6": [
+                                    1533
+                                ],
+                                "attributes_2": [
+                                    10
+                                ],
+                                "attributes_0": [
+                                    524
+                                ],
+                                "attributes_1": [
+                                    14,
+                                    18
+                                ]
+                            },
+                            "retail_price": 0,
+                            "id": 5236542,
+                            "quantity": 999
+                        },
+                        {
+                            "updated_date": "2014-06-18 22:44:46",
+                            "about_number": null,
+                            "ean": "370317491",
+                            "default": false,
+                            "first_sale_date": null,
+                            "price": 2999,
+                            "first_active_date": "2014-02-27 10:10:45",
+                            "old_price": 2999,
+                            "additional_info": {},
+                            "created_date": "2014-02-12 19:23:44",
+                            "images": [
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "ecc1509b16a42549a76552553e47b9ce",
+                                    "ext": ".jpg",
+                                    "size": 62181
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "4573025565dadc0b58eb54f41cc7fdba",
+                                    "ext": ".jpg",
+                                    "size": 45030
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0e945f212a3ec637feb99d943276bdd2",
+                                    "ext": ".jpg",
+                                    "size": 64573
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "9489f207dfe8abf57744c56211e73523",
+                                    "ext": ".jpg",
+                                    "size": 181629
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "c61608be4afa1093f5eab40965cb4d4b",
+                                    "ext": ".jpg",
+                                    "size": 172553
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "d135bb6d048fd5ded7c866e052a36023",
+                                    "ext": ".jpg",
+                                    "size": 69737
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0a502c012fdd6522520a580ca75847e6",
+                                    "ext": ".jpg",
+                                    "size": 64408
+                                }
+                            ],
+                            "attributes": {
+                                "attributes_6": [
+                                    1533
+                                ],
+                                "attributes_2": [
+                                    4
+                                ],
+                                "attributes_0": [
+                                    524
+                                ],
+                                "attributes_1": [
+                                    14,
+                                    18
+                                ]
+                            },
+                            "retail_price": 0,
+                            "id": 5236543,
+                            "quantity": 999
+                        },
+                        {
+                            "updated_date": "2014-06-18 22:44:45",
+                            "about_number": null,
+                            "ean": "370317487",
+                            "default": false,
+                            "first_sale_date": null,
+                            "price": 2999,
+                            "first_active_date": "2014-02-27 10:10:45",
+                            "old_price": 2999,
+                            "additional_info": {},
+                            "created_date": "2014-02-12 19:23:44",
+                            "images": [
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "ecc1509b16a42549a76552553e47b9ce",
+                                    "ext": ".jpg",
+                                    "size": 62181
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "4573025565dadc0b58eb54f41cc7fdba",
+                                    "ext": ".jpg",
+                                    "size": 45030
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0e945f212a3ec637feb99d943276bdd2",
+                                    "ext": ".jpg",
+                                    "size": 64573
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "9489f207dfe8abf57744c56211e73523",
+                                    "ext": ".jpg",
+                                    "size": 181629
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "c61608be4afa1093f5eab40965cb4d4b",
+                                    "ext": ".jpg",
+                                    "size": 172553
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "d135bb6d048fd5ded7c866e052a36023",
+                                    "ext": ".jpg",
+                                    "size": 69737
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0a502c012fdd6522520a580ca75847e6",
+                                    "ext": ".jpg",
+                                    "size": 64408
+                                }
+                            ],
+                            "attributes": {
+                                "attributes_6": [
+                                    1533
+                                ],
+                                "attributes_2": [
+                                    2
+                                ],
+                                "attributes_0": [
+                                    524
+                                ],
+                                "attributes_1": [
+                                    14,
+                                    18
+                                ]
+                            },
+                            "retail_price": 0,
+                            "id": 5236544,
+                            "quantity": 999
+                        },
+                        {
+                            "updated_date": "2014-06-18 22:44:45",
+                            "about_number": null,
+                            "ean": "370317485",
+                            "default": false,
+                            "first_sale_date": null,
+                            "price": 2999,
+                            "first_active_date": "2014-02-27 10:10:45",
+                            "old_price": 2999,
+                            "additional_info": {},
+                            "created_date": "2014-02-12 19:23:44",
+                            "images": [
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "ecc1509b16a42549a76552553e47b9ce",
+                                    "ext": ".jpg",
+                                    "size": 62181
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "4573025565dadc0b58eb54f41cc7fdba",
+                                    "ext": ".jpg",
+                                    "size": 45030
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0e945f212a3ec637feb99d943276bdd2",
+                                    "ext": ".jpg",
+                                    "size": 64573
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "9489f207dfe8abf57744c56211e73523",
+                                    "ext": ".jpg",
+                                    "size": 181629
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "c61608be4afa1093f5eab40965cb4d4b",
+                                    "ext": ".jpg",
+                                    "size": 172553
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "d135bb6d048fd5ded7c866e052a36023",
+                                    "ext": ".jpg",
+                                    "size": 69737
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0a502c012fdd6522520a580ca75847e6",
+                                    "ext": ".jpg",
+                                    "size": 64408
+                                }
+                            ],
+                            "attributes": {
+                                "attributes_6": [
+                                    1533
+                                ],
+                                "attributes_2": [
+                                    21
+                                ],
+                                "attributes_0": [
+                                    524
+                                ],
+                                "attributes_1": [
+                                    14,
+                                    18
+                                ]
+                            },
+                            "retail_price": 0,
+                            "id": 5236545,
+                            "quantity": 999
+                        },
+                        {
+                            "updated_date": "2014-06-18 22:44:46",
+                            "about_number": null,
+                            "ean": "370317483",
+                            "default": false,
+                            "first_sale_date": null,
+                            "price": 2999,
+                            "first_active_date": "2014-02-27 10:10:45",
+                            "old_price": 2999,
+                            "additional_info": {},
+                            "created_date": "2014-02-12 19:23:44",
+                            "images": [
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "ecc1509b16a42549a76552553e47b9ce",
+                                    "ext": ".jpg",
+                                    "size": 62181
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "4573025565dadc0b58eb54f41cc7fdba",
+                                    "ext": ".jpg",
+                                    "size": 45030
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0e945f212a3ec637feb99d943276bdd2",
+                                    "ext": ".jpg",
+                                    "size": 64573
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "9489f207dfe8abf57744c56211e73523",
+                                    "ext": ".jpg",
+                                    "size": 181629
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "c61608be4afa1093f5eab40965cb4d4b",
+                                    "ext": ".jpg",
+                                    "size": 172553
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "d135bb6d048fd5ded7c866e052a36023",
+                                    "ext": ".jpg",
+                                    "size": 69737
+                                },
+                                {
+                                    "mime": "image/jpeg",
+                                    "image": {
+                                        "width": 672,
+                                        "height": 960
+                                    },
+                                    "hash": "0a502c012fdd6522520a580ca75847e6",
+                                    "ext": ".jpg",
+                                    "size": 64408
+                                }
+                            ],
+                            "attributes": {
+                                "attributes_6": [
+                                    1533
+                                ],
+                                "attributes_2": [
+                                    22
+                                ],
+                                "attributes_0": [
+                                    524
+                                ],
+                                "attributes_1": [
+                                    14,
+                                    18
+                                ]
+                            },
+                            "retail_price": 0,
+                            "id": 5236546,
+                            "quantity": 999
+                        }
+                    ],
+                    "max_price": 2999,
+                    "description_short": "Mit hochwertiger, leicht transparenter Spitze am Rundhalsausschnitt. Halblanger Arm mit Krempelaufschlag. Figurbetonende Form. Elastische Jerseyware. Produkttyp: T-Shirt. Passform: Figurbetont. Kragen: Ohne. Bündchen: Keine. Ausschnitt: Rundhals. Ärmelstil: Kurzarm. Stil: Casual. Optik: Uni. Auslieferung: Liegend. Pflegehinweise: Maschinenwäsche. Qualitätshinweise: Hautfreundlich Schadstoffgeprüft. Material: Jersey. Cotton made in Africa: Mit dem Kauf unterstützen Sie den nachhaltigen Baumwollanbau. Besondere Merkmale: Mit transparenter Spitze. Materialzusammensetzung: Obermaterial: 95% Baumwolle, 5% Elasthan.",
+                    "id": 294475,
+                    "style_key": "m01_365390367"
+                }
+            }
+        }
+    }
+]

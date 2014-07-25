@@ -232,7 +232,7 @@ class BasketTest extends AbstractShopApiTest
     public function testAddToBasketThrowsException()
     {
         $shopApi = $this->getShopApiWithResultFile('result/basket1.json');
-        $variant = ShopApi\Model\Variant::createFromJson(json_decode('{"id":123}'), $shopApi->getResultFactory());
+        $variant = ShopApi\Model\Variant::createFromJson(json_decode('{"id":123}'), $shopApi->getResultFactory(), $this->getProduct());
         $shopApi->addItemToBasket($this->sessionId, $variant);
     }
 
@@ -439,5 +439,18 @@ EOS;
         foreach ($set->getItems() as $item) {
             $this->checkBasketVariantItem($item);
         }
+    }
+    
+    private function getProduct() 
+    {       
+        $productIds = array(123, 456);
+
+        $shopApi = $this->getShopApiWithResultFile('result/products.json');
+
+        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $products = $productResult->getProducts();
+
+        
+        return $products[123];        
     }
 }

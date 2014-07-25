@@ -258,6 +258,55 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      *
+     * @return ShopApi\Model\VariantsResult
+     */
+    public function createVariantsResult(\stdClass $jsonObject)
+    {
+        $variants = array();
+        $errors = array();
+        $productIds = array();
+        $productSearchResult = false;
+
+        foreach ($jsonObject as $id => $data) {
+            if (isset($data->error_code)) {
+                $errors[] = $id;
+            } else {
+                $variants[$data->id] = $data->product_id;
+
+                $productIds[] = $data->product_id;
+            }
+        }
+
+        if (count($productIds) > 0) {
+            $productIds = array_unique($productIds);
+            // search products for valid variants
+            $productSearchResult = $this->shopApi
+                ->fetchProductsByIds(
+                    $productIds,
+                    array(
+                        ShopApi\Criteria\ProductFields::ATTRIBUTES_MERGED,
+                        ShopApi\Criteria\ProductFields::BRAND,
+                        ShopApi\Criteria\ProductFields::CATEGORIES,
+                        ShopApi\Criteria\ProductFields::DEFAULT_IMAGE,
+                        ShopApi\Criteria\ProductFields::DEFAULT_VARIANT,
+                        ShopApi\Criteria\ProductFields::DESCRIPTION_LONG,
+                        ShopApi\Criteria\ProductFields::DESCRIPTION_SHORT,
+                        ShopApi\Criteria\ProductFields::IS_ACTIVE,
+                        ShopApi\Criteria\ProductFields::IS_SALE,
+                        ShopApi\Criteria\ProductFields::MAX_PRICE,
+                        ShopApi\Criteria\ProductFields::MIN_PRICE,
+                        ShopApi\Criteria\ProductFields::VARIANTS
+                    )
+                )
+            ;
+        }
+
+        return ShopApi\Model\VariantsResult::create($variants, $errors, $productSearchResult);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @return ShopApi\Model\Product
      */
     public function createSingleProduct(\stdClass $jsonObject)
@@ -312,9 +361,9 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return ShopApi\Model\Variant
      */
-    public function createVariant(\stdClass $jsonObject)
+    public function createVariant(\stdClass $jsonObject, ShopApi\Model\Product $product)
     {
-        return ShopApi\Model\Variant::createFromJson($jsonObject, $this);
+        return ShopApi\Model\Variant::createFromJson($jsonObject, $this, $product);
     }
 
     /**

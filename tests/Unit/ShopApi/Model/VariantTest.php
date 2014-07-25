@@ -15,7 +15,7 @@ class VariantTest extends AbstractModelTest
     {
         $jsonObject = $this->getJsonObject('variant.json');
 
-        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory());
+        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory(), $this->getProduct());
 
         $this->assertEquals(5145543, $variant->getId());
         $this->assertEquals('ean1', $variant->getEan());
@@ -42,7 +42,7 @@ class VariantTest extends AbstractModelTest
     {
         $jsonObject = $this->getJsonObject('variant2.json');
 
-        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory());
+        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory(), $this->getProduct());
         $this->assertNull($variant->getFirstActiveDate());
         $this->assertNull($variant->getFirstSaleDate());
         $this->assertNull($variant->getCreatedDate());
@@ -68,12 +68,12 @@ class VariantTest extends AbstractModelTest
     public function testFromJsonAdditionalInfo()
     {
         $jsonObject = json_decode('{"additional_info":null}');
-        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory());
+        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory(), $this->getProduct());
         $this->assertEquals(null, $variant->getAdditionalInfo());
 
         $expected = json_decode('{"some":"data"}');
         $jsonObject = json_decode('{"additional_info":{"some":"data"}}');
-        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory());
+        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory(), $this->getProduct());
         $this->assertEquals($expected, $variant->getAdditionalInfo());
         $this->assertEquals("data", $variant->getAdditionalInfo()->some);
 
@@ -123,6 +123,12 @@ class VariantTest extends AbstractModelTest
 
         return $facetManager;
     }
+    
+    private function getProduct() 
+    {
+        $json = json_decode('{"id":1,"name":"Product"}');
+        return ShopApi\Model\Product::createFromJson($json, $this->getModelFactory(), 1);        
+    }    
 
 
 //    2014-04-21 nils.droege: not finish yet
