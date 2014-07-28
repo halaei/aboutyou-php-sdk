@@ -53,13 +53,23 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(3), 3);
       
         $set = new Basket\BasketSet("123456", array('image_url' => "http://", 'description' => 'Hallo'));
-        $item = new Basket\BasketSetItem($this->getVariantId(4));
+        $item = new Basket\BasketSetItem($this->getVariantId(4), array(), 200);       
+        $item2 = new Basket\BasketSetItem($this->getVariantId(5), array()); 
         
         $set->addItem($item);
+        $set->addItem($item2);
         $basket->updateItemSet($set);
        
         $basket = $api->updateBasket($this->getSessionId(), $basket);
-
+        
+        $set = $basket->getItem("123456");
+        $items = $set->getItems();
+        $item = $items[0];        
+        $this->assertEquals(200, $item->getAppId()); 
+        
+        $item2 = $items[1];
+        $this->assertEquals(null, $item2->getAppId()); 
+        
         $errorCount = count($basket->getErrors());
         
         $this->assertEquals(6, $basket->getTotalAmount() + $errorCount);
@@ -98,10 +108,14 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
     {
         $api = $this->getShopApi();
         
-        $item = new Basket\BasketItem('1234', $this->getVariantId(1), array(
-            'description' => 'test',
-            'image_url' => 'http://www.google.de',
-            'foo' => 'bar')
+        $item = new Basket\BasketItem('1234', 
+            $this->getVariantId(1), 
+            array(
+                'description' => 'test',
+                'image_url' => 'http://www.google.de',
+                'foo' => 'bar'
+            ),
+            200
         );
         
         $basket = new Basket();
@@ -111,6 +125,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $item   = $basket->getItem('1234');
         
         $this->assertEquals(1, $basket->getTotalAmount());
+        $this->assertEquals(200, $item->getAppId());
         $this->assertInstanceOf('\Collins\ShopApi\Model\Basket\BasketItem', $item);
         
         $data = $item->getAdditionalData();
