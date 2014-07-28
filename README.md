@@ -1,6 +1,6 @@
 ## ABOUT YOU App SDK
 
-# Documentation
+# Documentation 
 
 See [ABOUT YOU Developer Center](https://developer.aboutyou.de/) for more Information.
 
