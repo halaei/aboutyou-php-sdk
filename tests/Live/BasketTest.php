@@ -53,7 +53,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(3), 3);
       
         $set = new Basket\BasketSet("123456", array('image_url' => "http://", 'description' => 'Hallo'));
-        $item = new Basket\BasketSetItem($this->getVariantId(4), array(), 200);       
+        $item = new Basket\BasketSetItem($this->getVariantId(4), array());       
         $item2 = new Basket\BasketSetItem($this->getVariantId(5), array()); 
         
         $set->addItem($item);
@@ -65,7 +65,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $set = $basket->getItem("123456");
         $items = $set->getItems();
         $item = $items[0];        
-        $this->assertEquals(200, $item->getAppId()); 
+        $this->assertEquals(null, $item->getAppId()); 
         
         $item2 = $items[1];
         $this->assertEquals(null, $item2->getAppId()); 
@@ -114,6 +114,39 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
                 'description' => 'test',
                 'image_url' => 'http://www.google.de',
                 'foo' => 'bar'
+            )
+        );
+        
+        $basket = new Basket();
+        $basket->updateItem($item);
+        
+        $basket = $api->updateBasket($this->getSessionId(), $basket);
+        $item   = $basket->getItem('1234');
+        
+        $this->assertEquals(1, $basket->getTotalAmount());
+        $this->assertEquals(null, $item->getAppId());
+        $this->assertInstanceOf('\Collins\ShopApi\Model\Basket\BasketItem', $item);
+        
+        $data = $item->getAdditionalData();
+        
+        $this->assertEquals('test', $data['description']);
+        $this->assertEquals('http://www.google.de', $data['image_url']);
+        $this->assertEquals('bar', $data['foo']);  
+        
+        $basket->deleteAllItems();
+        $api->updateBasket($this->getSessionId(), $basket);
+    }
+    
+    public function testAddOneItemToBasketWithAppId()
+    {
+        $api = $this->getShopApi();
+        
+        $item = new Basket\BasketItem('1234', 
+            $this->getVariantId(1), 
+            array(
+                'description' => 'test',
+                'image_url' => 'http://www.google.de',
+                'foo' => 'bar'
             ),
             200
         );
@@ -135,7 +168,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $this->assertEquals('bar', $data['foo']);  
         
         $basket->deleteAllItems();
-        $api->updateBasket($this->getSessionId(), $basket);
+        $api->updateBasket($this->getSessionId(), $basket);        
     }
     
     public function testAddOneItemSetToBasket()
@@ -161,6 +194,9 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         
         $items = $set->getItems();
         $this->assertCount(1, $items);
+        
+        $item = $items[0];
+        $this->assertNull($item->getAppId());
         
         $data = $set->getAdditionalData();
         
@@ -209,6 +245,38 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $basket->deleteAllItems();
         $api->updateBasket($this->getSessionId(), $basket);
     }
+    
+    public function testAddSetWithTwoItemsWithAppIdToBasket()
+    {
+        $api = $this->getShopApi();
+
+        $item1 = new Basket\BasketSetItem($this->getVariantId(1), array('description' => 'Variante 1', 'hello' => 'world'), 139);
+        $item2 = new Basket\BasketSetItem($this->getVariantId(2), array('description' => 'Variante 2', 'hello' => 'universe'), 139);
+
+        $set = new Basket\BasketSet('set1', array(
+            'description' => 'Product-Set',
+            'image_url' => 'http://cdn.mary-paul.de/file/e40b90464ab4df830f6f2d5eccb0447f',
+            'hello' => 'multiverse')
+        );
+        
+        $set->addItem($item1);
+        $set->addItem($item2);
+
+        $basket = new Basket();
+
+        $basket->updateItemSet($set);
+        $basket = $api->updateBasket($this->getSessionId(), $basket);
+        
+        $set = $basket->getItem('set1');
+        $items = $set->getItems();
+
+        foreach ($items as $item) {
+            $this->assertEquals(139, $item->getAppId());
+        }
+
+        $basket->deleteAllItems();
+        $api->updateBasket($this->getSessionId(), $basket);
+    }    
 
     public function testAddItemToBasketWithProductID()
     {

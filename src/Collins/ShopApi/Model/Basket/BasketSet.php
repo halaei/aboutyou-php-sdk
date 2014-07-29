@@ -70,6 +70,9 @@ class BasketSet extends AbstractBasketItem implements BasketItemInterface
 
     /** @var interger */
     protected $totalVat;
+    
+    /** @var integer */
+    protected $setItemAppId = null;
 
     const IMAGE_URL_REQUIRED = true;
 
@@ -152,6 +155,12 @@ class BasketSet extends AbstractBasketItem implements BasketItemInterface
      */
     public function addItem(BasketSetItem $item)
     {
+        if (count($this->items) === 0) {
+            $this->setItemAppId = $item->getAppId();
+        } elseif ($this->setItemAppId !== $item->getAppId()) {
+            throw new \InvalidArgumentException('you can not set different app ids for items in an item-set.');
+        }
+        
         $this->items[] = $item;
     }
 
