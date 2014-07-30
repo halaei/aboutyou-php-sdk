@@ -25,7 +25,7 @@ class Variant extends AbstractModel
     
     /** @var Product */
     protected $product;
-
+    
     /**
      * @var Image
      */
@@ -80,6 +80,17 @@ class Variant extends AbstractModel
         }
 
         return $this->images;
+    }
+    
+    /**    
+     * @return string
+     */
+    public function getAboutNumber()
+    {
+        return isset($this->jsonObject->about_number) ?
+            $this->jsonObject->about_number :
+            null
+        ;
     }
 
     /**

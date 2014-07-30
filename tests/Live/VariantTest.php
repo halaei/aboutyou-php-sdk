@@ -25,6 +25,7 @@ class VariantTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $variant = $result->getVariantById(5833360);
         $this->assertInstanceOf('Collins\ShopApi\Model\Variant', $variant);       
         
+        $this->assertInternalType('string', $variant->getAboutNumber());
         $this->assertEquals('5833360', $variant->getId());
         $this->assertInstanceOf('Collins\ShopApi\Model\Product', $variant->getProduct());
     }   
