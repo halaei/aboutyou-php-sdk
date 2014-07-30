@@ -298,6 +298,7 @@ class Basket
         $item = array(
             'id' => $basketItem->getId(),
             'variant_id' => $basketItem->getVariantId(),
+            'app_id' => $basketItem->getAppId()
         );
         $additionalData = $basketItem->getAdditionalData();
         if (!empty($additionalData)) {
@@ -326,7 +327,8 @@ class Basket
         $itemSet = array();
         foreach ($items as $subItem) {
             $item = array(
-                'variant_id' => $subItem->getVariantId()
+                'variant_id' => $subItem->getVariantId(),
+                'app_id' => $subItem->getAppId()
             );
             $additionalData = $subItem->getAdditionalData();
             if (!empty($additionalData)) {
