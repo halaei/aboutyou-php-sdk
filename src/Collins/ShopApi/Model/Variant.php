@@ -387,4 +387,29 @@ class Variant extends AbstractModel
 
         return null;
     }
+
+    /**
+     * Returns the quantity per pack for this variant.
+     * By default, this returns 1. But some items can have a bigger number.
+     *
+     * @return int quantity per pack
+     */
+    public function getQuantityPerPack()
+    {
+        $facetGroup = $this->getFacetGroup(Constants::FACET_QUANTITY_PER_PACK);
+
+        if (!$facetGroup) {
+            return 1;
+        }
+
+        $facets = $facetGroup->getFacets();
+
+        if (!$facets) {
+            return 1;
+        }
+
+        $facet = array_shift($facets);
+
+        return $facet->getValue();
+    }
 }
