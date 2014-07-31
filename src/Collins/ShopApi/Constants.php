@@ -31,6 +31,7 @@ abstract class Constants
     const FACET_CLOTHING_MEN_INCH = 189;
     const FACET_CLOTHING_MEN_DE = 187;
     const FACET_CONDITION = 234;
+    const FACET_QUANTITY_PER_PACK = 263;
 
     const SORT_RELEVANCE = 'relevance';
     const SORT_UPDATED = 'updated_date';
