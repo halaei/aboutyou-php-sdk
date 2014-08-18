@@ -310,6 +310,9 @@ class QueryBuilder
 
         $ids = array_map('intval', $ids);
 
+        // make sure the keys are correct to avoid creating an json object instead of array
+        $ids = array_values($ids);
+
         $this->query[] = array(
             'products' => array(
                 'ids'    => $ids,
