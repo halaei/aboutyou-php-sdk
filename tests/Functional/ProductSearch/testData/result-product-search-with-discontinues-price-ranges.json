@@ -1,0 +1,85 @@
+[
+    {
+        "product_search": {
+            "product_count": 1,
+            "pageHash": "3e969f0f-26bc-4c44-9d60-123456789012",
+            "facets": {
+                "prices": {
+                    "ranges": [
+                        {
+                            "count": 0,
+                            "to": 2000,
+                            "max": 0,
+                            "from": 0,
+                            "min": 0,
+                            "total_count": 0,
+                            "total": 0,
+                            "mean": 0
+                        },
+                        {
+                            "count": 0,
+                            "to": 5000,
+                            "max": 0,
+                            "from": 2000,
+                            "min": 0,
+                            "total_count": 0,
+                            "total": 0,
+                            "mean": 0
+                        },
+                        {
+                            "count": 0,
+                            "to": 7000,
+                            "max": 0,
+                            "from": 5000,
+                            "min": 0,
+                            "total_count": 0,
+                            "total": 0,
+                            "mean": 0
+                        },
+                        {
+                            "count": 1,
+                            "to": 10000,
+                            "max": 7499,
+                            "from": 7000,
+                            "min": 7499,
+                            "total_count": 1,
+                            "total": 7499,
+                            "mean": 7499
+                        },
+                        {
+                            "count": 0,
+                            "to": 20000,
+                            "max": 0,
+                            "from": 10000,
+                            "min": 0,
+                            "total_count": 0,
+                            "total": 0,
+                            "mean": 0
+                        },
+                        {
+                            "count": 0,
+                            "to": 50000,
+                            "max": 0,
+                            "from": 20000,
+                            "min": 0,
+                            "total_count": 0,
+                            "total": 0,
+                            "mean": 0
+                        },
+                        {
+                            "count": 0,
+                            "to": 50000,
+                            "max": 0,
+                            "from": 50000,
+                            "min": 0,
+                            "total_count": 0,
+                            "total": 0,
+                            "mean": 0
+                        }
+                    ]
+                }
+            },
+            "products": []
+        }
+    }
+]
