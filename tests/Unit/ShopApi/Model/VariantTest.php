@@ -111,10 +111,10 @@ class VariantTest extends AbstractModelTest
     public function testGetSeasonCode(Variant $variant)
     {
         $facetManager = $this->getFacetManager('facets-all.json');
-	ShopApi\Model\FacetGroupSet::setFacetManager($facetManager);
+        ShopApi\Model\FacetGroupSet::setFacetManager($facetManager);
 
         $facetGroup = $variant->getSeasonCode();
-	$this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroup', $facetGroup);
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroup', $facetGroup);
         $this->assertEquals('season', $facetGroup->getName());
         $this->assertEquals('HW 14', $facetGroup->getFacetNames());
 
@@ -123,7 +123,6 @@ class VariantTest extends AbstractModelTest
         $this->assertEquals('hw14', $facet->getValue());
         $this->assertEquals('HW 14', $facet->getName());
         $this->assertEquals('season', $facet->getGroupName());
-
     }
 
     protected function getFacetManager($filename)
