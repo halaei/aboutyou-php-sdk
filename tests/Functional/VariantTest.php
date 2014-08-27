@@ -150,5 +150,25 @@ class VariantTest extends AbstractShopApiTest
             $this->assertEquals($product, $variant->getProduct());
         }
     }
-}
- 
+
+    public function testGetSeasonCode()
+    {
+        $shopApi = $this->getShopApiWithResultFile('facets-289.json');
+
+        $facets = $shopApi->fetchFacets(array(289));
+        var_dump($facets);die;
+        
+        $count = 0;
+        foreach ($facets as $facet) {
+            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Facet', $facet);
+            $this->assertInternalType('int', $facet->getId());
+            $this->assertInternalType('string', $facet->getName());
+            $this->assertInternalType('string', $facet->getValue());
+            $this->assertInternalType('int', $facet->getGroupId());
+            $this->assertInternalType('string', $facet->getGroupName());
+            $this->assertEquals('size_code', $facet->getGroupName());
+            $this->assertEquals(206, $facet->getGroupId());
+            if ($count++ > 2) break; // tree is enough
+        }
+    }  
+} 

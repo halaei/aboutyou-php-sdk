@@ -56,7 +56,7 @@ class VariantTest extends AbstractModelTest
     {
         $facetGroupSet = $variant->getFacetGroupSet();
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroupSet', $facetGroupSet);
-        $this->assertCount(6, $facetGroupSet->getLazyGroups());
+        $this->assertCount(7, $facetGroupSet->getLazyGroups());
 
         $this->markTestIncomplete('This Test is not implemented yet');
 
@@ -103,6 +103,27 @@ class VariantTest extends AbstractModelTest
         $size = $variant->getSize();
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroup', $size);
         $this->assertEquals('XS', $size->getFacetNames());
+    }
+
+    /**
+     * @depends testFromJson
+     */
+    public function testGetSeasonCode(Variant $variant)
+    {
+        $facetManager = $this->getFacetManager('facets-all.json');
+	ShopApi\Model\FacetGroupSet::setFacetManager($facetManager);
+
+        $facetGroup = $variant->getSeasonCode();
+	$this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroup', $facetGroup);
+        $this->assertEquals('season', $facetGroup->getName());
+        $this->assertEquals('HW 14', $facetGroup->getFacetNames());
+
+        $facet = $facetManager->getFacet(289, 4084);
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Facet', $facet);
+        $this->assertEquals('hw14', $facet->getValue());
+        $this->assertEquals('HW 14', $facet->getName());
+        $this->assertEquals('season', $facet->getGroupName());
+
     }
 
     protected function getFacetManager($filename)
