@@ -23,6 +23,9 @@ abstract class BasketVariantItem extends AbstractBasketItem
 
     /** @var integer */
     private $variantId;
+    
+    /** @var int */
+    private $appId = null;
 
     /**
      * Constructor.
@@ -30,12 +33,17 @@ abstract class BasketVariantItem extends AbstractBasketItem
      * @param integer $variantId
      * @param array $additionalData
      */
-    public function __construct($variantId, $additionalData = null)
+    public function __construct($variantId, $additionalData = null, $appId = null)
     {
         $this->checkVariantId($variantId);
-        $this->checkAdditionData($additionalData);
+        $this->checkAdditionData($additionalData);        
         $this->variantId = $variantId;
         $this->additionalData = $additionalData;
+        
+        if (isset($appId)) {
+            $this->checkAppId($appId);
+            $this->appId = $appId;            
+        }        
     }
 
     /**
@@ -64,6 +72,16 @@ abstract class BasketVariantItem extends AbstractBasketItem
     public function getTax()
     {
         return $this->jsonObject->tax;
+    }
+    
+    /**
+     * Get the AppId
+     * 
+     * @return int
+     */
+    public function getAppId()
+    {
+        return $this->appId;
     }
 
     /**
@@ -159,4 +177,11 @@ abstract class BasketVariantItem extends AbstractBasketItem
             throw new \InvalidArgumentException('the variant id must be an integer');
         }
     }
+    
+    protected function checkAppId($appId)
+    {
+        if (!is_long($appId)) {
+            throw new \InvalidArgumentException('the app id must be an integer');
+        }
+    }    
 }

@@ -1,6 +1,6 @@
 ## ABOUT YOU App SDK
 
-# Documentation
+# Documentation 
 
 See [ABOUT YOU Developer Center](https://developer.aboutyou.de/) for more Information.
 
@@ -19,7 +19,7 @@ The SDK is available via [Packagist](https://packagist.org/) under the [aboutyou
 ```json
     {
         "require": {
-            "aboutyou/app-sdk": "~0.1"
+            "aboutyou/app-sdk": "~0.9.7"
         }
     }
 ```

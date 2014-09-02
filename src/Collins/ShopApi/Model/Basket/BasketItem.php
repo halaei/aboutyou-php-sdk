@@ -41,11 +41,11 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
      * @param integer $variantId
      * @param array $additionalData
      */
-    public function __construct($id, $variantId, array $additionalData = null)
+    public function __construct($id, $variantId, array $additionalData = null, $appId = null)
     {
         $this->checkId($id);
         $this->id = $id;
-        parent::__construct($variantId, $additionalData);
+        parent::__construct($variantId, $additionalData, $appId);
     }
 
     /**
@@ -58,7 +58,13 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
      */
     public static function createFromJson($jsonObject, array $products)
     {
-        $item = new static($jsonObject->id, $jsonObject->variant_id, isset($jsonObject->additional_data) ? (array)$jsonObject->additional_data : null);
+        $item = new static(
+            $jsonObject->id, 
+            $jsonObject->variant_id, 
+            isset($jsonObject->additional_data) ? (array)$jsonObject->additional_data : null,
+            isset($jsonObject->app_id) ? $jsonObject->app_id : null
+        );
+        
         $item->parseErrorResult($jsonObject);
 
         $item->jsonObject = $jsonObject;

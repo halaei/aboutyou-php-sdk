@@ -6,9 +6,9 @@
 
 namespace Collins\ShopApi\Model;
 
-
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
+use Collins\ShopApi\Model\Product;
 
 class Variant extends AbstractModel
 {
@@ -25,7 +25,7 @@ class Variant extends AbstractModel
     
     /** @var Product */
     protected $product;
-
+    
     /**
      * @var Image
      */
@@ -38,6 +38,7 @@ class Variant extends AbstractModel
     /**
      * @param \stdClass $jsonObject
      * @param ModelFactoryInterface $factory
+     * @param Product $product
      *
      * @return static
      */
@@ -47,7 +48,7 @@ class Variant extends AbstractModel
 
         $variant->factory    = $factory;
         $variant->jsonObject = $jsonObject;
-        $variant->product = $product;
+        $variant->product    = $product;
 
         return $variant;
     }        
@@ -81,6 +82,17 @@ class Variant extends AbstractModel
         return $this->images;
     }
     
+    /**    
+     * @return string
+     */
+    public function getAboutNumber()
+    {
+        return isset($this->jsonObject->about_number) ?
+            $this->jsonObject->about_number :
+            null
+        ;
+    }
+
     /**
      * @return Product
      */
@@ -88,7 +100,7 @@ class Variant extends AbstractModel
     {
         return $this->product;
     }
-  
+
     /**
      * Get image by given hash.
      *
@@ -374,5 +386,40 @@ class Variant extends AbstractModel
         }
 
         return null;
+    }
+
+    /**
+     * Returns the quantity per pack for this variant.
+     * By default, this returns 1. But some items can have a bigger number.
+     *
+     * @return int quantity per pack
+     */
+    public function getQuantityPerPack()
+    {
+        $facetGroup = $this->getFacetGroup(Constants::FACET_QUANTITY_PER_PACK);
+
+        if (!$facetGroup) {
+            return 1;
+        }
+
+        $facets = $facetGroup->getFacets();
+
+        if (!$facets) {
+            return 1;
+        }
+
+        $facet = array_shift($facets);
+
+        return $facet->getValue();
+    }
+
+   /**
+     * get the season code e.g. "HW 14 / hw14"
+     *
+     * @return FacetGroup|null
+     */
+    public function getSeasonCode()
+    {
+        return $this->getFacetGroup(Constants::FACET_SEASON_CODE);
     }
 }

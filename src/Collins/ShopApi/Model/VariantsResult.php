@@ -2,7 +2,6 @@
 
 namespace Collins\ShopApi\Model;
 
-
 class VariantsResult
 {
     /** @var Variant[] */
@@ -10,11 +9,11 @@ class VariantsResult
     /** @var array */
     protected $errors = array();
 
-    
     /**
      * 
      * @param \stdClass $jsonObject
      * @param \Collins\ShopApi\Model\ModelFactoryInterface $factory
+     * @param \Collins\ShopApi\Model\ProductSearchResult $productSearchResult
      * 
      * @return static
      */
@@ -22,12 +21,12 @@ class VariantsResult
     {        
         $variantsResult = new static();                
         $variantsResult->errors = $errors;
-        
+
         if ($productSearchResult === false || count($variants) === 0) {
             // no variant was found
             return $variantsResult;
         }
-                        
+
         // get products from product-search
         $products = $productSearchResult->getProducts();
 
@@ -37,7 +36,7 @@ class VariantsResult
                 $variantsResult->errors[] = $variantId;
                 continue;
             }
-            
+
             $product = $products[$productId];
             $variant = $product->getVariantById($variantId);
 
@@ -45,8 +44,7 @@ class VariantsResult
                 $variantsResult->variants[$variantId] = $variant;                
             }
         }            
-        
-                        
+
         return $variantsResult;
     }
     
@@ -98,4 +96,3 @@ class VariantsResult
         return $this->errors;
     }
 }
-

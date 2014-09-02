@@ -263,6 +263,7 @@ class QueryBuilder
             }
 
             $ids = array_map('intval', $ids);
+            $ids = array_values($ids);
 
             $this->query[] = array(
                 'category' => array(
@@ -314,6 +315,9 @@ class QueryBuilder
 
         $ids = array_map('intval', $ids);
 
+        // make sure the keys are correct to avoid creating an json object instead of array
+        $ids = array_values($ids);
+
         $this->query[] = array(
             'products' => array(
                 'ids'    => $ids,
@@ -334,6 +338,7 @@ class QueryBuilder
         settype($ids, 'array');
 
         $ids = array_map('intval', $ids);
+        $ids = array_values($ids);
 
         $this->query[] = array(
             'live_variant' => array(
