@@ -70,11 +70,12 @@ class DefaultCategoryManager implements CategoryManagerInterface
             return array();
         }
 
-        // may faster then foreach
-        $categories = array_intersect_key(
-            $this->categories,
-            array_flip($ids)
-        );
+        $categories = array();
+        foreach ($ids as $id) {
+            if (isset($this->categories[$id])) {
+                $categories[] = $this->categories[$id];
+            }
+        }
 
         return $categories;
     }
