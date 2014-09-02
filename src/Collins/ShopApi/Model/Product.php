@@ -399,62 +399,33 @@ class Product extends AbstractModel
      */
     public function getLeafCategories($activeOnly = true)
     {
-        return ($this->getCategories($activeOnly, "leaf"));
+        $categoryIds = $this->getLeafCategoryIds();
+
+        $categories = $this->getCategoryManager()->getCategories($categoryIds, $activeOnly);
+
+        return array_values($categories);
     }
 
 
     public function getRootCategoryIds() {
-        $result = array_map(function($ids){
-                return($ids[0]);
-            }, $this->categoryIdPaths);
-        return($result);
+        $ids = array_map(function($categoryIdPath) {
+            return $categoryIdPath[0];
+        }, $this->categoryIdPaths);
+
+        return array_unique($ids);
     }
 
     public function getLeafCategoryIds() {
-        $result = array_map(function($ids){
-                return($ids[count($ids) - 1]);
-            }, $this->categoryIdPaths);
-        return($result);
+        return array_map(function($categoryIdPath) {
+            return end($categoryIdPath);
+        }, $this->categoryIdPaths);
+
+        return $ids;
     }
 
-
-    public function getCategories($activeOnly = true, $categoryType="root")
+    public function getCategories($activeOnly = true)
     {
-        if(!in_array($categoryType, array("root", "leaf"))) {
-            throw new \InvalidArgumentException("Only 'root' and 'leaf' are allowed types of categories, but ".var_export($categoryType, true)." was given");
-        }
-
-        $activeAttrName = "active".ucfirst($categoryType)."Categories";
-        $stdAttrName = $categoryType."Categories";
-
-        if($activeOnly && !is_null($this->{$activeAttrName})) {
-            return($this->{$activeAttrName});
-        }
-
-        if(!$activeOnly && !is_null($this->{$stdAttrName})) {
-            return($this->{$stdAttrName});
-        }
-
-        $categoryIds = call_user_func(array($this, "get".ucfirst($categoryType)."CategoryIds"));
-
-        $result = $this->getCategoryManager()->getCategories($categoryIds, $activeOnly);
-        $result = array_values($result);
-
-        if($activeOnly) {
-            $this->{$activeAttrName} = $result;
-        } else {
-            $this->{$stdAttrName} = $result;
-        }
-
-        return($result);
-    }
-
-    /**
-     * @return \Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface
-     */
-    private function getCategoryManager()
-    {
-        return $this->factory->getCategoryManager();
+        return $this->getRootCategories($activeOnly);
     }
 
     /**
@@ -464,7 +435,11 @@ class Product extends AbstractModel
      */
     public function getRootCategories($activeOnly = true)
     {
-        return ($this->getCategories($activeOnly, "root"));
+        $categoryIds = $this->getRootCategoryIds();
+
+        $categories = $this->getCategoryManager()->getCategories($categoryIds, $activeOnly);
+
+        return array_values($categories);
     }
 
     /**
@@ -718,5 +693,13 @@ class Product extends AbstractModel
         }
 
         return $variants;
+    }
+
+    /**
+     * @return \Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface
+     */
+    private function getCategoryManager()
+    {
+        return $this->factory->getCategoryManager();
     }
 }
