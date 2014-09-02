@@ -61,15 +61,6 @@ class ProductGetCategoryTest extends AbstractShopApiTest
         $this->assertEquals(2, $categories[0]->getId());
         $this->assertEquals(1, $categories[1]->getId());
         $this->assertEquals(3, $categories[2]->getId());
-
-        $product = $this->getProduct('product-with-categories.json');
-        $categories = $product->getRootCategories();
-        $this->assertInternalType('array', $categories);
-        $this->assertCount(1, $categories);
-        foreach ($categories as $category) {
-            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
-        }
-        $this->assertEquals(1, $categories[0]->getId());
     }
 
     public function testGetLeafCategories()
@@ -86,16 +77,6 @@ class ProductGetCategoryTest extends AbstractShopApiTest
         $this->assertEquals(121, $categories[1]->getId());
         $this->assertEquals(11, $categories[2]->getId());
         $this->assertEquals(3, $categories[3]->getId());
-
-        $product = $this->getProduct('product-with-categories.json');
-        $categories = $product->getLeafCategories();
-        $this->assertInternalType('array', $categories);
-        $this->assertCount(2, $categories);
-        foreach ($categories as $category) {
-            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
-        }
-        $this->assertEquals(21, $categories[0]->getId());
-        $this->assertEquals(121, $categories[1]->getId());
     }
 
     public function testGetCategory()

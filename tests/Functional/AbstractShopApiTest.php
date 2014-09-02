@@ -169,9 +169,8 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
 
     protected function setupCategoryManager($shopApi)
     {
-        $categoryManager = new ShopApi\Model\CategoryManager\DefaultCategoryManager();
+        $categoryManager = $shopApi->getResultFactory()->getCategoryManager();
         $json = $this->getJsonObjectFromFile('category-tree-v2.json');
         $categoryManager->parseJson($json[0]->category_tree, $shopApi->getResultFactory());
-        $shopApi->getResultFactory()->setCategoryManager($categoryManager);
     }
 }

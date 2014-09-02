@@ -106,8 +106,9 @@ class DefaultCategoryManagerTest extends AbstractModelTest
      */
     public function testCategoryTreeHierarchy($categories)
     {
-        $frauen  = $categories[74415];
-        $maenner = $categories[74416];
+        $this->markTestIncomplete();
+        $frauen  = $categories[0];
+        $maenner = $categories[1];
     }
 }
  

@@ -109,7 +109,7 @@ class ProductSearchTest extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
             'product-search-result-with-product-categories.json',
-            'category-all.json'
+//            'category-all.json'
         ));
 
         // get all available products
@@ -120,8 +120,7 @@ class ProductSearchTest extends AbstractShopApiTest
         $category = $product->getCategory();
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category->getParent());
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category->getParent()->getParent());
-        $this->assertNull($category->getParent()->getParent()->getParent());
+        $this->assertNull($category->getParent()->getParent());
     }
 
     /***************************************************/

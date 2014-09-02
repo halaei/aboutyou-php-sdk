@@ -116,17 +116,17 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
         $categories = $productSearchResult->getCategories();
         $this->assertInternalType('array', $categories);
 
-        $this->assertCount(361, $categories);
+        $this->assertCount(8, $categories);
 
         foreach ($categories as $category) {
             $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
             $this->assertGreaterThan(0, $category->getProductCount());
         }
 
-        $damenCategory = $categories['16077'];
+        $damenCategory = $categories[0];
         $this->assertNull($damenCategory->getParent());
         $subCategories = $damenCategory->getSubCategories();
-        $this->assertCount(6, $subCategories);
+        $this->assertCount(3, $subCategories);
         $this->assertEquals($damenCategory, $subCategories[0]->getParent());
 //
 //
