@@ -6,8 +6,6 @@
 
 namespace Collins\ShopApi\Model;
 
-use Collins\ShopApi\Factory\ModelFactoryInterface;
-
 abstract class AbstractProductsResult implements \IteratorAggregate, \ArrayAccess, \Countable
 {
     /** @var Product[] */

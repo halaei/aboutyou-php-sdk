@@ -9,7 +9,6 @@ namespace Collins\ShopApi\Model;
 use Collins\ShopApi;
 use Collins\ShopApi\Exception\MalformedJsonException;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
-use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Product
 {
