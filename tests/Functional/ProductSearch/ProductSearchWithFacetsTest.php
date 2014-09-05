@@ -10,10 +10,9 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
     public function testProductSearchWithSaleResult()
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
-                'result-product-search-with-facets.json',
-//                'category-all.json',
-                'facet-result.json'
-            ));
+            'result-product-search-with-facets.json',
+            'facet-result.json'
+        ));
 
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
 
@@ -27,10 +26,9 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
     public function testProductSearchWithPriceRangeResult()
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
-                'result-product-search-with-facets.json',
-//                'category-all.json',
-                'facet-result.json'
-            ));
+            'result-product-search-with-facets.json',
+            'facet-result.json'
+        ));
 
         // get all available products
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
@@ -71,7 +69,6 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
             'result-product-search-with-facets.json',
-//            'category-all.json',
             'facet-result.json'
         ));
 
@@ -107,7 +104,6 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
             'result-product-search-with-facets.json',
-//            'category-all.json',
             'facet-result.json'
         ));
 
@@ -128,43 +124,21 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
         $subCategories = $damenCategory->getSubCategories();
         $this->assertCount(3, $subCategories);
         $this->assertEquals($damenCategory, $subCategories[0]->getParent());
-//
-//
-//        $tree = $productSearchResult->getCategoryTree();
-//        $this->assertInternalType('array', $tree);
-//        $this->assertCount(3, $tree);
-//
-//        foreach ($tree as $category) {
-//            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
-//            $this->assertNull(0, $category->getParent());
-//            $this->assertNotCount(0, $category->getSubCategories());
-//        }
-    }
 
-    public function testProductSearchGetActiveBrands()
-    {
-        $this->markTestIncomplete('implement method');
 
-//        $shopApi = $this->getShopApiWithResultFiles(array(
-//                'result-product-search-with-facets.json',
-//                'category-all.json'
-//            ));
-//
-//        $criteria = $shopApi->getProductSearchCriteria('12345')
-//            ->setLimit(0)
-//            ->selectFacetsByFacetGroup(0, -1);
-//        $productSearchResult = $shopApi->fetchProductSearch($criteria);
-//        $brandRawFacetIds = $productSearchResult->getRawFacets();
-//
-//        // collect ids
-//        $brandFacetIds = array();
-//
-//        $brands = $shopApi->fetchFacets($brandFacetIds);
+        $tree = $productSearchResult->getCategoryTree();
+        $this->assertInternalType('array', $tree);
+        $this->assertCount(2, $tree);
 
+        foreach ($tree as $category) {
+            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+            $this->assertNull($category->getParent());
+            $this->assertNotCount(0, $category->getSubCategories());
+        }
     }
 
 
-        /***************************************************/
+    /***************************************************/
 
     protected function getJsonStringFromFile($filepath)
     {

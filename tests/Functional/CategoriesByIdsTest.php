@@ -5,10 +5,6 @@ use Collins\ShopApi;
 
 class CategoriesByIdsTest extends AbstractShopApiTest
 {
-    public function setup() {
-        $this->markTestIncomplete();
-    }
-
     /**
      * @expectedException \InvalidArgumentException
      */
@@ -42,7 +38,7 @@ class CategoriesByIdsTest extends AbstractShopApiTest
     public function testFetchCategoriesWithStringIds()
     {
         $categoryIds = array('16080', '16138', '123');
-        $shopApi = $this->getShopApiWithResultFile('category-tree-v2.json');
+        $shopApi = $this->getShopApiWithResultFile('category.json');
 
         $categoriesResult = $shopApi->fetchCategoriesByIds($categoryIds);
 
@@ -55,7 +51,7 @@ class CategoriesByIdsTest extends AbstractShopApiTest
     {
         $categoryIds = array(16080, 16138, 123);
 
-        $shopApi = $this->getShopApiWithResultFile('category-tree-v2.json');
+        $shopApi = $this->getShopApiWithResultFile('category.json');
 
         $categoriesResult = $shopApi->fetchCategoriesByIds($categoryIds);
         $categories = $categoriesResult->getCategories();

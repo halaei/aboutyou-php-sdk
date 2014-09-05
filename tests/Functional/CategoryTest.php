@@ -11,28 +11,6 @@ use Collins\ShopApi;
 class CategoryTest extends AbstractShopApiTest
 {
     /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testFetchCategoryTreeWithDepthGreaterThan10()
-    {
-        $this->markTestIncomplete();
-        $shopApi = $this->getShopApiWithResult('category-tree-v2.json');
-
-        $shopApi->fetchCategoryTree(1000);
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testFetchCategoryTreeWithDepthLessThanMiuns1()
-    {
-        $this->markTestIncomplete();
-        $shopApi = $this->getShopApiWithResult('category-tree-v2.json');
-        
-        $shopApi->fetchCategoryTree(-1000);
-    }         
-
-    /**
      *
      */
     public function testBreadcrumb()
