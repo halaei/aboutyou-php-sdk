@@ -8,7 +8,7 @@ namespace Collins\ShopApi\Model;
 
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 
-abstract class AbstractProductsResult extends AbstractModel implements \IteratorAggregate, \ArrayAccess, \Countable
+abstract class AbstractProductsResult implements \IteratorAggregate, \ArrayAccess, \Countable
 {
     /** @var Product[] */
     protected $products;

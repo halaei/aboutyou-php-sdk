@@ -10,7 +10,7 @@ use Collins\ShopApi\Constants;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Model\Product;
 
-class Variant extends AbstractModel
+class Variant
 {
     protected $jsonObject;
 
