@@ -394,8 +394,6 @@ class ShopApi
     }
 
     /**
-     * @param int $maxDepth  -1 <= $maxDepth <= 10
-     *
      * @return CategoryTree
      *
      * @throws ShopApi\Exception\MalformedJsonException
@@ -404,7 +402,7 @@ class ShopApi
      * @deprecated use the CategoryManager instead of
      * @see getCategoryManager()
      */
-    public function fetchCategoryTree($maxDepth = -1)
+    public function fetchCategoryTree()
     {
         $query = $this->getQuery()
             ->requireCategoryTree()

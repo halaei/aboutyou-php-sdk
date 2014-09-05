@@ -29,23 +29,23 @@ class CategoryTree implements \IteratorAggregate, \Countable
     }
 
     /**
-     * allows foreach iteration on active top categories
+     * allows foreach iteration on active root categories
      *
      * {@inheritdoc}
      *
-     * @return Iterator
+     * @return \ArrayIterator
      */
     public function getIterator() {
         return new \ArrayIterator($this->getCategories(true));
     }
 
     /**
-     * Count of the sub categories
+     * Count active root all categories
      *
      * {@inheritdoc}
      */
     public function count()
     {
-        return count($this->$this->getCategories(false));
+        return count($this->getCategories(true));
     }
 }
