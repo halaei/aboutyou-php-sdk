@@ -10,7 +10,6 @@ use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Factory\ResultFactoryInterface;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface;
-use Collins\ShopApi\Model\CategoryManager\DefaultCategoryManager;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
 use Collins\ShopApi\Model\FacetManager\AboutyouCacheStrategy;

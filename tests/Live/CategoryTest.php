@@ -19,33 +19,6 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
         $api->fetchCategoriesByIds(';!');
     }
     
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testFetchCategoryTreeWithDepth()
-    {
-        $api = $this->getShopApi();
-        $tree = $api->fetchCategoryTree(1000);
-    }
-    
-    /**
-     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
-     */
-    public function testFetchCategoryTreeWithTrueDepth()
-    {
-        $api = $this->getShopApi();
-        $tree = $api->fetchCategoryTree(true);
-    }    
-
-    /**
-     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
-     */
-    public function testFetchCategoryTreeWithFalseDepth()
-    {
-        $api = $this->getShopApi();
-        $tree = $api->fetchCategoryTree(false);
-    }    
-    
     public function testFetchCategoriesOverTree()
     {
         $api = $this->getShopApi();

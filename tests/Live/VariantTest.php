@@ -10,26 +10,27 @@ class VariantTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
     public function testGetVariantById() 
     {
         $shopApi = $this->getShopApi();
+        $variantId = $this->getVariantId(1);
         
-        $result = $shopApi->fetchVariantsByIds(array('5833360', '58333600'));
+        $result = $shopApi->fetchVariantsByIds(array($variantId, '1'));
         
         $this->assertInstanceOf('Collins\ShopApi\Model\VariantsResult', $result);
         $this->assertTrue($result->hasVariantsNotFound());
         
         $errors = $result->getVariantsNotFound();
 
-        $this->assertEquals('58333600', $errors[0]);
+        $this->assertEquals('1', $errors[0]);
         
         $this->assertCount(1, $result->getVariantsFound());
         
-        $variant = $result->getVariantById(5833360);
+        $variant = $result->getVariantById($variantId);
         $this->assertInstanceOf('Collins\ShopApi\Model\Variant', $variant);       
         
         if ($variant->getAboutNumber() !== null) {
             $this->assertInternalType('string', $variant->getAboutNumber());            
         }
         
-        $this->assertEquals('5833360', $variant->getId());
+        $this->assertEquals($variantId, $variant->getId());
         $this->assertInstanceOf('Collins\ShopApi\Model\Product', $variant->getProduct());
     }   
     
