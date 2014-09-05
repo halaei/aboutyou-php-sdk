@@ -13,7 +13,6 @@ class DefaultCategoryManagerTest extends AbstractModelTest
 {
     public function testParseJson()
     {
-//        $factory = $this->getModelFactoryMock();
         $factory = $this->getModelFactory();
 
         $categoryManager = new DefaultCategoryManager();
@@ -102,13 +101,37 @@ class DefaultCategoryManagerTest extends AbstractModelTest
     }
 
     /**
+     * @param Category[] $categories
+     *
      * @depends testGetCategoryTree
      */
     public function testCategoryTreeHierarchy($categories)
     {
-        $this->markTestIncomplete();
-        $frauen  = $categories[0];
-        $maenner = $categories[1];
+        foreach ($categories as $category) {
+            foreach ($category->getSubCategories() as $subCategory) {
+                $this->assertEquals($category, $subCategory->getParent());
+            }
+        }
+
+        $female  = $categories[0];
+        $this->assertEquals('Frauen', $female->getName());
+        $femaleCats = $female->getSubCategories();
+        $this->assertEquals('Shirts', $femaleCats[0]->getName());
+        $this->assertEquals(74417, $femaleCats[0]->getId());
+        $this->assertEquals('Jeans', $femaleCats[1]->getName());
+        $this->assertEquals(74419, $femaleCats[1]->getId());
+        $this->assertEquals('Schuhe', $femaleCats[2]->getName());
+        $this->assertEquals(74421, $femaleCats[2]->getId());
+
+        $male = $categories[1];
+        $this->assertEquals('Männer', $male->getName());
+        $maleCats = $male->getSubCategories();
+        $this->assertEquals('Shirts', $maleCats[0]->getName());
+        $this->assertEquals(74418, $maleCats[0]->getId());
+        $this->assertEquals('Jeans', $maleCats[1]->getName());
+        $this->assertEquals(74420, $maleCats[1]->getId());
+        $this->assertEquals('Schuhe', $maleCats[2]->getName());
+        $this->assertEquals(74422, $maleCats[2]->getId());
     }
 }
  
