@@ -404,11 +404,9 @@ class ShopApi
      */
     public function fetchCategoryTree()
     {
-        $query = $this->getQuery()
-            ->requireCategoryTree()
-        ;
+        $categoryManager =  $this->getCategoryManager();
 
-        return $query->executeSingle();
+        return new CategoryTree($categoryManager);
     }
 
     /**
