@@ -7,7 +7,6 @@ use Collins\ShopApi\Constants;
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
-use Collins\ShopApi\Factory\ResultFactoryInterface;
 use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface;
 use Collins\ShopApi\Model\CategoryTree;
@@ -71,7 +70,7 @@ class ShopApi
      * @param string $appId
      * @param string $appPassword
      * @param string $apiEndPoint Constants::API_ENVIRONMENT_LIVE for live environment, Constants::API_ENVIRONMENT_STAGE for staging
-     * @param ResultFactoryInterface $resultFactory if null it will use the DefaultModelFactory with the DefaultFacetManager
+     * @param ModelFactoryInterface $resultFactory if null it will use the DefaultModelFactory with the DefaultFacetManager
      * @param LoggerInterface $logger
      * @param \Aboutyou\Common\Cache\CacheMultiGet|\Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
      */
@@ -79,7 +78,7 @@ class ShopApi
         $appId,
         $appPassword,
         $apiEndPoint = Constants::API_ENVIRONMENT_LIVE,
-        ResultFactoryInterface $resultFactory = null,
+        ModelFactoryInterface $resultFactory = null,
         LoggerInterface $logger = null,
         $facetManagerCache = null
     ) {
@@ -518,9 +517,9 @@ class ShopApi
     }
 
     /**
-     * @param ResultFactoryInterface $modelFactory
+     * @param ModelFactoryInterface $modelFactory
      */
-    public function setResultFactory(ResultFactoryInterface $modelFactory)
+    public function setResultFactory(ModelFactoryInterface $modelFactory)
     {
         if ($modelFactory instanceof DefaultModelFactory) {
             $this->eventDispatcher = $modelFactory->getEventDispatcher();
@@ -530,7 +529,7 @@ class ShopApi
     }
 
     /**
-     * @return ResultFactoryInterface|DefaultModelFactory
+     * @return ModelFactoryInterface|DefaultModelFactory
      */
     public function getResultFactory()
     {

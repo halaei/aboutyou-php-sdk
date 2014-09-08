@@ -31,25 +31,6 @@ class FactoryTest extends AbstractShopApiTest
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\Product', $product);
     }
 
-    public function testGetRawJsonFactory()
-    {
-//        $this->markTestIncomplete('fatal error');
-        $shopApi = new ShopApi('id', 'dummy');
-        $shopApi->setResultFactory(new ShopApi\Factory\RawJsonFactory($shopApi));
-
-        $factory = $shopApi->getResultFactory();
-        $this->assertInstanceOf('Collins\\ShopApi\\Factory\\ResultFactoryInterface', $factory);
-        $this->assertNotInstanceOf('Collins\\ShopApi\\Factory\\ModelFactoryInterface', $factory);
-
-        $json = $this->getJsonObjectFromFile('fetch-facet.json');
-        $facets = $factory->createFacetList($json);
-        $this->assertInternalType('array', $facets);
-
-        $json = $this->getJsonObjectFromFile('result/products-full.json');
-        $result = $factory->createProductsResult($json[0]->products);
-        $this->assertInstanceOf('\stdClass', $result);
-    }
-    
     private function getProduct() 
     {
         $productIds = array(123, 456);
