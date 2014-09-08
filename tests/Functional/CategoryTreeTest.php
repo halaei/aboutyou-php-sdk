@@ -43,7 +43,7 @@ class CategoryTreeTest extends AbstractShopApiTest
     }
 
     /**
-     * @depends testFetchCategories
+     * @depends testFetchCategoryTree
      */
     public function testProductResultIteratorInterface($categoryTreeResult)
     {
@@ -53,16 +53,7 @@ class CategoryTreeTest extends AbstractShopApiTest
     }
 
     /**
-     * @depends testFetchCategories
-     */
-    public function testProductResultArrayAccessInterface($categoryTreeResult)
-    {
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $categoryTreeResult[16080]);
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $categoryTreeResult[16138]);
-    }
-
-    /**
-     * @depends testFetchCategories
+     * @depends testFetchCategoryTree
      */
     public function testProductResultCountableInterface($categoryTreeResult)
     {

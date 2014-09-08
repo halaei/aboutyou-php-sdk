@@ -36,6 +36,9 @@ class DefaultCategoryManager implements CategoryManagerInterface
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function isEmpty()
     {
         return $this->categories === null;
@@ -44,9 +47,9 @@ class DefaultCategoryManager implements CategoryManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getCategoryTree()
+    public function getCategoryTree($activeOnly = Category::ACTIVE_ONLY)
     {
-        return $this->getSubCategories(0);
+        return $this->getSubCategories(0, $activeOnly);
     }
 
     /**
@@ -64,7 +67,7 @@ class DefaultCategoryManager implements CategoryManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getCategories(array $ids)
+    public function getCategories(array $ids, $activeOnly = Category::ACTIVE_ONLY)
     {
         if (empty($this->categories)) {
             return array();
@@ -73,7 +76,10 @@ class DefaultCategoryManager implements CategoryManagerInterface
         $categories = array();
         foreach ($ids as $id) {
             if (isset($this->categories[$id])) {
-                $categories[] = $this->categories[$id];
+                $category = $this->categories[$id];
+                if ($activeOnly === Category::ALL || $category->isActive()) {
+                    $categories[] = $category;
+                }
             }
         }
 
@@ -83,7 +89,7 @@ class DefaultCategoryManager implements CategoryManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getSubCategories($id)
+    public function getSubCategories($id, $activeOnly = Category::ACTIVE_ONLY)
     {
         if (!isset($this->parentChildIds[$id])) {
             return array();
@@ -91,6 +97,30 @@ class DefaultCategoryManager implements CategoryManagerInterface
 
         $ids = $this->parentChildIds[$id];
 
-        return $this->getCategories($ids);
+        return $this->getCategories($ids, $activeOnly);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFirstCategoryByName($name, $activeOnly = Category::ACTIVE_ONLY)
+    {
+        foreach ($this->categories as $category) {
+            if ($category->getName() === $name && ($activeOnly === Category::ALL || $category->isActive())) {
+                return $category;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCategoriesByName($name, $activeOnly = Category::ACTIVE_ONLY)
+    {
+        return array_values(array_filter($this->categories, function ($category) use ($name, $activeOnly) {
+            return ($category->getName() === $name && ($activeOnly === Category::ALL || $category->isActive()));
+        }));
     }
 }

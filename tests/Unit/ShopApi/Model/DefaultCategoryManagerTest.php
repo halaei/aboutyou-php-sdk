@@ -145,5 +145,39 @@ class DefaultCategoryManagerTest extends AbstractModelTest
         $this->assertEquals('Schuhe', $maleCats[2]->getName());
         $this->assertEquals(74422, $maleCats[2]->getId());
     }
+
+    /**
+     * @depends testParseJson
+     */
+    public function testGetFirstCategoryByName(DefaultCategoryManager $categoryManager)
+    {
+        $this->assertEquals(74416, $categoryManager->getFirstCategoryByName('Männer')->getId());
+        $this->assertEquals(74419, $categoryManager->getFirstCategoryByName('Jeans')->getId());
+        $this->assertEquals(74417, $categoryManager->getFirstCategoryByName('Shirts')->getId());
+        $this->assertNull($categoryManager->getFirstCategoryByName('Landing Page'));
+        $this->assertEquals(74423, $categoryManager->getFirstCategoryByName('Landing Page', false)->getId());
+        $this->assertNull($categoryManager->getFirstCategoryByName('Unknown'));
+        $this->assertNull($categoryManager->getFirstCategoryByName('Unknown', Category::ALL));
+    }
+
+    /**
+     * @depends testParseJson
+     */
+    public function testGetCategoriesByName(DefaultCategoryManager $categoryManager)
+    {
+        $categories = $categoryManager->getCategoriesByName('Jeans');
+        $this->assertCount(2, $categories);
+        $this->assertEquals(74419, $categories[0]->getId());
+        $this->assertEquals(74420, $categories[1]->getId());
+
+        $categories = $categoryManager->getCategoriesByName('Landing Page');
+        $this->assertCount(0, $categories);
+
+        $categories = $categoryManager->getCategoriesByName('Landing Page', Category::ALL);
+        $this->assertCount(1, $categories);
+
+        $categories = $categoryManager->getCategoriesByName('Unknown');
+        $this->assertCount(0, $categories);
+    }
 }
  
