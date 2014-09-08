@@ -56,6 +56,18 @@ class DefaultCategoryManagerTest extends AbstractModelTest
         $this->checkMainCategory($category);
     }
 
+    public function testGetCategoriesIfEmpty()
+    {
+        $factory = $this->getModelFactory();
+
+        $categoryManager = new DefaultCategoryManager();
+        $factory->setCategoryManager($categoryManager);
+
+        $categories = $categoryManager->getCategories(array(1));
+        $this->assertInternalType('array', $categories);
+        $this->assertCount(0, $categories);
+    }
+
     /**
      * @depends testParseJson
      */
