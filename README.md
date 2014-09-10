@@ -19,7 +19,7 @@ The SDK is available via [Packagist](https://packagist.org/) under the [aboutyou
 ```json
     {
         "require": {
-            "aboutyou/app-sdk": "~0.9.7"
+            "aboutyou/app-sdk": "~0.10"
         }
     }
 ```

@@ -263,6 +263,7 @@ class QueryBuilder
             }
 
             $ids = array_map('intval', $ids);
+            $ids = array_values($ids);
 
             $this->query[] = array(
                 'category' => array(
@@ -333,6 +334,7 @@ class QueryBuilder
         settype($ids, 'array');
 
         $ids = array_map('intval', $ids);
+        $ids = array_values($ids);
 
         $this->query[] = array(
             'live_variant' => array(

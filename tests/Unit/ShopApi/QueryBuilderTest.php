@@ -7,6 +7,7 @@
 namespace Collins\ShopApi\Test\Unit\ShopApi;
 
 use Collins\ShopApi\Constants;
+use Collins\ShopApi\Criteria\ProductFields;
 use Collins\ShopApi\QueryBuilder;
 
 class QueryBuilderTest extends \PHPUnit_Framework_TestCase
@@ -39,6 +40,69 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
 
         $expected = '[{"category_tree":{}}]';
 
+        $this->assertEquals($expected, $query->getQueryString());
+    }
+
+    public function testFetchCategoriesByIds()
+    {
+        $query = $this->queryBuilder
+            ->fetchCategoriesByIds(array(789,456))
+        ;
+        $expected = '[{"category":{"ids":[789,456]}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+
+        $this->queryBuilder = new QueryBuilder();
+        $query = $this->queryBuilder
+            ->fetchCategoriesByIds(array(4 => 789, 2 => 456))
+        ;
+        $expected = '[{"category":{"ids":[789,456]}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+    }
+
+    public function testFetchProductsByIds()
+    {
+        $query = $this->queryBuilder
+            ->fetchProductsByIds(array(789,456))
+        ;
+        $expected = '[{"products":{"ids":[789,456],"fields":[]}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+
+        $this->queryBuilder = new QueryBuilder();
+        $query = $this->queryBuilder
+            ->fetchProductsByIds(array(4 => 789, 2 => 456))
+        ;
+        $expected = '[{"products":{"ids":[789,456],"fields":[]}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+
+        $this->queryBuilder = new QueryBuilder();
+        $query = $this->queryBuilder
+            ->fetchProductsByIds(array(4 => 789, 2 => 456), array(ProductFields::DESCRIPTION_SHORT))
+        ;
+        $expected = '[{"products":{"ids":[789,456],"fields":["description_short"]}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+
+        // Test that attributes_merged were added, if facets are required
+        $this->queryBuilder = new QueryBuilder();
+        $query = $this->queryBuilder
+            ->fetchProductsByIds(array(789, 456), array(ProductFields::BRAND))
+        ;
+        $expected = '[{"products":{"ids":[789,456],"fields":["brand_id","attributes_merged"]}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+    }
+
+    public function testFetchLiveVariantByIds()
+    {
+        $query = $this->queryBuilder
+            ->fetchLiveVariantByIds(array(789,456))
+        ;
+        $expected = '[{"live_variant":{"ids":[789,456]}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+
+        $this->queryBuilder = new QueryBuilder();
+        $query = $this->queryBuilder
+            ->fetchLiveVariantByIds(array(4 => 789, 2 => 456))
+        ;
+        $expected = '[{"live_variant":{"ids":[789,456]}}]';
         $this->assertEquals($expected, $query->getQueryString());
     }
 

@@ -147,6 +147,14 @@ class ProductSearchResult
     {
         if (empty($this->priceRanges)) return null;
 
+        foreach ($this->priceRanges as $priceRange) {
+            if ($priceRange->getProductCount() === 0) {
+                continue;
+            }
+
+            return $priceRange->getMin();
+        }
+
         return $this->priceRanges[0]->getMin();
     }
 
@@ -160,12 +168,15 @@ class ProductSearchResult
         if (empty($this->priceRanges)) return null;
 
         $maxPrice = 0;
-        foreach ($this->priceRanges as $priceRange) {
-            if (!$priceRange->getMax()) break;
-            $maxPrice = $priceRange->getMax();
+        foreach (array_reverse($this->priceRanges) as $priceRange) {
+            if ($priceRange->getProductCount() === 0) {
+                continue;
+            }
+
+            return $priceRange->getMax();
         }
 
-        return $maxPrice;
+        return end($this->priceRanges)->getMax();
     }
 
     /**

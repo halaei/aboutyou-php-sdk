@@ -37,7 +37,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 
         $basket = $api->fetchBasket($this->getSessionId());    
         $amount = $basket->getTotalAmount();   
-        
+              
         $this->assertEquals(0, $amount);
     }
         
@@ -45,33 +45,33 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
      * @depends testEmptyBasket
      */
     public function testAddProductToBasket()
-    {
+    {        
         $api = $this->getShopApi(); 
-
-        $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(1));
-        $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(2));
-        $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(3), 3);
-      
+   
+        $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(1));             
+        $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(3));                  
+        $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(6), 3);
+     
         $set = new Basket\BasketSet("123456", array('image_url' => "http://", 'description' => 'Hallo'));
-        $item = new Basket\BasketSetItem($this->getVariantId(4), array());       
-        $item2 = new Basket\BasketSetItem($this->getVariantId(5), array()); 
+        $item = new Basket\BasketSetItem($this->getVariantId(7), array());       
+        $item2 = new Basket\BasketSetItem($this->getVariantId(8), array()); 
         
         $set->addItem($item);
         $set->addItem($item2);
         $basket->updateItemSet($set);
-       
+               
         $basket = $api->updateBasket($this->getSessionId(), $basket);
         
         $set = $basket->getItem("123456");
         $items = $set->getItems();
-        $item = $items[0];        
+        $item = $items[0];  
         $this->assertEquals(null, $item->getAppId()); 
         
         $item2 = $items[1];
         $this->assertEquals(null, $item2->getAppId()); 
         
         $errorCount = count($basket->getErrors());
-        
+  
         $this->assertEquals(6, $basket->getTotalAmount() + $errorCount);
 
         return $basket;
@@ -86,7 +86,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $basket->deleteAllItems();
 
         $basket = $api->updateBasket($this->getSessionId(), $basket);
-        
+
         $this->assertEquals(0, $basket->getTotalAmount());
     }
 
@@ -122,7 +122,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         
         $basket = $api->updateBasket($this->getSessionId(), $basket);
         $item   = $basket->getItem('1234');
-        
+
         $this->assertEquals(1, $basket->getTotalAmount());
         $this->assertEquals(null, $item->getAppId());
         $this->assertInstanceOf('\Collins\ShopApi\Model\Basket\BasketItem', $item);
@@ -150,13 +150,13 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
             ),
             200
         );
-        
+           
         $basket = new Basket();
         $basket->updateItem($item);
         
         $basket = $api->updateBasket($this->getSessionId(), $basket);
         $item   = $basket->getItem('1234');
-        
+                
         $this->assertEquals(1, $basket->getTotalAmount());
         $this->assertEquals(200, $item->getAppId());
         $this->assertInstanceOf('\Collins\ShopApi\Model\Basket\BasketItem', $item);
@@ -213,7 +213,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $api = $this->getShopApi();
 
         $item1 = new Basket\BasketSetItem($this->getVariantId(1), array('description' => 'Variante 1', 'hello' => 'world'));
-        $item2 = new Basket\BasketSetItem($this->getVariantId(2), array('description' => 'Variante 2', 'hello' => 'universe'));
+        $item2 = new Basket\BasketSetItem($this->getVariantId(3), array('description' => 'Variante 2', 'hello' => 'universe'));
 
         $set = new Basket\BasketSet('set1', array(
             'description' => 'Product-Set',
@@ -251,7 +251,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $api = $this->getShopApi();
 
         $item1 = new Basket\BasketSetItem($this->getVariantId(1), array('description' => 'Variante 1', 'hello' => 'world'), 139);
-        $item2 = new Basket\BasketSetItem($this->getVariantId(2), array('description' => 'Variante 2', 'hello' => 'universe'), 139);
+        $item2 = new Basket\BasketSetItem($this->getVariantId(3), array('description' => 'Variante 2', 'hello' => 'universe'), 139);
 
         $set = new Basket\BasketSet('set1', array(
             'description' => 'Product-Set',
@@ -308,6 +308,6 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $basket = $api->fetchBasket($this->getSessionId());    
 
         $basket->deleteAllItems();
-        $basket = $api->updateBasket($this->getSessionId(), $basket);       
+        $basket = $api->updateBasket($this->getSessionId(), $basket);
     }    
 }
