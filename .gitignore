@@ -9,6 +9,7 @@ runtime
 logs
 .idea
 ShopSDK.iml
+Shop-SDK.iml
 
 # Ignore potentially sensitive file
 Config.php

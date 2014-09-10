@@ -150,5 +150,4 @@ class VariantTest extends AbstractShopApiTest
             $this->assertEquals($product, $variant->getProduct());
         }
     }
-}
- 
+} 

@@ -412,4 +412,14 @@ class Variant extends AbstractModel
 
         return $facet->getValue();
     }
+
+   /**
+     * get the season code e.g. "HW 14 / hw14"
+     *
+     * @return FacetGroup|null
+     */
+    public function getSeasonCode()
+    {
+        return $this->getFacetGroup(Constants::FACET_SEASON_CODE);
+    }
 }
