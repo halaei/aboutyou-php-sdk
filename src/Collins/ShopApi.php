@@ -31,12 +31,12 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class ShopApi
 {
-    const DEVCENTER_API_URL_STAGE = 'http://devcenter.staging.collins.kg/api';
-    const DEVCENTER_API_URL_SANDBOX = 'http://devcenter.staging.collins.kg/api';
-    const DEVCENTER_API_URL_LIVE = 'http://devcenter.staging.collins.kg/api';
+    const DEVCENTER_API_URL_STAGE = 'http://devcenter-staging-www1.pub.collins.kg:81/api';
+    const DEVCENTER_API_URL_SANDBOX = 'http://devcenter-staging-www1.pub.collins.kg:81/api';
+    const DEVCENTER_API_URL_LIVE = 'https://developer.aboutyou,de/api';
     const IMAGE_URL_STAGE   = 'http://mndb.staging.aboutyou.de/mmdb/file';
     const IMAGE_URL_SANDBOX = 'http://mndb.sandbox.aboutyou.de/mmdb/file';
-    const IMAGE_URL_LIVE    = 'http://cdn.mary-paul.de/file';
+    const IMAGE_URL_LIVE    = 'http://cdn.aboutyou.de/file';
 
     /** @var ShopApiClient */
     protected $shopApiClient;
@@ -685,7 +685,7 @@ class ShopApi
     public function getJavaScriptURL()
     {
         if ($this->environment === Constants::API_ENVIRONMENT_STAGE) {
-            $url = '//devcenter.staging.collins.kg/appjs/'.$this->appId.'.js';            
+            $url = '//devcenter-staging-www1.pub.collins.kg:81/appjs/'.$this->appId.'.js';
         } else {
             $url = '//developer.aboutyou.de/appjs/'.$this->appId.'.js';            
         }
