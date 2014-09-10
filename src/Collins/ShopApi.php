@@ -36,7 +36,7 @@ class ShopApi
     const DEVCENTER_API_URL_LIVE = 'https://developer.aboutyou,de/api';
     const IMAGE_URL_STAGE   = 'http://mndb.staging.aboutyou.de/mmdb/file';
     const IMAGE_URL_SANDBOX = 'http://mndb.sandbox.aboutyou.de/mmdb/file';
-    const IMAGE_URL_LIVE    = 'http://cdn.mary-paul.de/file';
+    const IMAGE_URL_LIVE    = 'http://cdn.aboutyou.de/file';
 
     /** @var ShopApiClient */
     protected $shopApiClient;
