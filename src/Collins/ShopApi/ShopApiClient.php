@@ -41,8 +41,8 @@ class ShopApiClient
      * @var string
      *
      * current end points are:
-     * stage: http://ant-core-staging-s-api1.wavecloud.de/api
-     * live:  http://ant-shop-api1.wavecloud.de/api
+     * stage: http://shop-api.staging.aboutyou.de/api
+     * live:  https://shop-api.aboutyou.de/api
      */
     protected $apiEndPoint;
 
