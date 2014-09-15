@@ -33,7 +33,7 @@ class ShopApi
 {
     const DEVCENTER_API_URL_STAGE = 'http://devcenter-staging-www1.pub.collins.kg:81/api';
     const DEVCENTER_API_URL_SANDBOX = 'http://devcenter-staging-www1.pub.collins.kg:81/api';
-    const DEVCENTER_API_URL_LIVE = 'https://developer.aboutyou,de/api';
+    const DEVCENTER_API_URL_LIVE = 'https://developer.aboutyou.de/api';
     const IMAGE_URL_STAGE   = 'http://mndb.staging.aboutyou.de/mmdb/file';
     const IMAGE_URL_SANDBOX = 'http://mndb.sandbox.aboutyou.de/mmdb/file';
     const IMAGE_URL_LIVE    = 'http://cdn.aboutyou.de/file';
