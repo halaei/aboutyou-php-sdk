@@ -46,6 +46,11 @@ interface CategoryManagerInterface
     public function getCategoryTree($activeOnly = true);
 
     /**
+     * @return Category[]
+     */
+    public function getAllCategories();
+
+    /**
      * @expimental
      *
      * @param string $name

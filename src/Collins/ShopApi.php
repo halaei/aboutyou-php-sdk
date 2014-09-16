@@ -8,6 +8,8 @@ use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Model\Basket;
+use Collins\ShopApi\Model\CategoriesResult;
+use Collins\ShopApi\Model\Category;
 use Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
@@ -372,24 +374,22 @@ class ShopApi
      */
     public function fetchCategoriesByIds($ids = null)
     {
-
         // we allow to pass a single ID instead of an array
         if ($ids !== null && !is_array($ids)) {
             $ids = array($ids);
         }
 
-        $query = $this->getQuery()
-            ->fetchCategoriesByIds($ids)
-        ;
-
-        $result = $query->executeSingle();
-
-        $notFound = $result->getCategoriesNotFound();
-        if (!empty($notFound) && $this->logger) {
-            $this->logger->warning('categories not found: appid=' . $this->appId . ' product ids=[' . join(',', $notFound) . ']');
+        foreach ($ids as $id) {
+            if (!is_long($id) && !ctype_digit($id)) {
+                throw new \InvalidArgumentException('A single category ID must be an integer or a numeric string');
+            } else if ($id < 1) {
+                throw new \InvalidArgumentException('A single category ID must be greater than 0');
+            }
         }
 
-        return $result;
+        $categoryManager =  $this->getCategoryManager();
+
+        return new CategoriesResult($categoryManager, $ids);
     }
 
     /**

@@ -38,7 +38,7 @@ class CategoriesByIdsTest extends AbstractShopApiTest
     public function testFetchCategoriesWithStringIds()
     {
         $categoryIds = array('16080', '16138', '123');
-        $shopApi = $this->getShopApiWithResultFile('category.json');
+        $shopApi = $this->getShopApiWithResultFile('category-tree-v2.json');
 
         $categoriesResult = $shopApi->fetchCategoriesByIds($categoryIds);
 
@@ -49,7 +49,7 @@ class CategoriesByIdsTest extends AbstractShopApiTest
     
     public function testFetchCategories()
     {
-        $categoryIds = array(16080, 16138, 123);
+        $categoryIds = array(74415, 74420, 123);
 
         $shopApi = $this->getShopApiWithResultFile('category.json');
 
@@ -57,16 +57,16 @@ class CategoriesByIdsTest extends AbstractShopApiTest
         $categories = $categoriesResult->getCategories();
         $this->assertCount(2, $categories);
 
-        $category = $categories[16080];
+        $category = $categories[74415];
         $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $category);
-        $this->assertEquals(16080, $category->getId());
-        $this->assertEquals('Blusen & Tuniken', $category->getName());
+        $this->assertEquals(74415, $category->getId());
+        $this->assertEquals('Frauen', $category->getName());
         $this->assertTrue($category->isActive());
 
-        $category = $categories[16138];
+        $category = $categories[74420];
         $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $category);
-        $this->assertEquals(16138, $category->getId());
-        $this->assertEquals('Minikleider', $category->getName());
+        $this->assertEquals(74420, $category->getId());
+        $this->assertEquals('Jeans', $category->getName());
         $this->assertTrue($category->isActive());
 
         $notFound = $categoriesResult->getCategoriesNotFound();
@@ -90,8 +90,8 @@ class CategoriesByIdsTest extends AbstractShopApiTest
      */
     public function testProductResultArrayAccessInterface($categoriesResult)
     {
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $categoriesResult[16080]);
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $categoriesResult[16138]);
+        $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $categoriesResult[74415]);
+        $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $categoriesResult[74420]);
     }
 
     /**

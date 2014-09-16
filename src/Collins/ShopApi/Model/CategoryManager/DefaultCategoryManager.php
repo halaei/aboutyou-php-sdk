@@ -86,6 +86,11 @@ class DefaultCategoryManager implements CategoryManagerInterface
         return $categories;
     }
 
+    public function getAllCategories()
+    {
+        return $this->categories;
+    }
+
     /**
      * {@inheritdoc}
      */
