@@ -358,7 +358,8 @@ class QueryBuilder
         $this->query[] = array(
             'products_eans' => array(
                 'eans'   => $eans,
-                'fields' => ProductFields::filterFields($fields)
+                'fields' => ProductFields::filterFields($fields),
+                'version' => '2'
             )
         );
 

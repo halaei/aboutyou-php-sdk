@@ -170,6 +170,14 @@ EOS;
         $this->assertCount(1, $products);
         $product = reset($products);
         $this->assertEquals(123, $product->getId());
+
+        $errors = $productResult->getErrors();
+        $this->assertCount(1, $errors);
+        $this->assertInstanceOf('\stdClass', $errors[0]);
+        $this->assertEquals(404, $errors[0]->error_code);
+        $this->assertEquals('product not found', $errors[0]->error_message[0]);
+
+        $this->assertEquals(1, $productResult->getProductsNotFound()[0]);
     }
 
     /**
