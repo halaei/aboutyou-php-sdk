@@ -38,7 +38,16 @@ class Product extends AbstractModel
     protected $maxPrice;
 
     /** @var integer */
+    protected $maxSavings;
+
+    /** @var integer */
+    protected $maxSavingsPercentage;
+
+    /** @var integer */
     protected $brandId;
+
+    /** @var integer */
+    protected $merchantId;
 
 
     /** @var array */
@@ -58,6 +67,9 @@ class Product extends AbstractModel
 
     /** @var Variant[] */
     protected $variants;
+
+    /** @var Variant[] */
+    protected $inactiveVariants;
 
     /** @var Product[] */
     protected $styles;
@@ -101,18 +113,22 @@ class Product extends AbstractModel
         $product->id   = $jsonObject->id;
         $product->name = $jsonObject->name;
 
-        $product->isSale            = isset($jsonObject->sale) ? $jsonObject->sale : false;
-        $product->descriptionShort  = isset($jsonObject->description_short) ? $jsonObject->description_short : '';
-        $product->descriptionLong   = isset($jsonObject->description_long) ? $jsonObject->description_long : '';
-        $product->isActive          = isset($jsonObject->active) ? $jsonObject->active : true;
-        $product->brandId           = isset($jsonObject->brand_id) ? $jsonObject->brand_id : null;
+        $product->isSale           = isset($jsonObject->sale) ? $jsonObject->sale : false;
+        $product->descriptionShort = isset($jsonObject->description_short) ? $jsonObject->description_short : '';
+        $product->descriptionLong  = isset($jsonObject->description_long) ? $jsonObject->description_long : '';
+        $product->isActive         = isset($jsonObject->active) ? $jsonObject->active : true;
+        $product->brandId          = isset($jsonObject->brand_id) ? $jsonObject->brand_id : null;
+        $product->merchantId       = isset($jsonObject->merchant_id) ? $jsonObject->merchant_id : null;
 
         $product->minPrice         = isset($jsonObject->min_price) ? $jsonObject->min_price : null;
         $product->maxPrice         = isset($jsonObject->max_price) ? $jsonObject->max_price : null;
+        $product->maxSavingsPrice  = isset($jsonObject->max_savings) ? $jsonObject->max_savings : null;
+        $product->maxSavingsPercentage = isset($jsonObject->max_savings_percentage) ? $jsonObject->max_savings_percentage : null;
 
         $product->defaultImage     = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
         $product->defaultVariant   = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant, $product) : null;
         $product->variants         = self::parseVariants($jsonObject, $factory, $product);
+        $product->inactiveVariants = self::parseVariants($jsonObject, $factory, $product, 'inactive_variants');
         $product->styles           = self::parseStyles($jsonObject, $factory);
 
         $key = 'categories.' . $appId;
@@ -123,12 +139,12 @@ class Product extends AbstractModel
         return $product;
     }
 
-    protected static function parseVariants($jsonObject, ShopApi\Factory\ModelFactoryInterface $factory, Product $product)
+    protected static function parseVariants($jsonObject, ShopApi\Factory\ModelFactoryInterface $factory, Product $product, $attributeName = 'variants')
     {
         $variants = array();
-        if (!empty($jsonObject->variants)) {
-            foreach ($jsonObject->variants as $variant) {
-                $variants[$variant->id] = $factory->createVariant($variant, $product);
+        if (!empty($jsonObject->$attributeName)) {
+            foreach ($jsonObject->$attributeName as $jsonVariant) {
+                $variants[$jsonVariant->id] = $factory->createVariant($jsonVariant, $product);
             }
         }
 
@@ -633,6 +649,14 @@ class Product extends AbstractModel
     }
 
     /**
+     * @return Variant[]
+     */
+    public function getInactiveVariants()
+    {
+        return $this->inactiveVariants;
+    }
+
+    /**
      * @return Product[]
      */
     public function getStyles()
@@ -646,6 +670,27 @@ class Product extends AbstractModel
     public function getMaxPrice()
     {
         return $this->maxPrice;
+    }
+
+    /**
+     * @return integer|null
+     */
+    public function getMaxSavingsPrice()
+    {
+        return $this->maxPrice;
+    }
+
+    /**
+     * @return integer|null
+     */
+    public function getMaxSavingsPercentage()
+    {
+        return $this->maxPrice;
+    }
+
+    public function getMerchantId()
+    {
+        return $this->merchantId;
     }
 
     /**

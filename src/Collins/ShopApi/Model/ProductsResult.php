@@ -12,7 +12,8 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 
 class ProductsResult extends AbstractProductsResult
 {
-    protected $productsNotFound = array();
+    /** @var integer[] */
+    protected $idsNotFound = array();
 
     /**
      * @param \stdClass $jsonObject
@@ -29,7 +30,8 @@ class ProductsResult extends AbstractProductsResult
         if (isset($jsonObject->ids)) {
             foreach ($jsonObject->ids as $key => $jsonProduct) {
                 if (isset($jsonProduct->error_code)) {
-                    $productsResult->productsNotFound[] = $key;
+                    $productsResult->idsNotFound[] = $key;
+                    $productsResult->errors[]      = $jsonProduct;
                     continue;
                 }
                 $productsResult->products[$key] = $factory->createProduct($jsonProduct);
@@ -40,10 +42,10 @@ class ProductsResult extends AbstractProductsResult
     }
 
     /**
-     * @return array of product ids
+     * @return integer[] array of product ids
      */
     public function getProductsNotFound()
     {
-        return $this->productsNotFound;
+        return $this->idsNotFound;
     }
 }
