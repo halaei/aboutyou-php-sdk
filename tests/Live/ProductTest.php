@@ -74,7 +74,6 @@ class ProductTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
                 $this->assertInstanceOf('\\Collins\\ShopApi\\Model\Variant', $variant);
             }
         }
-        $this->markTestIncomplete();
 
         return $product;
     }
