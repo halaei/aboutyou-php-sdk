@@ -14,63 +14,73 @@ class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTe
         $api = $this->getShopApi();
         $criteria = $this->getSearchCriteria();
         $criteria->setLimit(5);
-        
+
         $result = $api->fetchProductSearch($criteria);
-        
+
         $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\ProductSearchResult', $result);
-        $this->assertCount(5, $result->getProducts()); 
-        
+        $this->assertCount(5, $result->getProducts());
+
         foreach($result->getProducts() as $product) {
             $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Product', $product);
         }
     }
-    
+
     public function testProductSearchWithId()
     {
         $api = $this->getShopApi();
         $criteria = $this->getSearchCriteria();
         $criteria->setLimit(5);
-        
+
         $result = $api->fetchProductSearch($criteria);
-        
+
         $productsArray = $result->getProducts();
         $product = $productsArray[0];
-        
+
         $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Product', $product);
-        
+
         $resultProduct = $api->fetchProductsByIds(array($product->getId()));
-        
+
         $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\ProductsResult', $resultProduct);
     }
-    
+
+    public function testProductSearchWithEANS()
+    {
+        $api = $this->getShopApi();
+
+        $result = $api->fetchProductsByEans(['NO_VALID_EAN']);
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\ProductsEansResult', $result);
+
+        $this->assertCount(1, $result->getErrors());
+    }
+
     public function testProductSearchCategoryTree()
     {
-        $api = $this->getShopApi();        
+        $api = $this->getShopApi();
         $criteria = $this->getSearchCriteria();
         $criteria->setLimit(5);
-        
+
         $result = $api->fetchProductSearch($criteria);
 
         $this->assertInternalType('array', $result->getCategoryTree());
     }
-    
+
     public function testProductSearchCategory()
     {
         $api = $this->getShopApi();
         $criteria = $this->getSearchCriteria();
         $criteria->setLimit(5);
-        
+
         $result = $api->fetchProductSearch($criteria);
 
         $this->assertInternalType('array', $result->getCategories());
-    }    
-    
+    }
+
     public function testProductSearchProductCount()
     {
-        $api = $this->getShopApi();        
+        $api = $this->getShopApi();
         $criteria = $this->getSearchCriteria();
         $criteria->setLimit(5);
-        
+
         $result = $api->fetchProductSearch($criteria);
 
         $this->assertInternalType('int', $result->getProductCount());
@@ -153,6 +163,6 @@ class ProductSearchTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTe
         foreach ($products as $product) {
             $this->checkProduct($product);
         }
-    }    
+    }
 }
 

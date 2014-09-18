@@ -6,8 +6,6 @@
 
 namespace Collins\ShopApi\Model;
 
-use Collins\ShopApi\Factory\ModelFactoryInterface;
-
 abstract class AbstractProductsResult extends AbstractModel implements \IteratorAggregate, \ArrayAccess, \Countable
 {
     /** @var Product[] */
@@ -15,6 +13,9 @@ abstract class AbstractProductsResult extends AbstractModel implements \Iterator
 
     /** @var string */
     protected $pageHash;
+
+    /** @var array */
+    protected $errors = array();
 
     protected function __construct()
     {
@@ -35,6 +36,22 @@ abstract class AbstractProductsResult extends AbstractModel implements \Iterator
     public function getProducts()
     {
         return $this->products;
+    }
+
+    /**
+     * returns array of json objects (\stdClass) with error code and message and additional data
+     *
+     * eg.
+     * {
+     *   "error_message": "no such number",
+     *   "error_code": 404
+     * }
+     *
+     * @return array of product not found results
+     */
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
     /*
