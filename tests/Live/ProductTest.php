@@ -41,6 +41,44 @@ class ProductTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $this->assertInternalType('int', $product->getMaxPrice());
     }
 
+    public function testGetProductFull()
+    {
+        $product = $this->getProduct(1, array(
+            ProductFields::ATTRIBUTES_MERGED,
+            ProductFields::BRAND,
+            ProductFields::CATEGORIES,
+            ProductFields::DEFAULT_IMAGE,
+            ProductFields::DEFAULT_VARIANT,
+            ProductFields::DESCRIPTION_LONG,
+            ProductFields::DESCRIPTION_SHORT,
+            ProductFields::INACTIVE_VARIANTS,
+            ProductFields::IS_ACTIVE,
+            ProductFields::IS_SALE,
+            ProductFields::MIN_PRICE,
+            ProductFields::MAX_PRICE,
+            ProductFields::MAX_SAVINGS,
+            ProductFields::MAX_SAVINGS_PERCENTAGE,
+            ProductFields::VARIANTS,
+            'merchant_id'
+        ));
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\Product', $product);
+
+        $this->assertInternalType('int', $product->getMaxSavingsPrice());
+        $this->assertInternalType('int', $product->getMaxSavingsPercentage());
+        $this->assertInternalType('int', $product->getMerchantId());
+
+        $variants = $product->getInactiveVariants();
+        if ($variants !== null) {
+            $this->assertInternalType('array', $variants);
+            foreach ($variants as $variant) {
+                $this->assertInstanceOf('\\Collins\\ShopApi\\Model\Variant', $variant);
+            }
+        }
+        $this->markTestIncomplete();
+
+        return $product;
+    }
+
 //      TODO: search for a product with no length, eg. shows
 //    public function testGetVariantGetLength()
 //    {
