@@ -14,6 +14,9 @@ abstract class AbstractProductsResult implements \IteratorAggregate, \ArrayAcces
     /** @var string */
     protected $pageHash;
 
+    /** @var array */
+    protected $errors = array();
+
     protected function __construct()
     {
         $this->products = array();
@@ -33,6 +36,22 @@ abstract class AbstractProductsResult implements \IteratorAggregate, \ArrayAcces
     public function getProducts()
     {
         return $this->products;
+    }
+
+    /**
+     * returns array of json objects (\stdClass) with error code and message and additional data
+     *
+     * eg.
+     * {
+     *   "error_message": "no such number",
+     *   "error_code": 404
+     * }
+     *
+     * @return array of product not found results
+     */
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
     /*

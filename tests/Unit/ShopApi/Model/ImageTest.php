@@ -49,6 +49,18 @@ class ImageTest extends AbstractModelTest
         $this->assertStringStartsWith('/hash1', $image->getUrl());
         $shopApi->setBaseImageUrl(null);
         $this->assertStringStartsWith(ShopApi::IMAGE_URL_LIVE . '/hash1', $image->getUrl());
+
+        $this->assertNull($image->getAdditionalItems());
+        $this->assertNull($image->getAngle());
+        $this->assertNull($image->getBackground());
+        $this->assertNull($image->getColor());
+        $this->assertNull($image->getFocus());
+        $this->assertNull($image->getGender());
+        $this->assertNull($image->getModelData());
+        $this->assertNull($image->getNextDetailLevel());
+        $this->assertNull($image->getPreparation());
+        $this->assertNull($image->getView());
+        $this->assertNull($image->getType());
     }
 }
  

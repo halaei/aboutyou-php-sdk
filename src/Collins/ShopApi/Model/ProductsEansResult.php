@@ -11,6 +11,9 @@ use Collins\ShopApi\Factory\ModelFactoryInterface;
 
 class ProductsEansResult extends AbstractProductsResult
 {
+    /** @var string[] */
+    protected $eansNotFound = array();
+
     /**
      * @param \stdClass $jsonObject
      * @param ModelFactoryInterface $factory
@@ -23,10 +26,22 @@ class ProductsEansResult extends AbstractProductsResult
 
         $productsEansResult->pageHash = isset($jsonObject->pageHash) ? $jsonObject->pageHash : null;
 
-        foreach ($jsonObject->eans as $jsonProduct) {
-            $productsEansResult->products[] = $factory->createProduct($jsonProduct);
+        if (isset($jsonObject->eans)) {
+            foreach ($jsonObject->eans as $jsonProduct) {
+                if (isset($jsonProduct->error_code)) {
+                    $productsEansResult->errors[] = $jsonProduct;
+                    $productsEansResult->eansNotFound = array_merge($productsEansResult->eansNotFound, $jsonProduct->ean);
+                    continue;
+                }
+                $productsEansResult->products[] = $factory->createProduct($jsonProduct);
+            }
         }
 
         return $productsEansResult;
+    }
+
+    public function getEansNotFound()
+    {
+        return $this->eansNotFound;
     }
 }
