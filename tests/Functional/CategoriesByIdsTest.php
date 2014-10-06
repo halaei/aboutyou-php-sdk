@@ -37,7 +37,7 @@ class CategoriesByIdsTest extends AbstractShopApiTest
     
     public function testFetchCategoriesWithStringIds()
     {
-        $categoryIds = array('16080', '16138', '123');
+        $categoryIds = array(74415, 74420, 123);
         $shopApi = $this->getShopApiWithResultFile('category-tree-v2.json');
 
         $categoriesResult = $shopApi->fetchCategoriesByIds($categoryIds);

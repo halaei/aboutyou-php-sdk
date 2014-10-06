@@ -21,7 +21,7 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
         $appPassword = 'abc';
         $apiEndPoint = 'http://localhost.dev/api';
         $loggerInterfaceImplementation = $this->getMock('\\Psr\\Log\\LoggerInterface');
-        $cacheInterfaceMock = $this->getMock('\\Aboutyou\\Common\\Cache\\CacheMultiGet');
+        $cacheMock = $this->getMockForAbstractClass('\\Aboutyou\\Common\\Cache\\CacheProvider');
 
         $shopApi = new ShopApi(
             $appId,
@@ -29,7 +29,7 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
             $apiEndPoint,
             null,
             $loggerInterfaceImplementation,
-            $cacheInterfaceMock
+            $cacheMock
         );
 
         $this->assertEquals($apiEndPoint, $shopApi->getApiEndPoint());
@@ -94,6 +94,7 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
         $modelFactory = new DefaultModelFactory(
             $shopApi,
             new DefaultFacetManager($strategy),
+            new ShopApi\Model\CategoryManager\DefaultCategoryManager('100'),
             $factory->getEventDispatcher()
         );
         $shopApi->setResultFactory($modelFactory);

@@ -8,7 +8,7 @@ namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi;
 use Collins\ShopApi\Factory\DefaultModelFactory;
-use Collins\ShopApi\Model\Product;
+use Collins\ShopApi\Model\CategoryManager\DefaultCategoryManager;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class ProductFacetsTest extends AbstractShopApiTest
@@ -21,7 +21,7 @@ class ProductFacetsTest extends AbstractShopApiTest
     public function getFactory($facetsFile)
     {
         $facetManager = $this->getStaticFacetManagerFromFile($facetsFile);
-        $factory = new DefaultModelFactory(new ShopApi('id', 'token'), $facetManager, new EventDispatcher());
+        $factory = new DefaultModelFactory(new ShopApi('id', 'token'), $facetManager, new DefaultCategoryManager(), new EventDispatcher());
 
         return $factory;
     }

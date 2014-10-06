@@ -11,9 +11,12 @@ class CategoriesResult implements \IteratorAggregate, \ArrayAccess, \Countable
     /** @var CategoryManagerInterface */
     private $categories;
 
+    private $ids;
+
     public function __construct(CategoryManagerInterface $categoryManager, $ids)
     {
-        $this->categories = $categoryManager->getCategories($ids, false);
+        $this->ids = $ids;
+        $this->categories = $categoryManager->getCategories($ids, Category::ALL, true);
     }
 
     /**
@@ -29,7 +32,11 @@ class CategoriesResult implements \IteratorAggregate, \ArrayAccess, \Countable
      */
     public function getCategoriesNotFound()
     {
-        return array();
+        $idsFound = array_keys($this->categories);
+
+        $idsNotFound = array_diff($this->ids, $idsFound);
+
+        return array_values($idsNotFound);
     }
 
     /*

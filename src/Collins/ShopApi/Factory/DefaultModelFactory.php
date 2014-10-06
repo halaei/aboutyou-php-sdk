@@ -37,11 +37,13 @@ class DefaultModelFactory implements ModelFactoryInterface
     public function __construct(
         ShopApi $shopApi = null,
         FacetManagerInterface $facetManager,
+        CategoryManagerInterface $categoryManager,
         EventDispatcher $eventDispatcher
     ) {
         if (!empty($shopApi)) {
             $this->setShopApi($shopApi);
         }
+        $this->categoryManager = $categoryManager;
 
         $this->eventDispatcher = $eventDispatcher;
         $this->setFacetManager($facetManager);
@@ -211,10 +213,6 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function getCategoryManager()
     {
-        if (empty($this->categoryManager)) {
-            $this->setCategoryManager(new Model\CategoryManager\DefaultCategoryManager($this));
-        }
-
         return $this->categoryManager;
     }
 

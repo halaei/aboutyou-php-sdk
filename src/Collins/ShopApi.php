@@ -11,6 +11,7 @@ use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\CategoriesResult;
 use Collins\ShopApi\Model\Category;
 use Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface;
+use Collins\ShopApi\Model\CategoryManager\DefaultCategoryManager;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
 use Collins\ShopApi\Model\FacetManager\AboutyouCacheStrategy;
@@ -82,13 +83,13 @@ class ShopApi
         $apiEndPoint = Constants::API_ENVIRONMENT_LIVE,
         ModelFactoryInterface $resultFactory = null,
         LoggerInterface $logger = null,
-        $facetManagerCache = null
+        $cache = null
     ) {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $logger);
 
-        if ($facetManagerCache) {
-            $this->modelFactory = function ($scope) use ($facetManagerCache) {
-                return $scope->initDefaultFactory($facetManagerCache);
+        if ($cache) {
+            $this->modelFactory = function ($scope) use ($cache) {
+                return $scope->initDefaultFactory($cache);
             };
         }
 
@@ -768,21 +769,23 @@ class ShopApi
     }
 
     /**
-     * @param \Aboutyou\Common\Cache\CacheMultiGet|\Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
+     * @param \Aboutyou\Common\Cache\CacheMultiGet|\Doctrine\Common\Cache\CacheMultiGet $cache
      *
      * @return DefaultModelFactory
      */
-    public function initDefaultFactory($facetManagerCache = null)
+    public function initDefaultFactory($cache = null)
     {
         $strategy = new FetchFacetGroupStrategy($this);
 
-        if ($facetManagerCache) {
-            $strategy = new AboutyouCacheStrategy($facetManagerCache, $strategy);
+        if ($cache) {
+            $strategy = new AboutyouCacheStrategy($cache, $strategy);
         }
 
+        $categoryManager = new DefaultCategoryManager($this->appId, $cache);
         $resultFactory = new DefaultModelFactory(
             $this,
             new DefaultFacetManager($strategy),
+            $categoryManager,
             new EventDispatcher()
         );
 

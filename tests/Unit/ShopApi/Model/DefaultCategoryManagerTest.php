@@ -6,6 +6,7 @@
 
 namespace Collins\ShopApi\Test\Unit\Model;
 
+use Aboutyou\Common\Cache\ArrayCache;
 use Collins\ShopApi\Model\Category;
 use Collins\ShopApi\Model\CategoryManager\DefaultCategoryManager;
 
@@ -178,6 +179,49 @@ class DefaultCategoryManagerTest extends AbstractModelTest
 
         $categories = $categoryManager->getCategoriesByName('Unknown');
         $this->assertCount(0, $categories);
+    }
+
+    public function testCacheCategories()
+    {
+        $factory = $this->getModelFactory();
+
+        $cacheMock = $this->getMockForAbstractClass('Aboutyou\\Common\\Cache\\CacheProvider', array(), '', true, true, true, array('fetch', 'save'));
+        $cacheMock->expects($this->atLeastOnce())
+            ->method('save')
+            ->with('categories', $this->isType('array'))
+        ;
+        $cacheMock->expects($this->atLeastOnce())
+            ->method('fetch')
+            ->with('categories')
+            ->will($this->returnValue(false))
+        ;
+
+        $categoryManager = new DefaultCategoryManager('', $cacheMock);
+        $factory->setCategoryManager($categoryManager);
+        $jsonObject = $this->getJsonObject('category-tree-v2.json');
+        $categoryManager->parseJson($jsonObject, $factory);
+    }
+
+    public function testLoadCachedCategories()
+    {
+        $cache = $this->getFilledCache();
+
+        $categoryManager = new DefaultCategoryManager('', $cache);
+        $this->assertFalse($categoryManager->isEmpty());
+        $this->assertCount(9, $categoryManager->getAllCategories());
+    }
+
+    private function getFilledCache()
+    {
+        $factory = $this->getModelFactory();
+        $cache = new ArrayCache();
+
+        $categoryManager = new DefaultCategoryManager('', $cache);
+        $factory->setCategoryManager($categoryManager);
+        $jsonObject = $this->getJsonObject('category-tree-v2.json');
+        $categoryManager->parseJson($jsonObject, $factory);
+
+        return $cache;
     }
 }
  

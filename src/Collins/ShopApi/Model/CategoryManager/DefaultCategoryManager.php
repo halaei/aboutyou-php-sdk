@@ -6,16 +6,50 @@
 
 namespace Collins\ShopApi\Model\CategoryManager;
 
+use Aboutyou\Common\Cache\CacheProvider;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Model\Category;
 
 class DefaultCategoryManager implements CategoryManagerInterface
 {
+    const DEFAULT_CACHE_DURATION = 7200;
+
     /** @var Category[] */
     private $categories;
 
     /** @var integer[] */
     private $parentChildIds;
+
+    /** @var Cache */
+    private $cache;
+
+    /**
+     * @param string $appId  This must set, when you use more then one instances with different apps
+     * @param CacheProvider $cache
+     */
+    public function __construct($appId = '', CacheProvider $cache = null)
+    {
+        if ($cache !== null) {
+            $cache->setNamespace('AY:SDK:' . $appId);
+        }
+        $this->cache = $cache;
+
+        $this->loadCachedCategories();
+    }
+
+    public function loadCachedCategories()
+    {
+        if ($this->cache) {
+            $this->categories = $this->cache->fetch('categories') ?: null;
+        }
+    }
+
+    public function cacheCategories()
+    {
+        if ($this->cache) {
+            $this->cache->save('categories', $this->categories, self::DEFAULT_CACHE_DURATION);
+        }
+    }
 
     /**
      * @param \stdObject $jsonObject
@@ -32,6 +66,8 @@ class DefaultCategoryManager implements CategoryManagerInterface
         foreach ($jsonObject->ids as $id => $jsonCategory) {
             $this->categories[$id] = $factory->createCategory($jsonCategory, $this);
         }
+
+        $this->cacheCategories();
 
         return $this;
     }
@@ -67,7 +103,7 @@ class DefaultCategoryManager implements CategoryManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getCategories(array $ids, $activeOnly = Category::ACTIVE_ONLY)
+    public function getCategories(array $ids, $activeOnly = Category::ACTIVE_ONLY, $idAsKey = false)
     {
         if (empty($this->categories)) {
             return array();
@@ -78,12 +114,12 @@ class DefaultCategoryManager implements CategoryManagerInterface
             if (isset($this->categories[$id])) {
                 $category = $this->categories[$id];
                 if ($activeOnly === Category::ALL || $category->isActive()) {
-                    $categories[] = $category;
+                    $categories[$id] = $category;
                 }
             }
         }
 
-        return $categories;
+        return $idAsKey ? $categories : array_values($categories);
     }
 
     public function getAllCategories()
