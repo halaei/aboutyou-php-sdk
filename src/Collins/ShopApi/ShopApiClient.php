@@ -9,6 +9,7 @@ namespace Collins\ShopApi;
 use Collins\ShopApi\Exception\ApiErrorException;
 use Collins\ShopApi\Exception\MalformedJsonException;
 use Guzzle\Http\Client;
+use Guzzle\Http\Message\EntityEnclosingRequestInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -36,6 +37,9 @@ class ShopApiClient
 
     /** @var string */
     protected $appPassword = null;
+
+    /** @var string */
+    protected $pageId = null;
 
     /**
      * @var string
@@ -134,6 +138,22 @@ class ShopApiClient
     }
 
     /**
+     * @return string
+     */
+    public function getPageId()
+    {
+        return $this->pageId;
+    }
+
+    /**
+     * @param string $pageId
+     */
+    public function setPageId($pageId)
+    {
+        $this->pageId = $pageId;
+    }
+
+    /**
      * @param Client $guzzleClient
      */
     public function setClient(Client $guzzleClient)
@@ -174,6 +194,9 @@ class ShopApiClient
         $request->setBody($body);
         $request->setAuth($this->appId, $this->appPassword);
         $request->setHeader('Accept-Encoding', 'gzip,deflate');
+        if ($this->pageId) {
+            $request->setHeader('X-Page-ID', $this->pageId);
+        }
 
         if ($this->logger) {
             $adapter = new \Guzzle\Log\PsrLogAdapter($this->logger);
