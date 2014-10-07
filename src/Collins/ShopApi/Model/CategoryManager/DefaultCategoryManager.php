@@ -103,7 +103,7 @@ class DefaultCategoryManager implements CategoryManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getCategories(array $ids, $activeOnly = Category::ACTIVE_ONLY, $idAsKey = false)
+    public function getCategories(array $ids, $activeOnly = Category::ACTIVE_ONLY)
     {
         if (empty($this->categories)) {
             return array();
@@ -119,7 +119,7 @@ class DefaultCategoryManager implements CategoryManagerInterface
             }
         }
 
-        return $idAsKey ? $categories : array_values($categories);
+        return $categories;
     }
 
     public function getAllCategories()

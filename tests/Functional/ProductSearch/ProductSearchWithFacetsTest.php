@@ -119,11 +119,11 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
             $this->assertGreaterThan(0, $category->getProductCount());
         }
 
-        $damenCategory = $categories[0];
+        $damenCategory = reset($categories);
         $this->assertNull($damenCategory->getParent());
         $subCategories = $damenCategory->getSubCategories();
         $this->assertCount(3, $subCategories);
-        $this->assertEquals($damenCategory, $subCategories[0]->getParent());
+        $this->assertEquals($damenCategory, reset($subCategories)->getParent());
 
 
         $tree = $productSearchResult->getCategoryTree();

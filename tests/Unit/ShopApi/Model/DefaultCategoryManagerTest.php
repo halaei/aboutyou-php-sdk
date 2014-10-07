@@ -126,7 +126,7 @@ class DefaultCategoryManagerTest extends AbstractModelTest
             }
         }
 
-        $female  = $categories[0];
+        $female  = array_shift($categories);
         $this->assertEquals('Frauen', $female->getName());
         $femaleCats = $female->getSubCategories();
         $this->assertEquals('Shirts', $femaleCats[0]->getName());
@@ -136,7 +136,7 @@ class DefaultCategoryManagerTest extends AbstractModelTest
         $this->assertEquals('Schuhe', $femaleCats[2]->getName());
         $this->assertEquals(74421, $femaleCats[2]->getId());
 
-        $male = $categories[1];
+        $male = array_shift($categories);
         $this->assertEquals('Männer', $male->getName());
         $maleCats = $male->getSubCategories();
         $this->assertEquals('Shirts', $maleCats[0]->getName());

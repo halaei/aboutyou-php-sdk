@@ -22,22 +22,30 @@ class CategoryTreeTest extends AbstractShopApiTest
             $this->assertEquals('Schuhe', $subCategories[2]->getName());
         }
 
-        $this->assertEquals(74415,    $categories[0]->getId());
-        $this->assertEquals('Frauen', $categories[0]->getName());
+        $this->assertArrayHasKey(74415, $categories);
+        $this->assertArrayHasKey(74416, $categories);
+        $this->assertArrayNotHasKey(74423, $categories);
 
-        $this->assertEquals(74416,    $categories[1]->getId());
-        $this->assertEquals('Männer', $categories[1]->getName());
-        $this->assertCount(3, $categories[1]->getSubCategories());
+        $category = array_shift($categories);
+        $this->assertEquals(74415,    $category->getId());
+        $this->assertEquals('Frauen', $category->getName());
 
-        $this->assertArrayNotHasKey(2, $categories);
+        $category = array_shift($categories);
+        $this->assertEquals(74416,    $category->getId());
+        $this->assertEquals('Männer', $category->getName());
+        $this->assertCount(3, $category->getSubCategories());
 
 
         $categories = $categoryTreeResult->getCategories(false);
         $this->assertCount(3, $categories);
+        $this->assertArrayHasKey(74415, $categories);
+        $this->assertArrayHasKey(74416, $categories);
+        $this->assertArrayHasKey(74423, $categories);
 
-        $this->assertEquals(74423,    $categories[2]->getId());
-        $this->assertEquals('Landing Page', $categories[2]->getName());
-        $this->assertCount(0, $categories[2]->getSubCategories());
+        $category = array_pop($categories);
+        $this->assertEquals(74423,    $category->getId());
+        $this->assertEquals('Landing Page', $category->getName());
+        $this->assertCount(0, $category->getSubCategories());
 
         return $categoryTreeResult;
     }

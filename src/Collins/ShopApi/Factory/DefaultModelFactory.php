@@ -519,17 +519,16 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createCategoriesFacets(array $jsonArray)
     {
-        $counts = array();
+        $categoryManager = $this->getCategoryManager();
+
+        $flattenCategories = array();
         foreach ($jsonArray as $item) {
-            $categoryId = $item->term;
-            $counts[$categoryId] = $item->count;
-        }
+            $id = $item->term;
+            $category = $categoryManager->getCategory($id);
+            if (!$category) continue;
 
-        // fetch all categories from API
-        $flattenCategories = $this->getCategoryManager()->getCategories(array_keys($counts), false);
-
-        foreach ($flattenCategories as $id => $category) {
-            $category->setProductCount($counts[$category->getId()]);
+            $category->setProductCount($item->count);
+            $flattenCategories[$id] = $category;
         }
 
         return $flattenCategories;
