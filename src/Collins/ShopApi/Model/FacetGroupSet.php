@@ -164,11 +164,11 @@ class FacetGroupSet implements FacetUniqueKeyInterface
 
     public function getFacet($facetGroupId, $facetId)
     {
-        if(empty($this->facets)) {
+        if (empty($this->facets)) {
             $this->fetch();
         }
 
-        if(isset($this->facets["$facetGroupId:$facetId"])) {
+        if (isset($this->facets["$facetGroupId:$facetId"])) {
             return($this->facets["$facetGroupId:$facetId"]);
         }
     }

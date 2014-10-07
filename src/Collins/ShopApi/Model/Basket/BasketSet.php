@@ -242,7 +242,7 @@ class BasketSet extends AbstractBasketItem implements BasketItemInterface
      */
     protected function checkId($id) 
     {
-        if(!is_string($id) || strlen($id) < 2) {
+        if (!is_string($id) || strlen($id) < 2) {
             throw new \InvalidArgumentException('ID of the BasketSetItem must be a String that must contain minimum two characters');            
         }
     }

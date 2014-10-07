@@ -91,13 +91,13 @@ class QueryBuilder
 
         $orderLines = array();
 
-        foreach($items as $item) {
+        foreach ($items as $item) {
             $orderLine = array(
                 'id' => $item->getId(),
                 'variant_id' => $item->getVariantId(),
             );
 
-            if($item->getAdditionalData()) {
+            if ($item->getAdditionalData()) {
                 $orderLine['additional_data'] = $item->getAdditionalData();
             }
 
@@ -133,17 +133,17 @@ class QueryBuilder
                 'set_items' => array()
             );
 
-            if($itemSet->getAdditionalData()) {
+            if ($itemSet->getAdditionalData()) {
                 $orderLine['additional_data'] = $itemSet->getAdditionalData();
             }
 
 
-            foreach($itemSet->getItems() as $item) {
+            foreach ($itemSet->getItems() as $item) {
                 $entry = array(
                     'variant_id' => $item->getVariantId(),
                 );
 
-                if($item->getAdditionalData()) {
+                if ($item->getAdditionalData()) {
                     $entry['additional_data'] = $item->getAdditionalData();
                 }
 
@@ -287,7 +287,7 @@ class QueryBuilder
     {
         if ($maxDepth >= 0 && $maxDepth <= 10) {
             $params = array('max_depth' => $maxDepth);
-        } else if($maxDepth > 10 || $maxDepth < -1) {
+        } else if ($maxDepth > 10 || $maxDepth < -1) {
             throw new \InvalidArgumentException('$maxDepth must be greater than or equal to -1 and less than or equal to 10');
         } else {
             $params = new \stdClass();
@@ -503,7 +503,7 @@ class QueryBuilder
      */
     public function getQueryString()
     {
-        return json_encode($this->query);
+        return json_encode(array_values($this->query));
     }
 
     /**
