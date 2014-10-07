@@ -133,7 +133,7 @@ class Query extends QueryBuilder
             return $this;
         }
 
-        $this->query[] = array(
+        $this->query['category tree'] = array(
             'category_tree' => array('version' => '2')
         );
 
@@ -210,10 +210,11 @@ class Query extends QueryBuilder
         }
 
         $results = array();
+        $currentQueries = array_values($this->query);
 
         foreach ($jsonResponse as $index => $responseObject) {
-            $currentQuery   = $this->query[$index];
             $jsonObject     = current($responseObject);
+            $currentQuery   = $currentQueries[$index];
             $resultKey      = key($responseObject);
             $queryKey       = key($currentQuery);
 
