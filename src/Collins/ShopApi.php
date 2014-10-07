@@ -70,6 +70,14 @@ class ShopApi
     protected $eventDispatcher;
 
     /**
+     * Page ID or Request ID to identify multiple requests for a single page including ajax queries
+     * The id is an alhpa num string: [a-zA-Z0-9_-+]+
+     *
+     * @var string
+     */
+    protected $pageId;
+
+    /**
      * @param string $appId
      * @param string $appPassword
      * @param string $apiEndPoint Constants::API_ENVIRONMENT_LIVE for live environment, Constants::API_ENVIRONMENT_STAGE for staging
@@ -86,6 +94,7 @@ class ShopApi
         $cache = null
     ) {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $logger);
+        $this->generatePageId();
 
         if ($cache) {
             $this->modelFactory = function ($scope) use ($cache) {
@@ -116,6 +125,38 @@ class ShopApi
     public function getApiClient()
     {
         return $this->shopApiClient;
+    }
+
+    /**
+     * Generates a unique ID for this request
+     *
+     * @param string $prefix
+     */
+    public function generatePageId($prefix = '')
+    {
+        $this->setPageId($prefix . Uuid::uuid4());
+    }
+
+    /**
+     * Gets the Page Id, put this request id on your page and use it for all ajax requests
+     *
+     * @return string
+     */
+    public function getPageId()
+    {
+        return $this->pageId;
+    }
+
+    /**
+     * Sets the page id,
+     * you should overwrite the page id, on all ajax queries, to collect all requests for one page.
+     *
+     * @param string $pageId
+     */
+    public function setPageId($pageId)
+    {
+        $this->pageId = $pageId;
+        $this->shopApiClient->setPageId($pageId);
     }
 
     /**
