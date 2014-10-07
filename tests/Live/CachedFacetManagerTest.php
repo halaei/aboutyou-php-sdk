@@ -3,6 +3,8 @@
 namespace Collins\ShopApi\Test\Live;
 
 use Collins\ShopApi\Factory\DefaultModelFactory;
+use Collins\ShopApi\Model\Category;
+use Collins\ShopApi\Model\CategoryManager\DefaultCategoryManager;
 use Collins\ShopApi\Model\Facet;
 use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
 use Collins\ShopApi\Model\FacetManager\AboutyouCacheStrategy;
@@ -52,7 +54,7 @@ class CachedFacetManagerTest extends \Collins\ShopApi\Test\Live\AbstractShopApiL
         /** @var DefaultModelFactory $factory */
         $facetManager    = new DefaultFacetManager($strategy);
         $this->eventDispatcher = new EventDispatcher();
-        $factory = new DefaultModelFactory($shopApi, $facetManager, new EventDispatcher());
+        $factory = new DefaultModelFactory($shopApi, $facetManager, new DefaultCategoryManager(), new EventDispatcher());
         $shopApi->setResultFactory($factory);
 
         $criteria = $shopApi->getProductSearchCriteria('AboutyouCacheStrategy')
