@@ -143,7 +143,7 @@ class Category
      */
     public function getSubCategories($activeOnly = self::ACTIVE_ONLY)
     {
-        $subCategories = array_values($this->categoryManager->getSubCategories($this->id));
+        $subCategories = $this->categoryManager->getSubCategories($this->id);
 
         if ($activeOnly === self::ALL) {
             return $subCategories;

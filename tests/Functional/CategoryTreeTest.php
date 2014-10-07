@@ -17,9 +17,9 @@ class CategoryTreeTest extends AbstractShopApiTest
             $this->assertTrue($category->isActive());
             $subCategories = $category->getSubCategories();
             $this->assertCount(3, $subCategories);
-            $this->assertEquals('Shirts', $subCategories[0]->getName());
-            $this->assertEquals('Jeans',  $subCategories[1]->getName());
-            $this->assertEquals('Schuhe', $subCategories[2]->getName());
+            $this->assertEquals('Shirts', array_shift($subCategories)->getName());
+            $this->assertEquals('Jeans',  array_shift($subCategories)->getName());
+            $this->assertEquals('Schuhe', array_shift($subCategories)->getName());
         }
 
         $this->assertArrayHasKey(74415, $categories);

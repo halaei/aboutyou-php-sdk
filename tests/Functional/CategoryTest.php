@@ -23,12 +23,14 @@ class CategoryTest extends AbstractShopApiTest
 
         $breadcrumb = $category->getBreadcrumb();
         $this->assertCount(1, $breadcrumb);
-        $this->assertEquals(74415, $breadcrumb[0]->getId());
+        $this->assertEquals(74415, reset($breadcrumb)->getId());
 
         $subcategories = $category->getSubCategories();
-        $breadcrumb = $subcategories[0]->getBreadcrumb();
+        $breadcrumb = reset($subcategories)->getBreadcrumb();
         $this->assertCount(2, $breadcrumb);
-        $this->assertEquals(74415, $breadcrumb[0]->getId());
-        $this->assertEquals(74417, $breadcrumb[1]->getId());
+        $category = array_shift($breadcrumb);
+        $this->assertEquals(74415, $category->getId());
+        $category = array_shift($breadcrumb);
+        $this->assertEquals(74417, $category->getId());
     }
 }

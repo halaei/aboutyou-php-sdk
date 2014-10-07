@@ -20,7 +20,6 @@ class ProductGetCategoryTest extends AbstractShopApiTest
     {
         $this->shopApi = $this->getShopApiWithResultFile('product/category.json');
         $this->shopApi->getCategoryManager(true);
-
     }
 
     public function getProduct($filename)
@@ -58,9 +57,9 @@ class ProductGetCategoryTest extends AbstractShopApiTest
         foreach ($categories as $category) {
             $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
         }
-        $this->assertEquals(2, $categories[0]->getId());
-        $this->assertEquals(1, $categories[1]->getId());
-        $this->assertEquals(3, $categories[2]->getId());
+        $this->assertEquals(2, array_shift($categories)->getId());
+        $this->assertEquals(1, array_shift($categories)->getId());
+        $this->assertEquals(3, array_shift($categories)->getId());
     }
 
     public function testGetLeafCategories()
@@ -73,10 +72,10 @@ class ProductGetCategoryTest extends AbstractShopApiTest
         foreach ($categories as $category) {
             $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
         }
-        $this->assertEquals(21, $categories[0]->getId());
-        $this->assertEquals(121, $categories[1]->getId());
-        $this->assertEquals(11, $categories[2]->getId());
-        $this->assertEquals(3, $categories[3]->getId());
+        $this->assertEquals(21, array_shift($categories)->getId());
+        $this->assertEquals(121, array_shift($categories)->getId());
+        $this->assertEquals(11, array_shift($categories)->getId());
+        $this->assertEquals(3, array_shift($categories)->getId());
     }
 
     public function testGetCategory()

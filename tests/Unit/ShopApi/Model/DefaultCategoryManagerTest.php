@@ -129,22 +129,32 @@ class DefaultCategoryManagerTest extends AbstractModelTest
         $female  = array_shift($categories);
         $this->assertEquals('Frauen', $female->getName());
         $femaleCats = $female->getSubCategories();
-        $this->assertEquals('Shirts', $femaleCats[0]->getName());
-        $this->assertEquals(74417, $femaleCats[0]->getId());
-        $this->assertEquals('Jeans', $femaleCats[1]->getName());
-        $this->assertEquals(74419, $femaleCats[1]->getId());
-        $this->assertEquals('Schuhe', $femaleCats[2]->getName());
-        $this->assertEquals(74421, $femaleCats[2]->getId());
+        $subCategory = array_shift($femaleCats);
+        $this->assertEquals('Shirts', $subCategory->getName());
+        $this->assertEquals(74417, $subCategory->getId());
+        $subCategory = array_shift($femaleCats);
+        $this->assertEquals('Jeans', $subCategory->getName());
+        $this->assertEquals(74419, $subCategory->getId());
+        $subCategory = array_shift($femaleCats);
+        $this->assertEquals('Schuhe', $subCategory->getName());
+        $this->assertEquals(74421, $subCategory->getId());
+        $subCategory = array_shift($femaleCats);
+        $this->assertNull($subCategory);
 
         $male = array_shift($categories);
         $this->assertEquals('Männer', $male->getName());
         $maleCats = $male->getSubCategories();
-        $this->assertEquals('Shirts', $maleCats[0]->getName());
-        $this->assertEquals(74418, $maleCats[0]->getId());
-        $this->assertEquals('Jeans', $maleCats[1]->getName());
-        $this->assertEquals(74420, $maleCats[1]->getId());
-        $this->assertEquals('Schuhe', $maleCats[2]->getName());
-        $this->assertEquals(74422, $maleCats[2]->getId());
+        $subCategory = array_shift($maleCats);
+        $this->assertEquals('Shirts', $subCategory->getName());
+        $this->assertEquals(74418, $subCategory->getId());
+        $subCategory = array_shift($maleCats);
+        $this->assertEquals('Jeans', $subCategory->getName());
+        $this->assertEquals(74420, $subCategory->getId());
+        $subCategory = array_shift($maleCats);
+        $this->assertEquals('Schuhe', $subCategory->getName());
+        $this->assertEquals(74422, $subCategory->getId());
+        $subCategory = array_shift($maleCats);
+        $this->assertNull($subCategory);
     }
 
     /**
@@ -168,8 +178,8 @@ class DefaultCategoryManagerTest extends AbstractModelTest
     {
         $categories = $categoryManager->getCategoriesByName('Jeans');
         $this->assertCount(2, $categories);
-        $this->assertEquals(74419, $categories[0]->getId());
-        $this->assertEquals(74420, $categories[1]->getId());
+        $this->assertEquals(74419, reset($categories)->getId());
+        $this->assertEquals(74420, end($categories)->getId());
 
         $categories = $categoryManager->getCategoriesByName('Landing Page');
         $this->assertCount(0, $categories);

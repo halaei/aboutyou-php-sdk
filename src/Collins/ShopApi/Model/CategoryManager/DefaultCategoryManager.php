@@ -160,8 +160,13 @@ class DefaultCategoryManager implements CategoryManagerInterface
      */
     public function getCategoriesByName($name, $activeOnly = Category::ACTIVE_ONLY)
     {
-        return array_values(array_filter($this->categories, function ($category) use ($name, $activeOnly) {
-            return ($category->getName() === $name && ($activeOnly === Category::ALL || $category->isActive()));
-        }));
+        $categories = array_filter($this->categories, function ($category) use ($name, $activeOnly) {
+            return (
+                $category->getName() === $name
+                && ($activeOnly === Category::ALL || $category->isActive())
+            );
+        });
+
+        return $categories;
     }
 }

@@ -418,7 +418,7 @@ class Product
 
         $categories = $this->getCategoryManager()->getCategories($categoryIds, $activeOnly);
 
-        return array_values($categories);
+        return $categories;
     }
 
 
@@ -454,7 +454,7 @@ class Product
 
         $categories = $this->getCategoryManager()->getCategories($categoryIds, $activeOnly);
 
-        return array_values($categories);
+        return $categories;
     }
 
     /**
