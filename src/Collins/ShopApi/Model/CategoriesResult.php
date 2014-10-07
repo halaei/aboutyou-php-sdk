@@ -16,7 +16,7 @@ class CategoriesResult implements \IteratorAggregate, \ArrayAccess, \Countable
     public function __construct(CategoryManagerInterface $categoryManager, $ids)
     {
         $this->ids = $ids;
-        $this->categories = $categoryManager->getCategories($ids, Category::ALL, true);
+        $this->categories = $categoryManager->getCategories($ids, Category::ALL);
     }
 
     /**

@@ -412,7 +412,7 @@ class Product
      *
      * @return Category[]
      */
-    public function getLeafCategories($activeOnly = true)
+    public function getLeafCategories($activeOnly = Category::ACTIVE_ONLY)
     {
         $categoryIds = $this->getLeafCategoryIds();
 
@@ -438,7 +438,7 @@ class Product
         return $ids;
     }
 
-    public function getCategories($activeOnly = true)
+    public function getCategories($activeOnly = Category::ACTIVE_ONLY)
     {
         return $this->getRootCategories($activeOnly);
     }
@@ -448,7 +448,7 @@ class Product
      *
      * @return Category[]
      */
-    public function getRootCategories($activeOnly = true)
+    public function getRootCategories($activeOnly = Category::ACTIVE_ONLY)
     {
         $categoryIds = $this->getRootCategoryIds();
 

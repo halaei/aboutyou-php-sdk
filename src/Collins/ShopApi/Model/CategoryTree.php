@@ -23,7 +23,7 @@ class CategoryTree implements \IteratorAggregate, \Countable
      *
      * @return array|Category[]
      */
-    public function getCategories($activeOnly = true)
+    public function getCategories($activeOnly = Category::ACTIVE_ONLY)
     {
         return $this->categoryManager->getCategoryTree($activeOnly);
     }

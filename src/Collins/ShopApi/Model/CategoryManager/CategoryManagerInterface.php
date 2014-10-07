@@ -28,7 +28,7 @@ interface CategoryManagerInterface
      *
      * @return Category[]
      */
-    public function getCategories(array $ids, $activeOnly = true);
+    public function getCategories(array $ids, $activeOnly = Category::ACTIVE_ONLY);
 
     /**
      * @param integer $id
@@ -36,14 +36,14 @@ interface CategoryManagerInterface
      *
      * @return Category[]
      */
-    public function getSubCategories($id, $activeOnly = true);
+    public function getSubCategories($id, $activeOnly = Category::ACTIVE_ONLY);
 
     /**
      * @param boolean $activeOnly
      *
      * @return Category[]
      */
-    public function getCategoryTree($activeOnly = true);
+    public function getCategoryTree($activeOnly = Category::ACTIVE_ONLY);
 
     /**
      * @return Category[]
@@ -57,7 +57,7 @@ interface CategoryManagerInterface
      *
      * @return Category
      */
-    public function getFirstCategoryByName($name, $activeOnly = true);
+    public function getFirstCategoryByName($name, $activeOnly = Category::ACTIVE_ONLY);
 
     /**
      * @expimental
@@ -66,5 +66,5 @@ interface CategoryManagerInterface
      *
      * @return Category[]
      */
-    public function getCategoriesByName($name, $activeOnly = true);
+    public function getCategoriesByName($name, $activeOnly = Category::ACTIVE_ONLY);
 }

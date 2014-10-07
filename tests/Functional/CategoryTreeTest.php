@@ -36,7 +36,7 @@ class CategoryTreeTest extends AbstractShopApiTest
         $this->assertCount(3, $category->getSubCategories());
 
 
-        $categories = $categoryTreeResult->getCategories(false);
+        $categories = $categoryTreeResult->getCategories(ShopApi\Model\Category::ALL);
         $this->assertCount(3, $categories);
         $this->assertArrayHasKey(74415, $categories);
         $this->assertArrayHasKey(74416, $categories);
