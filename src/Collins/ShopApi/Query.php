@@ -13,11 +13,16 @@ use Collins\ShopApi\Factory\ModelFactoryInterface;
 
 class Query extends QueryBuilder
 {
+    const QUERY_TREE   = 'category tree';
+    const QUERY_FACETS = 'all facets';
+
     /** @var ShopApiClient */
     protected $client;
 
     /** @var ModelFactoryInterface */
     protected $factory;
+
+    protected $additionalQuery = array();
 
     /**
      * @param ShopApiClient       $client
@@ -136,7 +141,7 @@ class Query extends QueryBuilder
             return $this;
         }
 
-        $this->query['category tree'] = array(
+        $this->query[self::QUERY_TREE] = array(
             'category_tree' => array('version' => '2')
         );
 
@@ -149,7 +154,7 @@ class Query extends QueryBuilder
             return $this;
         }
 
-        $this->query['all facets'] = array(
+        $this->query[self::QUERY_FACETS] = array(
             'facets' => new \stdClass()
         );
 
@@ -227,6 +232,7 @@ class Query extends QueryBuilder
 
         $results = array();
         $currentQueries = array_values($this->query);
+        $queryIds = array_keys($this->query);
 
         foreach ($jsonResponse as $index => $responseObject) {
             $jsonObject     = current($responseObject);
@@ -254,10 +260,15 @@ class Query extends QueryBuilder
                 }
             }
 
-            $query = $currentQuery[$queryKey];
+            $query   = $currentQuery[$queryKey];
+            $queryId = $queryIds[$index];
 
-            $method  = $this->mapping[$resultKey];
-            $results[$resultKey] = $factory->$method($jsonObject, $query);
+            if ($queryId === self::QUERY_FACETS) {
+                $factory->updateFacetManager($jsonObject);
+            } else {
+                $method  = $this->mapping[$resultKey];
+                $results[$resultKey] = $factory->$method($jsonObject, $query);
+            }
         }
 
         return $results;

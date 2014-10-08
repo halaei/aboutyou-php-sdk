@@ -14,6 +14,11 @@ interface FacetManagerInterface
     public function isEmpty();
 
     /**
+     * @param \Collins\ShopApi\Model\Facet[][] $facets
+     */
+    public function setFacets($facets);
+
+    /**
      * @param $groupId group id of a facet
      * @param $id id of the facet
      *

@@ -177,9 +177,10 @@ class DefaultModelFactory implements ModelFactoryInterface
         return $this->getCategoryManager()->parseJson($jsonObject, $this);
     }
 
-    public function initializeFacetManager()
+    public function updateFacetManager($jsonObject)
     {
-
+        $facets = $this->createFacetsList($jsonObject);
+        $this->getFacetManager()->setFacets($facets);
     }
 
     /**
