@@ -10,8 +10,6 @@ use Collins\ShopApi\Criteria\ProductFields;
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Exception\UnexpectedResultException;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Query extends QueryBuilder
 {
@@ -21,19 +19,14 @@ class Query extends QueryBuilder
     /** @var ModelFactoryInterface */
     protected $factory;
 
-    /** @var EventDispatcher */
-    protected $eventDispatcher;
-
     /**
      * @param ShopApiClient       $client
      * @param ModelFactoryInterface $factory
-     * @param EventDispatcher $eventDispatcher
      */
-    public function __construct(ShopApiClient $client, ModelFactoryInterface $factory, EventDispatcher $eventDispatcher)
+    public function __construct(ShopApiClient $client, ModelFactoryInterface $factory)
     {
-        $this->client          = $client;
-        $this->factory         = $factory;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->client  = $client;
+        $this->factory = $factory;
     }
 
 
@@ -54,6 +47,7 @@ class Query extends QueryBuilder
         parent::fetchAutocomplete($searchword, $limit, $types);
 
         $this->requireCategoryTree();
+        $this->requireFacets();
 
         return $this;
     }
@@ -68,6 +62,7 @@ class Query extends QueryBuilder
         parent::fetchBasket($sessionId);
 
         $this->requireCategoryTree();
+        $this->requireFacets();
 
         return $this;
     }
@@ -84,8 +79,11 @@ class Query extends QueryBuilder
     ) {
         parent::fetchProductsByIds($ids, $fields);
 
-        if (in_array(ProductFields::CATEGORIES, $fields)) {
+        if (ProductFields::requiresCategories($fields)) {
             $this->requireCategoryTree();
+        }
+        if (ProductFields::requiresFacets($fields)) {
+            $this->requireFacets();
         }
 
         return $this;
@@ -103,8 +101,11 @@ class Query extends QueryBuilder
     ) {
         parent::fetchProductsByEans($eans, $fields);
 
-        if (in_array(ProductFields::CATEGORIES, $fields)) {
+        if (ProductFields::requiresCategories($fields)) {
             $this->requireCategoryTree();
+        }
+        if (ProductFields::requiresFacets($fields)) {
+            $this->requireFacets();
         }
 
         return $this;
@@ -122,10 +123,12 @@ class Query extends QueryBuilder
         if ($criteria->requiresCategories()) {
             $this->requireCategoryTree();
         }
+        if ($criteria->requiresFacets()) {
+            $this->requireFacets();
+        }
 
         return $this;
     }
-
 
     public function requireCategoryTree($fetchForced = false)
     {
@@ -135,6 +138,19 @@ class Query extends QueryBuilder
 
         $this->query['category tree'] = array(
             'category_tree' => array('version' => '2')
+        );
+
+        return $this;
+    }
+
+    public function requireFacets($fetchForced = false)
+    {
+        if (!($fetchForced || $this->factory->getFacetManager()->isEmpty())) {
+            return $this;
+        }
+
+        $this->query['all facets'] = array(
+            'facets' => new \stdClass()
         );
 
         return $this;
@@ -200,7 +216,7 @@ class Query extends QueryBuilder
      *
      * @throws UnexpectedResultException
      */
-    protected function parseResult($jsonResponse, $isMultiRequest=true)
+    protected function parseResult($jsonResponse, $isMultiRequest = true)
     {
         if ($jsonResponse === false ||
             !is_array($jsonResponse) ||
@@ -239,9 +255,6 @@ class Query extends QueryBuilder
             }
 
             $query = $currentQuery[$queryKey];
-
-            $event = new GenericEvent($jsonObject, array('result' => $resultKey, 'query' => $query));
-            $this->eventDispatcher->dispatch('collins.shop_api.' . $resultKey . '_result.create_model.before', $event);
 
             $method  = $this->mapping[$resultKey];
             $results[$resultKey] = $factory->$method($jsonObject, $query);

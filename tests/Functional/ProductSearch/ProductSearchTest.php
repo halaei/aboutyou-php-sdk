@@ -9,6 +9,8 @@ use Collins\ShopApi\Test\Functional\AbstractShopApiTest;
 
 class ProductSearchTest extends AbstractShopApiTest
 {
+    protected $facetsResultPath = null;
+
     public function testProductSearch()
     {
         $shopApi = $this->getShopApiWithResultFileAndFacets(
@@ -107,10 +109,9 @@ class ProductSearchTest extends AbstractShopApiTest
     
     public function testProductGetCategoryGetParent()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
-            'product-search-result-with-product-categories.json',
-//            'category-all.json'
-        ));
+        $shopApi = $this->getShopApiWithResultFile(
+            'product-search-result-with-product-categories.json'
+        );
 
         // get all available products
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));

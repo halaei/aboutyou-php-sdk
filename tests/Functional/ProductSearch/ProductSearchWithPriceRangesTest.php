@@ -7,11 +7,12 @@ use Collins\ShopApi\Test\Functional\AbstractShopApiTest;
 
 class ProductSearchWithPriceRangesTest extends AbstractShopApiTest
 {
+    protected $facetsResultPath = null;
+
     public function testProductSearchWithSteadyPriceRangeResult()
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
             'result-product-search-with-facets.json',
-//            'category-all.json',
             'facet-result.json'
         ));
 
@@ -54,7 +55,6 @@ class ProductSearchWithPriceRangesTest extends AbstractShopApiTest
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
             'result-product-search-with-discontinues-price-ranges.json',
-//            'category-all.json',
             'facet-result.json'
         ));
 

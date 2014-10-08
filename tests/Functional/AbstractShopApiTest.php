@@ -14,6 +14,8 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
 {
     protected $setupCategoryManager = true;
 
+    protected $facetsResultPath = 'facets-all.json';
+
     /**
      * @param string|string[] $jsonString
      * @param string|null $exceptedRequestBody
@@ -72,17 +74,7 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
 
     protected function getStaticFacetManagerFromFile($filename)
     {
-        $jsonObject = $this->getJsonObjectFromFile($filename);
-        if (isset($jsonObject[0]->facets->facet)) {
-            $jsonFacets = $jsonObject[0]->facets->facet;
-        } else {
-            $jsonFacets = $jsonObject[0]->facet;
-        }
-        $facets = array();
-        foreach ($jsonFacets as $jsonFacet) {
-            $facet = ShopApi\Model\Facet::createFromJson($jsonFacet);
-            $facets[] = $facet;
-        }
+        $facets = $this->getFacetList($filename);
 
         $facetManager = new ShopApi\Model\FacetManager\StaticFacetManager($facets);
 
@@ -124,19 +116,18 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
      *
      * @return ShopApi
      */
-    protected $_____shopApi = null;
     protected function getShopApiWithResult($jsonString, $exceptedRequestBody = null)
     {
         $client = $this->getGuzzleClient($jsonString, $exceptedRequestBody);
 
-        if(is_null($this->_____shopApi)) {
-            $this->_____shopApi = new ShopApi('98', 'token');
-        }
-        #$shopApi = new ShopApi('id', 'token');
-        $shopApi = $this->_____shopApi;
+        $shopApi = new ShopApi('100', 'token');
         $shopApi->getApiClient()->setClient($client);
         if ($this->setupCategoryManager === true) {
             $this->setupCategoryManager($shopApi);
+        }
+        if ($this->facetsResultPath) {
+            $facets = $this->getFacetList($this->facetsResultPath);
+            $shopApi->getResultFactory()->getFacetManager()->setFacets($facets);
         }
 
         return $shopApi;
@@ -172,5 +163,26 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
         $categoryManager = $shopApi->getResultFactory()->getCategoryManager();
         $json = $this->getJsonObjectFromFile('category-tree-v2.json');
         $categoryManager->parseJson($json[0]->category_tree, $shopApi->getResultFactory());
+    }
+
+    /**
+     * @param $filename
+     * @return array
+     */
+    protected function getFacetList($filename)
+    {
+        $jsonObject = $this->getJsonObjectFromFile($filename);
+        if (isset($jsonObject[0]->facets->facet)) {
+            $jsonFacets = $jsonObject[0]->facets->facet;
+        } else {
+            $jsonFacets = $jsonObject[0]->facet;
+        }
+        $facets = array();
+        foreach ($jsonFacets as $jsonFacet) {
+            $facet = ShopApi\Model\Facet::createFromJson($jsonFacet);
+            $facets[] = $facet;
+        }
+
+        return $facets;
     }
 }

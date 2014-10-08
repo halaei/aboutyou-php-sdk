@@ -29,17 +29,9 @@ class StaticFacetManager implements FacetManagerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedEvents()
+    public function isEmpty()
     {
-        return array();
-    }
-
-    public function setShopApi(ShopApi $shopApi)
-    {
-        // dummy
+        return $this->factes === null;
     }
 
     public function getFacet($groupId, $facetId)

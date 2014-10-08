@@ -7,12 +7,13 @@ use Collins\ShopApi\Test\Functional\AbstractShopApiTest;
 
 class ProductSearchWithFacetsTest extends AbstractShopApiTest
 {
+    protected $facetsResultPath = null;
+
     public function testProductSearchWithSaleResult()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
-            'result-product-search-with-facets.json',
-            'facet-result.json'
-        ));
+        $shopApi = $this->getShopApiWithResultFile(
+            'result-product-search-with-facets.json'
+        );
 
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
 
@@ -25,10 +26,9 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
 
     public function testProductSearchWithPriceRangeResult()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
-            'result-product-search-with-facets.json',
-            'facet-result.json'
-        ));
+        $shopApi = $this->getShopApiWithResultFile(
+            'result-product-search-with-facets.json'
+        );
 
         // get all available products
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
@@ -67,10 +67,10 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
 
     public function testProductSearchWithFacetResult()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
+        $shopApi = $this->getShopApiWithResultFileAndFacets(
             'result-product-search-with-facets.json',
             'facet-result.json'
-        ));
+        );
 
         // get all available products
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
@@ -102,10 +102,9 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
 
     public function testProductSearchWithCategoriesResult()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
-            'result-product-search-with-facets.json',
-            'facet-result.json'
-        ));
+        $shopApi = $this->getShopApiWithResultFile(
+            'result-product-search-with-facets.json'
+        );
 
         // get all available products
         $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));

@@ -14,6 +14,8 @@ class AboutyouCacheStrategyTest extends AbstractModelTest
 {
     public function testFetch()
     {
+        $this->markTestIncomplete();
+
         // $id, $name, $value, $groupId, $groupName
         $brand123 = new Facet(123, 'Brand 123', 'brand123', 0, 'brand');
         $brand456 = new Facet(456, 'Brand 456', 'brand465', 0, 'brand');

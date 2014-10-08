@@ -35,15 +35,29 @@ class ProductFields
 
         // this simplify parsing on (pre)fetching facets
         if (
-            !in_array(self::ATTRIBUTES_MERGED, $fields) && (
-                in_array(self::BRAND, $fields) ||
-                in_array(self::VARIANTS, $fields) ||
-                in_array(self::DEFAULT_VARIANT, $fields)
-            )
+            !in_array(self::ATTRIBUTES_MERGED, $fields) &&
+            self::requiresFacets($fields)
         ) {
             $fields[] = ProductFields::ATTRIBUTES_MERGED;
         }
 
         return $fields;
+    }
+
+    public static function requiresFacets(array $fields)
+    {
+        $requiredFacetFields = array_intersect(array(
+            self::BRAND,
+            self::VARIANTS,
+            self::DEFAULT_VARIANT,
+            self::ATTRIBUTES_MERGED,
+        ), $fields);
+
+        return count($requiredFacetFields);
+    }
+
+    public static function requiresCategories(array $fields)
+    {
+        return in_array(self::CATEGORIES, $fields);
     }
 }

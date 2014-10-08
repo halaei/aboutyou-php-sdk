@@ -451,11 +451,22 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     {
         $productCategories =
             isset($this->result['fields']) &&
-            in_array(ProductFields::CATEGORIES, $this->result['fields'])
+            ProductFields::requiresCategories($this->result['fields'])
         ;
         $categoryFacets = isset($this->result['categories']) && $this->result['categories'];
 
         return $productCategories || $categoryFacets;
+    }
+
+    public function requiresFacets()
+    {
+        $productFacets =
+            isset($this->result['fields']) &&
+            ProductFields::requiresFacets($this->result['fields'])
+        ;
+        $facetFacets = !empty($this->result['facets']);
+
+        return $productFacets || $facetFacets;
     }
 
     /**

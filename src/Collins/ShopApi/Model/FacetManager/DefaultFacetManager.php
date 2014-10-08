@@ -6,46 +6,73 @@
 
 namespace Collins\ShopApi\Model\FacetManager;
 
-class DefaultFacetManager extends AbstractFacetManager
+use Aboutyou\Common\Cache\Cache;
+use Collins\ShopApi\Model\Facet;
+
+class DefaultFacetManager implements FacetManagerInterface
 {
-    /** @var FetchStrategyInterface */
-    protected $fetchStrategy;
+    const DEFAULT_CACHE_DURATION = 7200;
+
+    /** @var Facet[][] */
+    private $facets = null;
+
+    /** @var Cache */
+    private $cache;
+
+    /** @var string */
+    private $cacheKey;
 
     /**
-     * @param FetchStrategyInterface $fetchStrategy
+     * @param Cache $cache
+     * @param string $appId
      */
-    public function __construct(FetchStrategyInterface $fetchStrategy)
+    public function __construct(Cache $cache = null, $appId = '')
     {
-        $this->fetchStrategy = $fetchStrategy;
+        $this->cache    = $cache;
+        $this->cacheKey = 'AY:SDK:' . $appId . ':facets';
+
+        $this->loadCachedFacets();
     }
 
-    /**
-     * @return FetchStrategyInterface
-     */
-    public function getFetchStrategy()
+    public function loadCachedFacets()
     {
-        return $this->fetchStrategy;
-    }
-
-    /**
-     * @param FetchStrategyInterface
-     */
-    public function setFetchStrategy(FetchStrategyInterface $fetchStrategy)
-    {
-        $this->fetchStrategy = $fetchStrategy;
-    }
-
-    protected function preFetch()
-    {
-        if (empty($this->missingFacetGroupIdsAndFacetIds)) {
-            return;
+        if ($this->cache) {
+            $this->facets = $this->cache->fetch($this->cacheKey) ?: null;
         }
-
-        foreach ($this->missingFacetGroupIdsAndFacetIds as $groupId => $facetIds) {
-            $this->missingFacetGroupIdsAndFacetIds[$groupId] = array_values(array_unique($facetIds));
-        }
-
-        $this->facets += $this->fetchStrategy->fetch($this->missingFacetGroupIdsAndFacetIds);
-        $this->missingFacetGroupIdsAndFacetIds = array();
     }
-} 
+
+    public function cacheFacets()
+    {
+        if ($this->cache) {
+            $this->cache->save($this->cacheKey, $this->facets, self::DEFAULT_CACHE_DURATION);
+        }
+    }
+
+    public function clearCache()
+    {
+        if ($this->cache) {
+            $this->cache->delete($this->cacheKey);
+        }
+    }
+
+    public function isEmpty()
+    {
+        return $this->facets === null;
+    }
+
+    public function setFacets($facets)
+    {
+        $this->facets = $facets;
+        $this->cacheFacets();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFacet($groupId, $id)
+    {
+        $lookupKey = Facet::uniqueKey($groupId, $id);
+
+        return isset($this->facets[$lookupKey]) ? $this->facets[$lookupKey] : null;
+    }
+}

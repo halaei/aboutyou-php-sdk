@@ -7,6 +7,8 @@ use Collins\ShopApi\Test\Functional\AbstractShopApiTest;
 
 class ProductSearchRealLifeTest extends AbstractShopApiTest
 {
+    protected $facetsResultPath = null;
+
     public function testProductSearchPriceRange()
     {
         $shopApi = $this->getShopApiWithResultFile('product_search-20140414.json');

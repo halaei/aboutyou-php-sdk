@@ -6,16 +6,12 @@
 
 namespace Collins\ShopApi\Model\FacetManager;
 
-use Collins\ShopApi;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
-interface FacetManagerInterface extends EventSubscriberInterface
+interface FacetManagerInterface
 {
     /**
-     * @param \Collins\ShopApi $shopApi
-     * @deprecated the FetchStrategy implemention may need this information
+     * @return boolean
      */
-    public function setShopApi(ShopApi $shopApi);
+    public function isEmpty();
 
     /**
      * @param $groupId group id of a facet

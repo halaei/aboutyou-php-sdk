@@ -18,7 +18,7 @@ class DefaultModelFactoryTest extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFile('facets-all.json');
         /** @var ShopApi\Factory\DefaultModelFactory $modelFactory */
         $modelFactory = $shopApi->getResultFactory();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\AbstractFacetManager', $modelFactory->getFacetManager());
+        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\DefaultFacetManager', $modelFactory->getFacetManager());
 
         $facetManagerMock = $this->getMockForAbstractClass('Collins\\ShopApi\\Model\\FacetManager\\FacetManagerInterface');
 //        $facetManagerMock->expects($this->atLeastOnce())

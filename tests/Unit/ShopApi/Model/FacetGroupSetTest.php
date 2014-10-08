@@ -7,8 +7,7 @@
 namespace Collins\ShopApi\Test\Unit\Model;
 
 use Collins\ShopApi\Model\FacetGroupSet;
-use Collins\ShopApi\Model\FacetManager\SingleFacetManager;
-use Symfony\Component\EventDispatcher\Event;
+use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
 
 class FacetGroupSetTest extends AbstractModelTest
 {
@@ -101,7 +100,7 @@ class FacetGroupSetTest extends AbstractModelTest
 
     public function testSetFacetManager()
     {
-        FacetGroupSet::setFacetManager(new SingleFacetManager());
+        FacetGroupSet::setFacetManager(new DefaultFacetManager());
     }
 
     public function testUsingFacetManager()

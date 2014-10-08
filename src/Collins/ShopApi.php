@@ -23,7 +23,6 @@ use Collins\ShopApi\Query;
 use Collins\ShopApi\ShopApiClient;
 use Psr\Log\LoggerInterface;
 use Rhumsaa\Uuid\Uuid;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Provides access to the Collins Frontend Platform.
@@ -66,9 +65,6 @@ class ShopApi
     /** @var AuthSDK */
     protected $authSdk;        
 
-    /** @var EventDispatcher */
-    protected $eventDispatcher;
-
     /**
      * Page ID or Request ID to identify multiple requests for a single page including ajax queries
      * The id is an alhpa num string: [a-zA-Z0-9_-+]+
@@ -102,17 +98,7 @@ class ShopApi
             };
         }
 
-        if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
-            $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
-            $this->environment = Constants::API_ENVIRONMENT_STAGE;            
-        } else if ($apiEndPoint === Constants::API_ENVIRONMENT_SANDBOX) {
-            $this->setBaseImageUrl(self::IMAGE_URL_SANDBOX);
-            $this->environment = Constants::API_ENVIRONMENT_SANDBOX;  
-        } else if ($apiEndPoint === Constants::API_ENVIRONMENT_STAGE) {
-            $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
-        } else {
-            $this->setBaseImageUrl(self::IMAGE_URL_LIVE);
-        }
+        $this->setBaseImageUrlByApiEndPoint($apiEndPoint);
 
         $this->logger      = $logger;
         $this->appId       = $appId;
@@ -280,7 +266,7 @@ class ShopApi
      */
     public function getQuery()
     {
-        $query = new Query($this->shopApiClient, $this->getResultFactory(), $this->eventDispatcher);
+        $query = new Query($this->shopApiClient, $this->getResultFactory());
 
         return $query;
     }
@@ -563,10 +549,6 @@ class ShopApi
      */
     public function setResultFactory(ModelFactoryInterface $modelFactory)
     {
-        if ($modelFactory instanceof DefaultModelFactory) {
-            $this->eventDispatcher = $modelFactory->getEventDispatcher();
-        }
-
         $this->modelFactory = $modelFactory;
     }
 
@@ -816,18 +798,13 @@ class ShopApi
      */
     public function initDefaultFactory($cache = null)
     {
-        $strategy = new FetchFacetGroupStrategy($this);
-
-        if ($cache) {
-            $strategy = new AboutyouCacheStrategy($cache, $strategy);
-        }
-
         $categoryManager = new DefaultCategoryManager($this->appId, $cache);
+        $facetManager    = new DefaultFacetManager($cache, $this->appId);
+
         $resultFactory = new DefaultModelFactory(
             $this,
-            new DefaultFacetManager($strategy),
-            $categoryManager,
-            new EventDispatcher()
+            $facetManager,
+            $categoryManager
         );
 
         $this->setResultFactory($resultFactory);
@@ -1022,5 +999,26 @@ class ShopApi
         }
 
         return (object) $response->json();
+    }
+
+    /**
+     * @param $apiEndPoint
+     */
+    public function setBaseImageUrlByApiEndPoint($apiEndPoint)
+    {
+        switch ($apiEndPoint) {
+            case Constants::API_ENVIRONMENT_STAGE:
+                $this->setBaseImageUrl(self::IMAGE_URL_STAGE);
+                $this->environment = Constants::API_ENVIRONMENT_STAGE;
+                break;
+            case Constants::API_ENVIRONMENT_SANDBOX:
+                $this->setBaseImageUrl(self::IMAGE_URL_SANDBOX);
+                $this->environment = Constants::API_ENVIRONMENT_SANDBOX;
+                break;
+            default:
+                $this->setBaseImageUrl(self::IMAGE_URL_LIVE);
+                $this->environment = Constants::API_ENVIRONMENT_LIVE;
+                break;
+        }
     }
 }

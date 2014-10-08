@@ -148,7 +148,7 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The session id must be a string
+     * @expectedExceptionMessage The basket id must be a string
      */
     public function testFetchBasketThrowsInvalidArgumentException()
     {
@@ -157,7 +157,7 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The session id must have at least 5 characters
+     * @expectedExceptionMessage The basket id must have at least 5 characters
      */
     public function testFetchBasketThrowsInvalidArgumentException2()
     {

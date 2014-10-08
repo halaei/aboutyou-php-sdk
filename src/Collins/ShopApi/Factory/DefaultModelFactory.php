@@ -12,8 +12,6 @@ use Collins\ShopApi\Model\Basket;
 use Collins\ShopApi\Model\ProductSearchResult;
 use Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface;
 use Collins\ShopApi\Model\FacetManager\FacetManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\GenericEvent;
 
 class DefaultModelFactory implements ModelFactoryInterface
 {
@@ -23,29 +21,24 @@ class DefaultModelFactory implements ModelFactoryInterface
     /** @var FacetManagerInterface */
     protected $facetManager;
 
-    /** @var EventDispatcher */
-    protected $eventDispatcher;
-
     /** @var  CategoryManagerInterface */
     protected $categoryManager;
 
     /**
      * @param ShopApi $shopApi
      * @param FacetManagerInterface $facetManager
-     * @param EventDispatcher $eventDispatcher
+     * @param CategoryManagerInterface $categoryManager
      */
     public function __construct(
         ShopApi $shopApi = null,
         FacetManagerInterface $facetManager,
-        CategoryManagerInterface $categoryManager,
-        EventDispatcher $eventDispatcher
+        CategoryManagerInterface $categoryManager
     ) {
         if (!empty($shopApi)) {
             $this->setShopApi($shopApi);
         }
         $this->categoryManager = $categoryManager;
 
-        $this->eventDispatcher = $eventDispatcher;
         $this->setFacetManager($facetManager);
     }
 
@@ -55,48 +48,11 @@ class DefaultModelFactory implements ModelFactoryInterface
     }
 
     /**
-     * @return EventDispatcher
-     */
-    public function getEventDispatcher()
-    {
-        return $this->eventDispatcher;
-    }
-
-    protected function subscribeFacetManagerEvents()
-    {
-        $newSubscribedEvents = $this->facetManager->getSubscribedEvents();
-        if (!empty($newSubscribedEvents)) {
-            $this->getEventDispatcher()->addSubscriber($this->facetManager);
-        }
-    }
-
-//    protected function subscribeCategoryManagerEvents()
-//    {
-//        $newSubscribedEvents = $this->getCategoryManager()->getSubscribedEvents();
-//        if (!empty($newSubscribedEvents)) {
-//            $this->getEventDispatcher()->addSubscriber($this->getCategoryManager());
-//        }
-//    }
-
-    protected function unsubscribeFacetManagerEvents()
-    {
-        if (!empty($this->facetManager)) {
-            $oldFacetManagerSubscribedEvents = $this->facetManager->getSubscribedEvents();
-            if (!empty($oldFacetManagerSubscribedEvents)) {
-                $this->getEventDispatcher()->removeSubscriber($this->facetManager);
-            }
-        }
-    }
-
-    /**
      * @param FacetManagerInterface $facetManager
      */
     public function setFacetManager(FacetManagerInterface $facetManager)
     {
-        $this->unsubscribeFacetManagerEvents();
         $this->facetManager = $facetManager;
-        $this->subscribeFacetManagerEvents();
-        $this->facetManager->setShopApi($this->shopApi);
         Model\FacetGroupSet::setFacetManager($facetManager);
     }
 
@@ -219,6 +175,11 @@ class DefaultModelFactory implements ModelFactoryInterface
     public function initializeCategoryManager($jsonObject)
     {
         return $this->getCategoryManager()->parseJson($jsonObject, $this);
+    }
+
+    public function initializeFacetManager()
+    {
+
     }
 
     /**
@@ -344,8 +305,6 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createSingleProduct(\stdClass $jsonObject)
     {
-        $this->eventDispatcher->dispatch('collins.shop_api.product.create_model.before', new GenericEvent($jsonObject));
-
         return $this->createProduct($jsonObject);
     }
 
