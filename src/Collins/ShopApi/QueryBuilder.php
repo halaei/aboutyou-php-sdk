@@ -6,7 +6,6 @@
 
 namespace Collins\ShopApi;
 
-
 use Collins\ShopApi\Criteria\ProductFields;
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Model\Basket;
@@ -22,7 +21,7 @@ class QueryBuilder
     }
 
     /**
-     * @param string $searchword The prefix search word to search for.
+     * @param string $searchWord The prefix search word to search for.
      * @param int    $limit      Maximum number of results.
      * @param array  $types      Array of types to search for (Constants::TYPE_...).
      *
@@ -31,17 +30,17 @@ class QueryBuilder
      * @throws \InvalidArgumentException
      */
     public function fetchAutocomplete(
-        $searchword,
+        $searchWord,
         $limit = null,
         array $types = null
     ) {
-        if (!is_string($searchword)) {
+        if (!is_string($searchWord)) {
             throw new \InvalidArgumentException('searchword must be a string');
         }
 
         // strtolower is a workaround of ticket SAPI-532
         $options = array(
-            'searchword' => mb_strtolower($searchword, 'UTF-8'),
+            'searchword' => mb_strtolower($searchWord, 'UTF-8'),
         );
 
         if ($limit !== null) {
@@ -61,17 +60,17 @@ class QueryBuilder
     }
 
     /**
-     * @param string $sessionId Free to choose ID of the current website visitor.
+     * @param string $basketId Free to choose ID of the current website visitor.
      *
      * @return $this
      */
-    public function fetchBasket($sessionId)
+    public function fetchBasket($basketId)
     {
-        $this->checkSessionId($sessionId);
+        $this->checkBasketId($basketId);
 
         $this->query[] = array(
             'basket' => array(
-                'session_id' => $sessionId
+                'session_id' => $basketId
             )
         );
 
@@ -79,15 +78,14 @@ class QueryBuilder
     }
 
     /**
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param int    $productVariantId ID of product variant.
-     * @param int    $amount           Amount of items to add.
+     * @param string $basketId        Free to choose ID of the current website visitor.
+     * @param BasketItem[] $items     Array of basket items
      *
      * @return $this
      */
-    public function addItemsToBasket($sessionId, array $items)
+    public function addItemsToBasket($basketId, array $items)
     {
-        $this->checkSessionId($sessionId);
+        $this->checkBasketId($basketId);
 
         $orderLines = array();
 
@@ -106,7 +104,7 @@ class QueryBuilder
 
         $this->query[] = array(
             'basket' => array(
-                'session_id' => $sessionId,
+                'session_id' => $basketId,
                 'order_lines' => $orderLines
             )
         );
@@ -115,15 +113,14 @@ class QueryBuilder
     }
 
     /**
-     * @param string $sessionId        Free to choose ID of the current website visitor.
-     * @param Model\BasketItemSet[]    $itemSets
-     * @param int    $amount           Amount of items to add.
+     * @param string $basketId        Free to choose ID of the current website visitor.
+     * @param BasketItemSet[]         $itemSets
      *
      * @return $this
      */
-    public function addItemSetsToBasket($sessionId, array $itemSets)
+    public function addItemSetsToBasket($basketId, array $itemSets)
     {
-        $this->checkSessionId($sessionId);
+        $this->checkBasketId($basketId);
 
         $orderLines = array();
 
@@ -155,7 +152,7 @@ class QueryBuilder
 
         $this->query[] = array(
             'basket' => array(
-                'session_id' => $sessionId,
+                'session_id' => $basketId,
                 'order_lines' => $orderLines
             )
         );
@@ -164,19 +161,19 @@ class QueryBuilder
     }
 
     /**
-     * @param string $sessionId        Free to choose ID of the current website visitor.
+     * @param string $basketId        Free to choose ID of the current website visitor.
      * @param int    $productVariantId ID of product variant.
      * @param string $basketItemId  ID of single item or set in the basket
      *
      * @return $this
      */
-    public function addToBasket($sessionId, $productVariantId, $basketItemId)
+    public function addToBasket($basketId, $productVariantId, $basketItemId)
     {
-        $this->checkSessionId($sessionId);
+        $this->checkBasketId($basketId);
 
         $this->query[] = array(
             'basket' => array(
-                'session_id' => $sessionId,
+                'session_id' => $basketId,
                 'order_lines' => array(
                     array(
                         'id' => $basketItemId,
@@ -190,14 +187,14 @@ class QueryBuilder
     }
 
     /**
-     * @param string   $sessionId   Free to choose ID of the current website visitor.
+     * @param string   $basketId   Free to choose ID of the current website visitor.
      * @param string[] $itemIds     array of basket item ids to delete, this can be sets or single items
      *
      * @return $this
      */
-    public function removeFromBasket($sessionId, $itemIds)
+    public function removeFromBasket($basketId, $itemIds)
     {
-        $this->checkSessionId($sessionId);
+        $this->checkBasketId($basketId);
 
         $orderLines = array();
 
@@ -207,7 +204,7 @@ class QueryBuilder
 
         $this->query[] = array(
             'basket' => array(
-                'session_id' => $sessionId,
+                'session_id' => $basketId,
                 'order_lines' => $orderLines
             )
         );
@@ -216,16 +213,16 @@ class QueryBuilder
     }
 
     /**
-     * @param string $sessionId
+     * @param string $basketId
      * @param Basket $basket
      *
      * @return $this
      */
-    public function updateBasket($sessionId, Basket $basket)
+    public function updateBasket($basketId, Basket $basket)
     {
-        $this->checkSessionId($sessionId);
+        $this->checkBasketId($basketId);
 
-        $basketQuery = array('session_id'  => $sessionId);
+        $basketQuery = array('session_id'  => $basketId);
 
         $orderLines = $basket->getOrderLinesArray();
         if (!empty($orderLines)) {
@@ -387,19 +384,19 @@ class QueryBuilder
     }
 
     /**
-     * @param string $sessionId
+     * @param string $basketId
      * @param string $successUrl
      * @param string $cancelUrl
      * @param string $errorUrl
      *
      * @return $this
      */
-    public function initiateOrder($sessionId, $successUrl, $cancelUrl, $errorUrl)
+    public function initiateOrder($basketId, $successUrl, $cancelUrl, $errorUrl)
     {
-        $this->checkSessionId($sessionId);
+        $this->checkBasketId($basketId);
 
         $args = array();
-        $args['session_id'] = $sessionId;
+        $args['session_id'] = $basketId;
         $args['success_url'] = $successUrl;
         if ($cancelUrl) $args['cancel_url'] = $cancelUrl;
         if ($errorUrl) $args['error_url'] = $errorUrl;
@@ -415,7 +412,7 @@ class QueryBuilder
      */
     public function fetchProductSearch(ProductSearchCriteria $criteria)
     {
-        $this->checkSessionId($criteria->getSessionId());
+        $this->checkBasketId($criteria->getSessionId());
 
         $this->query[] = array(
             'product_search' => $criteria->toArray()
@@ -473,15 +470,15 @@ class QueryBuilder
     }
 
     /**
-     * @param string $searchword The search string to search for.
+     * @param string $searchWord The search string to search for.
      *
      * @return $this
      */
-    public function fetchSuggest($searchword)
+    public function fetchSuggest($searchWord)
     {
         $this->query[] = array(
             'suggest' => array(
-                'searchword' => $searchword
+                'searchword' => $searchWord
             )
         );
 
@@ -507,17 +504,17 @@ class QueryBuilder
     }
 
     /**
-     * @param $sessionId
+     * @param $basketId
      *
      * @throws \InvalidArgumentException
      */
-    protected function checkSessionId($sessionId)
+    protected function checkBasketId($basketId)
     {
-        if (!is_string($sessionId)) {
-            throw new \InvalidArgumentException('The session id must be a string');
+        if (!is_string($basketId)) {
+            throw new \InvalidArgumentException('The basket id must be a string');
         }
-        if (!isset($sessionId[4])) {
-            throw new \InvalidArgumentException('The session id must have at least 5 characters');
+        if (!isset($basketId[4])) {
+            throw new \InvalidArgumentException('The basket id must have at least 5 characters');
         }
     }
 }
