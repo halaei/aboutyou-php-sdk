@@ -180,7 +180,7 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
         $facets = array();
         foreach ($jsonFacets as $jsonFacet) {
             $facet = ShopApi\Model\Facet::createFromJson($jsonFacet);
-            $facets[] = $facet;
+            $facets[$facet->getUniqueKey()] = $facet;
         }
 
         return $facets;

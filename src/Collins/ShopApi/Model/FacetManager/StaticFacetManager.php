@@ -29,6 +29,11 @@ class StaticFacetManager implements FacetManagerInterface
         }
     }
 
+    public function setFacets($facets)
+    {
+
+    }
+
     public function isEmpty()
     {
         return $this->factes === null;

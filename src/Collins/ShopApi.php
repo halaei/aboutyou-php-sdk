@@ -5,6 +5,7 @@ use AuthSDK\AuthSDK;
 use AuthSDK\SessionStorage;
 use Collins\ShopApi\Constants;
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
+use Collins\ShopApi\Exception\RuntimeException;
 use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Model\Basket;
@@ -15,6 +16,7 @@ use Collins\ShopApi\Model\CategoryManager\DefaultCategoryManager;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
 use Collins\ShopApi\Model\FacetManager\AboutyouCacheStrategy;
+use Collins\ShopApi\Model\FacetManager\FacetManagerInterface;
 use Collins\ShopApi\Model\FacetManager\FetchFacetGroupStrategy;
 use Collins\ShopApi\Model\ProductsEansResult;
 use Collins\ShopApi\Model\ProductSearchResult;
@@ -73,6 +75,8 @@ class ShopApi
      */
     protected $pageId;
 
+    protected $cache;
+
     /**
      * @param string $appId
      * @param string $appPassword
@@ -96,6 +100,7 @@ class ShopApi
             $this->modelFactory = function ($scope) use ($cache) {
                 return $scope->initDefaultFactory($cache);
             };
+            $this->cache = $cache;
         }
 
         $this->setBaseImageUrlByApiEndPoint($apiEndPoint);
@@ -230,7 +235,9 @@ class ShopApi
             $this->baseImageUrl = '';
         }
 
-        $this->getResultFactory()->setBaseImageUrl($this->baseImageUrl);
+        if ($this->modelFactory && $this->modelFactory instanceof ModelFactoryInterface) {
+            $this->getResultFactory()->setBaseImageUrl($this->baseImageUrl);
+        }
     }
 
     /**
@@ -726,7 +733,14 @@ class ShopApi
         return new ProductSearchCriteria($sessionId);
     }
 
+    public function preCacheFacets()
+    {
+        if (!$this->cache) {
+            throw new \RuntimeException('You can not use this this method, without setting the cache with the constructor');
+        }
 
+        $this->getQuery()->requireFacets()->execute();
+    }
 
     /**
      * Returns the URL to the Collins JavaScript file for helper functions
@@ -806,6 +820,8 @@ class ShopApi
             $facetManager,
             $categoryManager
         );
+
+        $resultFactory->setBaseImageUrl($this->baseImageUrl);
 
         $this->setResultFactory($resultFactory);
     }

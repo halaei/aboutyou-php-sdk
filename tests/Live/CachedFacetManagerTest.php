@@ -17,53 +17,19 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class CachedFacetManagerTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 {
-    public function testCacheAllUsedFacets()
+    public function testPreCacheFacets()
     {
         $cache   = new ArrayCache();
         $shopApi = $this->getShopApi(null, null, $cache);
-        /** @var DefaultFacetManager $facetManager */
         $facetManager = $shopApi->getResultFactory()->getFacetManager();
-        /** @var AboutyouCacheStrategy $cacheStrategy */
-        $cacheStrategy = $facetManager->getFetchStrategy();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\AboutyouCacheStrategy', $cacheStrategy);
+        $this->assertTrue($facetManager->isEmpty());
+        $shopApi->preCacheFacets();
+        $this->assertFalse($facetManager->isEmpty());
 
-        $cacheStrategy->cacheAllFacets($shopApi);
+        /** @var DefaultFacetManager $facetManager */
+        $facetManager = new DefaultFacetManager($cache, $shopApi->getAppId());
+        $this->assertFalse($facetManager->isEmpty());
 
         return $cache;
-    }
-
-    /**
-     * @depends testCacheAllUsedFacets
-     *
-     * @param CacheMultiGet $cache
-     */
-    public function testThatFactesAreCached(CacheMultiGet $cache)
-    {
-        $shopApi = $this->getShopApi(null, null, $cache);
-
-        $dummyFacet  = new Facet(30, '30', '30', 1, 'size');
-        $fetchedFacets[$dummyFacet->getUniqueKey()] = $dummyFacet;
-
-        $strategyMock = $this->getMockForAbstractClass('\\Collins\\ShopApi\\Model\\FacetManager\\FetchStrategyInterface');
-        $strategyMock->expects($this->never())
-            ->method('fetch')
-            ->will($this->returnValue($fetchedFacets))
-        ;
-
-        $strategy = new AboutyouCacheStrategy($cache, $strategyMock);
-        /** @var DefaultModelFactory $factory */
-        $facetManager    = new DefaultFacetManager($strategy);
-        $this->eventDispatcher = new EventDispatcher();
-        $factory = new DefaultModelFactory($shopApi, $facetManager, new DefaultCategoryManager(), new EventDispatcher());
-        $shopApi->setResultFactory($factory);
-
-        $criteria = $shopApi->getProductSearchCriteria('AboutyouCacheStrategy')
-            ->setLimit(0)
-//            ->selectFacetsByGroupId(172, 3)
-            ->selectAllFacets(\Collins\ShopApi\Criteria\ProductSearchCriteria::FACETS_UNLIMITED)
-        ;
-
-        $productSearchResult = $shopApi->fetchProductSearch($criteria);
-        $facetCounts = $productSearchResult->getFacets();
     }
 }
