@@ -23,16 +23,16 @@ class DefaultCategoryManager implements CategoryManagerInterface
     /** @var Cache */
     private $cache;
 
+    private $cacheKey;
+
     /**
      * @param string $appId  This must set, when you use more then one instances with different apps
      * @param CacheProvider $cache
      */
     public function __construct($appId = '', CacheProvider $cache = null)
     {
-        if ($cache !== null) {
-            $cache->setNamespace('AY:SDK:' . $appId);
-        }
-        $this->cache = $cache;
+        $this->cache    = $cache;
+        $this->cacheKey = 'AY:SDK:' . $appId . ':categories';
 
         $this->loadCachedCategories();
     }
@@ -40,14 +40,21 @@ class DefaultCategoryManager implements CategoryManagerInterface
     public function loadCachedCategories()
     {
         if ($this->cache) {
-            $this->categories = $this->cache->fetch('categories') ?: null;
+            $this->categories = $this->cache->fetch($this->cacheKey) ?: null;
         }
     }
 
     public function cacheCategories()
     {
         if ($this->cache) {
-            $this->cache->save('categories', $this->categories, self::DEFAULT_CACHE_DURATION);
+            $this->cache->save($this->cacheKey, $this->categories, self::DEFAULT_CACHE_DURATION);
+        }
+    }
+
+    public function clearCache()
+    {
+        if ($this->cache) {
+            $this->cache->delete($this->cacheKey);
         }
     }
 
