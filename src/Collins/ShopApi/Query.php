@@ -22,7 +22,9 @@ class Query extends QueryBuilder
     /** @var ModelFactoryInterface */
     protected $factory;
 
-    protected $additionalQuery = array();
+    protected $ghostQuery = array();
+
+    private $allQuery = array();
 
     /**
      * @param ShopApiClient       $client
@@ -141,7 +143,7 @@ class Query extends QueryBuilder
             return $this;
         }
 
-        $this->query[self::QUERY_TREE] = array(
+        $this->ghostQuery[self::QUERY_TREE] = array(
             'category_tree' => array('version' => '2')
         );
 
@@ -154,11 +156,19 @@ class Query extends QueryBuilder
             return $this;
         }
 
-        $this->query[self::QUERY_FACETS] = array(
+        $this->ghostQuery[self::QUERY_FACETS] = array(
             'facets' => new \stdClass()
         );
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getQueryString()
+    {
+        return json_encode(array_values($this->ghostQuery + $this->query));
     }
 
     /**
@@ -168,9 +178,11 @@ class Query extends QueryBuilder
      */
     public function execute()
     {
-        if (empty($this->query)) {
+        if (empty($this->query) && empty($this->ghostQuery)) {
             return array();
         }
+
+        $this->allQuery = $this->ghostQuery + $this->query;
 
         $queryString = $this->getQueryString();
 
@@ -211,6 +223,34 @@ class Query extends QueryBuilder
         'live_variant'   => 'createVariantsResult'
     );
 
+    protected function checkResponse($jsonResponse)
+    {
+        if ($jsonResponse === false ||
+            !is_array($jsonResponse) ||
+            count($jsonResponse) !== count($this->allQuery)
+        ) {
+            throw new UnexpectedResultException();
+        }
+
+        $currentQueries = array_values($this->allQuery);
+
+        foreach ($jsonResponse as $index => $responseObject) {
+            $currentQuery = $currentQueries[$index];
+            $responseKey  = key($responseObject);
+            $queryKey     = key($currentQuery);
+
+            if ($responseKey !== $queryKey) {
+                throw new UnexpectedResultException(
+                    'result ' . $queryKey . ' expected, but ' . $responseKey . ' given on position ' . $index .
+                    ' - query: ' . json_encode(array($currentQuery))
+                );
+            }
+            if (!isset($this->mapping[$responseKey])) {
+                throw new UnexpectedResultException('internal error, ' . $responseKey . ' is unknown result');
+            }
+        }
+    }
+
     /**
      * returns an array of parsed results
      *
@@ -223,39 +263,24 @@ class Query extends QueryBuilder
      */
     protected function parseResult($jsonResponse, $isMultiRequest = true)
     {
-        if ($jsonResponse === false ||
-            !is_array($jsonResponse) ||
-            count($jsonResponse) !== count($this->query)
-        ) {
-            throw new UnexpectedResultException();
-        }
+        $this->checkResponse($jsonResponse);
 
         $results = array();
-        $currentQueries = array_values($this->query);
-        $queryIds = array_keys($this->query);
+        $currentQueries = array_values($this->allQuery);
+        $queryIds = array_keys($this->allQuery);
 
         foreach ($jsonResponse as $index => $responseObject) {
             $jsonObject     = current($responseObject);
             $currentQuery   = $currentQueries[$index];
-            $resultKey      = key($responseObject);
+            $responseKey    = key($responseObject);
             $queryKey       = key($currentQuery);
-
-            if ($resultKey !== $queryKey) {
-                throw new UnexpectedResultException(
-                    'result ' . $queryKey . ' expected, but '. $resultKey . ' given on position ' . $index .
-                    ' - query: ' . json_encode(array($currentQuery))
-                );
-            }
-            if (!isset($this->mapping[$resultKey])) {
-                throw new UnexpectedResultException('internal error, '. $resultKey . ' is unknown result');
-            }
 
             $factory = $this->factory;
             
             if (isset($jsonObject->error_code)) {
-                $result = $factory->preHandleError($jsonObject, $resultKey, $isMultiRequest);
+                $result = $factory->preHandleError($jsonObject, $responseKey, $isMultiRequest);
                 if ($result !== false) {
-                    $results[$resultKey] = $result;
+                    $results[$responseKey] = $result;
                     continue;
                 }
             }
@@ -265,9 +290,11 @@ class Query extends QueryBuilder
 
             if ($queryId === self::QUERY_FACETS) {
                 $factory->updateFacetManager($jsonObject);
+            } else if ($queryId === self::QUERY_TREE) {
+                $factory->initializeCategoryManager($jsonObject);
             } else {
-                $method  = $this->mapping[$resultKey];
-                $results[$resultKey] = $factory->$method($jsonObject, $query);
+                $method  = $this->mapping[$responseKey];
+                $results[$responseKey] = $factory->$method($jsonObject, $query);
             }
         }
 

@@ -40,15 +40,18 @@ class ImageTest extends AbstractModelTest
         $this->assertStringStartsWith('/hash1?width=123&height=456', $image->getUrl(123, 456));
 
         $shopApi = new ShopApi('appid', 'pw');
+        $shopApi->getResultFactory();
         $this->assertStringStartsWith(ShopApi::IMAGE_URL_LIVE . '/hash1', $image->getUrl());
         $shopApi->setBaseImageUrl('http://domain.tld');
-        $this->assertStringStartsWith('http://domain.tld/hash1', $image->getUrl());
-        $shopApi->setBaseImageUrl('http://domain.tld/');
         $this->assertStringStartsWith('http://domain.tld/hash1', $image->getUrl());
         $shopApi->setBaseImageUrl(false);
         $this->assertStringStartsWith('/hash1', $image->getUrl());
         $shopApi->setBaseImageUrl(null);
         $this->assertStringStartsWith(ShopApi::IMAGE_URL_LIVE . '/hash1', $image->getUrl());
+        $shopApi->getResultFactory()->setBaseImageUrl('http://domain2.tld');
+        $this->assertStringStartsWith('http://domain2.tld/hash1', $image->getUrl());
+        Image::setBaseUrl('http://domain3.tld');
+        $this->assertStringStartsWith('http://domain3.tld/hash1', $image->getUrl());
 
         $this->assertNull($image->getAdditionalItems());
         $this->assertNull($image->getAngle());

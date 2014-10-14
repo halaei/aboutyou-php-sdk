@@ -13,12 +13,7 @@ use Collins\ShopApi\Model\Basket;
 class QueryBuilder
 {
     /** @var array */
-    protected $query;
-
-    public function __construct()
-    {
-        $this->query = array();
-    }
+    protected $query = array();
 
     /**
      * @param string $searchWord The prefix search word to search for.

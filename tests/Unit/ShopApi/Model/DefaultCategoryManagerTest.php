@@ -198,15 +198,15 @@ class DefaultCategoryManagerTest extends AbstractModelTest
         $cacheMock = $this->getMockForAbstractClass('Aboutyou\\Common\\Cache\\CacheProvider', array(), '', true, true, true, array('fetch', 'save'));
         $cacheMock->expects($this->atLeastOnce())
             ->method('save')
-            ->with('categories', $this->isType('array'))
+            ->with('AY:SDK:100:categories', $this->isType('array'))
         ;
         $cacheMock->expects($this->atLeastOnce())
             ->method('fetch')
-            ->with('categories')
+            ->with('AY:SDK:100:categories')
             ->will($this->returnValue(false))
         ;
 
-        $categoryManager = new DefaultCategoryManager('', $cacheMock);
+        $categoryManager = new DefaultCategoryManager('100', $cacheMock);
         $factory->setCategoryManager($categoryManager);
         $jsonObject = $this->getJsonObject('category-tree-v2.json');
         $categoryManager->parseJson($jsonObject, $factory);
