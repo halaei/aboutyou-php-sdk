@@ -41,8 +41,8 @@ class ProductSearchTest extends AbstractShopApiTest
 
         $rawFacets = $productSearchResult->getRawFacets();
         $this->assertInstanceOf('\stdClass', $rawFacets);
-        $this->assertObjectHasAttribute("0", $rawFacets);
-        $brandFacets = $rawFacets->{"0"};
+        $this->assertTrue(isset($rawFacets->{'0'}), 'rawFacets has no attribute "0"');
+        $brandFacets = $rawFacets->{'0'};
         $this->assertInstanceOf('\stdClass', $brandFacets);
         $this->assertObjectHasAttribute('_type', $brandFacets);
         $this->assertObjectHasAttribute('total', $brandFacets);

@@ -30,4 +30,8 @@
             <file>src/CollinsApi.php</file>
         </blacklist>
     </filter>
+
+    <php>
+        <ini name="memory_limit" value="512M" />
+    </php>
 </phpunit>
