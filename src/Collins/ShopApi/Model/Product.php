@@ -9,9 +9,8 @@ namespace Collins\ShopApi\Model;
 use Collins\ShopApi;
 use Collins\ShopApi\Exception\MalformedJsonException;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
-use Symfony\Component\EventDispatcher\GenericEvent;
 
-class Product extends AbstractModel
+class Product
 {
     /** @var integer */
     protected $id;
@@ -53,6 +52,18 @@ class Product extends AbstractModel
     /** @var array */
     protected $categoryIdPaths;
 
+    /** @var  Category[] */
+    protected $rootCategories;
+
+    /** @var  Category[] */
+    protected $activeRootCategories;
+
+    /** @var  Category[] */
+    protected $leafCategories;
+
+    /** @var  Category[] */
+    protected $activeLeafCategories;
+
     /** @var integer[] */
     protected $facetIds;
 
@@ -77,17 +88,8 @@ class Product extends AbstractModel
     /** @var FacetGroupSet */
     protected $facetGroups;
 
-    /** @var Category[] */
-    protected $rootCategories;
-
-    /** @var Category[] */
-    protected $activeRootCategories;
-
-    /** @var Category[] */
-    protected $leafCategories;
-
-    /** @var Category[] */
-    protected $activeLeafCategories;
+    /** @var  ModelFactoryInterface */
+    private $factory;
 
     protected function __construct()
     {
@@ -109,6 +111,8 @@ class Product extends AbstractModel
         if (!isset($jsonObject->id) || !isset($jsonObject->name)) {
             throw new MalformedJsonException();
         }
+
+        $product->factory = $factory;
 
         $product->id   = $jsonObject->id;
         $product->name = $jsonObject->name;
@@ -357,7 +361,7 @@ class Product extends AbstractModel
      *
      * @return Category|null
      */
-    public function getCategory($active = true)
+    public function getCategory($active = false)
     {
         if (empty($this->categoryIdPaths)) {
             return;
@@ -377,8 +381,6 @@ class Product extends AbstractModel
             return;
         }
 
-        $this->fetchAndParseCategories();
-
         // get reverse sorted category pathes
         $pathLengths = array_map('count', $this->categoryIdPaths);
         arsort($pathLengths);
@@ -386,8 +388,12 @@ class Product extends AbstractModel
         foreach ($pathLengths as $index => $pathLength) {
             $categoryPath = $this->categoryIdPaths[$index];
             $leafId = end($categoryPath);
-            if (!isset($this->activeLeafCategories[$leafId])) continue;
-            $category = $this->activeLeafCategories[$leafId];
+
+            $category = $this->getCategoryManager()->getCategory($leafId, true);
+
+            if (!$category) {
+                throw new ShopApi\Exception\RuntimeException('Missing category with id ' . $leafId);
+            }
 
             if ($category->isPathActive()) {
                 return $category;
@@ -406,17 +412,33 @@ class Product extends AbstractModel
      *
      * @return Category[]
      */
-    public function getLeafCategories($activeOnly = true)
+    public function getLeafCategories($activeOnly = Category::ACTIVE_ONLY)
     {
-        $this->fetchAndParseCategories();
+        $categoryIds = $this->getLeafCategoryIds();
 
-        return array_values($activeOnly ?
-            $this->activeLeafCategories :
-            $this->leafCategories
-        );
+        $categories = $this->getCategoryManager()->getCategories($categoryIds, $activeOnly);
+
+        return $categories;
     }
 
-    public function getCategories($activeOnly = true)
+
+    public function getRootCategoryIds() {
+        $ids = array_map(function($categoryIdPath) {
+            return $categoryIdPath[0];
+        }, $this->categoryIdPaths);
+
+        return array_unique($ids);
+    }
+
+    public function getLeafCategoryIds() {
+        return array_map(function($categoryIdPath) {
+            return end($categoryIdPath);
+        }, $this->categoryIdPaths);
+
+        return $ids;
+    }
+
+    public function getCategories($activeOnly = Category::ACTIVE_ONLY)
     {
         return $this->getRootCategories($activeOnly);
     }
@@ -426,63 +448,14 @@ class Product extends AbstractModel
      *
      * @return Category[]
      */
-    public function getRootCategories($activeOnly = true)
+    public function getRootCategories($activeOnly = Category::ACTIVE_ONLY)
     {
-        $this->fetchAndParseCategories();
+        $categoryIds = $this->getRootCategoryIds();
 
-        return array_values($activeOnly ?
-            $this->activeRootCategories :
-            $this->rootCategories
-        );
+        $categories = $this->getCategoryManager()->getCategories($categoryIds, $activeOnly);
+
+        return $categories;
     }
-
-    protected function fetchAndParseCategories()
-    {
-        if ($this->rootCategories !== null) {
-            return;
-        }
-
-        $this->rootCategories = array();
-        $this->activeRootCategories = array();
-        $this->leafCategories = array();
-        $this->activeLeafCategories = array();
-
-        if (empty($this->categoryIdPaths)) {
-            return;
-        }
-
-        // put all category ids in an array to fetch by ids
-        $categoryIds = array_values(array_unique(
-            call_user_func_array('array_merge', $this->categoryIdPaths)
-        ));
-
-        // fetch all necessary categories from API
-        $flattenCategories = $this->getShopApi()->fetchCategoriesByIds($categoryIds)->getCategories();
-
-        foreach ($flattenCategories as $category) {
-            $parentId = $category->getParentId();
-            if ($parentId !== null && isset($flattenCategories[$parentId])) {
-                $category->setParent($flattenCategories[$parentId], true);
-            }
-        }
-
-        foreach ($this->categoryIdPaths as $categoryIdPath) {
-            $rootId = $categoryIdPath[0];
-            $rootCategory = $flattenCategories[$rootId];
-            $this->rootCategories[$rootId] = $rootCategory;
-            if ($rootCategory->isActive()) {
-                $this->activeRootCategories[$rootId] = $rootCategory;
-            }
-
-            $leafId = end($categoryIdPath);
-            $leafCategory = $flattenCategories[$leafId];
-            $this->leafCategories[$leafId] = $leafCategory;
-            if ($leafCategory->isActive()) {
-                $this->activeLeafCategories[$leafId] = $leafCategory;
-            }
-        }
-    }
-
 
     /**
      * Get facets of given group id.
@@ -764,5 +737,13 @@ class Product extends AbstractModel
         }
 
         return $variants;
+    }
+
+    /**
+     * @return \Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface
+     */
+    private function getCategoryManager()
+    {
+        return $this->factory->getCategoryManager();
     }
 }

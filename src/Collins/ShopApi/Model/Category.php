@@ -6,9 +6,9 @@
 
 namespace Collins\ShopApi\Model;
 
-use Collins\ShopApi\Factory\ModelFactoryInterface;
+use Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface;
 
-class Category extends AbstractModel
+class Category
 {
     const ALL = false;
     const ACTIVE_ONLY = true;
@@ -28,51 +28,32 @@ class Category extends AbstractModel
     /** @var Category */
     protected $parentId;
 
-    /** @var Category */
-    protected $parent;
-
-    /** @var Category[] */
-    protected $allSubCategories;
-
-    /** @var Category[] */
-    protected $activeSubCategories;
+    /** @var CategoryManagerInterface */
+    protected $categoryManager;
 
     /** @var integer */
     protected $productCount;
 
     protected function __construct()
     {
-        $this->allSubCategories = array();
-        $this->activeSubCategories = array();
     }
 
     /**
      * @param object        $jsonObject  json as object tree
-     * @param ModelFactoryInterface $factory
-     * @param Category|null $parent
+     * @param CategoryManagerInterface $categoryManager
      *
      * @return static
      */
-    public static function createFromJson($jsonObject, ModelFactoryInterface $factory, $parent = null)
+    public static function createFromJson($jsonObject, CategoryManagerInterface $categoryManager)
     {
         $category = new static();
 
-        $category->parent   = $parent;
+        $category->categoryManager   = $categoryManager;
         $category->parentId = $jsonObject->parent;
         $category->id       = $jsonObject->id;
         $category->name     = $jsonObject->name;
         $category->isActive = $jsonObject->active;
         $category->position = $jsonObject->position;
-
-        if (isset($jsonObject->sub_categories)) {
-            foreach ($jsonObject->sub_categories as $jsonSubCategory) {
-                $subCategory = $factory->createCategory($jsonSubCategory, $category);
-                $category->allSubCategories[] = $subCategory;
-                if ($subCategory->isActive) {
-                    $category->activeSubCategories[] = $subCategory;
-                }
-            }
-        }
 
         return $category;
     }
@@ -148,20 +129,11 @@ class Category extends AbstractModel
      */
     public function getParent()
     {
-        if ($this->parent) {
-            return $this->parent;
-        }
-
         if (!$this->getParentId()) {
             return null;
         }
 
-        $parents = $this->getShopApi()->fetchCategoriesByIds(array($this->getParentId()))->getCategories();
-        if (count($parents)) {
-            $this->parent = reset($parents);
-        }
-
-        return $this->parent;
+        return $this->categoryManager->getCategory($this->getParentId());
     }
 
     /**
@@ -171,11 +143,15 @@ class Category extends AbstractModel
      */
     public function getSubCategories($activeOnly = self::ACTIVE_ONLY)
     {
-        if ($activeOnly) {
-            return $this->activeSubCategories;
+        $subCategories = $this->categoryManager->getSubCategories($this->id);
+
+        if ($activeOnly === self::ALL) {
+            return $subCategories;
         }
 
-        return $this->allSubCategories;
+        return array_filter($subCategories, function (Category $subCategory) {
+            return $subCategory->isActive();
+        });
     }
 
     /**
@@ -187,113 +163,5 @@ class Category extends AbstractModel
         $breadcrumb[] = $this;
 
         return $breadcrumb;
-    }
-
-    /**
-     * Sets the parent category of this category
-     *
-     * @param Category $parent
-     * @param bool $doAddChild
-     */
-    public function setParent(Category $parent, $doAddChild = false)
-    {
-        $this->parent = $parent;
-
-        if ($doAddChild) {
-            $parent->addChild($this);
-        }
-    }
-
-    /**
-     * @param Category $child
-     */
-    public function addChild(Category $child)
-    {
-        $this->allSubCategories[] = $child;
-
-        if($child->isActive()) {
-            $this->activeSubCategories[] = $child;
-        }
-    }
-
-    /**
-     * @param Category[] $categories
-     */
-    public function setSubCategories(array $categories)
-    {
-        $this->allSubCategories = $categories;
-
-        foreach ($categories as $category) {
-            if($category->isActive()) {
-                $this->activeSubCategories[] = $category;
-            }
-        }
-    }
-
-    /**
-     * Builds a return a category tree array
-     *
-     * @param Category[] categories
-     * @return array
-     *
-     * @deprecated
-     */
-    public static function buildTree($categories)
-    {
-        $tree = array();
-        foreach($categories as $category) {
-            if(!self::addToTree($category, $tree)) {
-                $tree[] = $category;
-            }
-        }
-
-        return $tree;
-    }
-
-    /**
-     * Used to add a single category in a category tree array
-     *
-     * @param Category $category
-     * @param array $tree
-     * @return bool true if category could be added
-     *
-     * @deprecated
-     */
-    protected static function addToTree($category, &$tree) {
-        $added = false;
-
-        foreach($tree as $key => $cat) {
-
-            // is parent?
-            if($cat->getId() == $category->getParentId()) {
-                $category->setParent($cat);
-                $cat->addChild($category);
-
-                $tree[$key] = $cat;
-                return true;
-            }
-
-            // is child?
-            if($cat->getParentId() == $category->getId()) {
-                $added = true;
-
-                $cat->setParent($category);
-                $category->addChild($cat);
-
-                $tree[$key] = $category;
-                return true;
-            }
-
-            // check children
-            $subCategories = $cat->getSubCategories();
-
-            if(count($subCategories) && self::addToTree($category, $subCategories)) {
-                $cat->setSubCategories($subCategories);
-                $tree[$key] = $cat;
-                return true;
-            }
-        }
-
-        return false;
     }
 }

@@ -29,4 +29,9 @@ abstract class AbstractModelTest extends \Collins\ShopApi\Test\ShopSdkTest
 
         return $shopApi->getResultFactory();
     }
+
+    protected function getModelFactoryMock()
+    {
+        return $this->getMock('\\Collins\\ShopApi\\Factory\\DefaultModelFactory', array(), array(), '', false);
+    }
 }

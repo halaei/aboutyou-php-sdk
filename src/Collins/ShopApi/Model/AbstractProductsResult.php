@@ -6,7 +6,7 @@
 
 namespace Collins\ShopApi\Model;
 
-abstract class AbstractProductsResult extends AbstractModel implements \IteratorAggregate, \ArrayAccess, \Countable
+abstract class AbstractProductsResult implements \IteratorAggregate, \ArrayAccess, \Countable
 {
     /** @var Product[] */
     protected $products;

@@ -6,8 +6,6 @@
 
 namespace Collins\ShopApi\Model\ProductSearchResult;
 
-use Collins\ShopApi\Factory\ModelFactoryInterface;
-
 abstract class TermsCounts
 {
     /** @var integer */

@@ -279,6 +279,9 @@ class QueryBuilder
      * @param int $maxDepth -1 <= $maxDepth <= 10,
      *
      * @return $this
+     * @throws \InvalidArgumentException
+     *
+     * @deprecated use requireCategoryTree and the CategoryManager instead of
      */
     public function fetchCategoryTree($maxDepth = -1)
     {
@@ -289,6 +292,7 @@ class QueryBuilder
         } else {
             $params = new \stdClass();
         }
+
         $this->query[] = array(
             'category_tree' => $params,
         );

@@ -6,12 +6,11 @@
 
 namespace Collins\ShopApi\Model;
 
+use Collins\ShopApi;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi\Model\ProductSearchResult\FacetCounts;
 use Collins\ShopApi\Model\ProductSearchResult\PriceRange;
 use Collins\ShopApi\Model\ProductSearchResult\SaleCounts;
-use Collins\ShopApi;
-use Symfony\Component\EventDispatcher\GenericEvent;
 
 class ProductSearchResult
 {

@@ -2,8 +2,6 @@
 namespace Collins\ShopApi\Model;
 
 use Collins\ShopApi\Factory\ModelFactoryInterface;
-use Collins\ShopApi\Model\Basket\BasketItemInterface;
-use Collins\ShopApi\Model\Basket\BasketVariantItem;
 use Collins\ShopApi\Model\Basket\BasketSet;
 use Collins\ShopApi\Model\Basket\BasketItem;
 

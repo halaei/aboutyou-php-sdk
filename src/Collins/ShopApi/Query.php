@@ -6,6 +6,8 @@
 
 namespace Collins\ShopApi;
 
+use Collins\ShopApi\Criteria\ProductFields;
+use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Exception\UnexpectedResultException;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -32,6 +34,110 @@ class Query extends QueryBuilder
         $this->client          = $client;
         $this->factory         = $factory;
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+
+    /**
+     * @param string $searchword The prefix search word to search for.
+     * @param int    $limit      Maximum number of results.
+     * @param array  $types      Array of types to search for (Constants::TYPE_...).
+     *
+     * @return $this
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function fetchAutocomplete(
+        $searchword,
+        $limit = null,
+        array $types = null
+    ) {
+        parent::fetchAutocomplete($searchword, $limit, $types);
+
+        $this->requireCategoryTree();
+
+        return $this;
+    }
+
+        /**
+     * @param string $sessionId Free to choose ID of the current website visitor.
+     *
+     * @return $this
+     */
+    public function fetchBasket($sessionId)
+    {
+        parent::fetchBasket($sessionId);
+
+        $this->requireCategoryTree();
+
+        return $this;
+    }
+
+        /**
+     * @param string[]|int[] $ids
+     * @param array $fields
+     *
+     * @return $this
+     */
+    public function fetchProductsByIds(
+        array $ids,
+        array $fields = array()
+    ) {
+        parent::fetchProductsByIds($ids, $fields);
+
+        if (in_array(ProductFields::CATEGORIES, $fields)) {
+            $this->requireCategoryTree();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string[] $eans
+     * @param array $fields
+     *
+     * @return $this
+     */
+    public function fetchProductsByEans(
+        array $eans,
+        array $fields = array()
+    ) {
+        parent::fetchProductsByEans($eans, $fields);
+
+        if (in_array(ProductFields::CATEGORIES, $fields)) {
+            $this->requireCategoryTree();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ProductSearchCriteria $criteria
+     *
+     * @return $this
+     */
+    public function fetchProductSearch(ProductSearchCriteria $criteria)
+    {
+        parent::fetchProductSearch($criteria);
+
+        if ($criteria->requiresCategories()) {
+            $this->requireCategoryTree();
+        }
+
+        return $this;
+    }
+
+
+    public function requireCategoryTree($fetchForced = false)
+    {
+        if (!($fetchForced || $this->factory->getCategoryManager()->isEmpty())) {
+            return $this;
+        }
+
+        $this->query[] = array(
+            'category_tree' => array('version' => '2')
+        );
+
+        return $this;
     }
 
     /**

@@ -7,6 +7,10 @@
 namespace Collins\ShopApi\Factory;
 
 use Collins\ShopApi;
+use Collins\ShopApi\Model;
+use Collins\ShopApi\Model\Basket;
+use Collins\ShopApi\Model\ProductSearchResult;
+use Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface;
 use Collins\ShopApi\Model\FacetManager\FacetManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -22,6 +26,9 @@ class DefaultModelFactory implements ModelFactoryInterface
     /** @var EventDispatcher */
     protected $eventDispatcher;
 
+    /** @var  CategoryManagerInterface */
+    protected $categoryManager;
+
     /**
      * @param ShopApi $shopApi
      * @param FacetManagerInterface $facetManager
@@ -30,11 +37,13 @@ class DefaultModelFactory implements ModelFactoryInterface
     public function __construct(
         ShopApi $shopApi = null,
         FacetManagerInterface $facetManager,
+        CategoryManagerInterface $categoryManager,
         EventDispatcher $eventDispatcher
     ) {
         if (!empty($shopApi)) {
             $this->setShopApi($shopApi);
         }
+        $this->categoryManager = $categoryManager;
 
         $this->eventDispatcher = $eventDispatcher;
         $this->setFacetManager($facetManager);
@@ -42,10 +51,6 @@ class DefaultModelFactory implements ModelFactoryInterface
 
     public function setShopApi(ShopApi $shopApi)
     {
-        ShopApi\Model\Category::setShopApi($shopApi);
-        ShopApi\Model\Product::setShopApi($shopApi);
-        ShopApi\Model\FacetGroupSet::setShopApi($shopApi);
-
         $this->shopApi = $shopApi;
     }
 
@@ -64,6 +69,14 @@ class DefaultModelFactory implements ModelFactoryInterface
             $this->getEventDispatcher()->addSubscriber($this->facetManager);
         }
     }
+
+//    protected function subscribeCategoryManagerEvents()
+//    {
+//        $newSubscribedEvents = $this->getCategoryManager()->getSubscribedEvents();
+//        if (!empty($newSubscribedEvents)) {
+//            $this->getEventDispatcher()->addSubscriber($this->getCategoryManager());
+//        }
+//    }
 
     protected function unsubscribeFacetManagerEvents()
     {
@@ -84,11 +97,11 @@ class DefaultModelFactory implements ModelFactoryInterface
         $this->facetManager = $facetManager;
         $this->subscribeFacetManagerEvents();
         $this->facetManager->setShopApi($this->shopApi);
-        ShopApi\Model\FacetGroupSet::setFacetManager($facetManager);
+        Model\FacetGroupSet::setFacetManager($facetManager);
     }
 
     /**
-     * @return ShopApi\Model\FacetManager|FacetManagerInterface
+     * @return Model\FacetManager|FacetManagerInterface
      */
     public function getFacetManager()
     {
@@ -97,7 +110,7 @@ class DefaultModelFactory implements ModelFactoryInterface
 
     public function setBaseImageUrl($baseUrl)
     {
-        ShopApi\Model\Image::setBaseUrl($baseUrl);
+        Model\Image::setBaseUrl($baseUrl);
     }
 
     /**
@@ -111,97 +124,117 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\Autocomplete
+     * @return Model\Autocomplete
      */
     public function createAutocomplete(\stdClass $jsonObject)
     {
-        return ShopApi\Model\Autocomplete::createFromJson($jsonObject, $this);
+        return Model\Autocomplete::createFromJson($jsonObject, $this);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\Basket
+     * @return Basket
      */
     public function createBasket(\stdClass $jsonObject)
     {
-        return ShopApi\Model\Basket::createFromJson($jsonObject, $this);
+        return Basket::createFromJson($jsonObject, $this);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\Basket\BasketItem
+     * @return Basket\BasketItem
      */
     public function createBasketItem(\stdClass $jsonObject, array $products)
     {
-        return ShopApi\Model\Basket\BasketItem::createFromJson($jsonObject, $products);
+        return Basket\BasketItem::createFromJson($jsonObject, $products);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\Basket\BasketSet
+     * @return Basket\BasketSet
      */
     public function createBasketSet(\stdClass $jsonObject, array $products)
     {
-        return ShopApi\Model\Basket\BasketSet::createFromJson($jsonObject, $this, $products);
+        return Basket\BasketSet::createFromJson($jsonObject, $this, $products);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\Basket\BasketSetItem
+     * @return Basket\BasketSetItem
      */
     public function createBasketSetItem(\stdClass $jsonObject, array $products)
     {
-        return ShopApi\Model\Basket\BasketSetItem::createFromJson($jsonObject, $products);
+        return Basket\BasketSetItem::createFromJson($jsonObject, $products);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\CategoriesResult
+     * @return Model\CategoriesResult
      */
     public function createCategoriesResult(\stdClass $jsonObject, $queryParams)
     {
-        return ShopApi\Model\CategoriesResult::createFromJson($jsonObject, $queryParams['ids'], $this);
+        return Model\CategoriesResult::createFromJson($jsonObject, $queryParams['ids'], $this);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\Category
+     * @return Model\Category
      */
-    public function createCategory(\stdClass $jsonObject, $parent = null)
+    public function createCategory(\stdClass $jsonObject)
     {
-        return ShopApi\Model\Category::createFromJson($jsonObject, $this, $parent);
+        return Model\Category::createFromJson($jsonObject, $this->getCategoryManager());
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\CategoryTree
+     * @return CategoryTree
      */
-    public function createCategoryTree(array $jsonArray)
+    public function createCategoryTree($jsonArray)
     {
-        return ShopApi\Model\CategoryTree::createFromJson($jsonArray, $this);
+        $this->initializeCategoryManager($jsonArray);
+
+        return new Model\CategoryTree($this->getCategoryManager());
+    }
+
+    public function setCategoryManager(CategoryManagerInterface $categoryManager)
+    {
+        $this->categoryManager = $categoryManager;
+    }
+
+    /**
+     * @return CategoryManagerInterface
+     */
+    public function getCategoryManager()
+    {
+        return $this->categoryManager;
+    }
+
+    public function initializeCategoryManager($jsonObject)
+    {
+        return $this->getCategoryManager()->parseJson($jsonObject, $this);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\Facet
+     * @return Model\Facet
      */
     public function createFacet(\stdClass $jsonObject)
     {
-        return ShopApi\Model\Facet::createFromJson($jsonObject);
+        return Model\Facet::createFromJson($jsonObject);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\Facet[]
+     * @return Model\Facet[]
      */
     public function createFacetList(array $jsonArray)
     {
@@ -218,7 +251,7 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\Facet[]
+     * @return Model\Facet[]
      */
     public function createFacetsList(\stdClass $jsonObject)
     {
@@ -238,27 +271,27 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\Image
+     * @return Model\Image
      */
     public function createImage(\stdClass $jsonObject)
     {
-        return ShopApi\Model\Image::createFromJson($jsonObject);
+        return Model\Image::createFromJson($jsonObject);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\Product
+     * @return Model\Product
      */
     public function createProduct(\stdClass $jsonObject)
     {
-        return ShopApi\Model\Product::createFromJson($jsonObject, $this, $this->shopApi->getAppId());
+        return Model\Product::createFromJson($jsonObject, $this, $this->shopApi->getAppId());
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\VariantsResult
+     * @return Model\VariantsResult
      */
     public function createVariantsResult(\stdClass $jsonObject)
     {
@@ -307,7 +340,7 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\Product
+     * @return Model\Product
      */
     public function createSingleProduct(\stdClass $jsonObject)
     {
@@ -319,31 +352,31 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\ProductsResult
+     * @return Model\ProductsResult
      */
     public function createProductsResult(\stdClass $jsonObject)
     {
-        return ShopApi\Model\ProductsResult::createFromJson($jsonObject, $this);
+        return Model\ProductsResult::createFromJson($jsonObject, $this);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\ProductsEansResult
+     * @return Model\ProductsEansResult
      */
     public function createProductsEansResult(\stdClass $jsonObject)
     {
-        return ShopApi\Model\ProductsEansResult::createFromJson($jsonObject, $this);
+        return Model\ProductsEansResult::createFromJson($jsonObject, $this);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\ProductSearchResult
+     * @return Model\ProductSearchResult
      */
     public function createProductSearchResult(\stdClass $jsonObject)
     {
-        return ShopApi\Model\ProductSearchResult::createFromJson($jsonObject, $this);
+        return Model\ProductSearchResult::createFromJson($jsonObject, $this);
     }
 
     /**
@@ -359,39 +392,39 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\Variant
+     * @return Model\Variant
      */
     public function createVariant(\stdClass $jsonObject, ShopApi\Model\Product $product)
     {
-        return ShopApi\Model\Variant::createFromJson($jsonObject, $this, $product);
+        return Model\Variant::createFromJson($jsonObject, $this, $product);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\Order
+     * @return Model\Order
      */
     public function createOrder(\stdClass $jsonObject)
     {
         $basket = $this->createBasket($jsonObject->basket);
 
-        return new ShopApi\Model\Order($jsonObject->order_id, $basket);
+        return new Model\Order($jsonObject->order_id, $basket);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\InitiateOrder
+     * @return Model\InitiateOrder
      */
     public function initiateOrder(\stdClass $jsonObject)
     {
-        return ShopApi\Model\InitiateOrder::createFromJson($jsonObject);
+        return Model\InitiateOrder::createFromJson($jsonObject);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\App[]
+     * @return Model\App[]
      */
     public function createChildApps(\stdClass $jsonObject)
     {
@@ -408,11 +441,11 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\App
+     * @return Model\App
      */
     public function createApp(\stdClass $jsonObject)
     {
-        return ShopApi\Model\App::createFromJson($jsonObject);
+        return Model\App::createFromJson($jsonObject);
     }
 
     /**
@@ -428,7 +461,7 @@ class DefaultModelFactory implements ModelFactoryInterface
             }
             $facetCounts = $this->getTermFacets($groupId, $jsonResultFacet->terms);
 
-            $facetsCounts[$groupId] = ShopApi\Model\ProductSearchResult\FacetCounts::createFromJson(
+            $facetsCounts[$groupId] = Model\ProductSearchResult\FacetCounts::createFromJson(
                 $groupId,
                 $jsonResultFacet,
                 $facetCounts
@@ -450,7 +483,7 @@ class DefaultModelFactory implements ModelFactoryInterface
                 continue;
             } // TODO: Handle error, write test
             $count = $jsonTerm->count;
-            $facetCounts[] = new ShopApi\Model\ProductSearchResult\FacetCount($facet, $count);
+            $facetCounts[] = new Model\ProductSearchResult\FacetCount($facet, $count);
         }
 
         return $facetCounts;
@@ -459,13 +492,13 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\ProductSearchResult\PriceRange[]
+     * @return Model\ProductSearchResult\PriceRange[]
      */
     public function createPriceRanges(\stdClass $jsonObject)
     {
         $priceRanges = array();
         foreach ($jsonObject->ranges as $range) {
-            $priceRanges[] = ShopApi\Model\ProductSearchResult\PriceRange::createFromJson($range);
+            $priceRanges[] = Model\ProductSearchResult\PriceRange::createFromJson($range);
         }
 
         return $priceRanges;
@@ -474,11 +507,11 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      *
-     * @return ShopApi\Model\ProductSearchResult\SaleCounts
+     * @return Model\ProductSearchResult\SaleCounts
      */
     public function createSaleFacet(\stdClass $jsonObject)
     {
-        return ShopApi\Model\ProductSearchResult\SaleCounts::createFromJson($jsonObject);
+        return Model\ProductSearchResult\SaleCounts::createFromJson($jsonObject);
     }
 
     /**
@@ -486,26 +519,16 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createCategoriesFacets(array $jsonArray)
     {
-        $counts = array();
+        $categoryManager = $this->getCategoryManager();
+
+        $flattenCategories = array();
         foreach ($jsonArray as $item) {
-            $categoryId = $item->term;
-            $counts[$categoryId] = $item->count;
-        }
+            $id = $item->term;
+            $category = $categoryManager->getCategory($id);
+            if (!$category) continue;
 
-        // fetch all categories from API
-        $flattenCategories = $this->getShopApi()->fetchCategoriesByIds()->getCategories();
-
-        foreach ($flattenCategories as $id => $category) {
-            if (isset($counts[$category->getId()])) {
-                $category->setProductCount($counts[$category->getId()]);
-                if ($category->getParentId()) {
-                    $parent = $flattenCategories[$category->getParentId()];
-                    $parent->addChild($category);
-                    $category->setParent($parent);
-                }
-            } else {
-                unset($flattenCategories[$id]);
-            }
+            $category->setProductCount($item->count);
+            $flattenCategories[$id] = $category;
         }
 
         return $flattenCategories;
@@ -518,7 +541,7 @@ class DefaultModelFactory implements ModelFactoryInterface
         }
 
         if ($isMultiRequest) {
-            return new ShopApi\Model\ResultError($json);
+            return new Model\ResultError($json);
         }
 
         throw new ShopApi\Exception\ResultErrorException($json);

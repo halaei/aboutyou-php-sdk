@@ -23,22 +23,11 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
     public function testMultiQuery()
     {
         $query = $this->queryBuilder
-            ->fetchCategoryTree(0)
+            ->fetchAutocomplete('bar')
             ->fetchSuggest('foo')
         ;
 
-        $expected = '[{"category_tree":{"max_depth":0}},{"suggest":{"searchword":"foo"}}]';
-
-        $this->assertEquals($expected, $query->getQueryString());
-    }
-
-    public function testFetchCategoryTree()
-    {
-        $query = $this->queryBuilder
-            ->fetchCategoryTree()
-        ;
-
-        $expected = '[{"category_tree":{}}]';
+        $expected = '[{"autocompletion":{"searchword":"bar"}},{"suggest":{"searchword":"foo"}}]';
 
         $this->assertEquals($expected, $query->getQueryString());
     }

@@ -420,6 +420,14 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     }
 
     /**
+     * @return array
+     */
+    public function getProductFields()
+    {
+        return $this->result['fields'];
+    }
+
+    /**
      * @param string $sessionId
      *
      * @return $this
@@ -437,6 +445,17 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     public function getSessionId()
     {
         return $this->sessionId;
+    }
+
+    public function requiresCategories()
+    {
+        $productCategories =
+            isset($this->result['fields']) &&
+            in_array(ProductFields::CATEGORIES, $this->result['fields'])
+        ;
+        $categoryFacets = isset($this->result['categories']) && $this->result['categories'];
+
+        return $productCategories || $categoryFacets;
     }
 
     /**

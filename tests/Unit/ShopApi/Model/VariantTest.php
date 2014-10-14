@@ -57,12 +57,6 @@ class VariantTest extends AbstractModelTest
         $facetGroupSet = $variant->getFacetGroupSet();
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroupSet', $facetGroupSet);
         $this->assertCount(7, $facetGroupSet->getLazyGroups());
-
-        $this->markTestIncomplete('This Test is not implemented yet');
-
-//        $group = $variant->getFacetGroup(206);
-//        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroup', $group);
-//        $this->assertNull($variant->getFacetGroup(1234));
     }
 
     public function testFromJsonAdditionalInfo()

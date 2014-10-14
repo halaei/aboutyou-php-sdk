@@ -8,7 +8,6 @@ namespace Collins\ShopApi\Model;
 
 use Collins\ShopApi\Factory\ModelFactoryInterface;
 use Collins\ShopApi;
-use Symfony\Component\EventDispatcher\GenericEvent;
 
 class ProductsResult extends AbstractProductsResult
 {

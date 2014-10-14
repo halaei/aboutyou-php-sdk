@@ -25,7 +25,7 @@ class AutocompleteTest extends AbstractShopApiTest
             $this->assertInstanceOf('Collins\ShopApi\Model\Category', $category);
         }
     }
-    
+
     /**
      * @expectedException \InvalidArgumentException
      */

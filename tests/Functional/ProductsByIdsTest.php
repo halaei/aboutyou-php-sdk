@@ -185,29 +185,18 @@ EOS;
      */
     public function testVariantImages()
     {
-        $this->markTestIncomplete('The Method is not implemented yet');
-
-        $productIds = array(123);
+        $productIds = array(456);
 
         $shopApi = $this->getShopApiWithResultFile('result/products-full.json');
 
         $productResult = $shopApi->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
-        $product = $products[123];
+        $product = $products[456];
         $variant = $product->getDefaultVariant();
 
-        // select specific image
         $defaultImage = $variant->getImage();
-        $imageHash = '2b0ee425a369b8feab3d1515a7bffaec';
-        $variant->selectImage($imageHash);
-        $selectedImage = $variant->getImage();
-        $this->assertNotEquals($defaultImage, $selectedImage);
-        $this->assertEquals($selectedImage, $variant->getImageByHash($imageHash));
-
-        // select default image
-        $variant->selectImage(null);
-        $selectedImage = $variant->getImage();
-        $this->assertEquals($defaultImage, $selectedImage);
+        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Image', $defaultImage);
+        $this->assertEquals('882ff9a8365b6e1b46773992b189e4dc', $defaultImage->getHash());
     }
 
     private function checkProduct($product)

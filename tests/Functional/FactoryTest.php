@@ -9,7 +9,7 @@ namespace Collins\ShopApi\Test\Functional;
 
 use Collins\ShopApi;
 
-class FactoryTestAbstract extends AbstractShopApiTest
+class FactoryTest extends AbstractShopApiTest
 {
     public function testGetFactory()
     {
@@ -31,27 +31,6 @@ class FactoryTestAbstract extends AbstractShopApiTest
         $this->assertInstanceOf('Collins\\ShopApi\\Model\\Product', $product);
     }
 
-    public function testGetRawJsonFactory()
-    {
-        $shopApi = new ShopApi('id', 'dummy');
-        $shopApi->setResultFactory(new ShopApi\Factory\RawJsonFactory($shopApi));
-
-        $factory = $shopApi->getResultFactory();
-        $this->assertInstanceOf('Collins\\ShopApi\\Factory\\ResultFactoryInterface', $factory);
-        $this->assertNotInstanceOf('Collins\\ShopApi\\Factory\\ModelFactoryInterface', $factory);
-
-        $tree = $factory->createCategoryTree(json_decode('[]'));
-        $this->assertInternalType('array', $tree);
-
-        $json = $this->getJsonObjectFromFile('fetch-facet.json');
-        $facets = $factory->createFacetList($json);
-        $this->assertInternalType('array', $facets);
-
-        $json = $this->getJsonObjectFromFile('result/products-full.json');
-        $result = $factory->createProductsResult($json[0]->products);
-        $this->assertInstanceOf('\stdClass', $result);
-    }
-    
     private function getProduct() 
     {
         $productIds = array(123, 456);

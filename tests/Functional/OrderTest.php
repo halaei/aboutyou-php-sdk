@@ -66,12 +66,6 @@ class OrderTest extends AbstractShopApiTest
         $this->assertInternalType('string', $initiateOrder->getUrl());
     }
 
-    public function testInitiateOrderVerifyUrl()
-    {
-        $this->markTestIncomplete('implement me');
-    }
-
-
     /**
      * @expectedException \Collins\ShopApi\Exception\ResultErrorException
      * @expectedExceptionMessage Basket is empty: abcabcabc

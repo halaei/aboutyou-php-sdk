@@ -7,8 +7,11 @@ use Collins\ShopApi\Constants;
 use Collins\ShopApi\Criteria\ProductSearchCriteria;
 use Collins\ShopApi\Factory\DefaultModelFactory;
 use Collins\ShopApi\Factory\ModelFactoryInterface;
-use Collins\ShopApi\Factory\ResultFactoryInterface;
 use Collins\ShopApi\Model\Basket;
+use Collins\ShopApi\Model\CategoriesResult;
+use Collins\ShopApi\Model\Category;
+use Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface;
+use Collins\ShopApi\Model\CategoryManager\DefaultCategoryManager;
 use Collins\ShopApi\Model\CategoryTree;
 use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
 use Collins\ShopApi\Model\FacetManager\AboutyouCacheStrategy;
@@ -78,7 +81,7 @@ class ShopApi
      * @param string $appId
      * @param string $appPassword
      * @param string $apiEndPoint Constants::API_ENVIRONMENT_LIVE for live environment, Constants::API_ENVIRONMENT_STAGE for staging
-     * @param ResultFactoryInterface $resultFactory if null it will use the DefaultModelFactory with the DefaultFacetManager
+     * @param ModelFactoryInterface $resultFactory if null it will use the DefaultModelFactory with the DefaultFacetManager
      * @param LoggerInterface $logger
      * @param \Aboutyou\Common\Cache\CacheMultiGet|\Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
      */
@@ -86,16 +89,16 @@ class ShopApi
         $appId,
         $appPassword,
         $apiEndPoint = Constants::API_ENVIRONMENT_LIVE,
-        ResultFactoryInterface $resultFactory = null,
+        ModelFactoryInterface $resultFactory = null,
         LoggerInterface $logger = null,
-        $facetManagerCache = null
+        $cache = null
     ) {
         $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $logger);
         $this->generatePageId();
 
-        if ($facetManagerCache) {
-            $this->modelFactory = function ($scope) use ($facetManagerCache) {
-                return $scope->initDefaultFactory($facetManagerCache);
+        if ($cache) {
+            $this->modelFactory = function ($scope) use ($cache) {
+                return $scope->initDefaultFactory($cache);
             };
         }
 
@@ -407,6 +410,9 @@ class ShopApi
      * @param mixed $ids either a single category ID as integer or an array of IDs
      *
      * @return \Collins\ShopApi\Model\CategoriesResult
+     *
+     * @deprecated use the CategoryManager instead of
+     * @see getCategoryManager()
      */
     public function fetchCategoriesByIds($ids = null)
     {
@@ -415,35 +421,60 @@ class ShopApi
             $ids = array($ids);
         }
 
-        $query = $this->getQuery()
-            ->fetchCategoriesByIds($ids)
-        ;
-
-        $result = $query->executeSingle();
-
-        $notFound = $result->getCategoriesNotFound();
-        if (!empty($notFound) && $this->logger) {
-            $this->logger->warning('categories not found: appid=' . $this->appId . ' product ids=[' . join(',', $notFound) . ']');
+        foreach ($ids as $id) {
+            if (!is_long($id) && !ctype_digit($id)) {
+                throw new \InvalidArgumentException('A single category ID must be an integer or a numeric string');
+            } else if ($id < 1) {
+                throw new \InvalidArgumentException('A single category ID must be greater than 0');
+            }
         }
 
-        return $result;
+        $categoryManager =  $this->getCategoryManager();
+
+        return new CategoriesResult($categoryManager, $ids);
     }
 
     /**
-     * @param int $maxDepth  -1 <= $maxDepth <= 10
-     *
      * @return CategoryTree
      *
      * @throws ShopApi\Exception\MalformedJsonException
      * @throws ShopApi\Exception\UnexpectedResultException
+     *
+     * @deprecated use the CategoryManager instead of
+     * @see getCategoryManager()
      */
-    public function fetchCategoryTree($maxDepth = -1)
+    public function fetchCategoryTree()
     {
-        $query = $this->getQuery()
-            ->fetchCategoryTree($maxDepth)
-        ;
+        $categoryManager =  $this->getCategoryManager();
 
-        return $query->executeSingle();
+        return new CategoryTree($categoryManager);
+    }
+
+    /**
+     * The Categories will be fetch automatically, if required by any other fetch method
+     *
+     * For Example
+     * $productsResult = $api->fetchProductsByIds([12345], ['categories']);
+     *  will fetch the categories with the same request.
+     * $rootCategories = $api->getCategoryManager()->getCategoryTree();
+     *  will give you all categories for your Menu without an other request
+     *
+     * @param bool $fetchIfEmpty
+     *
+     * @return CategoryManagerInterface
+     */
+    public function getCategoryManager($fetchIfEmpty = true)
+    {
+        $categoryManager = $this->getResultFactory()->getCategoryManager();
+
+        if ($fetchIfEmpty && $categoryManager->isEmpty()) {
+            $query = $this->getQuery()
+                ->requireCategoryTree()
+                ->executeSingle()
+            ;
+        }
+
+        return $categoryManager;
     }
 
     /**
@@ -528,9 +559,9 @@ class ShopApi
     }
 
     /**
-     * @param ResultFactoryInterface $modelFactory
+     * @param ModelFactoryInterface $modelFactory
      */
-    public function setResultFactory(ResultFactoryInterface $modelFactory)
+    public function setResultFactory(ModelFactoryInterface $modelFactory)
     {
         if ($modelFactory instanceof DefaultModelFactory) {
             $this->eventDispatcher = $modelFactory->getEventDispatcher();
@@ -540,7 +571,7 @@ class ShopApi
     }
 
     /**
-     * @return ResultFactoryInterface|DefaultModelFactory
+     * @return ModelFactoryInterface|DefaultModelFactory
      */
     public function getResultFactory()
     {
@@ -779,21 +810,23 @@ class ShopApi
     }
 
     /**
-     * @param \Aboutyou\Common\Cache\CacheMultiGet|\Doctrine\Common\Cache\CacheMultiGet $facetManagerCache
+     * @param \Aboutyou\Common\Cache\CacheMultiGet|\Doctrine\Common\Cache\CacheMultiGet $cache
      *
      * @return DefaultModelFactory
      */
-    public function initDefaultFactory($facetManagerCache = null)
+    public function initDefaultFactory($cache = null)
     {
         $strategy = new FetchFacetGroupStrategy($this);
 
-        if ($facetManagerCache) {
-            $strategy = new AboutyouCacheStrategy($facetManagerCache, $strategy);
+        if ($cache) {
+            $strategy = new AboutyouCacheStrategy($cache, $strategy);
         }
 
+        $categoryManager = new DefaultCategoryManager($this->appId, $cache);
         $resultFactory = new DefaultModelFactory(
             $this,
             new DefaultFacetManager($strategy),
+            $categoryManager,
             new EventDispatcher()
         );
 

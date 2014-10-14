@@ -1,51 +1,22 @@
 <?php
 namespace Collins\ShopApi\Model;
 
-use Collins\ShopApi\Factory\ModelFactoryInterface;
+use Collins\ShopApi\Model\CategoryManager\CategoryManagerInterface;
 
 /**
  *
  */
 class CategoriesResult implements \IteratorAggregate, \ArrayAccess, \Countable
 {
-    /** @var Category[] */
-    protected $categories = array();
+    /** @var CategoryManagerInterface */
+    private $categories;
 
-    protected $categoriesNotFound = array();
+    private $ids;
 
-    protected function __construct()
+    public function __construct(CategoryManagerInterface $categoryManager, $ids)
     {
-    }
-
-    /**
-     * @param $jsonObject
-     * @param null $orderByIds
-     * @param ModelFactoryInterface $factory
-     *
-     * @return static
-     */
-    public static function createFromJson($jsonObject, $orderByIds = null, ModelFactoryInterface $factory)
-    {
-        $categoriesResult = new static();
-
-        if ($orderByIds === null) {
-            $orderByIds = array_keys(get_object_vars($jsonObject));
-        }
-
-        foreach ($orderByIds as $id) {
-            if (!isset($jsonObject->$id) ) {
-                continue;
-            }
-
-            $jsonCategory = $jsonObject->$id;
-            if (isset($jsonCategory->error_code)) {
-                $categoriesResult->categoriesNotFound[] = $id;
-            } else {
-                $categoriesResult->categories[$id] = $factory->createCategory($jsonCategory);
-            }
-        }
-
-        return $categoriesResult;
+        $this->ids = $ids;
+        $this->categories = $categoryManager->getCategories($ids, Category::ALL);
     }
 
     /**
@@ -61,7 +32,11 @@ class CategoriesResult implements \IteratorAggregate, \ArrayAccess, \Countable
      */
     public function getCategoriesNotFound()
     {
-        return $this->categoriesNotFound;
+        $idsFound = array_keys($this->categories);
+
+        $idsNotFound = array_diff($this->ids, $idsFound);
+
+        return array_values($idsNotFound);
     }
 
     /*

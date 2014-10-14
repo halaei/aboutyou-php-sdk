@@ -28,8 +28,7 @@ class ProductSearchRealLifeTest extends AbstractShopApiTest
     public function testProductSearchRawFacets()
     {
         $shopApi = $this->getShopApiWithResultFiles(array(
-            'product_search-20140414-2.json',
-            'category-all.json'
+            'product_search-20140414-2.json'
         ));
 
         // get all available products
