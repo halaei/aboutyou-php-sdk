@@ -29,7 +29,7 @@ class DefaultCategoryManager implements CategoryManagerInterface
      * @param string $appId  This must set, when you use more then one instances with different apps
      * @param CacheProvider $cache
      */
-    public function __construct($appId = '', CacheProvider $cache = null)
+    public function __construct(CacheProvider $cache = null, $appId = '')
     {
         $this->cache    = $cache;
         $this->cacheKey = 'AY:SDK:' . $appId . ':categories';

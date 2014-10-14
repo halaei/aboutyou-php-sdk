@@ -812,7 +812,7 @@ class ShopApi
      */
     public function initDefaultFactory($cache = null)
     {
-        $categoryManager = new DefaultCategoryManager($this->appId, $cache);
+        $categoryManager = new DefaultCategoryManager($cache, $this->appId);
         $facetManager    = new DefaultFacetManager($cache, $this->appId);
 
         $resultFactory = new DefaultModelFactory(

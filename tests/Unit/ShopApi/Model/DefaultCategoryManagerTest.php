@@ -206,7 +206,7 @@ class DefaultCategoryManagerTest extends AbstractModelTest
             ->will($this->returnValue(false))
         ;
 
-        $categoryManager = new DefaultCategoryManager('100', $cacheMock);
+        $categoryManager = new DefaultCategoryManager($cacheMock, '100');
         $factory->setCategoryManager($categoryManager);
         $jsonObject = $this->getJsonObject('category-tree-v2.json');
         $categoryManager->parseJson($jsonObject, $factory);
@@ -216,7 +216,7 @@ class DefaultCategoryManagerTest extends AbstractModelTest
     {
         $cache = $this->getFilledCache();
 
-        $categoryManager = new DefaultCategoryManager('', $cache);
+        $categoryManager = new DefaultCategoryManager($cache, '');
         $this->assertFalse($categoryManager->isEmpty());
         $this->assertCount(9, $categoryManager->getAllCategories());
     }
@@ -226,7 +226,7 @@ class DefaultCategoryManagerTest extends AbstractModelTest
         $factory = $this->getModelFactory();
         $cache = new ArrayCache();
 
-        $categoryManager = new DefaultCategoryManager('', $cache);
+        $categoryManager = new DefaultCategoryManager($cache, '');
         $factory->setCategoryManager($categoryManager);
         $jsonObject = $this->getJsonObject('category-tree-v2.json');
         $categoryManager->parseJson($jsonObject, $factory);
