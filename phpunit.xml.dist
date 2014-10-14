@@ -19,7 +19,7 @@
 
     <groups>
         <exclude>
-            <group>benchmark</group>
+            <group>live</group>
         </exclude>
     </groups>
 

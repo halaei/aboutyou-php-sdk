@@ -42,6 +42,10 @@ class ShopApi
     const IMAGE_URL_SANDBOX = 'http://mndb.sandbox.aboutyou.de/mmdb/file';
     const IMAGE_URL_LIVE    = 'http://cdn.aboutyou.de/file';
 
+    const PRE_CACHE_FACETS   = 1;
+    const PRE_CACHE_CATEGORY = 2;
+    const PRE_CACHE_ALL      = 3;
+
     /** @var ShopApiClient */
     protected $shopApiClient;
 
@@ -733,13 +737,34 @@ class ShopApi
         return new ProductSearchCriteria($sessionId);
     }
 
-    public function preCacheFacets()
+    /**
+     * Fetch and cache facets and/or categories.
+     *
+     * This can be used in an hourly cron job
+     *
+     * @param int $preCacheOption PRE_CACHE_ALL, PRE_CACHE_FACETS or PRE_CACHE_CATEGORY
+     */
+    public function preCache($preCacheOption = self::PRE_CACHE_ALL)
     {
+        if ($preCacheOption & self::PRE_CACHE_ALL === 0) {
+            throw new \RuntimeException('You must select at least one pre cache option');
+        }
+
         if (!$this->cache) {
             throw new \RuntimeException('You can not use this this method, without setting the cache with the constructor');
         }
 
-        $this->getQuery()->requireFacets()->execute();
+        $query = $this->getQuery();
+
+        if ($preCacheOption & self::PRE_CACHE_FACETS) {
+            $query->requireFacets();
+        }
+
+        if ($preCacheOption & self::PRE_CACHE_CATEGORY) {
+            $query->requireCategoryTree();
+        }
+
+        $query->execute();
     }
 
     /**
