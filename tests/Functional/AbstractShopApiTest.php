@@ -14,7 +14,7 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
 {
     protected $setupCategoryManager = true;
 
-    protected $facetsResultPath = 'facets-all.json';
+    protected $facetsResultPath = 'facets-for-product-variant-facets.json';
 
     /**
      * @param string|string[] $jsonString
