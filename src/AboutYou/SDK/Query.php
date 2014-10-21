@@ -16,7 +16,7 @@ class Query extends QueryBuilder
     const QUERY_TREE   = 'category tree';
     const QUERY_FACETS = 'all facets';
 
-    /** @var ShopApiClient */
+    /** @var Client */
     protected $client;
 
     /** @var ModelFactoryInterface */
@@ -27,10 +27,10 @@ class Query extends QueryBuilder
     private $allQuery = array();
 
     /**
-     * @param ShopApiClient       $client
+     * @param Client       $client
      * @param ModelFactoryInterface $factory
      */
-    public function __construct(ShopApiClient $client, ModelFactoryInterface $factory)
+    public function __construct(Client $client, ModelFactoryInterface $factory)
     {
         $this->client  = $client;
         $this->factory = $factory;

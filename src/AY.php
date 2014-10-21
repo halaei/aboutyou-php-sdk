@@ -19,7 +19,7 @@ use AboutYou\SDK\Model\ProductsEansResult;
 use AboutYou\SDK\Model\ProductSearchResult;
 use AboutYou\SDK\Model\ProductsResult;
 use AboutYou\SDK\Query;
-use AboutYou\SDK\ShopApiClient;
+use AboutYou\SDK\Client;
 use Psr\Log\LoggerInterface;
 use Rhumsaa\Uuid\Uuid;
 
@@ -43,7 +43,7 @@ class AY
     const PRE_CACHE_CATEGORY = 2;
     const PRE_CACHE_ALL      = 3;
 
-    /** @var ShopApiClient */
+    /** @var Client */
     protected $shopApiClient;
 
     /** @var string */
@@ -94,7 +94,7 @@ class AY
         LoggerInterface $logger = null,
         $cache = null
     ) {
-        $this->shopApiClient = new ShopApiClient($appId, $appPassword, $apiEndPoint, $logger);
+        $this->shopApiClient = new Client($appId, $appPassword, $apiEndPoint, $logger);
         $this->generatePageId();
 
         if ($cache) {
@@ -112,7 +112,7 @@ class AY
     }
 
     /**
-     * @return ShopApiClient
+     * @return Client
      */
     public function getApiClient()
     {

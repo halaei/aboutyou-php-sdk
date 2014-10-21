@@ -8,12 +8,12 @@ namespace AboutYou\SDK;
 
 use AboutYou\SDK\Exception\ApiErrorException;
 use AboutYou\SDK\Exception\MalformedJsonException;
-use Guzzle\Http\Client;
+use Guzzle\Http\Client as GuzzleClient;
 use Guzzle\Http\Message\EntityEnclosingRequestInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-class ShopApiClient
+class Client
 {
     const API_END_POINT_STAGE   = 'http://shop-api.staging.aboutyou.de/api';
     const API_END_POINT_SANDBOX = 'http://shop-api.sandbox.aboutyou.de/api';
@@ -22,7 +22,7 @@ class ShopApiClient
     /**
      * Guzzle client that is needed to execute API requests.
      * Will be initialized before the first request is done.
-     * @var \Guzzle\Http\Client
+     * @var \Guzzle\Http\GuzzleClient
      */
     protected $guzzleClient = null;
 
@@ -154,15 +154,15 @@ class ShopApiClient
     }
 
     /**
-     * @param Client $guzzleClient
+     * @param GuzzleClient $guzzleClient
      */
-    public function setClient(Client $guzzleClient)
+    public function setClient(GuzzleClient $guzzleClient)
     {
         $this->guzzleClient = $guzzleClient;
     }
 
     /**
-     * @return Client
+     * @return GuzzleClient
      */
     public function getClient()
     {
@@ -170,7 +170,7 @@ class ShopApiClient
             return $this->guzzleClient;
         }
 
-        $this->guzzleClient = new Client($this->getApiEndPoint());
+        $this->guzzleClient = new GuzzleClient($this->getApiEndPoint());
 
         return $this->guzzleClient;
     }
