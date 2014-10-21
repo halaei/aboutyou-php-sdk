@@ -4,7 +4,7 @@ namespace Collins\ShopApi;
 /**
  * Contains often used properties related to the App development.
  *
- * @author Antevorte GmbH
+ * @author ABOUT YOU GmbH
  */
 abstract class Constants
 {

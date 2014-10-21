@@ -2,7 +2,7 @@
 /**
  * @auther nils.droege@project-collins.com
  * @author Christian Kilb <christian.kilb@project-collins.com>
- * (c) Collins GmbH & Co KG
+ * (c) ABOUT YOU GmbH
  */
 
 namespace Collins\ShopApi\Model\Basket;

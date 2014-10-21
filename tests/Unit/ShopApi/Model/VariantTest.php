@@ -1,7 +1,7 @@
 <?php
 /**
  * @auther nils.droege@project-collins.com
- * (c) Collins GmbH & Co KG
+ * (c) ABOUT YOU GmbH
  */
 
 namespace Collins\ShopApi\Test\Unit\Model;

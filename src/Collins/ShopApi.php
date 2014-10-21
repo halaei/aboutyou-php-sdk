@@ -31,7 +31,7 @@ use Rhumsaa\Uuid\Uuid;
  * This class is abstract because it's not meant to be instanciated.
  * All the public methods cover a single API query.
  *
- * @author Collins GmbH & Co KG
+ * @author ABOUT YOU GmbH
  */
 class ShopApi
 {
