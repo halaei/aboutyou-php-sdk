@@ -1,6 +1,6 @@
 <?php
 /**
- * @auther nils.droege@project-collins.com
+ * @auther nils.droege@aboutyou.de
  * (c) ABOUT YOU GmbH
  */
 

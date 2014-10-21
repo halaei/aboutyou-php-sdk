@@ -1,6 +1,6 @@
 <?php
 /**
- * @auther nils.droege@project-collins.com
+ * @auther nils.droege@aboutyou.de
  * @author Christian Kilb <christian.kilb@project-collins.com>
  * (c) ABOUT YOU GmbH
  */
