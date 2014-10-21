@@ -1,7 +1,7 @@
 <?php
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use AboutYou\SDK\Model\Category;
 
 class CategoryTreeTest extends AbstractShopApiTest
 {
@@ -13,7 +13,7 @@ class CategoryTreeTest extends AbstractShopApiTest
         $this->assertCount(2, $categories);
 
         foreach ($categories as $category) {
-            $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $category);
+            $this->assertInstanceOf('\AboutYou\SDK\Model\Category', $category);
             $this->assertTrue($category->isActive());
             $subCategories = $category->getSubCategories();
             $this->assertCount(3, $subCategories);
@@ -36,7 +36,7 @@ class CategoryTreeTest extends AbstractShopApiTest
         $this->assertCount(3, $category->getSubCategories());
 
 
-        $categories = $categoryTreeResult->getCategories(ShopApi\Model\Category::ALL);
+        $categories = $categoryTreeResult->getCategories(Category::ALL);
         $this->assertCount(3, $categories);
         $this->assertArrayHasKey(74415, $categories);
         $this->assertArrayHasKey(74416, $categories);
@@ -56,7 +56,7 @@ class CategoryTreeTest extends AbstractShopApiTest
     public function testProductResultIteratorInterface($categoryTreeResult)
     {
         foreach ($categoryTreeResult as $category) {
-            $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $category);
+            $this->assertInstanceOf('\AboutYou\SDK\Model\Category', $category);
         }
     }
 

@@ -4,11 +4,11 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Unit\Model;
+namespace AboutYou\SDK\Test\Unit\Model;
 
 use Aboutyou\Common\Cache\ArrayCache;
-use Collins\ShopApi\Model\Category;
-use Collins\ShopApi\Model\CategoryManager\DefaultCategoryManager;
+use AboutYou\SDK\Model\Category;
+use AboutYou\SDK\Model\CategoryManager\DefaultCategoryManager;
 
 class DefaultCategoryManagerTest extends AbstractModelTest
 {
@@ -35,7 +35,7 @@ class DefaultCategoryManagerTest extends AbstractModelTest
 
         $knownId = 74415;
         $category = $categoryManager->getCategory($knownId);
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Category', $category);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
         $this->assertEquals($knownId, $category->getId());
     }
 
@@ -52,7 +52,7 @@ class DefaultCategoryManagerTest extends AbstractModelTest
         $categories = $categoryManager->getCategories(array($unknownId, $knownId));
         $this->assertCount(1, $categories);
         foreach ($categories as $category) {
-            $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Category', $category);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
         }
         $this->checkMainCategory($category);
     }
@@ -77,7 +77,7 @@ class DefaultCategoryManagerTest extends AbstractModelTest
         $categories = $categoryManager->getCategoryTree();
         $this->assertCount(2, $categories);
         foreach ($categories as $category) {
-            $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Category', $category);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
 
             $this->checkMainCategory($category);
         }
@@ -98,7 +98,7 @@ class DefaultCategoryManagerTest extends AbstractModelTest
         $subCategories = $categoryManager->getSubCategories($knownId);
         $this->assertCount(3, $subCategories);
         foreach ($subCategories as $subCategory) {
-            $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Category', $subCategory);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $subCategory);
         }
     }
 
@@ -108,7 +108,7 @@ class DefaultCategoryManagerTest extends AbstractModelTest
         $this->assertCount(3, $subCategories);
 
         foreach ($subCategories as $subCategory) {
-            $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Category', $subCategory);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $subCategory);
             $this->assertEquals($category, $subCategory->getParent());
         }
     }

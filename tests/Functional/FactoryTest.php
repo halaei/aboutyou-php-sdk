@@ -4,31 +4,31 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
 
-use Collins\ShopApi;
+use \AY;
 
 class FactoryTest extends AbstractShopApiTest
 {
     public function testGetFactory()
     {
-        $shopApi = new ShopApi('id', 'dummy');
+        $shopApi = new AY('id', 'dummy');
 
         $factory = $shopApi->getResultFactory();
-        $this->assertInstanceOf('Collins\\ShopApi\\Factory\\ModelFactoryInterface', $factory);
-        $this->assertInstanceOf('Collins\\ShopApi\\Factory\\ResultFactoryInterface', $factory);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Factory\\ModelFactoryInterface', $factory);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Factory\\ResultFactoryInterface', $factory);
 
         $variant = $factory->createVariant(json_decode('{}'), $this->getProduct());
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Variant', $variant);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Variant', $variant);
 
         $json = $this->getJsonObjectFromFile('facet.json');
         $facet = $factory->createFacet($json);
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Facet', $facet);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $facet);
 
         $json = $this->getJsonObjectFromFile('product/product-full.json');
         $product = $factory->createProduct($json);
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Product', $product);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $product);
     }
 
     private function getProduct() 

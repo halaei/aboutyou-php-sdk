@@ -4,10 +4,10 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Unit\Model;
+namespace AboutYou\SDK\Test\Unit\Model;
 
-use Collins\ShopApi\Model\FacetGroupSet;
-use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
+use AboutYou\SDK\Model\FacetGroupSet;
+use AboutYou\SDK\Model\FacetManager\DefaultFacetManager;
 
 class FacetGroupSetTest extends AbstractModelTest
 {
@@ -105,7 +105,7 @@ class FacetGroupSetTest extends AbstractModelTest
 
     public function testUsingFacetManager()
     {
-        $facetManagerMock = $this->getMockForAbstractClass('Collins\\ShopApi\\Model\\FacetManager\\FacetManagerInterface');
+        $facetManagerMock = $this->getMockForAbstractClass('\\AboutYou\\SDK\\Model\\FacetManager\\FacetManagerInterface');
         $facetManagerMock->expects($this->atLeastOnce())
             ->method('getFacet');
 

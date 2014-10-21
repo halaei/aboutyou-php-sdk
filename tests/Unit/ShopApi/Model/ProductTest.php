@@ -4,10 +4,10 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Unit\Model;
+namespace AboutYou\SDK\Test\Unit\Model;
 
-use Collins\ShopApi\Factory\DefaultModelFactory;
-use Collins\ShopApi\Model\Product;
+use AboutYou\SDK\Factory\DefaultModelFactory;
+use AboutYou\SDK\Model\Product;
 
 class ProductTest extends AbstractModelTest
 {
@@ -18,7 +18,7 @@ class ProductTest extends AbstractModelTest
     }
 
     /**
-     * @expectedException \Collins\ShopApi\Exception\MalformedJsonException
+     * @expectedException \AboutYou\SDK\Exception\MalformedJsonException
      */
     public function testMalformedJsonException()
     {
@@ -27,7 +27,7 @@ class ProductTest extends AbstractModelTest
     }
 
     /**
-     * @expectedException \Collins\ShopApi\Exception\RuntimeException
+     * @expectedException \AboutYou\SDK\Exception\RuntimeException
      */
     public function testGetBrandRuntimeException()
     {

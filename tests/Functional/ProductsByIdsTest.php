@@ -4,9 +4,9 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use AboutYou\SDK\Model;
 
 class ProductsByIdsTest extends AbstractShopApiTest
 {
@@ -92,18 +92,18 @@ class ProductsByIdsTest extends AbstractShopApiTest
 
         $p456 = $products[456];
         $this->checkProduct($p456);
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Image', $p456->getDefaultImage());
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Image', $p456->getDefaultImage());
         $this->assertTrue($p456->isActive());
         $this->assertTrue($p456->isSale());
         $this->assertEquals(3980, $p456->getMinPrice());
         $this->assertEquals(3990, $p456->getMaxPrice());
 
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Variant', $p456->getDefaultVariant());
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Variant', $p456->getDefaultVariant());
 
         $variants = $p456->getVariants();
         $this->assertCount(5, $variants);
         $variant = reset($variants);
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Variant', $variant);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Variant', $variant);
         $this->assertEquals(5145543, $variant->getId());
 
         return $p456;
@@ -195,18 +195,18 @@ EOS;
         $variant = $product->getDefaultVariant();
 
         $defaultImage = $variant->getImage();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Image', $defaultImage);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Image', $defaultImage);
         $this->assertEquals('882ff9a8365b6e1b46773992b189e4dc', $defaultImage->getHash());
     }
 
     private function checkProduct($product)
     {
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Product', $product);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $product);
         $this->assertObjectHasAttribute('id', $product);
         $this->assertObjectHasAttribute('name', $product);
     }
 
-    private function checkProductFull(ShopApi\Model\Product $product)
+    private function checkProductFull(Model\Product $product)
     {
         $this->checkProduct($product);
         $variants = $product->getVariants();
@@ -219,7 +219,7 @@ EOS;
         }
     }
 
-    private function checkVariant(ShopApi\Model\Variant $variant)
+    private function checkVariant(Model\Variant $variant)
     {
         $this->assertInternalType('int', $variant->getId());
         $this->assertGreaterThan(0, count($variant->getFacetIds()));

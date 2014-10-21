@@ -1,9 +1,9 @@
 <?php
 
-namespace Collins\ShopApi\Test\Functional\ProductSearch;
+namespace AboutYou\SDK\Test\Functional\ProductSearch;
 
-use Collins\ShopApi\Model\ProductSearchResult;
-use Collins\ShopApi\Test\Functional\AbstractShopApiTest;
+use AboutYou\SDK\Model\ProductSearchResult;
+use AboutYou\SDK\Test\Functional\AbstractShopApiTest;
 
 class ProductSearchRealLifeTest extends AbstractShopApiTest
 {
@@ -22,7 +22,7 @@ class ProductSearchRealLifeTest extends AbstractShopApiTest
         $this->assertCount(6, $priceRanges);
 
         foreach ($priceRanges as $priceRange) {
-            $this->assertInstanceOf('Collins\\ShopApi\\Model\\ProductSearchResult\\PriceRange', $priceRange);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\ProductSearchResult\\PriceRange', $priceRange);
             $this->assertEquals(0, $priceRange->getMax());
         }
     }

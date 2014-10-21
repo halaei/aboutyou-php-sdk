@@ -4,7 +4,7 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test;
+namespace AboutYou\SDK\Test;
 
 /**
  * @backupStaticAttributes disabled

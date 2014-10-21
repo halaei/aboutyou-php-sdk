@@ -4,10 +4,10 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi\Model\Product;
-use Collins\ShopApi\Model\Variant;
+use AboutYou\SDK\Model\Product;
+use AboutYou\SDK\Model\Variant;
 
 class VariantTest extends AbstractShopApiTest
 {
@@ -62,11 +62,11 @@ class VariantTest extends AbstractShopApiTest
         
         $variant = $result->getVariantById(5236546);
         
-        $this->assertInstanceOf('Collins\ShopApi\Model\Variant', $variant);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Variant', $variant);
         $this->assertEquals(5236546, $variant->getId());
         
         $product = $variant->getProduct();
-        $this->assertInstanceOf('Collins\ShopApi\Model\Product', $product);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $product);
         
         $this->assertEquals(294475, $product->getId());
     }
@@ -90,8 +90,8 @@ class VariantTest extends AbstractShopApiTest
         
         foreach ($ids as $id) {
             $variant = $result->getVariantById($id);
-            $this->assertInstanceOf('Collins\ShopApi\Model\Variant', $variant);
-            $this->assertInstanceOf('Collins\ShopApi\Model\Product', $variant->getProduct());
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Variant', $variant);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $variant->getProduct());
         }
     }    
     
@@ -145,7 +145,7 @@ class VariantTest extends AbstractShopApiTest
         $this->assertCount(5, $variants);
         
         foreach ($variants as $variant) {
-            $this->assertInstanceOf('Collins\ShopApi\Model\Product', $variant->getProduct());
+            $this->assertInstanceOf('AboutYou\SDK\Model\Product', $variant->getProduct());
             $this->assertEquals(374469, $variant->getProduct()->getId());
             $this->assertEquals($product, $variant->getProduct());
         }

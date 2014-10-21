@@ -1,11 +1,11 @@
 <?php
 
-namespace Collins\ShopApi\Test\Live;
+namespace AboutYou\SDK\Test\Live;
 
 /**
  * @group live
  */
-class VariantTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
+class VariantTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 {
     public function testGetVariantById()
     {
@@ -14,7 +14,7 @@ class VariantTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 
         $result = $shopApi->fetchVariantsByIds(array($id, $id * 1000));
 
-        $this->assertInstanceOf('Collins\ShopApi\Model\VariantsResult', $result);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\VariantsResult', $result);
         $this->assertTrue($result->hasVariantsNotFound());
 
         $errors = $result->getVariantsNotFound();
@@ -24,14 +24,14 @@ class VariantTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $this->assertCount(1, $result->getVariantsFound());
 
         $variant = $result->getVariantById($id);
-        $this->assertInstanceOf('Collins\ShopApi\Model\Variant', $variant);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Variant', $variant);
 
         if ($variant->getAboutNumber() !== null) {
             $this->assertInternalType('string', $variant->getAboutNumber());
         }
 
         $this->assertEquals($id, $variant->getId());
-        $this->assertInstanceOf('Collins\ShopApi\Model\Product', $variant->getProduct());
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $variant->getProduct());
     }
 
     public function testGetVariantByIdWithSameProduct()
@@ -40,15 +40,15 @@ class VariantTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 
         $result = $shopApi->fetchVariantsByIds(array('4683343', '4683349'));
 
-        $this->assertInstanceOf('Collins\ShopApi\Model\VariantsResult', $result);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\VariantsResult', $result);
         $this->assertFalse($result->hasVariantsNotFound());
 
         $this->assertCount(2, $result->getVariantsFound());
 
         foreach ($result->getVariantsFound() as $variant) {
-            $this->assertInstanceOf('Collins\ShopApi\Model\Variant', $variant);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Variant', $variant);
             $product = $variant->getProduct();
-            $this->assertInstanceOf('Collins\ShopApi\Model\Product', $product);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $product);
 
             $this->assertEquals(215114, $product->getId());
         }
@@ -61,7 +61,7 @@ class VariantTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 
         $result = $shopApi->fetchVariantsByIds($ids);
 
-        $this->assertInstanceOf('Collins\ShopApi\Model\VariantsResult', $result);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\VariantsResult', $result);
         $this->assertTrue($result->hasVariantsNotFound());
 
         $errors = $result->getVariantsNotFound();

@@ -1,11 +1,11 @@
 <?php
 
-namespace Collins\ShopApi\Test\Functional\ProductSearch;
+namespace AboutYou\SDK\Test\Functional\ProductSearch;
 
-use Collins\ShopApi\Criteria\ProductSearchCriteria;
-use Collins\ShopApi\Model\Product;
-use Collins\ShopApi\Model\ProductSearchResult;
-use Collins\ShopApi\Test\Functional\AbstractShopApiTest;
+use AboutYou\SDK\Criteria\ProductSearchCriteria;
+use AboutYou\SDK\Model\Product;
+use AboutYou\SDK\Model\ProductSearchResult;
+use AboutYou\SDK\Test\Functional\AbstractShopApiTest;
 
 class ProductSearchTest extends AbstractShopApiTest
 {
@@ -52,7 +52,7 @@ class ProductSearchTest extends AbstractShopApiTest
     }
 
     /**
-     * @see tests/unit/ShopApi/ProductSearchFilterTest.php
+     * @see tests/unit/AboutYou/ProductSearchFilterTest.php
      */
     public function testProductSearchFilterObject()
     {
@@ -119,8 +119,8 @@ class ProductSearchTest extends AbstractShopApiTest
 
         $product = $products[0];
         $category = $product->getCategory();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category->getParent());
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category->getParent());
         $this->assertNull($category->getParent()->getParent());
     }
 

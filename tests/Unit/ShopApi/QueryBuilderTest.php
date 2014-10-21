@@ -4,11 +4,11 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Unit\ShopApi;
+namespace AboutYou\SDK\Test\Unit\ShopApi;
 
-use Collins\ShopApi\Constants;
-use Collins\ShopApi\Criteria\ProductFields;
-use Collins\ShopApi\QueryBuilder;
+use AboutYou\SDK\Constants;
+use AboutYou\SDK\Criteria\ProductFields;
+use AboutYou\SDK\QueryBuilder;
 
 class QueryBuilderTest extends \PHPUnit_Framework_TestCase
 {

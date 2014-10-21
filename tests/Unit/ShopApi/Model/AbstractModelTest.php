@@ -4,11 +4,11 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Unit\Model;
+namespace AboutYou\SDK\Test\Unit\Model;
 
-use Collins\ShopApi;
+use \AY;
 
-abstract class AbstractModelTest extends \Collins\ShopApi\Test\ShopSdkTest
+abstract class AbstractModelTest extends \AboutYou\SDK\Test\ShopSdkTest
 {
     protected function getJsonObject($filepath)
     {
@@ -21,17 +21,17 @@ abstract class AbstractModelTest extends \Collins\ShopApi\Test\ShopSdkTest
     }
 
     /**
-     * @return ShopApi\Factory\ModelFactoryInterface
+     * @return AboutYou\SDK\Factory\ModelFactoryInterface
      */
     protected function getModelFactory()
     {
-        $shopApi =  new ShopApi('id', 'token');
+        $shopApi =  new AY('id', 'token');
 
         return $shopApi->getResultFactory();
     }
 
     protected function getModelFactoryMock()
     {
-        return $this->getMock('\\Collins\\ShopApi\\Factory\\DefaultModelFactory', array(), array(), '', false);
+        return $this->getMock('\\AboutYou\\Factory\\DefaultModelFactory', array(), array(), '', false);
     }
 }

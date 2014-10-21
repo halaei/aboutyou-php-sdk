@@ -1,14 +1,14 @@
 <?php
 
-namespace Collins\ShopApi\Test\Live;
+namespace AboutYou\SDK\Test\Live;
 
-use Collins\ShopApi\Criteria\ProductFields;
-use Collins\ShopApi\Model\Product;
+use AboutYou\SDK\Criteria\ProductFields;
+use AboutYou\SDK\Model\Product;
 
 /**
  * @group live
  */
-class ProductTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
+class ProductTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 {
     public function testGetProduct()
     {
@@ -17,7 +17,7 @@ class ProductTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
             ProductFields::MAX_PRICE,
             ProductFields::VARIANTS
         ));
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\Product', $product);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\Product', $product);
 
         return $product;
     }
@@ -61,7 +61,7 @@ class ProductTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
             ProductFields::VARIANTS,
             'merchant_id'
         ));
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\Product', $product);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\Product', $product);
 
         $this->assertInternalType('int', $product->getMaxSavingsPrice());
         $this->assertInternalType('int', $product->getMaxSavingsPercentage());
@@ -71,7 +71,7 @@ class ProductTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         if ($variants !== null) {
             $this->assertInternalType('array', $variants);
             foreach ($variants as $variant) {
-                $this->assertInstanceOf('\\Collins\\ShopApi\\Model\Variant', $variant);
+                $this->assertInstanceOf('\\AboutYou\\SDK\\Model\Variant', $variant);
             }
         }
 

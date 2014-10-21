@@ -4,10 +4,11 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
-use Collins\ShopApi\Model\Basket;
+use AboutYou\SDK\Model\Variant;
+use \AY;
+use AboutYou\SDK\Model\Basket;
 
 class BasketTest extends AbstractShopApiTest
 {
@@ -121,7 +122,7 @@ class BasketTest extends AbstractShopApiTest
     }
 
     /**
-     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
+     * @expectedException \AboutYou\SDK\Exception\ResultErrorException
      */
     public function testAddItemSetToBasketWithWrongBasketSetID()
     {
@@ -138,7 +139,7 @@ class BasketTest extends AbstractShopApiTest
     }
 
     /**
-     * @expectedException \Collins\ShopApi\Exception\UnexpectedResultException
+     * @expectedException \AboutYou\SDK\Exception\UnexpectedResultException
      */
     public function testAddItemToBasketWithWrongProductsResult()
     {
@@ -283,7 +284,7 @@ class BasketTest extends AbstractShopApiTest
     public function testAddToBasketThrowsException()
     {
         $shopApi = $this->getShopApiWithResultFile('result/basket1.json');
-        $variant = ShopApi\Model\Variant::createFromJson(json_decode('{"id":123}'), $shopApi->getResultFactory(), $this->getProduct());
+        $variant = Variant::createFromJson(json_decode('{"id":123}'), $shopApi->getResultFactory(), $this->getProduct());
         $shopApi->addItemToBasket($this->sessionId, $variant);
     }
 
@@ -457,7 +458,7 @@ EOS;
      */
     private function checkBasket(Basket $basket)
     {
-        $this->assertInstanceOf('Collins\ShopApi\Model\Basket', $basket);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Basket', $basket);
         $this->assertInternalType('int', $basket->getTotalPrice());
         $this->assertInternalType('int', $basket->getTotalNet());
         $this->assertInternalType('int', $basket->getTotalVat());
@@ -465,12 +466,12 @@ EOS;
         $this->assertInternalType('int', $basket->getTotalVariants());
 
         foreach ($basket->getItems() as $item) {
-            $this->assertInstanceOf('Collins\ShopApi\Model\Basket\BasketItemInterface', $item);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Basket\BasketItemInterface', $item);
             if ($item instanceof Basket\BasketItem) {
-                $this->assertInstanceOf('Collins\ShopApi\Model\Basket\BasketItem', $item);
+                $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Basket\BasketItem', $item);
                 $this->checkBasketVariantItem($item);
             } else {
-                $this->assertInstanceOf('Collins\ShopApi\Model\Basket\BasketSet', $item);
+                $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Basket\BasketSet', $item);
                 $this->checkBasketSet($item);
             }
         }
@@ -482,8 +483,8 @@ EOS;
         $this->assertInternalType('float', $item->getTax());
         $this->assertInternalType('int', $item->getTotalNet());
         $this->assertInternalType('int', $item->getTotalVat());
-        $this->assertInstanceOf('Collins\ShopApi\Model\Product', $item->getProduct());
-        $this->assertInstanceOf('Collins\ShopApi\Model\Variant', $item->getVariant());
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $item->getProduct());
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Variant', $item->getVariant());
 
     }
 

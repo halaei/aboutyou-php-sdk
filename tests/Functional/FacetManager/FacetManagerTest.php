@@ -1,11 +1,11 @@
 <?php
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
-use Collins\ShopApi\Model\Basket;
-use Collins\ShopApi\Model\ProductSearchResult;
-use Collins\ShopApi\Model\FacetManager;
+use \AY;
+use AboutYou\SDK\Model\Basket;
+use AboutYou\SDK\Model\ProductSearchResult;
+use AboutYou\SDK\Model\FacetManager;
 
 /**
  * @group facet-manager
@@ -24,7 +24,7 @@ class FacetManagerTest extends AbstractShopApiTest
         $products = $productSearchResult->getProducts();
 
         $brand = $products[0]->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $brand);
     }
 
     public function testProductByEans()
@@ -37,7 +37,7 @@ class FacetManagerTest extends AbstractShopApiTest
         $products = $productEansResult->getProducts();
 
         $brand = $products[0]->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $brand);
     }
 
     public function testProductByIds()
@@ -50,7 +50,7 @@ class FacetManagerTest extends AbstractShopApiTest
         $products      = $productResult->getProducts();
 
         $brand = $products[301673]->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $brand);
     }
 
     public function testAutocomplete()
@@ -63,7 +63,7 @@ class FacetManagerTest extends AbstractShopApiTest
         $products = $autocompletionResult->getProducts();
 
         $brand = $products[0]->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $brand);
     }
 
     public function testBasket()
@@ -77,7 +77,7 @@ class FacetManagerTest extends AbstractShopApiTest
         $product = reset($products);
 
         $brand = $product->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $brand);
     }
 
     public function testGetOrder()
@@ -91,7 +91,7 @@ class FacetManagerTest extends AbstractShopApiTest
         $product = reset($products);
 
         $brand = $product->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $brand);
     }
 
     protected function getJsonStringFromFile($filepath)

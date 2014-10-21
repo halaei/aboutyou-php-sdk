@@ -1,7 +1,7 @@
 <?php
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use \AY;
 
 class ChildAppsTest extends AbstractShopApiTest
 {
@@ -16,7 +16,7 @@ class ChildAppsTest extends AbstractShopApiTest
         $this->assertInternalType('array', $apps);
 
         foreach ($apps as $app) {
-            $this->assertInstanceOf('Collins\\ShopApi\\Model\\App', $app);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\App', $app);
             $this->assertInternalType('int', $app->getId());
             $this->assertInternalType('string', $app->getLogoUrl());
             $this->assertInternalType('string', $app->getName());

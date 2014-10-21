@@ -1,7 +1,7 @@
 <?php
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use \AY;
 
 class AutocompleteTest extends AbstractShopApiTest
 {
@@ -15,14 +15,14 @@ class AutocompleteTest extends AbstractShopApiTest
         );
 
         $autocomplete = $shopApi->fetchAutocomplete('Shop', 10);
-        $this->assertInstanceOf('Collins\ShopApi\Model\Autocomplete', $autocomplete);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Autocomplete', $autocomplete);
 
         foreach ($autocomplete->getProducts() as $product) {
-            $this->assertInstanceOf('Collins\ShopApi\Model\Product', $product);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $product);
         }
 
         foreach ($autocomplete->getCategories() as $category) {
-            $this->assertInstanceOf('Collins\ShopApi\Model\Category', $category);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
         }
     }
 

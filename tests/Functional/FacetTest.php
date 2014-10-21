@@ -1,7 +1,7 @@
 <?php
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use \AY;
 
 class FacetTest extends AbstractShopApiTest
 {
@@ -19,7 +19,7 @@ class FacetTest extends AbstractShopApiTest
         $this->assertInternalType('array', $facets);
 
         foreach ($facets as $facet) {
-            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Facet', $facet);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $facet);
             $this->assertInternalType('int', $facet->getId());
             $this->assertInternalType('string', $facet->getName());
             $this->assertInternalType('int', $facet->getGroupId());

@@ -4,17 +4,17 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Unit\Model\Basket;
+namespace AboutYou\SDK\Test\Unit\Model\Basket;
 
-use Collins\ShopApi\Model\Basket\BasketSet;
-use Collins\ShopApi\Test\Unit\Model\AbstractModelTest;
+use AboutYou\SDK\Model\Basket\BasketSet;
+use AboutYou\SDK\Test\Unit\Model\AbstractModelTest;
 
 class BasketSetTest extends AbstractModelTest
 {
     public function testConstruct()
     {
         $basketSet  = new BasketSet('12', array('description' => 'blah', 'image_url'=> 'http://example.com/x.jpg'));
-        $this->assertInstanceOf('Collins\ShopApi\Model\Basket\BasketSet', $basketSet);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Basket\BasketSet', $basketSet);
     }
 
     /**

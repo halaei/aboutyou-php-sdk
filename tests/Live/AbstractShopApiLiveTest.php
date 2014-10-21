@@ -1,11 +1,11 @@
 <?php
 
-namespace Collins\ShopApi\Test\Live;
+namespace AboutYou\SDK\Test\Live;
 
-use Collins\ShopApi;
-use Collins\ShopApi\Criteria;
+use \AY;
+use AboutYou\SDK\Criteria;
 
-abstract class AbstractShopApiLiveTest extends \Collins\ShopApi\Test\ShopSdkTest
+abstract class AbstractShopApiLiveTest extends \AboutYou\SDK\Test\ShopSdkTest
 {
     private $api;
     private $config;
@@ -40,7 +40,7 @@ abstract class AbstractShopApiLiveTest extends \Collins\ShopApi\Test\ShopSdkTest
         $config = $this->getConfig();
         
         if (!isset($this->api)) {
-            $this->api = new ShopApi($config['user'], $config['password'], $config['endpoint'], $resultFactory, $logger, $facetManagerCache);
+            $this->api = new AY($config['user'], $config['password'], $config['endpoint'], $resultFactory, $logger, $facetManagerCache);
         }
         
         return $this->api;
@@ -58,7 +58,7 @@ abstract class AbstractShopApiLiveTest extends \Collins\ShopApi\Test\ShopSdkTest
     
     /**
      * @param int $offset
-     * @return ShopApi\Model\Product
+     * @return AboutYou\SDK\Model\Product
      */
     public function getProduct($offset = 1, array $fields = null)
     {
@@ -67,7 +67,7 @@ abstract class AbstractShopApiLiveTest extends \Collins\ShopApi\Test\ShopSdkTest
         }
 
         if ($fields === null) {
-            $fields = array(\Collins\ShopApi\Criteria\ProductFields::DEFAULT_VARIANT);
+            $fields = array(\AboutYou\SDK\Criteria\ProductFields::DEFAULT_VARIANT);
         }
         
         $api = $this->getShopApi();
@@ -83,7 +83,7 @@ abstract class AbstractShopApiLiveTest extends \Collins\ShopApi\Test\ShopSdkTest
     }    
   
     /**
-     * @return \Collins\ShopApi\Criteria\ProductSearchCriteria
+     * @return \AboutYou\SDK\Criteria\ProductSearchCriteria
      */
     protected function getSearchCriteria()
     {

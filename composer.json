@@ -36,11 +36,10 @@
         "phpunit/phpunit": "~4.3"
     },
     "autoload": {
-        "psr-0": {
-            "Collins\\ShopApi": "src/"
-        },
         "psr-4": {
-            "Collins\\ShopApi\\Test\\": "tests/"
+            "AboutYou\\SDK\\": "src/AboutYou/SDK/",
+            "AboutYou\\SDK\\Test\\": "tests/",
+            "": "src/"
         }
     }
 }

@@ -4,9 +4,9 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use \AY;
 
 class DefaultModelFactoryTest extends AbstractShopApiTest
 {
@@ -16,11 +16,11 @@ class DefaultModelFactoryTest extends AbstractShopApiTest
     public function testFacetManager()
     {
         $shopApi = $this->getShopApiWithResultFile('facets-all.json');
-        /** @var ShopApi\Factory\DefaultModelFactory $modelFactory */
+        /** @var AboutYou\SDK\Factory\DefaultModelFactory $modelFactory */
         $modelFactory = $shopApi->getResultFactory();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\DefaultFacetManager', $modelFactory->getFacetManager());
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\FacetManager\\DefaultFacetManager', $modelFactory->getFacetManager());
 
-        $facetManagerMock = $this->getMockForAbstractClass('Collins\\ShopApi\\Model\\FacetManager\\FacetManagerInterface');
+        $facetManagerMock = $this->getMockForAbstractClass('\\AboutYou\\SDK\\Model\\FacetManager\\FacetManagerInterface');
 //        $facetManagerMock->expects($this->atLeastOnce())
 //            ->method('getFacet');
 

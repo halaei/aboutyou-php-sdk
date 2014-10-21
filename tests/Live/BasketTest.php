@@ -1,15 +1,15 @@
 <?php
 
-namespace Collins\ShopApi\Test\Live;
+namespace AboutYou\SDK\Test\Live;
 
-use Collins\ShopApi;
-use Collins\ShopApi\Model\Basket;
+use \AY;
+use AboutYou\SDK\Model\Basket;
 
 
 /**
  * @group live
  */
-class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
+class BasketTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 {
     /**
      * @expectedException \InvalidArgumentException
@@ -125,7 +125,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
 
         $this->assertEquals(1, $basket->getTotalAmount());
         $this->assertEquals(null, $item->getAppId());
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Basket\BasketItem', $item);
+        $this->assertInstanceOf('\AboutYou\SDK\Model\Basket\BasketItem', $item);
         
         $data = $item->getAdditionalData();
         
@@ -159,7 +159,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
                 
         $this->assertEquals(1, $basket->getTotalAmount());
         $this->assertEquals(200, $item->getAppId());
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Basket\BasketItem', $item);
+        $this->assertInstanceOf('\AboutYou\SDK\Model\Basket\BasketItem', $item);
         
         $data = $item->getAdditionalData();
         
@@ -190,7 +190,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $set = $basket->getItem('1234');
                
         $this->assertEquals(1, $basket->getTotalAmount());
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Basket\BasketSet', $set);
+        $this->assertInstanceOf('\AboutYou\SDK\Model\Basket\BasketSet', $set);
         
         $items = $set->getItems();
         $this->assertCount(1, $items);
@@ -231,7 +231,7 @@ class BasketTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
         $set = $basket->getItem('set1');
 
         $this->assertEquals(1, $basket->getTotalAmount());
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Basket\BasketSet', $set);
+        $this->assertInstanceOf('\AboutYou\SDK\Model\Basket\BasketSet', $set);
 
         $items = $set->getItems();
         $this->assertCount(2, $items);

@@ -1,14 +1,14 @@
 <?php
 
-namespace Collins\ShopApi\Test\Live;
+namespace AboutYou\SDK\Test\Live;
 
 /**
  * @group live
  */
-class OrderTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
+class OrderTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 {
     /**
-     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
+     * @expectedException \AboutYou\SDK\Exception\ResultErrorException
      * @expectedExceptionMessage order_id: False is not of type 'integer'
      */
     public function testFetchOrderWithWrongId()
@@ -18,7 +18,7 @@ class OrderTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
     }
     
     /**
-     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
+     * @expectedException \AboutYou\SDK\Exception\ResultErrorException
      * @expectedExceptionMessage Basket is empty: 123456xyz
      */
     public function testInitiateOrderWithEmptyBasket()

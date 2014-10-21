@@ -4,13 +4,14 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use AboutYou\SDK\Model\Facet;
+use AboutYou\SDK\Model\FacetManager;
 use Guzzle\Http\Message\Response;
 use Guzzle\Service\Client;
 
-abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
+abstract class AbstractShopApiTest extends \AboutYou\SDK\Test\ShopSdkTest
 {
     protected $setupCategoryManager = true;
 
@@ -76,7 +77,7 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
     {
         $facets = $this->getFacetList($filename);
 
-        $facetManager = new ShopApi\Model\FacetManager\StaticFacetManager($facets);
+        $facetManager = new FacetManager\StaticFacetManager($facets);
 
         return $facetManager;
     }
@@ -120,7 +121,7 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
     {
         $client = $this->getGuzzleClient($jsonString, $exceptedRequestBody);
 
-        $shopApi = new ShopApi('100', 'token');
+        $shopApi = new \AY('100', 'token');
         $shopApi->getApiClient()->setClient($client);
         if ($this->setupCategoryManager === true) {
             $this->setupCategoryManager($shopApi);
@@ -151,7 +152,7 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
     {
         $client = $this->getGuzzleClient($jsonString, $exceptedRequestBody);
 
-        $shopApi = $this->getMock('Collins\\ShopApi', $methods, array('id', 'token'));
+        $shopApi = $this->getMock('AY', $methods, array('id', 'token'));
 
         $shopApi->getApiClient()->setClient($client);
 
@@ -179,7 +180,7 @@ abstract class AbstractShopApiTest extends \Collins\ShopApi\Test\ShopSdkTest
         }
         $facets = array();
         foreach ($jsonFacets as $jsonFacet) {
-            $facet = ShopApi\Model\Facet::createFromJson($jsonFacet);
+            $facet = Facet::createFromJson($jsonFacet);
             $facets[$facet->getUniqueKey()] = $facet;
         }
 

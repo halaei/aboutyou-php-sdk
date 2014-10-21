@@ -4,11 +4,11 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
-use Collins\ShopApi\Factory\DefaultModelFactory;
-use Collins\ShopApi\Model\CategoryManager\DefaultCategoryManager;
+use AboutYou\SDK\Constants;
+use AboutYou\SDK\Factory\DefaultModelFactory;
+use AboutYou\SDK\Model\CategoryManager\DefaultCategoryManager;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class ProductFacetsTest extends AbstractShopApiTest
@@ -16,12 +16,12 @@ class ProductFacetsTest extends AbstractShopApiTest
     /**
      * @param string $facetsFile
      *
-     * @return ShopApi\Factory\DefaultModelFactory
+     * @return \AboutYou\SDK\Factory\DefaultModelFactory
      */
     public function getFactory($facetsFile)
     {
         $facetManager = $this->getStaticFacetManagerFromFile($facetsFile);
-        $factory = new DefaultModelFactory(new ShopApi('id', 'token'), $facetManager, new DefaultCategoryManager(), new EventDispatcher());
+        $factory = new DefaultModelFactory(new \AY('id', 'token'), $facetManager, new DefaultCategoryManager(), new EventDispatcher());
 
         return $factory;
     }
@@ -40,7 +40,7 @@ class ProductFacetsTest extends AbstractShopApiTest
         $brand = $product->getBrand();
 
         $this->assertNotNull($brand);
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Facet', $brand);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $brand);
         $this->assertEquals(0, $brand->getGroupId());
         $this->assertEquals(596, $brand->getId());
         $this->assertEquals('MARC O`POLO', $brand->getName());
@@ -53,7 +53,7 @@ class ProductFacetsTest extends AbstractShopApiTest
 
         $this->assertNotNull($brand);
 
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Facet', $brand);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $brand);
         $this->assertEquals(0, $brand->getGroupId());
         $this->assertEquals(264, $brand->getId());
         $this->assertEquals('TOM TAILOR', $brand->getName());
@@ -63,13 +63,13 @@ class ProductFacetsTest extends AbstractShopApiTest
     public function testGetFacetGroupSet()
     {
         $attributes = $this->getProduct()->getFacetGroupSet();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroupSet', $attributes);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\FacetGroupSet', $attributes);
 
         $groups = $attributes->getGroups();
         $this->assertCount(4, $groups);
 
-        $brands = $groups[ShopApi\Constants::FACET_BRAND];
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroup', $brands);
+        $brands = $groups[Constants::FACET_BRAND];
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\FacetGroup', $brands);
         $this->assertEquals(0, $brands->getId());
         $this->assertEquals('brand', $brands->getName());
 
@@ -82,19 +82,19 @@ class ProductFacetsTest extends AbstractShopApiTest
         $this->assertEquals(264, $attribute->getId());
         $this->assertEquals('TOM TAILOR', $attribute->getName());
 
-        $color = $groups[ShopApi\Constants::FACET_COLOR];
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroup', $color);
+        $color = $groups[Constants::FACET_COLOR];
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\FacetGroup', $color);
         $this->assertEquals(1, $color->getId());
         $this->assertEquals('color', $color->getName());
     }
 
     public function testGetGroupFacets()
     {
-        $colors = $this->getProduct()->getGroupFacets(ShopApi\Constants::FACET_COLOR);
+        $colors = $this->getProduct()->getGroupFacets(Constants::FACET_COLOR);
         $this->assertNotNull($colors);
         $this->assertInternalType('array', $colors);
         $color = $colors[12];
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Facet', $color);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $color);
         $this->assertEquals(12, $color->getId());
         $this->assertEquals('Grau', $color->getName());
         $this->assertEquals('grau', $color->getValue());
@@ -108,7 +108,7 @@ class ProductFacetsTest extends AbstractShopApiTest
         $facetGroups = $product->getFacetGroups(206);
         $this->assertCount(6, $facetGroups);
         foreach ($facetGroups as $group) {
-            $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroup', $group);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\FacetGroup', $group);
             $this->assertEquals(206, $group->getId());
         }
     }
@@ -117,7 +117,7 @@ class ProductFacetsTest extends AbstractShopApiTest
     {
         $product = $this->getProduct('product/product-full.json');
 
-        $facetGroupSet = new ShopApi\Model\FacetGroupSet([206 => [2402]]);
+        $facetGroupSet = new \AboutYou\SDK\Model\FacetGroupSet([206 => [2402]]);
         $variant = $product->getVariantByFacets($facetGroupSet);
         $this->assertNull($variant);
 
@@ -132,7 +132,7 @@ class ProductFacetsTest extends AbstractShopApiTest
     {
         $product = $this->getProduct('product/product-full.json');
 
-        $facet = new ShopApi\Model\Facet(2402, '', '', 206, '');
+        $facet = new \AboutYou\SDK\Model\Facet(2402, '', '', 206, '');
         $variants = $product->getVariantsByFacetId($facet->getId(), $facet->getGroupId());
         $this->assertCount(1, $variants);
 
@@ -180,7 +180,7 @@ class ProductFacetsTest extends AbstractShopApiTest
         $product = $this->getProduct('product/product-variant-facets.json', 'facets-for-product-variant-facets.json');
 
 
-        $facetGroupSet = new ShopApi\Model\FacetGroupSet($ids);
+        $facetGroupSet = new \AboutYou\SDK\Model\FacetGroupSet($ids);
         $groups = $product->getSelectableFacetGroups($facetGroupSet);
 //        if (count($groups) != 4) {
 //            echo '<pre>', __LINE__, ') ', __METHOD__, ': <b>$groups</b>=', var_export($groups), '</pre>', PHP_EOL;
@@ -263,7 +263,7 @@ class ProductFacetsTest extends AbstractShopApiTest
 
         $product = $this->getProduct('product/product-variant-facets.json', 'facets-for-product-variant-facets.json');
 
-        $facetGroupSet = new ShopApi\Model\FacetGroupSet($ids);
+        $facetGroupSet = new \AboutYou\SDK\Model\FacetGroupSet($ids);
         $groups = $product->getExcludedFacetGroups($facetGroupSet);
         $this->assertCount(count($expectedValues), $groups);
         foreach ($expectedValues as $index => $expected) {

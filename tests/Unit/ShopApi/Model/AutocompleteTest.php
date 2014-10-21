@@ -4,9 +4,9 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Unit\Model;
+namespace AboutYou\SDK\Test\Unit\Model;
 
-use Collins\ShopApi\Model\Autocomplete;
+use AboutYou\SDK\Model\Autocomplete;
 
 class AutocompleteTest extends AbstractModelTest
 {

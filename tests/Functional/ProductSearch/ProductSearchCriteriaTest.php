@@ -4,28 +4,29 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional\ProductSearch;
+namespace AboutYou\SDK\Test\Functional\ProductSearch;
 
-use Collins\ShopApi;
-use Collins\ShopApi\Criteria\ProductFields;
-use Collins\ShopApi\Criteria\ProductSearchCriteria;
+use \AY;
+use AboutYou\SDK\Criteria\ProductFields;
+use AboutYou\SDK\Criteria\ProductSearchCriteria;
+use AboutYou\SDK\Test\Functional\AbstractShopApiTest;
 
 /**
  * Class SearchCriteriaTest
- * @package Collins\ShopApi\Test\Functional
+ * @package AboutYou\Test\Functional
  *
- * @see tests/unit/ShopApi/Criteria/ProductSearchCriteriaTestAbstract.php
+ * @see tests/unit/AboutYou/Criteria/ProductSearchCriteriaTestAbstract.php
  */
-class ProductSearchCriteriaTest extends ShopApi\Test\Functional\AbstractShopApiTest
+class ProductSearchCriteriaTest extends AbstractShopApiTest
 {
     public function testGetSearchCriteria()
     {
-        $shopApi = new ShopApi('id', 'token');
+        $shopApi = new AY('id', 'token');
 
         $criteria = $shopApi->getProductSearchCriteria('my session');
 
-        $this->assertInstanceOf('Collins\\ShopApi\\Criteria\\CriteriaInterface', $criteria);
-        $this->assertInstanceOf('Collins\\ShopApi\\Criteria\\ProductSearchCriteria', $criteria);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Criteria\\CriteriaInterface', $criteria);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Criteria\\ProductSearchCriteria', $criteria);
         $this->assertEquals('{"session_id":"my session"}', json_encode($criteria->toArray()));
 
         $criteria->setLimit(10);

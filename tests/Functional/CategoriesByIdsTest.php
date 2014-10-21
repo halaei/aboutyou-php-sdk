@@ -1,7 +1,7 @@
 <?php
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use \AY;
 
 class CategoriesByIdsTest extends AbstractShopApiTest
 {
@@ -58,13 +58,13 @@ class CategoriesByIdsTest extends AbstractShopApiTest
         $this->assertCount(2, $categories);
 
         $category = $categories[74415];
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $category);
+        $this->assertInstanceOf('\AboutYou\SDK\Model\Category', $category);
         $this->assertEquals(74415, $category->getId());
         $this->assertEquals('Frauen', $category->getName());
         $this->assertTrue($category->isActive());
 
         $category = $categories[74420];
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $category);
+        $this->assertInstanceOf('\AboutYou\SDK\Model\Category', $category);
         $this->assertEquals(74420, $category->getId());
         $this->assertEquals('Jeans', $category->getName());
         $this->assertTrue($category->isActive());
@@ -81,7 +81,7 @@ class CategoriesByIdsTest extends AbstractShopApiTest
     public function testProductResultIteratorInterface($categoriesResult)
     {
         foreach ($categoriesResult as $category) {
-            $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $category);
+            $this->assertInstanceOf('\AboutYou\SDK\Model\Category', $category);
         }
     }
 
@@ -90,8 +90,8 @@ class CategoriesByIdsTest extends AbstractShopApiTest
      */
     public function testProductResultArrayAccessInterface($categoriesResult)
     {
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $categoriesResult[74415]);
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $categoriesResult[74420]);
+        $this->assertInstanceOf('\AboutYou\SDK\Model\Category', $categoriesResult[74415]);
+        $this->assertInstanceOf('\AboutYou\SDK\Model\Category', $categoriesResult[74420]);
     }
 
     /**

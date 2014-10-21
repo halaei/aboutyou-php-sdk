@@ -30,7 +30,7 @@ For more detailed information see [ABOUT YOU Developer Center Documentation](htt
 Example how to use the App SDK with the apc cache.
 
     $cache = new \Aboutyou\Common\Cache\ApcCache();
-    $api = new \Collins\ShopApi($appId, $appPassword, $apiHost, null, null, $cache);
+    $api = new \AboutYou($appId, $appPassword, $apiHost, null, null, $cache);
 
 This is an example, how to pre cache facets and categories per cron (hourly pre caching is preferred). 
 We use APC for simplicity, but you can also use memcached, redis or other supported cache systems. 
@@ -43,7 +43,7 @@ First you need a php script which initialize the app sdk, fetch and cache the da
     require 'vendor/autoload.php';
     
     $cache = new \Aboutyou\Common\Cache\ApcCache();
-    $shopApi = new \Collins\ShopApi($appId, $appPassword, $shopApiHost, null, null, $cache);
+    $shopApi = new \AboutYou($appId, $appPassword, $shopApiHost, null, null, $cache);
     
     $shopApi->preCache();
 

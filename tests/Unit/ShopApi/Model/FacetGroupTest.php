@@ -4,11 +4,11 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Unit\Model;
+namespace AboutYou\SDK\Test\Unit\Model;
 
 
-use Collins\ShopApi\Model\Facet;
-use Collins\ShopApi\Model\FacetGroup;
+use AboutYou\SDK\Model\Facet;
+use AboutYou\SDK\Model\FacetGroup;
 
 class FacetGroupTest extends AbstractModelTest
 {

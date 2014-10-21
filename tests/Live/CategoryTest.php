@@ -1,13 +1,11 @@
 <?php
 
-namespace Collins\ShopApi\Test\Live;
-
-use Collins\ShopApi;
+namespace AboutYou\SDK\Test\Live;
 
 /**
  * @group live
  */
-class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
+class CategoryTest extends AbstractShopApiLiveTest
 {
 
     /**
@@ -29,7 +27,7 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
         $this->assertGreaterThan(0, count($categories), 'please configure at least one category for the app (id: '.$api->getAppId().')');
        
         foreach ($categories as $category) {
-            $this->assertInstanceOf('Collins\ShopApi\Model\Category', $category);            
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
             
             if (count($ids) < 5) {
                 $ids[] = $category->getId();

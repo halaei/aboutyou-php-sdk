@@ -4,10 +4,13 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Unit\Model;
+namespace AboutYou\SDK\Test\Unit\Model;
 
-use Collins\ShopApi\Model\Variant;
-use Collins\ShopApi;
+use AboutYou\SDK\Model\Facet;
+use AboutYou\SDK\Model\FacetGroupSet;
+use AboutYou\SDK\Model\FacetManager\StaticFacetManager;
+use AboutYou\SDK\Model\Product;
+use AboutYou\SDK\Model\Variant;
 
 class VariantTest extends AbstractModelTest
 {
@@ -31,8 +34,8 @@ class VariantTest extends AbstractModelTest
 
         $images = $variant->getImages();
         $this->assertCount(2, $images);
-        $this->assertInstanceOf('Collins\ShopApi\Model\Image', $images[0]);
-        $this->assertInstanceOf('Collins\ShopApi\Model\Image', $images[1]);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Image', $images[0]);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Image', $images[1]);
         $this->assertArrayNotHasKey(2, $images);
 
         return $variant;
@@ -55,7 +58,7 @@ class VariantTest extends AbstractModelTest
     public function testVariantWithAttributes(Variant $variant)
     {
         $facetGroupSet = $variant->getFacetGroupSet();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroupSet', $facetGroupSet);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\FacetGroupSet', $facetGroupSet);
         $this->assertCount(7, $facetGroupSet->getLazyGroups());
     }
 
@@ -92,10 +95,10 @@ class VariantTest extends AbstractModelTest
     public function testGetSize(Variant $variant)
     {
         $facetManager = $this->getFacetManager('facets-all.json');
-        ShopApi\Model\FacetGroupSet::setFacetManager($facetManager);
+        FacetGroupSet::setFacetManager($facetManager);
 
         $size = $variant->getSize();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroup', $size);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\FacetGroup', $size);
         $this->assertEquals('XS', $size->getFacetNames());
     }
 
@@ -105,15 +108,15 @@ class VariantTest extends AbstractModelTest
     public function testGetSeasonCode(Variant $variant)
     {
         $facetManager = $this->getFacetManager('facets-all.json');
-        ShopApi\Model\FacetGroupSet::setFacetManager($facetManager);
+        FacetGroupSet::setFacetManager($facetManager);
 
         $facetGroup = $variant->getSeasonCode();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetGroup', $facetGroup);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\FacetGroup', $facetGroup);
         $this->assertEquals('season', $facetGroup->getName());
         $this->assertEquals('HW 14', $facetGroup->getFacetNames());
 
         $facet = $facetManager->getFacet(289, 4084);
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Facet', $facet);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $facet);
         $this->assertEquals('hw14', $facet->getValue());
         $this->assertEquals('HW 14', $facet->getName());
         $this->assertEquals('season', $facet->getGroupName());
@@ -129,11 +132,11 @@ class VariantTest extends AbstractModelTest
         }
         $facets = array();
         foreach ($jsonFacets as $jsonFacet) {
-            $facet = ShopApi\Model\Facet::createFromJson($jsonFacet);
+            $facet = Facet::createFromJson($jsonFacet);
             $facets[] = $facet;
         }
 
-        $facetManager = new ShopApi\Model\FacetManager\StaticFacetManager($facets);
+        $facetManager = new StaticFacetManager($facets);
 
         return $facetManager;
     }
@@ -141,7 +144,7 @@ class VariantTest extends AbstractModelTest
     private function getProduct() 
     {
         $json = json_decode('{"id":1,"name":"Product"}');
-        return ShopApi\Model\Product::createFromJson($json, $this->getModelFactory(), 1);        
+        return Product::createFromJson($json, $this->getModelFactory(), 1);
     }    
 
 
@@ -151,10 +154,10 @@ class VariantTest extends AbstractModelTest
 //    {
 //        $facetsMap = array();
 //        foreach ($facetsData as $facetData) {
-//            $facet = new ShopApi\Model\Facet($facetData[0], $facetData[1], '', $facetData[2], $facetData[3]);
+//            $facet = new AboutYou\Model\Facet($facetData[0], $facetData[1], '', $facetData[2], $facetData[3]);
 //            $facetsMap[$facet->getUniqueKey()] = $facet;
 //        }
-//        $facetManager = $this->getMockForAbstractClass('\\Collins\\ShopApi\\Model\\FacetManager\\FacetManagerInterface');
+//        $facetManager = $this->getMockForAbstractClass('\\AboutYou\\SDK\\Model\\FacetManager\\FacetManagerInterface');
 //        $facetManager->expects($this->any())
 //            ->method('getFacet')
 //            ->with($this->returnValueMap($facetsMap))

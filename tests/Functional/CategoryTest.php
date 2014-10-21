@@ -4,9 +4,9 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use \AY;
 
 class CategoryTest extends AbstractShopApiTest
 {
@@ -19,7 +19,7 @@ class CategoryTest extends AbstractShopApiTest
         $categoryManager = $shopApi->getResultFactory()->getCategoryManager();
         $json = $this->getJsonObjectFromFile('category-tree-v2.json');
         $categoryManager->parseJson($json[0]->category_tree, $shopApi->getResultFactory());
-        $category = \Collins\ShopApi\Model\Category::createFromJson(reset($json[0]->category_tree->ids), $categoryManager);
+        $category = \AboutYou\SDK\Model\Category::createFromJson(reset($json[0]->category_tree->ids), $categoryManager);
 
         $breadcrumb = $category->getBreadcrumb();
         $this->assertCount(1, $breadcrumb);

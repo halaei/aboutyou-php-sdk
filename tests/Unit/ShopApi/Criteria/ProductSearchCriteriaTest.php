@@ -4,17 +4,17 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Unit\ShopApi\Criteria;
+namespace AboutYou\SDK\Test\Unit\AboutYou\SDK\Criteria;
 
 
-use Collins\ShopApi\Criteria\ProductFields;
-use Collins\ShopApi\Criteria\ProductSearchCriteria;
-use Collins\ShopApi\Model\FacetGroup;
-use Collins\ShopApi\Model\Facet;
-use Collins\ShopApi\Model\FacetGroupSet;
-use Collins\ShopApi\Model\Product;
+use AboutYou\SDK\Criteria\ProductFields;
+use AboutYou\SDK\Criteria\ProductSearchCriteria;
+use AboutYou\SDK\Model\FacetGroup;
+use AboutYou\SDK\Model\Facet;
+use AboutYou\SDK\Model\FacetGroupSet;
+use AboutYou\SDK\Model\Product;
 
-class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
+class ProductSearchCriteriaTest extends \AboutYou\SDK\Test\ShopSdkTest
 {
     public function getCriteria()
     {
@@ -25,8 +25,8 @@ class ProductSearchCriteriaTest extends \Collins\ShopApi\Test\ShopSdkTest
     {
         $criteria = $this->getCriteria();
 
-        $this->assertInstanceOf('Collins\\ShopApi\\Criteria\\CriteriaInterface', $criteria);
-        $this->assertInstanceOf('Collins\\ShopApi\\Criteria\\ProductSearchCriteria', $criteria);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Criteria\\CriteriaInterface', $criteria);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Criteria\\ProductSearchCriteria', $criteria);
         $this->assertEquals('{"session_id":"my"}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()

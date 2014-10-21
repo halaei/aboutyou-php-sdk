@@ -1,33 +1,33 @@
 <?php
 
-namespace Collins\ShopApi\Test\Live;
+namespace AboutYou\SDK\Test\Live;
 
 
-use Collins\ShopApi\Constants;
-use Collins\ShopApi\Model\Autocomplete;
+use AboutYou\SDK\Constants;
+use AboutYou\SDK\Model\Autocomplete;
 
 /**
  * @group live
  */
-class AutocompleteTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
+class AutocompleteTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 {
     public function testAutocomplete()
     {
         $shopApi = $this->getShopApi();
 
         $autocomplete = $shopApi->fetchAutocomplete('damen', 1);
-        $this->assertInstanceOf('Collins\ShopApi\Model\Autocomplete', $autocomplete);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Autocomplete', $autocomplete);
         $products = $autocomplete->getProducts();
         $this->assertGreaterThan(0, $products);
 
         foreach ($products as $product) {
-            $this->assertInstanceOf('Collins\ShopApi\Model\Product', $product);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $product);
         }
 
         $categories = $autocomplete->getCategories();
         $this->assertGreaterThan(0, $categories);
         foreach ($categories as $category) {
-            $this->assertInstanceOf('Collins\ShopApi\Model\Category', $category);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
         }
 
         $autocomplete = $shopApi->fetchAutocomplete('not existent', 10);
@@ -61,6 +61,6 @@ class AutocompleteTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTes
         $shopApi = $this->getShopApi();
         $autocomplete = $shopApi->fetchAutocomplete('Gürtel');
 
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Autocomplete', $autocomplete);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Autocomplete', $autocomplete);
     }
 }

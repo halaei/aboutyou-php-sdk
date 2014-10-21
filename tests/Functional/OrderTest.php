@@ -4,7 +4,7 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
 
 class OrderTest extends AbstractShopApiTest
@@ -14,10 +14,10 @@ class OrderTest extends AbstractShopApiTest
         $shopApi = $this->getShopApiWithResultFile('get-order.json');
 
         $order = $shopApi->fetchOrder('1243');
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Order', $order);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Order', $order);
         $this->assertEquals('123455', $order->getId());
         $basket = $order->getBasket();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Basket', $basket);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Basket', $basket);
     }
     
     public function testFetchOrderWithProductsWithoutCategories()
@@ -39,7 +39,7 @@ class OrderTest extends AbstractShopApiTest
             "abcabcabc",
             "http://somedomain.com/url"
         );
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\InitiateOrder', $initiateOrder);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\InitiateOrder', $initiateOrder);
         $this->assertEquals(
             'http://ant-web1.wavecloud.de/?user_token=34f9b86d-c899-4703-b85a-3c4971601b59&app_token=10268cc8-2025-4285-8e17-bc3160865824',
             $initiateOrder->getUrl()
@@ -67,7 +67,7 @@ class OrderTest extends AbstractShopApiTest
     }
 
     /**
-     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
+     * @expectedException \AboutYou\SDK\Exception\ResultErrorException
      * @expectedExceptionMessage Basket is empty: abcabcabc
      */
     public function testInitiateOrderFailedWithEmptyBasket()
@@ -90,7 +90,7 @@ class OrderTest extends AbstractShopApiTest
     }
 
     /**
-     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
+     * @expectedException \AboutYou\SDK\Exception\ResultErrorException
      * @expectedExceptionMessage success_url: u'/checkout/success' does not match '^http(s|)://'
      */
     public function testInitiateOrderFailedWithError()
