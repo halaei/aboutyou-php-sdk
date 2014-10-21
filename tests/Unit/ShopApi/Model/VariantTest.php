@@ -146,23 +146,4 @@ class VariantTest extends AbstractModelTest
         $json = json_decode('{"id":1,"name":"Product"}');
         return Product::createFromJson($json, $this->getModelFactory(), 1);
     }    
-
-
-//    2014-04-21 nils.droege: not finish yet
-//
-//    protected function getFacetManagerMock($facetsData)
-//    {
-//        $facetsMap = array();
-//        foreach ($facetsData as $facetData) {
-//            $facet = new AboutYou\Model\Facet($facetData[0], $facetData[1], '', $facetData[2], $facetData[3]);
-//            $facetsMap[$facet->getUniqueKey()] = $facet;
-//        }
-//        $facetManager = $this->getMockForAbstractClass('\\AboutYou\\SDK\\Model\\FacetManager\\FacetManagerInterface');
-//        $facetManager->expects($this->any())
-//            ->method('getFacet')
-//            ->with($this->returnValueMap($facetsMap))
-//        ;
-//
-//        return $facetManager;
-//    }
 }

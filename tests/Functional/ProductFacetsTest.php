@@ -175,17 +175,11 @@ class ProductFacetsTest extends AbstractShopApiTest
      */
     public function testGetSelectableFacetGroups($ids, $expectedValues)
     {
-//        $this->getShopApiWithResultFile('facets-for-product-variant-facets.json');
-
         $product = $this->getProduct('product/product-variant-facets.json', 'facets-for-product-variant-facets.json');
 
 
         $facetGroupSet = new \AboutYou\SDK\Model\FacetGroupSet($ids);
         $groups = $product->getSelectableFacetGroups($facetGroupSet);
-//        if (count($groups) != 4) {
-//            echo '<pre>', __LINE__, ') ', __METHOD__, ': <b>$groups</b>=', var_export($groups), '</pre>', PHP_EOL;
-//
-//        }
         $this->assertCount(count($expectedValues), $groups);
 
         foreach ($expectedValues as $index => $expected) {
@@ -259,8 +253,6 @@ class ProductFacetsTest extends AbstractShopApiTest
      */
     public function testGetExcludedFacetGroups($ids, $expectedValues)
     {
-//        $this->getShopApiWithResultFile('facets-for-product-variant-facets.json');
-
         $product = $this->getProduct('product/product-variant-facets.json', 'facets-for-product-variant-facets.json');
 
         $facetGroupSet = new \AboutYou\SDK\Model\FacetGroupSet($ids);

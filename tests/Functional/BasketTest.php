@@ -63,9 +63,6 @@ class BasketTest extends AbstractShopApiTest
         $this->assertEquals('engravingssens', $subItems[0]->getDescription());
         $this->assertEquals(array('description' => 'engravingssens', 'internal_infos' => array('stuff')), $subItems[0]->getAdditionalData());
 
-//        $this->assertEquals('identifier2', $items[1]->getId());
-//        $this->assertTrue($items[1]->hasErrors());
-
         return $basket;
     }
     
@@ -376,7 +373,6 @@ class BasketTest extends AbstractShopApiTest
      */
     public function testUpdateBasket(Basket $basket)
     {
-//        $this->markTestIncomplete('');
         $exceptedRequestBody = '[{"basket":{"session_id":"testing"}}]';
 
         $shopApi = $this->getShopApiWithResultFile('result/basket1.json', $exceptedRequestBody);

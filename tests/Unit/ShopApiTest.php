@@ -62,9 +62,7 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
             $appPassword,
             $apiEndPoint
         );
-        //api endpoint constant is overwritten in ShopApiClient.php  setApiEndpoint
-        //not asserted internal documentation 
-        //$this->assertEquals($apiEndPoint, $shopApi->getApiEndPoint());
+
         /**
          * this assertion relies on internal implementation and relieng on live environment
          * urls as constant, point to refactor but actually needs a test

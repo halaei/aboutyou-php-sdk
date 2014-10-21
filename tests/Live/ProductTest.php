@@ -77,18 +77,4 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 
         return $product;
     }
-
-//      TODO: search for a product with no length, eg. shows
-//    public function testGetVariantGetLength()
-//    {
-//        $id = 402573;
-//        $api = $this->getShopApi();
-//
-//        $productsResult = $api->fetchProductsByIds([$id], array(ProductFields::VARIANTS));
-//        $product = $productsResult[$id];
-//        $variants = $product->getVariants();
-//        $variant = reset($variants);
-//
-//        $this->assertNull($variant->getLength());
-//    }
 }

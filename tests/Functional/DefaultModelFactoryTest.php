@@ -16,13 +16,13 @@ class DefaultModelFactoryTest extends AbstractShopApiTest
     public function testFacetManager()
     {
         $shopApi = $this->getShopApiWithResultFile('facets-all.json');
-        /** @var AboutYou\SDK\Factory\DefaultModelFactory $modelFactory */
+        /** @var \AboutYou\SDK\Factory\DefaultModelFactory $modelFactory */
         $modelFactory = $shopApi->getResultFactory();
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\FacetManager\\DefaultFacetManager', $modelFactory->getFacetManager());
 
         $facetManagerMock = $this->getMockForAbstractClass('\\AboutYou\\SDK\\Model\\FacetManager\\FacetManagerInterface');
-//        $facetManagerMock->expects($this->atLeastOnce())
-//            ->method('getFacet');
+        $facetManagerMock->expects($this->atLeastOnce())
+            ->method('getFacet');
 
         $modelFactory->setFacetManager($facetManagerMock);
         $product = $modelFactory->createProduct(json_decode('{
@@ -35,8 +35,6 @@ class DefaultModelFactoryTest extends AbstractShopApiTest
         }'));
 
         $brand = $product->getBrand();
-
-//        $this->markTestIncomplete('implement me');
     }
 }
  
