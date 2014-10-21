@@ -561,6 +561,7 @@ class ShopApi
     public function setResultFactory(ModelFactoryInterface $modelFactory)
     {
         $this->modelFactory = $modelFactory;
+        $modelFactory->setBaseImageUrl($this->baseImageUrl);
     }
 
     /**
