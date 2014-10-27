@@ -38,7 +38,7 @@ class Product
     protected $maxPrice;
 
     /** @var integer */
-    protected $maxSavings;
+    protected $maxSavingsPrice;
 
     /** @var integer */
     protected $maxSavingsPercentage;
@@ -651,7 +651,7 @@ class Product
      */
     public function getMaxSavingsPrice()
     {
-        return $this->maxPrice;
+        return $this->maxSavingsPrice;
     }
 
     /**
@@ -659,7 +659,7 @@ class Product
      */
     public function getMaxSavingsPercentage()
     {
-        return $this->maxPrice;
+        return $this->maxSavingsPercentage;
     }
 
     public function getMerchantId()

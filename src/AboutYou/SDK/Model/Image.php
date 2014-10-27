@@ -282,7 +282,7 @@ class Image
     public function getUrl($width = 200, $height = 200)
     {
         $width = max(min($width, self::MAX_WIDTH), self::MIN_WIDTH);
-        $height = max(min($height, self::MAX_WIDTH), self::MIN_WIDTH);
+        $height = max(min($height, self::MAX_HEIGHT), self::MIN_HEIGHT);
 
         return $this->getBaseUrl() . '/' . $this->hash . '?width=' . $width . '&height=' . $height;
     }
