@@ -3,16 +3,16 @@ namespace AboutYou\SDK\Test\Functional;
 
 use \AY;
 
-class FacetTest extends AbstractShopApiTest
+class FacetTest extends AbstractAYTest
 {
     /**
      *
      */
     public function testFacet()
     {
-        $shopApi = $this->getShopApiWithResultFile('fetch-facet.json');
+        $ay = $this->getAYWithResultFile('fetch-facet.json');
 
-        $facets = $shopApi->fetchFacet(array(
+        $facets = $ay->fetchFacet(array(
             array("id" => 1234, "group_id" => 0 ),
             array("id" => 1234, "group_id" => 0 )
         ));

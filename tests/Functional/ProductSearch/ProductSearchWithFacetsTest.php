@@ -3,19 +3,19 @@
 namespace AboutYou\SDK\Test\Functional\ProductSearch;
 
 use AboutYou\SDK\Model\ProductSearchResult;
-use AboutYou\SDK\Test\Functional\AbstractShopApiTest;
+use AboutYou\SDK\Test\Functional\AbstractAYTest;
 
-class ProductSearchWithFacetsTest extends AbstractShopApiTest
+class ProductSearchWithFacetsTest extends AbstractAYTest
 {
     protected $facetsResultPath = null;
 
     public function testProductSearchWithSaleResult()
     {
-        $shopApi = $this->getShopApiWithResultFile(
+        $ay = $this->getAYWithResultFile(
             'result-product-search-with-facets.json'
         );
 
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $productSearchResult = $ay->fetchProductSearch($ay->getProductSearchCriteria('12345'));
 
         $saleFacet = $productSearchResult->getSaleCounts();
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\ProductSearchResult\\SaleCounts', $saleFacet);
@@ -26,12 +26,12 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
 
     public function testProductSearchWithPriceRangeResult()
     {
-        $shopApi = $this->getShopApiWithResultFile(
+        $ay = $this->getAYWithResultFile(
             'result-product-search-with-facets.json'
         );
 
         // get all available products
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $productSearchResult = $ay->fetchProductSearch($ay->getProductSearchCriteria('12345'));
         $priceRanges = $productSearchResult->getPriceRanges();
         $this->assertInternalType('array', $priceRanges);
         $this->assertCount(6, $priceRanges);
@@ -67,13 +67,13 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
 
     public function testProductSearchWithFacetResult()
     {
-        $shopApi = $this->getShopApiWithResultFileAndFacets(
+        $ay = $this->getAYWithResultFileAndFacets(
             'result-product-search-with-facets.json',
             'facet-result.json'
         );
 
         // get all available products
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $productSearchResult = $ay->fetchProductSearch($ay->getProductSearchCriteria('12345'));
         $facetsCounts = $productSearchResult->getFacets();
         $this->assertInternalType('array', $facetsCounts);
         $this->assertCount(1, $facetsCounts);
@@ -102,12 +102,12 @@ class ProductSearchWithFacetsTest extends AbstractShopApiTest
 
     public function testProductSearchWithCategoriesResult()
     {
-        $shopApi = $this->getShopApiWithResultFile(
+        $ay = $this->getAYWithResultFile(
             'result-product-search-with-facets.json'
         );
 
         // get all available products
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $productSearchResult = $ay->fetchProductSearch($ay->getProductSearchCriteria('12345'));
         $categories = $productSearchResult->getCategories();
         $this->assertInternalType('array', $categories);
 

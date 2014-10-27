@@ -8,7 +8,7 @@ use AboutYou\SDK\Model\Product;
 /**
  * @group live
  */
-class ProductTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
+class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
 {
     public function testGetProduct()
     {

@@ -2,12 +2,11 @@
 
 namespace AboutYou\SDK\Test\Live;
 
-use \AY;
 use AboutYou\SDK\Criteria;
 
-abstract class AbstractShopApiLiveTest extends \AboutYou\SDK\Test\ShopSdkTest
+abstract class AbstractAYLiveTest extends \AboutYou\SDK\Test\AYTest
 {
-    private $api;
+    private $ay;
     private $config;
     
     /**
@@ -29,9 +28,9 @@ abstract class AbstractShopApiLiveTest extends \AboutYou\SDK\Test\ShopSdkTest
     }
     
     /**
-     * @return ShopApi 
+     * @return \\AY
      */
-    protected function getShopApi(
+    protected function getAY(
         ResultFactoryInterface $resultFactory = null,
         LoggerInterface $logger = null,
         $facetManagerCache = null
@@ -39,11 +38,11 @@ abstract class AbstractShopApiLiveTest extends \AboutYou\SDK\Test\ShopSdkTest
     {
         $config = $this->getConfig();
         
-        if (!isset($this->api)) {
-            $this->api = new AY($config['user'], $config['password'], $config['endpoint'], $resultFactory, $logger, $facetManagerCache);
+        if (!isset($this->ay)) {
+            $this->ay = new \AY($config['user'], $config['password'], $config['endpoint'], $resultFactory, $logger, $facetManagerCache);
         }
         
-        return $this->api;
+        return $this->ay;
     }
     
     /**
@@ -70,7 +69,7 @@ abstract class AbstractShopApiLiveTest extends \AboutYou\SDK\Test\ShopSdkTest
             $fields = array(\AboutYou\SDK\Criteria\ProductFields::DEFAULT_VARIANT);
         }
         
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         
         $criteria = $this->getSearchCriteria();
         $criteria->setLimit(1, $offset);

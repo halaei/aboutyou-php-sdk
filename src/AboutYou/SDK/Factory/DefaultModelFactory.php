@@ -16,8 +16,8 @@ use AboutYou\SDK\Model\FacetManager\FacetManagerInterface;
 
 class DefaultModelFactory implements ModelFactoryInterface
 {
-    /** @var ShopApi */
-    protected $shopApi;
+    /** @var \AY */
+    protected $ay;
 
     /** @var FacetManagerInterface */
     protected $facetManager;
@@ -26,26 +26,26 @@ class DefaultModelFactory implements ModelFactoryInterface
     protected $categoryManager;
 
     /**
-     * @param ShopApi $shopApi
+     * @param \AY $ay
      * @param FacetManagerInterface $facetManager
      * @param CategoryManagerInterface $categoryManager
      */
     public function __construct(
-        \AY $shopApi = null,
+        \AY $ay = null,
         FacetManagerInterface $facetManager,
         CategoryManagerInterface $categoryManager
     ) {
-        if (!empty($shopApi)) {
-            $this->setShopApi($shopApi);
+        if (!empty($ay)) {
+            $this->setAY($ay);
         }
         $this->categoryManager = $categoryManager;
 
         $this->setFacetManager($facetManager);
     }
 
-    public function setShopApi(\AY $shopApi)
+    public function setAY(\AY $ay)
     {
-        $this->shopApi = $shopApi;
+        $this->ay = $ay;
     }
 
     /**
@@ -71,11 +71,11 @@ class DefaultModelFactory implements ModelFactoryInterface
     }
 
     /**
-     * @return ShopApi
+     * @return \AY
      */
-    protected function getShopApi()
+    protected function getAY()
     {
-        return $this->shopApi;
+        return $this->ay;
     }
 
     /**
@@ -248,7 +248,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createProduct(\stdClass $jsonObject)
     {
-        return Model\Product::createFromJson($jsonObject, $this, $this->shopApi->getAppId());
+        return Model\Product::createFromJson($jsonObject, $this, $this->ay->getAppId());
     }
 
     /**
@@ -276,7 +276,7 @@ class DefaultModelFactory implements ModelFactoryInterface
         if (count($productIds) > 0) {
             $productIds = array_unique($productIds);
             // search products for valid variants
-            $productSearchResult = $this->shopApi
+            $productSearchResult = $this->ay
                 ->fetchProductsByIds(
                     $productIds,
                     array(

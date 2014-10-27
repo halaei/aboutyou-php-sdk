@@ -9,13 +9,13 @@ namespace AboutYou\SDK\Test\Functional;
 use \AY;
 use AboutYou\SDK\Criteria\ProductFields;
 
-class ProductsByEansTest extends AbstractShopApiTest
+class ProductsByEansTest extends AbstractAYTest
 {
     public function testFetchProductsByEans()
     {
-        $shopApi = $this->getShopApiWithResultFile('result/products_eans.json');
+        $ay = $this->getAYWithResultFile('result/products_eans.json');
 
-        $productResult = $shopApi->fetchProductsByEans(array('4250671871492', '4250802292554'), array(ProductFields::VARIANTS));
+        $productResult = $ay->fetchProductsByEans(array('4250671871492', '4250802292554'), array(ProductFields::VARIANTS));
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\ProductsEansResult', $productResult);
         $products = $productResult->getProducts();
 

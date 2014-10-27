@@ -4,17 +4,15 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace AboutYou\SDK\Test\Unit\AboutYou\SDK\Criteria;
-
+namespace AboutYou\SDK\Test\Unit\AboutYou\Criteria;
 
 use AboutYou\SDK\Criteria\ProductFields;
 use AboutYou\SDK\Criteria\ProductSearchCriteria;
 use AboutYou\SDK\Model\FacetGroup;
 use AboutYou\SDK\Model\Facet;
 use AboutYou\SDK\Model\FacetGroupSet;
-use AboutYou\SDK\Model\Product;
 
-class ProductSearchCriteriaTest extends \AboutYou\SDK\Test\ShopSdkTest
+class ProductSearchCriteriaTest extends \AboutYou\SDK\Test\AYTest
 {
     public function getCriteria()
     {

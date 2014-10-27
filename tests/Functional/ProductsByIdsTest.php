@@ -8,15 +8,15 @@ namespace AboutYou\SDK\Test\Functional;
 
 use AboutYou\SDK\Model;
 
-class ProductsByIdsTest extends AbstractShopApiTest
+class ProductsByIdsTest extends AbstractAYTest
 {
     public function testFetchProducts()
     {
         $productIds = array(123, 456);
 
-        $shopApi = $this->getShopApiWithResultFile('result/products.json');
+        $ay = $this->getAYWithResultFile('result/products.json');
 
-        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $productResult = $ay->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
         $this->assertCount(2, $products);
         $p123 = $products[123];
@@ -65,9 +65,9 @@ class ProductsByIdsTest extends AbstractShopApiTest
     {
         $productIds = array(123, 456);
 
-        $shopApi = $this->getShopApiWithResultFile('result/products-full.json');
+        $ay = $this->getAYWithResultFile('result/products-full.json');
 
-        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $productResult = $ay->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
         $this->assertCount(2, $products);
 
@@ -113,9 +113,9 @@ class ProductsByIdsTest extends AbstractShopApiTest
     {
         $productIds = array(123, 456);
 
-        $shopApi = $this->getShopApiWithResultFile('p.json');
+        $ay = $this->getAYWithResultFile('p.json');
 
-        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $productResult = $ay->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
 
         $product = reset($products);
@@ -127,9 +127,9 @@ class ProductsByIdsTest extends AbstractShopApiTest
     {
         $productIds = array(220430);
 
-        $shopApi = $this->getShopApiWithResultFile('result/products-with-styles.json');
+        $ay = $this->getAYWithResultFile('result/products-with-styles.json');
 
-        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $productResult = $ay->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
         $this->assertCount(1, $products);
 
@@ -157,15 +157,15 @@ class ProductsByIdsTest extends AbstractShopApiTest
     }
 ]
 EOS;
-        $shopApi = $this->getShopApiWithResult($result);
+        $ay = $this->getAYWithResult($result);
 
         $logger = $this->getMockForAbstractClass('Psr\Log\LoggerInterface');
         $logger->expects($this->once())
             ->method('warning')
         ;
-        $shopApi->setLogger($logger);
+        $ay->setLogger($logger);
 
-        $productResult = $shopApi->fetchProductsByIds(array(1, 123));
+        $productResult = $ay->fetchProductsByIds(array(1, 123));
         $products = $productResult->getProducts();
         $this->assertCount(1, $products);
         $product = reset($products);
@@ -187,9 +187,9 @@ EOS;
     {
         $productIds = array(456);
 
-        $shopApi = $this->getShopApiWithResultFile('result/products-full.json');
+        $ay = $this->getAYWithResultFile('result/products-full.json');
 
-        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $productResult = $ay->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
         $product = $products[456];
         $variant = $product->getDefaultVariant();

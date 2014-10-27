@@ -5,14 +5,14 @@ namespace AboutYou\SDK\Test\Live;
 /**
  * @group live
  */
-class VariantTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
+class VariantTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
 {
     public function testGetVariantById()
     {
-        $shopApi = $this->getShopApi();
+        $ay = $this->getAY();
         $id = $this->getVariantId(1);
 
-        $result = $shopApi->fetchVariantsByIds(array($id, $id * 1000));
+        $result = $ay->fetchVariantsByIds(array($id, $id * 1000));
 
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\VariantsResult', $result);
         $this->assertTrue($result->hasVariantsNotFound());
@@ -36,9 +36,9 @@ class VariantTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 
     public function testGetVariantByIdWithSameProduct()
     {
-        $shopApi = $this->getShopApi();
+        $ay = $this->getAY();
 
-        $result = $shopApi->fetchVariantsByIds(array('4683343', '4683349'));
+        $result = $ay->fetchVariantsByIds(array('4683343', '4683349'));
 
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\VariantsResult', $result);
         $this->assertFalse($result->hasVariantsNotFound());
@@ -56,10 +56,10 @@ class VariantTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 
     public function testGetVariantByIdWithWrongIds()
     {
-        $shopApi = $this->getShopApi();
+        $ay = $this->getAY();
         $ids = array('583336000', '58333600');
 
-        $result = $shopApi->fetchVariantsByIds($ids);
+        $result = $ay->fetchVariantsByIds($ids);
 
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\VariantsResult', $result);
         $this->assertTrue($result->hasVariantsNotFound());

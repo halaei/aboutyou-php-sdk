@@ -6,14 +6,12 @@
 
 namespace AboutYou\SDK\Test\Unit\Model;
 
-use \AY;
-
-abstract class AbstractModelTest extends \AboutYou\SDK\Test\ShopSdkTest
+abstract class AbstractModelTest extends \AboutYou\SDK\Test\AYTest
 {
     protected function getJsonObject($filepath)
     {
         if (strpos($filepath, '/') !== 0) {
-            $filepath = dirname(dirname(__DIR__)) . '/testData/' . $filepath;
+            $filepath = dirname(__DIR__) . '/testData/' . $filepath;
         }
         $jsonString = file_get_contents($filepath);
 
@@ -21,13 +19,13 @@ abstract class AbstractModelTest extends \AboutYou\SDK\Test\ShopSdkTest
     }
 
     /**
-     * @return AboutYou\SDK\Factory\ModelFactoryInterface
+     * @return \AboutYou\SDK\Factory\ModelFactoryInterface
      */
     protected function getModelFactory()
     {
-        $shopApi =  new AY('id', 'token');
+        $ay =  new \AY('id', 'token');
 
-        return $shopApi->getResultFactory();
+        return $ay->getResultFactory();
     }
 
     protected function getModelFactoryMock()

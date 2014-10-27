@@ -11,7 +11,7 @@ use AboutYou\SDK\Factory\DefaultModelFactory;
 use AboutYou\SDK\Model\CategoryManager\DefaultCategoryManager;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class ProductFacetsTest extends AbstractShopApiTest
+class ProductFacetsTest extends AbstractAYTest
 {
     /**
      * @param string $facetsFile

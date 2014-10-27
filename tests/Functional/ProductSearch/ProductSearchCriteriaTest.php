@@ -9,7 +9,7 @@ namespace AboutYou\SDK\Test\Functional\ProductSearch;
 use \AY;
 use AboutYou\SDK\Criteria\ProductFields;
 use AboutYou\SDK\Criteria\ProductSearchCriteria;
-use AboutYou\SDK\Test\Functional\AbstractShopApiTest;
+use AboutYou\SDK\Test\Functional\AbstractAYTest;
 
 /**
  * Class SearchCriteriaTest
@@ -17,13 +17,13 @@ use AboutYou\SDK\Test\Functional\AbstractShopApiTest;
  *
  * @see tests/unit/AboutYou/Criteria/ProductSearchCriteriaTestAbstract.php
  */
-class ProductSearchCriteriaTest extends AbstractShopApiTest
+class ProductSearchCriteriaTest extends AbstractAYTest
 {
     public function testGetSearchCriteria()
     {
-        $shopApi = new AY('id', 'token');
+        $ay = new AY('id', 'token');
 
-        $criteria = $shopApi->getProductSearchCriteria('my session');
+        $criteria = $ay->getProductSearchCriteria('my session');
 
         $this->assertInstanceOf('\\AboutYou\\SDK\\Criteria\\CriteriaInterface', $criteria);
         $this->assertInstanceOf('\\AboutYou\\SDK\\Criteria\\ProductSearchCriteria', $criteria);
@@ -32,7 +32,7 @@ class ProductSearchCriteriaTest extends AbstractShopApiTest
         $criteria->setLimit(10);
         $this->assertEquals('{"session_id":"my session","result":{"limit":10,"offset":0}}', json_encode($criteria->toArray()));
 
-        $criteria = $shopApi->getProductSearchCriteria('my session')
+        $criteria = $ay->getProductSearchCriteria('my session')
             ->selectProductFields(array(ProductFields::DEFAULT_IMAGE,  ProductFields::DEFAULT_VARIANT))
             ->sortBy(ProductSearchCriteria::SORT_TYPE_PRICE, ProductSearchCriteria::SORT_DESC)
             ->setLimit(40)

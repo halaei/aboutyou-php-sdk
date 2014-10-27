@@ -3,18 +3,18 @@ namespace AboutYou\SDK\Test\Functional;
 
 use \AY;
 
-class AutocompleteTest extends AbstractShopApiTest
+class AutocompleteTest extends AbstractAYTest
 {
     /**
      *
      */
     public function testAutocomplete()
     {
-        $shopApi = $this->getShopApiWithResultFile(
+        $ay = $this->getAYWithResultFile(
             'result/autocompletion-shop.json'
         );
 
-        $autocomplete = $shopApi->fetchAutocomplete('Shop', 10);
+        $autocomplete = $ay->fetchAutocomplete('Shop', 10);
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Autocomplete', $autocomplete);
 
         foreach ($autocomplete->getProducts() as $product) {
@@ -31,10 +31,10 @@ class AutocompleteTest extends AbstractShopApiTest
      */
     public function testAutocompleteWithWrongSearchword()
     {
-        $shopApi = $this->getShopApiWithResultFile(
+        $ay = $this->getAYWithResultFile(
             'result/autocompletion-shop.json'
         );
         
-        $shopApi->fetchAutocomplete(false);
+        $ay->fetchAutocomplete(false);
     }
 }

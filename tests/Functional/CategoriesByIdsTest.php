@@ -3,16 +3,16 @@ namespace AboutYou\SDK\Test\Functional;
 
 use \AY;
 
-class CategoriesByIdsTest extends AbstractShopApiTest
+class CategoriesByIdsTest extends AbstractAYTest
 {
     /**
      * @expectedException \InvalidArgumentException
      */
     public function testFetchCategoriesWithWrongIds()
     {
-        $shopApi = $this->getShopApiWithResultFile('category-tree-v2.json');
+        $ay = $this->getAYWithResultFile('category-tree-v2.json');
 
-        $categoriesResult = $shopApi->fetchCategoriesByIds(array('kfd', false,  null, 212312, ));        
+        $categoriesResult = $ay->fetchCategoriesByIds(array('kfd', false,  null, 212312, ));
     }
     
     /**
@@ -20,9 +20,9 @@ class CategoriesByIdsTest extends AbstractShopApiTest
      */
     public function testFetchCategoriesWithStringIdsAndFalse()
     {
-        $shopApi = $this->getShopApiWithResultFile('category-tree-v2.json');
+        $ay = $this->getAYWithResultFile('category-tree-v2.json');
 
-        $categoriesResult = $shopApi->fetchCategoriesByIds(array('1', '2', false));        
+        $categoriesResult = $ay->fetchCategoriesByIds(array('1', '2', false));
     }   
     
     /**
@@ -30,17 +30,17 @@ class CategoriesByIdsTest extends AbstractShopApiTest
      */
     public function testFetchCategoriesWithNegativeIds()
     {
-        $shopApi = $this->getShopApiWithResultFile('category-tree-v2.json');
+        $ay = $this->getAYWithResultFile('category-tree-v2.json');
 
-        $categoriesResult = $shopApi->fetchCategoriesByIds(array(-1, -2, -4));        
+        $categoriesResult = $ay->fetchCategoriesByIds(array(-1, -2, -4));
     }     
     
     public function testFetchCategoriesWithStringIds()
     {
         $categoryIds = array(74415, 74420, 123);
-        $shopApi = $this->getShopApiWithResultFile('category-tree-v2.json');
+        $ay = $this->getAYWithResultFile('category-tree-v2.json');
 
-        $categoriesResult = $shopApi->fetchCategoriesByIds($categoryIds);
+        $categoriesResult = $ay->fetchCategoriesByIds($categoryIds);
 
         $categories = $categoriesResult->getCategories();
         
@@ -51,9 +51,9 @@ class CategoriesByIdsTest extends AbstractShopApiTest
     {
         $categoryIds = array(74415, 74420, 123);
 
-        $shopApi = $this->getShopApiWithResultFile('category.json');
+        $ay = $this->getAYWithResultFile('category.json');
 
-        $categoriesResult = $shopApi->fetchCategoriesByIds($categoryIds);
+        $categoriesResult = $ay->fetchCategoriesByIds($categoryIds);
         $categories = $categoriesResult->getCategories();
         $this->assertCount(2, $categories);
 

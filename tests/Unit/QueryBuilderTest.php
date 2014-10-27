@@ -4,7 +4,7 @@
  * (c) ABOUT YOU GmbH
  */
 
-namespace AboutYou\SDK\Test\Unit\ShopApi;
+namespace AboutYou\SDK\Test\Unit;
 
 use AboutYou\SDK\Constants;
 use AboutYou\SDK\Criteria\ProductFields;

@@ -44,7 +44,7 @@ class AY
     const PRE_CACHE_ALL      = 3;
 
     /** @var Client */
-    protected $shopApiClient;
+    protected $client;
 
     /** @var string */
     protected $baseImageUrl;
@@ -94,7 +94,7 @@ class AY
         LoggerInterface $logger = null,
         $cache = null
     ) {
-        $this->shopApiClient = new Client($appId, $appPassword, $apiEndPoint, $logger);
+        $this->client = new Client($appId, $appPassword, $apiEndPoint, $logger);
         $this->generatePageId();
 
         if ($cache) {
@@ -116,7 +116,7 @@ class AY
      */
     public function getApiClient()
     {
-        return $this->shopApiClient;
+        return $this->client;
     }
 
     /**
@@ -148,7 +148,7 @@ class AY
     public function setPageId($pageId)
     {
         $this->pageId = $pageId;
-        $this->shopApiClient->setPageId($pageId);
+        $this->client->setPageId($pageId);
     }
 
     /**
@@ -159,7 +159,7 @@ class AY
     {
         $this->appId       = $appId;
         $this->appPassword = $appPassword;
-        $this->shopApiClient->setAppCredentials($appId, $appPassword);
+        $this->client->setAppCredentials($appId, $appPassword);
     }
 
     /**
@@ -175,7 +175,7 @@ class AY
      */
     public function getApiEndPoint()
     {
-        return $this->shopApiClient->getApiEndPoint();
+        return $this->client->getApiEndPoint();
     }
 
     /**
@@ -185,7 +185,7 @@ class AY
      */
     public function setApiEndpoint($apiEndPoint)
     {
-        $this->shopApiClient->setApiEndpoint($apiEndPoint);
+        $this->client->setApiEndpoint($apiEndPoint);
     }
 
     /**
@@ -194,7 +194,7 @@ class AY
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
-        $this->shopApiClient->setLogger($logger);
+        $this->client->setLogger($logger);
     }
 
     /**
@@ -202,7 +202,7 @@ class AY
      */
     public function getLogger()
     {
-        return $this->shopApiClient->getLogger();
+        return $this->client->getLogger();
     }
 
     /**
@@ -212,7 +212,7 @@ class AY
      */
     public function setLogTemplate($logTemplate)
     {
-        $this->shopApiClient->setLogTemplate($logTemplate);
+        $this->client->setLogTemplate($logTemplate);
     }
 
     /**
@@ -220,7 +220,7 @@ class AY
      */
     public function getLogTemplate()
     {
-        return $this->shopApiClient->getLogTemplate();
+        return $this->client->getLogTemplate();
     }
 
     /**
@@ -274,7 +274,7 @@ class AY
      */
     public function getQuery()
     {
-        $query = new Query($this->shopApiClient, $this->getResultFactory());
+        $query = new Query($this->client, $this->getResultFactory());
 
         return $query;
     }
@@ -660,7 +660,7 @@ class AY
     /**
      * Fetch single facets by id and group id
      * For example:
-     * $shopApi->fetchFacet([
+     * $ay->fetchFacet([
      *   ["id" => 123, "group_id" => 0 ],
      *   ["id" => 456, "group_id" => 0 ]
      * ]);

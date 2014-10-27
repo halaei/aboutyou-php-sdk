@@ -29,7 +29,7 @@ use AboutYou\SDK\Factory\ModelFactoryInterface;
  * $basketSet->addItem(new BasketSetItem($shoesVariantId));
  * $basketSet->setAdditionalData(['description' => 'Shoes with laces "yellow star"', 'image_url' = 'http://myapp.com/shoes_yello_star.png']);
  * $basket->updateItemSet($basketSet)
- * $shopApi->updateBasket(session_id(), $basket);
+ * $ay->updateBasket(session_id(), $basket);
  *
  * You can use the static method create as an alternative to generate a basket set:
  * $basketSet = BasketItemSet::create(

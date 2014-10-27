@@ -3,18 +3,18 @@
 namespace AboutYou\SDK\Test\Functional\ProductSearch;
 
 use AboutYou\SDK\Model\ProductSearchResult;
-use AboutYou\SDK\Test\Functional\AbstractShopApiTest;
+use AboutYou\SDK\Test\Functional\AbstractAYTest;
 
-class ProductSearchRealLifeTest extends AbstractShopApiTest
+class ProductSearchRealLifeTest extends AbstractAYTest
 {
     protected $facetsResultPath = null;
 
     public function testProductSearchPriceRange()
     {
-        $shopApi = $this->getShopApiWithResultFile('product_search-20140414.json');
+        $ay = $this->getAYWithResultFile('product_search-20140414.json');
 
         // get all available products
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $productSearchResult = $ay->fetchProductSearch($ay->getProductSearchCriteria('12345'));
         $priceRanges = $productSearchResult->getPriceRanges();
         $maxPrice = $productSearchResult->getMaxPrice();
         $this->assertEquals(0, $maxPrice);
@@ -29,12 +29,12 @@ class ProductSearchRealLifeTest extends AbstractShopApiTest
 
     public function testProductSearchRawFacets()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
+        $ay = $this->getAYWithResultFiles(array(
             'product_search-20140414-2.json'
         ));
 
         // get all available products
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $productSearchResult = $ay->fetchProductSearch($ay->getProductSearchCriteria('12345'));
         $facets = $productSearchResult->getRawFacets();
 
         $this->assertInstanceOf('\stdClass', $facets);

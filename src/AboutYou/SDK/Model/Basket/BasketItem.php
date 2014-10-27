@@ -18,7 +18,7 @@ namespace AboutYou\SDK\Model\Basket;
  * $variantId = $variant->getId(); // $variant is instance of \AboutYou\Model\Variant
  * $basketItem = new BasketItem('my-personal-identifier', $variantId);
  * $basketItem->setAdditionalData('jeans with engraving "for you"', ['engraving_text' => 'for you']);
- * $shopApi->addItemToBasket(session_id(), $basketItem);
+ * $ay->addItemToBasket(session_id(), $basketItem);
  *
  * @see \AboutYou\Model\Variant
  * @see \AboutYou\Model\Basket

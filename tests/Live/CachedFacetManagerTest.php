@@ -15,19 +15,19 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 /**
  * @group live
  */
-class CachedFacetManagerTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
+class CachedFacetManagerTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
 {
     public function testPreCacheFacets()
     {
         $cache   = new ArrayCache();
-        $shopApi = $this->getShopApi(null, null, $cache);
-        $facetManager = $shopApi->getResultFactory()->getFacetManager();
+        $ay = $this->getAY(null, null, $cache);
+        $facetManager = $ay->getResultFactory()->getFacetManager();
         $this->assertTrue($facetManager->isEmpty());
-        $shopApi->preCache();
+        $ay->preCache();
         $this->assertFalse($facetManager->isEmpty());
 
         /** @var DefaultFacetManager $facetManager */
-        $facetManager = new DefaultFacetManager($cache, $shopApi->getAppId());
+        $facetManager = new DefaultFacetManager($cache, $ay->getAppId());
         $this->assertFalse($facetManager->isEmpty());
 
         return $cache;

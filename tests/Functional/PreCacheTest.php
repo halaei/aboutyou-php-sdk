@@ -8,20 +8,19 @@ namespace AboutYou\SDK\Test\Functional;
 
 use Aboutyou\Common\Cache\ArrayCache;
 use AboutYou\SDK\Constants;
-use \AY;
 use AboutYou\SDK\Model\CategoryManager\DefaultCategoryManager;
 use AboutYou\SDK\Model\FacetManager\DefaultFacetManager;
 
-class PreCacheTest extends AbstractShopApiTest
+class PreCacheTest extends AbstractAYTest
 {
     public function testPreCache()
     {
         $cache = new ArrayCache();
         $appId = '100';
 
-        $shopApi = $this->getShopApi($appId, $cache);
+        $ay = $this->getAY($appId, $cache);
 
-        $shopApi->preCache(AY::PRE_CACHE_ALL);
+        $ay->preCache(\AY::PRE_CACHE_ALL);
 
 
         $categoryManager = new DefaultCategoryManager($cache, $appId);
@@ -48,9 +47,9 @@ class PreCacheTest extends AbstractShopApiTest
     /**
      * @param $appId
      * @param $cache
-     * @return ShopApi
+     * @return \AY
      */
-    private function getShopApi($appId, $cache)
+    private function getAY($appId, $cache)
     {
         $jsonString = <<<EOL
 [
@@ -92,10 +91,10 @@ EOL;
 
 
         $client = $this->getGuzzleClient($jsonString, $exceptedRequestBody);
-        $shopApi = new AY($appId, 'token', Constants::API_ENVIRONMENT_LIVE, null, null, $cache);
-        $shopApi->getApiClient()->setClient($client);
+        $ay = new \AY($appId, 'token', Constants::API_ENVIRONMENT_LIVE, null, null, $cache);
+        $ay->getApiClient()->setClient($client);
 
-        return $shopApi;
+        return $ay;
     }
 }
  

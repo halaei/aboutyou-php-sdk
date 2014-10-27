@@ -9,13 +9,13 @@ namespace AboutYou\SDK\Test\Functional;
 
 use \AY;
 
-class FactoryTest extends AbstractShopApiTest
+class FactoryTest extends AbstractAYTest
 {
     public function testGetFactory()
     {
-        $shopApi = new AY('id', 'dummy');
+        $ay = new AY('id', 'dummy');
 
-        $factory = $shopApi->getResultFactory();
+        $factory = $ay->getResultFactory();
         $this->assertInstanceOf('\\AboutYou\\SDK\\Factory\\ModelFactoryInterface', $factory);
         $this->assertInstanceOf('\\AboutYou\\SDK\\Factory\\ResultFactoryInterface', $factory);
 
@@ -35,9 +35,9 @@ class FactoryTest extends AbstractShopApiTest
     {
         $productIds = array(123, 456);
 
-        $shopApi = $this->getShopApiWithResultFile('result/products.json');
+        $ay = $this->getAYWithResultFile('result/products.json');
 
-        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $productResult = $ay->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
 
         

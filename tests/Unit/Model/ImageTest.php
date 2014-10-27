@@ -7,7 +7,6 @@
 namespace AboutYou\SDK\Test\Unit\Model;
 
 use AboutYou\SDK\Model\Image;
-use \AY;
 
 class ImageTest extends AbstractModelTest
 {
@@ -39,16 +38,16 @@ class ImageTest extends AbstractModelTest
         $this->assertStringStartsWith('/hash1', $image->getUrl());
         $this->assertStringStartsWith('/hash1?width=123&height=456', $image->getUrl(123, 456));
 
-        $shopApi = new AY('appid', 'pw');
-        $shopApi->getResultFactory();
-        $this->assertStringStartsWith(AY::IMAGE_URL_LIVE . '/hash1', $image->getUrl());
-        $shopApi->setBaseImageUrl('http://domain.tld');
+        $ay = new \AY('appid', 'pw');
+        $ay->getResultFactory();
+        $this->assertStringStartsWith(\AY::IMAGE_URL_LIVE . '/hash1', $image->getUrl());
+        $ay->setBaseImageUrl('http://domain.tld');
         $this->assertStringStartsWith('http://domain.tld/hash1', $image->getUrl());
-        $shopApi->setBaseImageUrl(false);
+        $ay->setBaseImageUrl(false);
         $this->assertStringStartsWith('/hash1', $image->getUrl());
-        $shopApi->setBaseImageUrl(null);
-        $this->assertStringStartsWith(AY::IMAGE_URL_LIVE . '/hash1', $image->getUrl());
-        $shopApi->getResultFactory()->setBaseImageUrl('http://domain2.tld');
+        $ay->setBaseImageUrl(null);
+        $this->assertStringStartsWith(\AY::IMAGE_URL_LIVE . '/hash1', $image->getUrl());
+        $ay->getResultFactory()->setBaseImageUrl('http://domain2.tld');
         $this->assertStringStartsWith('http://domain2.tld/hash1', $image->getUrl());
         Image::setBaseUrl('http://domain3.tld');
         $this->assertStringStartsWith('http://domain3.tld/hash1', $image->getUrl());

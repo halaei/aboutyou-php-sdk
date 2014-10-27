@@ -7,11 +7,11 @@ use AboutYou\SDK\Model\ProductSearchResult;
 /**
  * @group live
  */
-class ProductSearchTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
+class ProductSearchTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
 {
     public function testProductSearchWithLimit()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         $criteria = $this->getSearchCriteria();
         $criteria->setLimit(5);
 
@@ -27,7 +27,7 @@ class ProductSearchTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 
     public function testProductSearchWithId()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         $criteria = $this->getSearchCriteria();
         $criteria->setLimit(5);
 
@@ -45,7 +45,7 @@ class ProductSearchTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 
     public function testProductSearchWithEANS()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
 
         $result = $api->fetchProductsByEans(['NO_VALID_EAN']);
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\ProductsEansResult', $result);
@@ -55,7 +55,7 @@ class ProductSearchTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 
     public function testProductSearchCategoryTree()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         $criteria = $this->getSearchCriteria();
         $criteria->setLimit(5);
 
@@ -66,7 +66,7 @@ class ProductSearchTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 
     public function testProductSearchCategory()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         $criteria = $this->getSearchCriteria();
         $criteria->setLimit(5);
 
@@ -77,7 +77,7 @@ class ProductSearchTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 
     public function testProductSearchProductCount()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         $criteria = $this->getSearchCriteria();
         $criteria->setLimit(5);
 
@@ -89,7 +89,7 @@ class ProductSearchTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 
     public function testProductSearchProductBoosts()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         $criteria = $this->getSearchCriteria()
             ->boostProducts(array(1))
             ->setLimit(2)
@@ -102,29 +102,29 @@ class ProductSearchTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 
     public function testProductSearchSort()
     {
-        $shopApi = $this->getShopApi();
+        $ay = $this->getAY();
 
         // search products and sort
-        $criteria = $shopApi->getProductSearchCriteria($this->getSessionId())
+        $criteria = $ay->getProductSearchCriteria($this->getSessionId())
             ->sortBy(
                 \AboutYou\SDK\Criteria\ProductSearchCriteria::SORT_TYPE_MOST_VIEWED
             )
         ;
-        $productSearchResult = $shopApi->fetchProductSearch($criteria);
+        $productSearchResult = $ay->fetchProductSearch($criteria);
         $this->checkProductSearchResult($productSearchResult);
     }
 
     public function testProductSearchWithFacets()
     {
-        $shopApi = $this->getShopApi();
+        $ay = $this->getAY();
 
         // search products and sort
-        $criteria = $shopApi->getProductSearchCriteria($this->getSessionId())
+        $criteria = $ay->getProductSearchCriteria($this->getSessionId())
             ->selectSales()
             ->selectPriceRanges()
             ->selectFacetsByGroupId(0, 10)
         ;
-        $productSearchResult = $shopApi->fetchProductSearch($criteria);
+        $productSearchResult = $ay->fetchProductSearch($criteria);
         $this->checkProductSearchResult($productSearchResult);
 
         $saleFacets = $productSearchResult->getSaleCounts();

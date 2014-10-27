@@ -8,17 +8,17 @@ namespace AboutYou\SDK\Test\Functional;
 
 use \AY;
 
-class CategoryTest extends AbstractShopApiTest
+class CategoryTest extends AbstractAYTest
 {
     /**
      *
      */
     public function testBreadcrumb()
     {
-        $shopApi = $this->getShopApiWithResult(''); // Init DefaultModelFactory
-        $categoryManager = $shopApi->getResultFactory()->getCategoryManager();
+        $ay = $this->getAYWithResult(''); // Init DefaultModelFactory
+        $categoryManager = $ay->getResultFactory()->getCategoryManager();
         $json = $this->getJsonObjectFromFile('category-tree-v2.json');
-        $categoryManager->parseJson($json[0]->category_tree, $shopApi->getResultFactory());
+        $categoryManager->parseJson($json[0]->category_tree, $ay->getResultFactory());
         $category = \AboutYou\SDK\Model\Category::createFromJson(reset($json[0]->category_tree->ids), $categoryManager);
 
         $breadcrumb = $category->getBreadcrumb();

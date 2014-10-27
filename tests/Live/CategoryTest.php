@@ -5,7 +5,7 @@ namespace AboutYou\SDK\Test\Live;
 /**
  * @group live
  */
-class CategoryTest extends AbstractShopApiLiveTest
+class CategoryTest extends AbstractAYLiveTest
 {
 
     /**
@@ -13,13 +13,13 @@ class CategoryTest extends AbstractShopApiLiveTest
      */
     public function testFetchCategoriesByIdWithStrings()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         $api->fetchCategoriesByIds(';!');
     }
     
     public function testFetchCategoriesOverTree()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         $tree = $api->fetchCategoryTree();
         $categories = $tree->getCategories(false);
         $ids = array();
@@ -42,7 +42,7 @@ class CategoryTest extends AbstractShopApiLiveTest
      */
     public function testFetchCategoriesByIds($ids)
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         $categories = $api->fetchCategoriesByIds($ids);
                
         $this->assertCount($categories->count(), $ids);

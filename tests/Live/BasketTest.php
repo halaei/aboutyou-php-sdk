@@ -9,14 +9,14 @@ use AboutYou\SDK\Model\Basket;
 /**
  * @group live
  */
-class BasketTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
+class BasketTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
 {
     /**
      * @expectedException \InvalidArgumentException
      */
     public function testFetchBasketWithFalseSessionId()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         $api->fetchBasket(false);
     }
     
@@ -25,7 +25,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
      */
     public function testFetchBasketWithIntSessionId()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         $api->fetchBasket(123456);      
     }    
     
@@ -33,7 +33,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
     {        
         $this->clearBasket();
         
-        $api = $this->getShopApi();
+        $api = $this->getAY();
 
         $basket = $api->fetchBasket($this->getSessionId());    
         $amount = $basket->getTotalAmount();   
@@ -46,7 +46,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
      */
     public function testAddProductToBasket()
     {        
-        $api = $this->getShopApi(); 
+        $api = $this->getAY();
    
         $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(1));             
         $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(3));                  
@@ -82,7 +82,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
      */
     public function testRemoveAllProductsInBasket($basket)
     {
-        $api = $this->getShopApi(); 
+        $api = $this->getAY();
         $basket->deleteAllItems();
 
         $basket = $api->updateBasket($this->getSessionId(), $basket);
@@ -95,7 +95,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
      */
     public function testAddItemWithVariantNotFound()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
 
         $basket = $api->addItemToBasket($this->getSessionId(), 1);
 
@@ -106,7 +106,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 
     public function testAddOneItemToBasket()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         
         $item = new Basket\BasketItem('1234', 
             $this->getVariantId(1), 
@@ -139,7 +139,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
     
     public function testAddOneItemToBasketWithAppId()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         
         $item = new Basket\BasketItem('1234', 
             $this->getVariantId(1), 
@@ -173,7 +173,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
     
     public function testAddOneItemSetToBasket()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         
         $item = new Basket\BasketSetItem($this->getVariantId(1));
         
@@ -210,7 +210,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
     
     public function testAddSetWithTwoItemsToBasket()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
 
         $item1 = new Basket\BasketSetItem($this->getVariantId(1), array('description' => 'Variante 1', 'hello' => 'world'));
         $item2 = new Basket\BasketSetItem($this->getVariantId(3), array('description' => 'Variante 2', 'hello' => 'universe'));
@@ -248,7 +248,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
     
     public function testAddSetWithTwoItemsWithAppIdToBasket()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
 
         $item1 = new Basket\BasketSetItem($this->getVariantId(1), array('description' => 'Variante 1', 'hello' => 'world'), 139);
         $item2 = new Basket\BasketSetItem($this->getVariantId(3), array('description' => 'Variante 2', 'hello' => 'universe'), 139);
@@ -280,7 +280,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
 
     public function testAddItemToBasketWithProductID()
     {
-        $api = $this->getShopApi();        
+        $api = $this->getAY();
         $basket = $api->addItemToBasket($this->getSessionId(), $this->getProductId(1));
         
         $this->assertTrue($basket->hasErrors());
@@ -288,7 +288,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
     
     public function testAddItemSetToBasketWithProductID()
     {
-        $shopApi = $this->getShopApi();        
+        $ay = $this->getAY();
         $basket = new Basket();
         
         $set = new Basket\BasketSet('A123567', array('description' => 'test', 'image_url' => 'http://img-url'));
@@ -297,14 +297,14 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
         $set->addItem($item);
         
         $basket->updateItemSet($set);
-        $result = $shopApi->updateBasket($this->getSessionId(), $basket);
+        $result = $ay->updateBasket($this->getSessionId(), $basket);
         
         $this->assertTrue($result->hasErrors());
     }   
     
     private function clearBasket()
     {
-        $api = $this->getShopApi();       
+        $api = $this->getAY();
         $basket = $api->fetchBasket($this->getSessionId());    
 
         $basket->deleteAllItems();

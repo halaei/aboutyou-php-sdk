@@ -4,16 +4,16 @@ namespace AboutYou\SDK\Test\Functional;
 use \AY;
 use Guzzle\Http\Message\Response;
 
-class FacetsTest extends AbstractShopApiTest
+class FacetsTest extends AbstractAYTest
 {
     /**
      *
      */
     public function testFacets()
     {
-        $shopApi = $this->getShopApiWithResultFile('facets-206.json');
+        $ay = $this->getAYWithResultFile('facets-206.json');
 
-        $facets = $shopApi->fetchFacets(array(206));
+        $facets = $ay->fetchFacets(array(206));
         $this->assertInternalType('array', $facets);
 
         $count = 0;

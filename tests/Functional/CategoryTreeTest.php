@@ -3,12 +3,12 @@ namespace AboutYou\SDK\Test\Functional;
 
 use AboutYou\SDK\Model\Category;
 
-class CategoryTreeTest extends AbstractShopApiTest
+class CategoryTreeTest extends AbstractAYTest
 {
     public function testFetchCategoryTree()
     {
-        $shopApi = $this->getShopApiWithResultFile('category-tree-v2.json');
-        $categoryTreeResult = $shopApi->fetchCategoryTree();
+        $ay = $this->getAYWithResultFile('category-tree-v2.json');
+        $categoryTreeResult = $ay->fetchCategoryTree();
         $categories = $categoryTreeResult->getCategories();
         $this->assertCount(2, $categories);
 

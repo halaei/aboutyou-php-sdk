@@ -6,26 +6,25 @@
 
 namespace AboutYou\SDK\Test\Functional;
 
-use \AY;
 use AboutYou\SDK\Model\Product;
 
-class ProductGetCategoryTest extends AbstractShopApiTest
+class ProductGetCategoryTest extends AbstractAYTest
 {
     protected $setupCategoryManager = false;
 
-    /** @var ShopApi */
-    private $shopApi;
+    /** @var \AY */
+    private $ay;
 
     public function setup()
     {
-        $this->shopApi = $this->getShopApiWithResultFile('product/category.json');
-        $this->shopApi->getCategoryManager(true);
+        $this->ay = $this->getAYWithResultFile('product/category.json');
+        $this->ay->getCategoryManager(true);
     }
 
     public function getProduct($filename)
     {
         $json = $this->getJsonObjectFromFile('product/' . $filename);
-        $product = Product::createFromJson($json, $this->shopApi->getResultFactory(), 98);
+        $product = Product::createFromJson($json, $this->ay->getResultFactory(), 98);
 
         return $product;
     }

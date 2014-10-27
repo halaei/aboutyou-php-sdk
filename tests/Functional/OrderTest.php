@@ -7,13 +7,13 @@
 namespace AboutYou\SDK\Test\Functional;
 
 
-class OrderTest extends AbstractShopApiTest
+class OrderTest extends AbstractAYTest
 {
     public function testFetchOrder()
     {
-        $shopApi = $this->getShopApiWithResultFile('get-order.json');
+        $ay = $this->getAYWithResultFile('get-order.json');
 
-        $order = $shopApi->fetchOrder('1243');
+        $order = $ay->fetchOrder('1243');
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Order', $order);
         $this->assertEquals('123455', $order->getId());
         $basket = $order->getBasket();
@@ -22,9 +22,9 @@ class OrderTest extends AbstractShopApiTest
     
     public function testFetchOrderWithProductsWithoutCategories()
     {
-        $shopApi = $this->getShopApiWithResultFile('get-order-without-categories.json');
+        $ay = $this->getAYWithResultFile('get-order-without-categories.json');
         
-        $order = $shopApi->fetchOrder('53574');
+        $order = $ay->fetchOrder('53574');
         $basket = $order->getBasket();
         $products = $basket->getProducts();
         $product = array_pop($products);
@@ -34,8 +34,8 @@ class OrderTest extends AbstractShopApiTest
 
     public function testInitiateOrderSuccess()
     {
-        $shopApi = $this->getShopApiWithResultFile('initiate-order.json');
-        $initiateOrder = $shopApi->initiateOrder(
+        $ay = $this->getAYWithResultFile('initiate-order.json');
+        $initiateOrder = $ay->initiateOrder(
             "abcabcabc",
             "http://somedomain.com/url"
         );
@@ -56,8 +56,8 @@ class OrderTest extends AbstractShopApiTest
 
     public function testInitiateOrderWithCancelAndErrorUrls()
     {
-        $shopApi = $this->getShopApiWithResultFile('initiate-order.json');
-        $initiateOrder = $shopApi->initiateOrder(
+        $ay = $this->getAYWithResultFile('initiate-order.json');
+        $initiateOrder = $ay->initiateOrder(
             "abcabcabc",
             "http://somedomain.com/url",
             "http://somedomain.com/cancel",
@@ -72,7 +72,7 @@ class OrderTest extends AbstractShopApiTest
      */
     public function testInitiateOrderFailedWithEmptyBasket()
     {
-        $shopApi = $this->getShopApiWithResult('[
+        $ay = $this->getAYWithResult('[
             {
                 "initiate_order": {
                     "error_ident": "440db3b3-75c4-4223-b5cf-e57d37616239",
@@ -83,7 +83,7 @@ class OrderTest extends AbstractShopApiTest
                 }
             }
         ]');
-        $initiateOrder = $shopApi->initiateOrder(
+        $initiateOrder = $ay->initiateOrder(
             "abcabcabc",
             "http://somedomain.com/url"
         );
@@ -104,8 +104,8 @@ class OrderTest extends AbstractShopApiTest
         }]
 EOS;
 
-        $shopApi = $this->getShopApiWithResult($response);
-        $initiateOrder = $shopApi->initiateOrder(
+        $ay = $this->getAYWithResult($response);
+        $initiateOrder = $ay->initiateOrder(
             "abcabcabc",
             "/somedomain.com/url"
         );

@@ -8,16 +8,16 @@ namespace AboutYou\SDK\Test\Functional;
 
 use \AY;
 
-class DefaultModelFactoryTest extends AbstractShopApiTest
+class DefaultModelFactoryTest extends AbstractAYTest
 {
     /**
      * @group facet-manager
      */
     public function testFacetManager()
     {
-        $shopApi = $this->getShopApiWithResultFile('facets-all.json');
+        $ay = $this->getAYWithResultFile('facets-all.json');
         /** @var \AboutYou\SDK\Factory\DefaultModelFactory $modelFactory */
-        $modelFactory = $shopApi->getResultFactory();
+        $modelFactory = $ay->getResultFactory();
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\FacetManager\\DefaultFacetManager', $modelFactory->getFacetManager());
 
         $facetManagerMock = $this->getMockForAbstractClass('\\AboutYou\\SDK\\Model\\FacetManager\\FacetManagerInterface');

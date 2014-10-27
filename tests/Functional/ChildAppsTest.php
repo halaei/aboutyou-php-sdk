@@ -3,16 +3,16 @@ namespace AboutYou\SDK\Test\Functional;
 
 use \AY;
 
-class ChildAppsTest extends AbstractShopApiTest
+class ChildAppsTest extends AbstractAYTest
 {
     /**
      *
      */
     public function testChildApps()
     {
-        $shopApi = $this->getShopApiWithResultFile('child-apps.json');
+        $ay = $this->getAYWithResultFile('child-apps.json');
 
-        $apps = $shopApi->fetchChildApps();
+        $apps = $ay->fetchChildApps();
         $this->assertInternalType('array', $apps);
 
         foreach ($apps as $app) {

@@ -9,6 +9,6 @@ namespace AboutYou\SDK\Test;
 /**
  * @backupStaticAttributes disabled
  */
-abstract class ShopSdkTest extends \PHPUnit_Framework_TestCase
+abstract class AYTest extends \PHPUnit_Framework_TestCase
 {
 }

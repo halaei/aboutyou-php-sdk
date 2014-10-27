@@ -6,14 +6,11 @@
 
 namespace AboutYou\SDK\Test\Unit;
 
-use \AY;
 use AboutYou\SDK\Constants;
-use AboutYou\SDK\Factory\DefaultModelFactory;
-use AboutYou\SDK\Model\FacetManager\DefaultFacetManager;
 use AboutYou\SDK\Model\FacetManager\AboutyouCacheStrategy;
 use AboutYou\SDK\Model\FacetManager\FetchSingleFacetStrategy;
 
-class ShopApiTest extends \PHPUnit_Framework_TestCase
+class AYTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructorWithDefaultStrategy()
     {
@@ -23,7 +20,7 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
         $loggerInterfaceImplementation = $this->getMock('\\Psr\\Log\\LoggerInterface');
         $cacheMock = $this->getMockForAbstractClass('\\Aboutyou\\Common\\Cache\\CacheProvider');
 
-        $shopApi = new AY(
+        $ay = new \AY(
             $appId,
             $appPassword,
             $apiEndPoint,
@@ -32,9 +29,9 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
             $cacheMock
         );
 
-        $this->assertEquals($apiEndPoint, $shopApi->getApiEndPoint());
-        $this->assertEquals($loggerInterfaceImplementation, $shopApi->getLogger());
-        $factory = $shopApi->getResultFactory();
+        $this->assertEquals($apiEndPoint, $ay->getApiEndPoint());
+        $this->assertEquals($loggerInterfaceImplementation, $ay->getLogger());
+        $factory = $ay->getResultFactory();
         $this->assertInstanceOf('\\AboutYou\\SDK\\Factory\\DefaultModelFactory', $factory);
         $facetManager = $factory->getFacetManager();
 
@@ -43,7 +40,7 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
         /**
          * relies on internal configuration of live image url as constant
          */
-        $this->assertEquals(AY::IMAGE_URL_LIVE, $shopApi->getBaseImageUrl());
+        $this->assertEquals(\AY::IMAGE_URL_LIVE, $ay->getBaseImageUrl());
     }
 
     /**
@@ -57,7 +54,7 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
         $apiEndPoint = Constants::API_ENVIRONMENT_STAGE;
         $apiEndPointLive = Constants::API_ENVIRONMENT_LIVE;
 
-        $shopApi = new AY(
+        $ay = new \AY(
             $appId,
             $appPassword,
             $apiEndPoint
@@ -67,21 +64,21 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
          * this assertion relies on internal implementation and relieng on live environment
          * urls as constant, point to refactor but actually needs a test
          */
-        $this->assertEquals($shopApi::IMAGE_URL_STAGE, $shopApi->getBaseImageUrl());
-        $this->assertEquals('//devcenter-staging-www1.pub.collins.kg:81/appjs/123.js', $shopApi->getJavaScriptURL());
+        $this->assertEquals($ay::IMAGE_URL_STAGE, $ay->getBaseImageUrl());
+        $this->assertEquals('//devcenter-staging-www1.pub.collins.kg:81/appjs/123.js', $ay->getJavaScriptURL());
         
-        $shopApiLive = new AY(
+        $ayLive = new \AY(
             $appId,
             $appPassword,
             $apiEndPointLive
         );   
         
-        $this->assertEquals('//developer.aboutyou.de/appjs/123.js', $shopApiLive->getJavaScriptURL());        
+        $this->assertEquals('//developer.aboutyou.de/appjs/123.js', $ayLive->getJavaScriptURL());
     }
 
     /**
      *
-     * @return \AboutYou\SDK
+     * @return \AY
      */
     private function getTestObject()
     {
@@ -89,13 +86,13 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
         $appPassword = 'abc';
         $apiEndPoint = Constants::API_ENVIRONMENT_STAGE;
 
-        $shopApi = new AY(
+        $ay = new \AY(
             $appId,
             $appPassword,
             $apiEndPoint
         );
 
-        return $shopApi;
+        return $ay;
     }
 
     /**
@@ -103,8 +100,8 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetQuery()
     {
-        $shopApi = $this->getTestObject();
-        $query = $shopApi->getQuery();
+        $ay = $this->getTestObject();
+        $query = $ay->getQuery();
         $this->assertInstanceOf('\\AboutYou\\SDK\\Query', $query);
     }
 
@@ -113,15 +110,15 @@ class ShopApiTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetApiClient()
     {
-        $shopApi = $this->getTestObject();
-        $shopApiClient = $shopApi->getApiClient();
-        $this->assertInstanceOf('\\AboutYou\\SDK\\ShopApiClient', $shopApiClient);
+        $ay     = $this->getTestObject();
+        $client = $ay->getApiClient();
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Client', $client);
     }
 
     public function testGetModelFactory()
     {
-        $shopApi = $this->getTestObject();
-        $modelFactory = $shopApi->getResultFactory();
+        $ay = $this->getTestObject();
+        $modelFactory = $ay->getResultFactory();
         $this->assertInstanceOf('\\AboutYou\\SDK\\Factory\\ResultFactoryInterface', $modelFactory);
     }
 

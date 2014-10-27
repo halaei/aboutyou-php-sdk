@@ -9,13 +9,13 @@ use AboutYou\SDK\Model\Autocomplete;
 /**
  * @group live
  */
-class AutocompleteTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
+class AutocompleteTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
 {
     public function testAutocomplete()
     {
-        $shopApi = $this->getShopApi();
+        $ay = $this->getAY();
 
-        $autocomplete = $shopApi->fetchAutocomplete('damen', 1);
+        $autocomplete = $ay->fetchAutocomplete('damen', 1);
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Autocomplete', $autocomplete);
         $products = $autocomplete->getProducts();
         $this->assertGreaterThan(0, $products);
@@ -30,19 +30,19 @@ class AutocompleteTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
             $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
         }
 
-        $autocomplete = $shopApi->fetchAutocomplete('not existent', 10);
+        $autocomplete = $ay->fetchAutocomplete('not existent', 10);
         $this->assertCount(0, $autocomplete->getProducts());
         $this->assertCount(0, $autocomplete->getCategories());
 
-        $autocomplete = $shopApi->fetchAutocomplete('damen', 2, array(Constants::TYPE_PRODUCTS));
+        $autocomplete = $ay->fetchAutocomplete('damen', 2, array(Constants::TYPE_PRODUCTS));
         $this->assertCount(2, $autocomplete->getProducts());
         $this->assertEquals(Autocomplete::NOT_REQUESTED, $autocomplete->getCategories());
 
-        $autocomplete = $shopApi->fetchAutocomplete('damen', 1, array(Constants::TYPE_CATEGORIES));
+        $autocomplete = $ay->fetchAutocomplete('damen', 1, array(Constants::TYPE_CATEGORIES));
         $this->assertEquals(Autocomplete::NOT_REQUESTED, $autocomplete->getProducts());
         $this->assertCount(1, $autocomplete->getCategories());
 
-        $autocomplete = $shopApi->fetchAutocomplete('Damen', 1);
+        $autocomplete = $ay->fetchAutocomplete('Damen', 1);
         $this->assertCount(1, $autocomplete->getProducts());
         $this->assertCount(1, $autocomplete->getCategories());
     }
@@ -52,14 +52,14 @@ class AutocompleteTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
      */
     public function testFetchAutocompleteWithInt()
     {
-        $shopApi = $this->getShopApi();
-        $autocomplete = $shopApi->fetchAutocomplete(false, 10);
+        $ay = $this->getAY();
+        $autocomplete = $ay->fetchAutocomplete(false, 10);
     }
 
     public function testUmlaut()
     {
-        $shopApi = $this->getShopApi();
-        $autocomplete = $shopApi->fetchAutocomplete('Gürtel');
+        $ay = $this->getAY();
+        $autocomplete = $ay->fetchAutocomplete('Gürtel');
 
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Autocomplete', $autocomplete);
     }

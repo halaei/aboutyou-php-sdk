@@ -11,7 +11,7 @@ use AboutYou\SDK\Model\FacetManager;
 use Guzzle\Http\Message\Response;
 use Guzzle\Service\Client;
 
-abstract class AbstractShopApiTest extends \AboutYou\SDK\Test\ShopSdkTest
+abstract class AbstractAYTest extends \AboutYou\SDK\Test\AYTest
 {
     protected $setupCategoryManager = true;
 
@@ -82,63 +82,63 @@ abstract class AbstractShopApiTest extends \AboutYou\SDK\Test\ShopSdkTest
         return $facetManager;
     }
 
-    protected function getShopApiWithResultFileAndFacets($filepath, $facetsFile)
+    protected function getAYWithResultFileAndFacets($filepath, $facetsFile)
     {
         $jsonString = $this->getJsonStringFromFile($filepath);
 
-        $shopApi = $this->getShopApiWithResult($jsonString);
+        $ay = $this->getAYWithResult($jsonString);
 
         $facetManager = $this->getStaticFacetManagerFromFile($facetsFile);
-        $shopApi->getResultFactory()->setFacetManager($facetManager);
+        $ay->getResultFactory()->setFacetManager($facetManager);
 
-        return $shopApi;
+        return $ay;
     }
 
-    protected function getShopApiWithResultFile($filepath, $exceptedRequestBody = null)
+    protected function getAYWithResultFile($filepath, $exceptedRequestBody = null)
     {
         $jsonString = $this->getJsonStringFromFile($filepath);
 
-        return $this->getShopApiWithResult($jsonString, $exceptedRequestBody);
+        return $this->getAYWithResult($jsonString, $exceptedRequestBody);
     }
 
-    protected function getShopApiWithResultFiles($filepaths, $exceptedRequestBody = null)
+    protected function getAYWithResultFiles($filepaths, $exceptedRequestBody = null)
     {
         $jsonStrings = array();
         foreach ($filepaths as $filepath) {
             $jsonStrings[] = $this->getJsonStringFromFile($filepath);
         }
 
-        return $this->getShopApiWithResult($jsonStrings, $exceptedRequestBody);
+        return $this->getAYWithResult($jsonStrings, $exceptedRequestBody);
     }
 
     /**
      * @param string|string[] $jsonString
      * @param string $exceptedRequestBody
      *
-     * @return ShopApi
+     * @return \AY
      */
-    protected function getShopApiWithResult($jsonString, $exceptedRequestBody = null)
+    protected function getAYWithResult($jsonString, $exceptedRequestBody = null)
     {
         $client = $this->getGuzzleClient($jsonString, $exceptedRequestBody);
 
-        $shopApi = new \AY('100', 'token');
-        $shopApi->getApiClient()->setClient($client);
+        $ay = new \AY('100', 'token');
+        $ay->getApiClient()->setClient($client);
         if ($this->setupCategoryManager === true) {
-            $this->setupCategoryManager($shopApi);
+            $this->setupCategoryManager($ay);
         }
         if ($this->facetsResultPath) {
             $facets = $this->getFacetList($this->facetsResultPath);
-            $shopApi->getResultFactory()->getFacetManager()->setFacets($facets);
+            $ay->getResultFactory()->getFacetManager()->setFacets($facets);
         }
 
-        return $shopApi;
+        return $ay;
     }
 
-    protected function getMockedShopApiWithResultFile(array $methods, $filepath, $exceptedRequestBody = null)
+    protected function getMockedAYWithResultFile(array $methods, $filepath, $exceptedRequestBody = null)
     {
         $jsonString = $this->getJsonStringFromFile($filepath);
 
-        return $this->getMockedShopApiWithResult($methods, $jsonString, $exceptedRequestBody);
+        return $this->getMockedAYWithResult($methods, $jsonString, $exceptedRequestBody);
     }
 
     /**
@@ -146,24 +146,24 @@ abstract class AbstractShopApiTest extends \AboutYou\SDK\Test\ShopSdkTest
      * @param string|string[] $jsonString
      * @param string|null $exceptedRequestBody
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|ShopApi
+     * @return \PHPUnit_Framework_MockObject_MockObject|\AY
      */
-    protected function getMockedShopApiWithResult(array $methods, $jsonString, $exceptedRequestBody = null)
+    protected function getMockedAYWithResult(array $methods, $jsonString, $exceptedRequestBody = null)
     {
         $client = $this->getGuzzleClient($jsonString, $exceptedRequestBody);
 
-        $shopApi = $this->getMock('AY', $methods, array('id', 'token'));
+        $ay = $this->getMock('AY', $methods, array('id', 'token'));
 
-        $shopApi->getApiClient()->setClient($client);
+        $ay->getApiClient()->setClient($client);
 
-        return $shopApi;
+        return $ay;
     }
 
-    protected function setupCategoryManager($shopApi)
+    protected function setupCategoryManager($ay)
     {
-        $categoryManager = $shopApi->getResultFactory()->getCategoryManager();
+        $categoryManager = $ay->getResultFactory()->getCategoryManager();
         $json = $this->getJsonObjectFromFile('category-tree-v2.json');
-        $categoryManager->parseJson($json[0]->category_tree, $shopApi->getResultFactory());
+        $categoryManager->parseJson($json[0]->category_tree, $ay->getResultFactory());
     }
 
     /**

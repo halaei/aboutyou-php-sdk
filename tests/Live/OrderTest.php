@@ -5,7 +5,7 @@ namespace AboutYou\SDK\Test\Live;
 /**
  * @group live
  */
-class OrderTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
+class OrderTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
 {
     /**
      * @expectedException \AboutYou\SDK\Exception\ResultErrorException
@@ -13,8 +13,8 @@ class OrderTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
      */
     public function testFetchOrderWithWrongId()
     {
-        $shopApi = $this->getShopApi();        
-        $shopApi->fetchOrder(false);
+        $ay = $this->getAY();
+        $ay->fetchOrder(false);
     }
     
     /**
@@ -23,14 +23,14 @@ class OrderTest extends \AboutYou\SDK\Test\Live\AbstractShopApiLiveTest
      */
     public function testInitiateOrderWithEmptyBasket()
     {
-        $shopApi = $this->getShopApi();
+        $ay = $this->getAY();
         
-        $basket = $shopApi->fetchBasket($this->getSessionId());
+        $basket = $ay->fetchBasket($this->getSessionId());
         
         if ($basket->getTotalAmount() !== 0) {
             $this->fail('The basket is not empty!');
         }
 
-        $shopApi->initiateOrder($this->getSessionId(), 'http://google.de');
+        $ay->initiateOrder($this->getSessionId(), 'http://google.de');
     }
 }

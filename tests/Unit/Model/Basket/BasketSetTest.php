@@ -14,7 +14,7 @@ class BasketSetTest extends AbstractModelTest
     public function testConstruct()
     {
         $basketSet  = new BasketSet('12', array('description' => 'blah', 'image_url'=> 'http://example.com/x.jpg'));
-        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Basket\BasketSet', $basketSet);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Basket\\BasketSet', $basketSet);
     }
 
     /**
