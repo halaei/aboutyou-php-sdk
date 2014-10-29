@@ -64,7 +64,7 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\Product', $product);
 
         $this->assertInternalType('int', $product->getMaxSavingsPrice());
-        $this->assertInternalType('int', $product->getMaxSavingsPercentage());
+        $this->assertInternalType('float', $product->getMaxSavingsPercentage());
         $this->assertInternalType('int', $product->getMerchantId());
 
         $variants = $product->getInactiveVariants();
