@@ -295,12 +295,14 @@ class QueryBuilder
     /**
      * @param string[]|int[] $ids
      * @param array $fields
+     * @param boolean $loadStyles styles loaded by default, but it could be
      *
      * @return $this
      */
     public function fetchProductsByIds(
         array $ids,
-        array $fields = array()
+        array $fields = array(),
+        $loadStyles = true
     ) {
         // we allow to pass a single ID instead of an array
         settype($ids, 'array');
@@ -309,12 +311,16 @@ class QueryBuilder
 
         // make sure the keys are correct to avoid creating an json object instead of array
         $ids = array_values($ids);
+        $args = array(
+            'ids'    => $ids,
+            'fields' => ProductFields::filterFields($fields)
+        );
+        if ($loadStyles === false) {
+            $args['get_styles'] = false;
+        }
 
         $this->query[] = array(
-            'products' => array(
-                'ids'    => $ids,
-                'fields' => ProductFields::filterFields($fields)
-            )
+            'products' => $args
         );
 
         return $this;

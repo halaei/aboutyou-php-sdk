@@ -77,6 +77,14 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         ;
         $expected = '[{"products":{"ids":[789,456],"fields":["brand_id","attributes_merged"]}}]';
         $this->assertEquals($expected, $query->getQueryString());
+
+        // Test that styles could be disabled
+        $this->queryBuilder = new QueryBuilder();
+        $query = $this->queryBuilder
+            ->fetchProductsByIds(array(789, 456), array(), false)
+        ;
+        $expected = '[{"products":{"ids":[789,456],"fields":[],"get_styles":false}}]';
+        $this->assertEquals($expected, $query->getQueryString());
     }
 
     public function testFetchLiveVariantByIds()
