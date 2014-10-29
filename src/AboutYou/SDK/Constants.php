@@ -5,6 +5,7 @@ namespace AboutYou\SDK;
  * Contains often used properties related to the App development.
  *
  * @author ABOUT YOU GmbH
+ * @deprecated
  */
 abstract class Constants
 {
