@@ -28,10 +28,19 @@ class ProductFields
     const MAX_SAVINGS            = 'max_savings';
     const MAX_SAVINGS_PERCENTAGE = 'max_savings_percentage';
     const TAGS                   = 'tags';
+    const STYLES                 = 'styles';
 
     public static function filterFields(array $fields)
     {
-        $fields = array_values(array_unique($fields));
+        $fields = array_unique($fields);
+
+        // styles are not yet supported by the API
+        $index = array_search(self::STYLES, $fields);
+        if ($index !== false) {
+            unset($fields[$index]);
+        }
+
+        $fields = array_values($fields);
 
         // this simplify parsing on (pre)fetching facets
         if (

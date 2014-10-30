@@ -85,6 +85,20 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         ;
         $expected = '[{"products":{"ids":[789,456],"fields":[],"get_styles":false}}]';
         $this->assertEquals($expected, $query->getQueryString());
+
+        // Test that styles fields won't send to the SAPI
+        $this->queryBuilder = new QueryBuilder();
+        $query = $this->queryBuilder
+            ->fetchProductsByIds(array(789, 456), array(ProductFields::STYLES))
+        ;
+        $expected = '[{"products":{"ids":[789,456],"fields":[]}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+        $this->queryBuilder = new QueryBuilder();
+        $query = $this->queryBuilder
+            ->fetchProductsByIds(array(789, 456), array(ProductFields::STYLES, ProductFields::CATEGORIES, ProductFields::MAX_PRICE))
+        ;
+        $expected = '[{"products":{"ids":[789,456],"fields":["categories","max_price"]}}]';
+        $this->assertEquals($expected, $query->getQueryString());
     }
 
     public function testFetchLiveVariantByIds()
