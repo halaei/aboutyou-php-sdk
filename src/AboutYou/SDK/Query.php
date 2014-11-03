@@ -82,7 +82,8 @@ class Query extends QueryBuilder
      */
     public function fetchProductsByIds(
         array $ids,
-        array $fields = array()
+        array $fields = array(),
+        $loadStyles = true
     ) {
         parent::fetchProductsByIds($ids, $fields);
 
@@ -276,7 +277,7 @@ class Query extends QueryBuilder
             $queryKey       = key($currentQuery);
 
             $factory = $this->factory;
-            
+
             if (isset($jsonObject->error_code)) {
                 $result = $factory->preHandleError($jsonObject, $responseKey, $isMultiRequest);
                 if ($result !== false) {
