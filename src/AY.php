@@ -25,7 +25,6 @@ use Rhumsaa\Uuid\Uuid;
 
 /**
  * Provides access to the ABOUT YOU Frontend Platform.
- * This class is abstract because it's not meant to be instanciated.
  * All the public methods cover a single API query.
  *
  * @author ABOUT YOU GmbH
@@ -57,7 +56,7 @@ class AY
 
     /** @var LoggerInterface */
     protected $logger;
-    
+
     /** @var string Constants::API_ENVIRONMENT_LIVE for live environment, Constants::API_ENVIRONMENT_STAGE for staging */
     protected $environment = Constants::API_ENVIRONMENT_LIVE;
 
@@ -66,7 +65,7 @@ class AY
     /** @var string */
     protected $appPassword;
     /** @var AuthSDK */
-    protected $authSdk;        
+    protected $authSdk;
 
     /**
      * Page ID or Request ID to identify multiple requests for a single page including ajax queries
@@ -500,7 +499,7 @@ class AY
 
         return $result;
     }
-    
+
     /**
      * @param integer[] $ids
      *
@@ -520,14 +519,14 @@ class AY
         ;
 
         $result = $query->executeSingle();
-        
+
         $variantsNotFound = $result->getVariantsNotFound();
         if ($result->hasVariantsNotFound() && $this->logger) {
             $this->logger->warning('variants or products for variants not found: appid=' . $this->appId . ' variant ids=[' . join(',', $variantsNotFound) . ']');
-        }        
+        }
 
         return $result;
-    }    
+    }
 
     /**
      * @param string[] $eans
@@ -778,7 +777,7 @@ class AY
         if ($this->environment === Constants::API_ENVIRONMENT_STAGE) {
             $url = '//devcenter-staging-www1.pub.collins.kg:81/appjs/'.$this->appId.'.js';
         } else {
-            $url = '//developer.aboutyou.de/appjs/'.$this->appId.'.js';            
+            $url = '//developer.aboutyou.de/appjs/'.$this->appId.'.js';
         }
 
         return $url;
