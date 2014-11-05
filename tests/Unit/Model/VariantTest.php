@@ -122,6 +122,46 @@ class VariantTest extends AbstractModelTest
         $this->assertEquals('season', $facet->getGroupName());
     }
 
+    public function testGetMaterials()
+    {
+        $jsonObject = $this->getJsonObject('variant.json');
+        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory(), $this->getProduct());
+
+        $materials = $variant->getMaterials();
+        $this->assertNull($materials);
+
+
+        $jsonObject = $this->getJsonObject('variant-with-materials.json');
+        $variant = Variant::createFromJson($jsonObject, $this->getModelFactory(), $this->getProduct());
+        $materials = $variant->getMaterials();
+        $this->assertInternalType('array', $materials);
+        $this->assertCount(3, $materials);
+        foreach ($materials as $material) {
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Material', $material);
+            $this->assertInternalType('string', $material->getName());
+            $compositions = $material->getCompositions();
+            $this->assertInternalType('array', $compositions);
+            foreach ($compositions as $composition) {
+                $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Composition', $composition);
+            }
+        }
+
+        $this->assertEquals('Obermaterial', $materials[0]->getName());
+        $this->assertEquals('shell', $materials[0]->getType());
+        $this->assertEquals('Futter 1', $materials[1]->getName());
+        $this->assertEquals('lining', $materials[1]->getType());
+        $this->assertEquals('Füllung', $materials[2]->getName());
+        $this->assertNull($materials[2]->getType());
+
+        $compositions = $materials[0]->getCompositions();
+        $this->assertCount(2, $compositions);
+        $this->assertEquals('baumwolle', $compositions[0]->getName());
+        $this->assertEquals(35.0, $compositions[0]->getPercentage());
+        $this->assertInternalType('float', $compositions[0]->getPercentage());
+        $this->assertEquals('polyester', $compositions[1]->getName());
+        $this->assertEquals(65.0, $compositions[1]->getPercentage());
+    }
+
     protected function getFacetManager($filename)
     {
         $jsonObject = $this->getJsonObject($filename);

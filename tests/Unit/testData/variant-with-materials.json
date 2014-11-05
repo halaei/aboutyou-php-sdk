@@ -1,0 +1,85 @@
+{
+    "ean": "ean1",
+    "default": false,
+    "price": 3990,
+    "old_price": 0,
+    "images": [
+        {
+            "hash": "882ff9a8365b6e1b46773992b189e4dc",
+            "name": "Antevorte-2_TOT0072001_140_21.jpg",
+            "image": {
+                "width": 1400,
+                "height": 2000
+            },
+            "ext": ".jpg",
+            "mime": "image/jpeg",
+            "size": 1874956
+        },
+        {
+            "hash": "2b0ee425a369b8feab3d1515a7bffaec",
+            "name": "Antevorte-2_TOT0072001_140_22.jpg",
+            "image": {
+                "width": 1400,
+                "height": 2000
+            },
+            "ext": ".jpg",
+            "mime": "image/jpeg",
+            "size": 1909980
+        }
+    ],
+    "materials": [
+        {
+            "type": "shell",
+            "name": "Obermaterial",
+            "composition": {
+                "baumwolle": 3500,
+                "polyester": 6500
+            }
+        },
+        {
+            "type": "lining",
+            "name": "Futter 1",
+            "composition": {
+                "polyester": 10000
+            }
+        },
+        {
+            "name": "Füllung",
+            "composition": {
+                "polyester": 10000
+            }
+        }
+    ],
+
+
+    "attributes": {
+        "attributes_172": [
+            1967
+        ],
+        "attributes_173": [
+            2075
+        ],
+        "attributes_206": [
+            2382
+        ],
+        "attributes_211": [
+            2749
+        ],
+        "attributes_0": [
+            264
+        ],
+        "attributes_1": [
+            12
+        ],
+        "attributes_289": [
+            4084
+        ]
+    },
+    "retail_price": 3995,
+    "id": 5145543,
+    "quantity": 5,
+    "first_active_date": "2014-02-14 18:09:38",
+    "first_sale_date": "2014-01-10 10:10:00",
+    "created_date": "2014-01-11 10:11:00",
+    "updated_date": "2014-01-12 10:12:00"
+}
