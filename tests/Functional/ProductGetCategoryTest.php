@@ -1,31 +1,30 @@
 <?php
 /**
- * @author nils.droege@project-collins.com
- * (c) Collins GmbH & Co KG
+ * @author nils.droege@aboutyou.de
+ * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
-use Collins\ShopApi\Model\Product;
+use AboutYou\SDK\Model\Product;
 
-class ProductGetCategoryTest extends AbstractShopApiTest
+class ProductGetCategoryTest extends AbstractAYTest
 {
     protected $setupCategoryManager = false;
 
-    /** @var ShopApi */
-    private $shopApi;
+    /** @var \AY */
+    private $ay;
 
     public function setup()
     {
-        $this->shopApi = $this->getShopApiWithResultFile('product/category.json');
-        $this->shopApi->getCategoryManager(true);
+        $this->ay = $this->getAYWithResultFile('product/category.json');
+        $this->ay->getCategoryManager(true);
     }
 
     public function getProduct($filename)
     {
         $json = $this->getJsonObjectFromFile('product/' . $filename);
-        $product = Product::createFromJson($json, $this->shopApi->getResultFactory(), 98);
+        $product = Product::createFromJson($json, $this->ay->getResultFactory(), 98);
 
         return $product;
     }
@@ -55,7 +54,7 @@ class ProductGetCategoryTest extends AbstractShopApiTest
         $this->assertCount(3, $categories);
 
         foreach ($categories as $category) {
-            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
         }
         $this->assertEquals(2, array_shift($categories)->getId());
         $this->assertEquals(1, array_shift($categories)->getId());
@@ -70,7 +69,7 @@ class ProductGetCategoryTest extends AbstractShopApiTest
 
         $this->assertCount(4, $categories);
         foreach ($categories as $category) {
-            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
         }
         $this->assertEquals(21, array_shift($categories)->getId());
         $this->assertEquals(121, array_shift($categories)->getId());
@@ -82,11 +81,11 @@ class ProductGetCategoryTest extends AbstractShopApiTest
     {
         $product = $this->getProduct('product-with-categories.json');
         $category = $product->getCategory(false);
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
         $this->assertEquals(21, $category->getId());
 
         $category = $product->getCategory();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
         $this->assertEquals(21, $category->getId());
     }
 
@@ -94,7 +93,7 @@ class ProductGetCategoryTest extends AbstractShopApiTest
     {
         $product = $this->getProduct('product-with-categories.json');
         $category = $product->getCategoryWithLongestActivePath();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
         $this->assertEquals(121, $category->getId());
     }
 

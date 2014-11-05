@@ -1,23 +1,23 @@
 <?php
 /**
- * @author nils.droege@project-collins.com
- * (c) Collins GmbH & Co KG
+ * @author nils.droege@aboutyou.de
+ * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi\Model\Product;
-use Collins\ShopApi\Model\Variant;
+use AboutYou\SDK\Model\Product;
+use AboutYou\SDK\Model\Variant;
 
-class VariantTest extends AbstractShopApiTest
+class VariantTest extends AbstractAYTest
 {
     public function testGetSize()
     {
-        $shopApi = $this->getShopApiWithResultFileAndFacets(
+        $ay = $this->getAYWithResultFileAndFacets(
             'result/products-374469-with-variants.json',
             'result/facet-for-product-374469.json'
         );
-        $products = $shopApi->fetchProductsByIds(array(1234))->getProducts();
+        $products = $ay->fetchProductsByIds(array(1234))->getProducts();
         /** @var Product $product */
         $product = reset($products);
         
@@ -50,37 +50,37 @@ class VariantTest extends AbstractShopApiTest
     
     public function testFetchVariantById()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
+        $ay = $this->getAYWithResultFiles(array(
             'result/live-variant-for-5236546.json',
             'result/live-variant-product-294475.json',
             ));
         
         
-        $result = $shopApi->fetchVariantsByIds(array('5236546'));
+        $result = $ay->fetchVariantsByIds(array('5236546'));
         
         $this->assertFalse($result->hasVariantsNotFound());
         
         $variant = $result->getVariantById(5236546);
         
-        $this->assertInstanceOf('Collins\ShopApi\Model\Variant', $variant);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Variant', $variant);
         $this->assertEquals(5236546, $variant->getId());
         
         $product = $variant->getProduct();
-        $this->assertInstanceOf('Collins\ShopApi\Model\Product', $product);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $product);
         
         $this->assertEquals(294475, $product->getId());
     }
     
     public function testFetchVariantByIdWithMultiAndEqualProducts()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
+        $ay = $this->getAYWithResultFiles(array(
             'result/live-variant-for-multi-and-equal-product.json',
             'result/live-variant-multi-and-equal-products.json',
             ));
         
         $ids = array(6077282, 6077305, 6501489);
         
-        $result = $shopApi->fetchVariantsByIds($ids);
+        $result = $ay->fetchVariantsByIds($ids);
         
         $this->assertFalse($result->hasVariantsNotFound());
         
@@ -90,17 +90,17 @@ class VariantTest extends AbstractShopApiTest
         
         foreach ($ids as $id) {
             $variant = $result->getVariantById($id);
-            $this->assertInstanceOf('Collins\ShopApi\Model\Variant', $variant);
-            $this->assertInstanceOf('Collins\ShopApi\Model\Product', $variant->getProduct());
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Variant', $variant);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $variant->getProduct());
         }
     }    
     
     public function testFetchVariantByIdWithNoResult()
     {
-        $shopApi = $this->getShopApiWithResultFile('result/live-variant-not-found.json');
+        $ay = $this->getAYWithResultFile('result/live-variant-not-found.json');
         $ids =  array(123,456,166366);
         
-        $result = $shopApi->fetchVariantsByIds($ids);
+        $result = $ay->fetchVariantsByIds($ids);
         
         $this->assertFalse($result->hasVariantsFound());
         $this->assertTrue($result->hasVariantsNotFound());
@@ -114,12 +114,12 @@ class VariantTest extends AbstractShopApiTest
     
     public function testFetchVariantByIdWithWrongProductSearchResult()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
+        $ay = $this->getAYWithResultFiles(array(
             'result/live-variant-for-5236546.json',
             'result/live-variant-product-not-found.json',
             ));
           
-        $result = $shopApi->fetchVariantsByIds(array('5236546'));
+        $result = $ay->fetchVariantsByIds(array('5236546'));
     
         $this->assertTrue($result->hasVariantsNotFound());
         $errors = $result->getVariantsNotFound();
@@ -130,12 +130,12 @@ class VariantTest extends AbstractShopApiTest
     
     public function testGetProductFromVariant()
     {
-        $shopApi = $this->getShopApiWithResultFileAndFacets(
+        $ay = $this->getAYWithResultFileAndFacets(
             'result/products-374469-with-variants.json',
             'result/facet-for-product-374469.json'
         );
         
-        $products = $shopApi->fetchProductsByIds(array(1234))->getProducts();
+        $products = $ay->fetchProductsByIds(array(1234))->getProducts();
         /** @var Product $product */
         $product = reset($products);
         
@@ -145,7 +145,7 @@ class VariantTest extends AbstractShopApiTest
         $this->assertCount(5, $variants);
         
         foreach ($variants as $variant) {
-            $this->assertInstanceOf('Collins\ShopApi\Model\Product', $variant->getProduct());
+            $this->assertInstanceOf('AboutYou\SDK\Model\Product', $variant->getProduct());
             $this->assertEquals(374469, $variant->getProduct()->getId());
             $this->assertEquals($product, $variant->getProduct());
         }

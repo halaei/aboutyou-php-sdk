@@ -1,25 +1,25 @@
 <?php
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use \AY;
 
-class FacetTest extends AbstractShopApiTest
+class FacetTest extends AbstractAYTest
 {
     /**
      *
      */
     public function testFacet()
     {
-        $shopApi = $this->getShopApiWithResultFile('fetch-facet.json');
+        $ay = $this->getAYWithResultFile('fetch-facet.json');
 
-        $facets = $shopApi->fetchFacet(array(
+        $facets = $ay->fetchFacet(array(
             array("id" => 1234, "group_id" => 0 ),
             array("id" => 1234, "group_id" => 0 )
         ));
         $this->assertInternalType('array', $facets);
 
         foreach ($facets as $facet) {
-            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Facet', $facet);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $facet);
             $this->assertInternalType('int', $facet->getId());
             $this->assertInternalType('string', $facet->getName());
             $this->assertInternalType('int', $facet->getGroupId());

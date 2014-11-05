@@ -1,48 +1,48 @@
 <?php
 
-namespace Collins\ShopApi\Test\Live;
+namespace AboutYou\SDK\Test\Live;
 
 
-use Collins\ShopApi\Constants;
-use Collins\ShopApi\Model\Autocomplete;
+use AboutYou\SDK\Constants;
+use AboutYou\SDK\Model\Autocomplete;
 
 /**
  * @group live
  */
-class AutocompleteTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
+class AutocompleteTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
 {
     public function testAutocomplete()
     {
-        $shopApi = $this->getShopApi();
+        $ay = $this->getAY();
 
-        $autocomplete = $shopApi->fetchAutocomplete('damen', 1);
-        $this->assertInstanceOf('Collins\ShopApi\Model\Autocomplete', $autocomplete);
+        $autocomplete = $ay->fetchAutocomplete('damen', 1);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Autocomplete', $autocomplete);
         $products = $autocomplete->getProducts();
         $this->assertGreaterThan(0, $products);
 
         foreach ($products as $product) {
-            $this->assertInstanceOf('Collins\ShopApi\Model\Product', $product);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $product);
         }
 
         $categories = $autocomplete->getCategories();
         $this->assertGreaterThan(0, $categories);
         foreach ($categories as $category) {
-            $this->assertInstanceOf('Collins\ShopApi\Model\Category', $category);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
         }
 
-        $autocomplete = $shopApi->fetchAutocomplete('not existent', 10);
+        $autocomplete = $ay->fetchAutocomplete('not existent', 10);
         $this->assertCount(0, $autocomplete->getProducts());
         $this->assertCount(0, $autocomplete->getCategories());
 
-        $autocomplete = $shopApi->fetchAutocomplete('damen', 2, array(Constants::TYPE_PRODUCTS));
+        $autocomplete = $ay->fetchAutocomplete('damen', 2, array(Constants::TYPE_PRODUCTS));
         $this->assertCount(2, $autocomplete->getProducts());
         $this->assertEquals(Autocomplete::NOT_REQUESTED, $autocomplete->getCategories());
 
-        $autocomplete = $shopApi->fetchAutocomplete('damen', 1, array(Constants::TYPE_CATEGORIES));
+        $autocomplete = $ay->fetchAutocomplete('damen', 1, array(Constants::TYPE_CATEGORIES));
         $this->assertEquals(Autocomplete::NOT_REQUESTED, $autocomplete->getProducts());
         $this->assertCount(1, $autocomplete->getCategories());
 
-        $autocomplete = $shopApi->fetchAutocomplete('Damen', 1);
+        $autocomplete = $ay->fetchAutocomplete('Damen', 1);
         $this->assertCount(1, $autocomplete->getProducts());
         $this->assertCount(1, $autocomplete->getCategories());
     }
@@ -52,15 +52,15 @@ class AutocompleteTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTes
      */
     public function testFetchAutocompleteWithInt()
     {
-        $shopApi = $this->getShopApi();
-        $autocomplete = $shopApi->fetchAutocomplete(false, 10);
+        $ay = $this->getAY();
+        $autocomplete = $ay->fetchAutocomplete(false, 10);
     }
 
     public function testUmlaut()
     {
-        $shopApi = $this->getShopApi();
-        $autocomplete = $shopApi->fetchAutocomplete('Gürtel');
+        $ay = $this->getAY();
+        $autocomplete = $ay->fetchAutocomplete('Gürtel');
 
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Autocomplete', $autocomplete);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Autocomplete', $autocomplete);
     }
 }

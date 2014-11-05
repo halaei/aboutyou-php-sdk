@@ -1,25 +1,25 @@
 <?php
 /**
- * @author nils.droege@project-collins.com
- * (c) Collins GmbH & Co KG
+ * @author nils.droege@aboutyou.de
+ * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use \AY;
 
-class CategoryTest extends AbstractShopApiTest
+class CategoryTest extends AbstractAYTest
 {
     /**
      *
      */
     public function testBreadcrumb()
     {
-        $shopApi = $this->getShopApiWithResult(''); // Init DefaultModelFactory
-        $categoryManager = $shopApi->getResultFactory()->getCategoryManager();
+        $ay = $this->getAYWithResult(''); // Init DefaultModelFactory
+        $categoryManager = $ay->getResultFactory()->getCategoryManager();
         $json = $this->getJsonObjectFromFile('category-tree-v2.json');
-        $categoryManager->parseJson($json[0]->category_tree, $shopApi->getResultFactory());
-        $category = \Collins\ShopApi\Model\Category::createFromJson(reset($json[0]->category_tree->ids), $categoryManager);
+        $categoryManager->parseJson($json[0]->category_tree, $ay->getResultFactory());
+        $category = \AboutYou\SDK\Model\Category::createFromJson(reset($json[0]->category_tree->ids), $categoryManager);
 
         $breadcrumb = $category->getBreadcrumb();
         $this->assertCount(1, $breadcrumb);

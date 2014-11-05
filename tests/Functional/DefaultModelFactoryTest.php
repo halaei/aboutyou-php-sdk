@@ -1,28 +1,28 @@
 <?php
 /**
- * @author nils.droege@project-collins.com
- * (c) Collins GmbH & Co KG
+ * @author nils.droege@aboutyou.de
+ * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use \AY;
 
-class DefaultModelFactoryTest extends AbstractShopApiTest
+class DefaultModelFactoryTest extends AbstractAYTest
 {
     /**
      * @group facet-manager
      */
     public function testFacetManager()
     {
-        $shopApi = $this->getShopApiWithResultFile('facets-all.json');
-        /** @var ShopApi\Factory\DefaultModelFactory $modelFactory */
-        $modelFactory = $shopApi->getResultFactory();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\DefaultFacetManager', $modelFactory->getFacetManager());
+        $ay = $this->getAYWithResultFile('facets-all.json');
+        /** @var \AboutYou\SDK\Factory\DefaultModelFactory $modelFactory */
+        $modelFactory = $ay->getResultFactory();
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\FacetManager\\DefaultFacetManager', $modelFactory->getFacetManager());
 
-        $facetManagerMock = $this->getMockForAbstractClass('Collins\\ShopApi\\Model\\FacetManager\\FacetManagerInterface');
-//        $facetManagerMock->expects($this->atLeastOnce())
-//            ->method('getFacet');
+        $facetManagerMock = $this->getMockForAbstractClass('\\AboutYou\\SDK\\Model\\FacetManager\\FacetManagerInterface');
+        $facetManagerMock->expects($this->atLeastOnce())
+            ->method('getFacet');
 
         $modelFactory->setFacetManager($facetManagerMock);
         $product = $modelFactory->createProduct(json_decode('{
@@ -35,8 +35,6 @@ class DefaultModelFactoryTest extends AbstractShopApiTest
         }'));
 
         $brand = $product->getBrand();
-
-//        $this->markTestIncomplete('implement me');
     }
 }
  

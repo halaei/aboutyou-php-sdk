@@ -1,26 +1,26 @@
 <?php
 /**
- * @author nils.droege@project-collins.com
- * (c) Collins GmbH & Co KG
+ * @author nils.droege@aboutyou.de
+ * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
 use Aboutyou\Common\Cache\ArrayCache;
-use Collins\ShopApi;
-use Collins\ShopApi\Model\CategoryManager\DefaultCategoryManager;
-use Collins\ShopApi\Model\FacetManager\DefaultFacetManager;
+use AboutYou\SDK\Constants;
+use AboutYou\SDK\Model\CategoryManager\DefaultCategoryManager;
+use AboutYou\SDK\Model\FacetManager\DefaultFacetManager;
 
-class PreCacheTest extends AbstractShopApiTest
+class PreCacheTest extends AbstractAYTest
 {
     public function testPreCache()
     {
         $cache = new ArrayCache();
         $appId = '100';
 
-        $shopApi = $this->getShopApi($appId, $cache);
+        $ay = $this->getAY($appId, $cache);
 
-        $shopApi->preCache(ShopApi::PRE_CACHE_ALL);
+        $ay->preCache(\AY::PRE_CACHE_ALL);
 
 
         $categoryManager = new DefaultCategoryManager($cache, $appId);
@@ -33,11 +33,11 @@ class PreCacheTest extends AbstractShopApiTest
         $facetManager = new DefaultFacetManager($cache, $appId);
 
         $facet1     = $facetManager->getFacet(2, 126);
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $facet1);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $facet1);
         $this->assertEquals('10', $facet1->getValue());
 
         $facet2 = $facetManager->getFacet(173,2112);
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $facet2);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $facet2);
         $this->assertEquals('S', $facet2->getName());
 
         $facets = $cache->fetch('AY:SDK:'.$appId.':facets');
@@ -47,9 +47,9 @@ class PreCacheTest extends AbstractShopApiTest
     /**
      * @param $appId
      * @param $cache
-     * @return ShopApi
+     * @return \AY
      */
-    private function getShopApi($appId, $cache)
+    private function getAY($appId, $cache)
     {
         $jsonString = <<<EOL
 [
@@ -91,10 +91,10 @@ EOL;
 
 
         $client = $this->getGuzzleClient($jsonString, $exceptedRequestBody);
-        $shopApi = new ShopApi($appId, 'token', ShopApi\Constants::API_ENVIRONMENT_LIVE, null, null, $cache);
-        $shopApi->getApiClient()->setClient($client);
+        $ay = new \AY($appId, 'token', Constants::API_ENVIRONMENT_LIVE, null, null, $cache);
+        $ay->getApiClient()->setClient($client);
 
-        return $shopApi;
+        return $ay;
     }
 }
  

@@ -1,20 +1,20 @@
 <?php
 
-namespace Collins\ShopApi\Test\Functional\ProductSearch;
+namespace AboutYou\SDK\Test\Functional\ProductSearch;
 
-use Collins\ShopApi\Model\ProductSearchResult;
-use Collins\ShopApi\Test\Functional\AbstractShopApiTest;
+use AboutYou\SDK\Model\ProductSearchResult;
+use AboutYou\SDK\Test\Functional\AbstractAYTest;
 
-class ProductSearchRealLifeTest extends AbstractShopApiTest
+class ProductSearchRealLifeTest extends AbstractAYTest
 {
     protected $facetsResultPath = null;
 
     public function testProductSearchPriceRange()
     {
-        $shopApi = $this->getShopApiWithResultFile('product_search-20140414.json');
+        $ay = $this->getAYWithResultFile('product_search-20140414.json');
 
         // get all available products
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $productSearchResult = $ay->fetchProductSearch($ay->getProductSearchCriteria('12345'));
         $priceRanges = $productSearchResult->getPriceRanges();
         $maxPrice = $productSearchResult->getMaxPrice();
         $this->assertEquals(0, $maxPrice);
@@ -22,19 +22,19 @@ class ProductSearchRealLifeTest extends AbstractShopApiTest
         $this->assertCount(6, $priceRanges);
 
         foreach ($priceRanges as $priceRange) {
-            $this->assertInstanceOf('Collins\\ShopApi\\Model\\ProductSearchResult\\PriceRange', $priceRange);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\ProductSearchResult\\PriceRange', $priceRange);
             $this->assertEquals(0, $priceRange->getMax());
         }
     }
 
     public function testProductSearchRawFacets()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
+        $ay = $this->getAYWithResultFiles(array(
             'product_search-20140414-2.json'
         ));
 
         // get all available products
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $productSearchResult = $ay->fetchProductSearch($ay->getProductSearchCriteria('12345'));
         $facets = $productSearchResult->getRawFacets();
 
         $this->assertInstanceOf('\stdClass', $facets);
