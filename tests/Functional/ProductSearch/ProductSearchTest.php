@@ -1,46 +1,48 @@
 <?php
 
-namespace Collins\ShopApi\Test\Functional\ProductSearch;
+namespace AboutYou\SDK\Test\Functional\ProductSearch;
 
-use Collins\ShopApi\Criteria\ProductSearchCriteria;
-use Collins\ShopApi\Model\Product;
-use Collins\ShopApi\Model\ProductSearchResult;
-use Collins\ShopApi\Test\Functional\AbstractShopApiTest;
+use AboutYou\SDK\Criteria\ProductSearchCriteria;
+use AboutYou\SDK\Model\Product;
+use AboutYou\SDK\Model\ProductSearchResult;
+use AboutYou\SDK\Test\Functional\AbstractAYTest;
 
-class ProductSearchTest extends AbstractShopApiTest
+class ProductSearchTest extends AbstractAYTest
 {
+    protected $facetsResultPath = null;
+
     public function testProductSearch()
     {
-        $shopApi = $this->getShopApiWithResultFileAndFacets(
+        $ay = $this->getAYWithResultFileAndFacets(
             'product_search.json',
             'facet-result.json'
         );
 
         // get all available products
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $productSearchResult = $ay->fetchProductSearch($ay->getProductSearchCriteria('12345'));
         $this->checkProductSearchResult($productSearchResult);
     }
 
     public function testProductSearchSort()
     {
-        $shopApi = $this->getShopApiWithResultFileAndFacets(
+        $ay = $this->getAYWithResultFileAndFacets(
             'product_search.json',
             'facet-result.json'
         );
 
         // search products and sort
-        $criteria = $shopApi->getProductSearchCriteria('12345')
+        $criteria = $ay->getProductSearchCriteria('12345')
             ->sortBy(
                 ProductSearchCriteria::SORT_TYPE_MOST_VIEWED
             )
         ;
-        $productSearchResult = $shopApi->fetchProductSearch($criteria);
+        $productSearchResult = $ay->fetchProductSearch($criteria);
         $this->checkProductSearchResult($productSearchResult);
 
         $rawFacets = $productSearchResult->getRawFacets();
         $this->assertInstanceOf('\stdClass', $rawFacets);
-        $this->assertObjectHasAttribute("0", $rawFacets);
-        $brandFacets = $rawFacets->{"0"};
+        $this->assertTrue(isset($rawFacets->{'0'}), 'rawFacets has no attribute "0"');
+        $brandFacets = $rawFacets->{'0'};
         $this->assertInstanceOf('\stdClass', $brandFacets);
         $this->assertObjectHasAttribute('_type', $brandFacets);
         $this->assertObjectHasAttribute('total', $brandFacets);
@@ -50,27 +52,27 @@ class ProductSearchTest extends AbstractShopApiTest
     }
 
     /**
-     * @see tests/unit/ShopApi/ProductSearchFilterTest.php
+     * @see tests/unit/AboutYou/ProductSearchFilterTest.php
      */
     public function testProductSearchFilterObject()
     {
         // This is the imported part of this test!!
         $expectedRequestBody = '[{"product_search":{"session_id":"12345","filter":{"categories":[123]}}}]';
 
-        $shopApi = $this->getShopApiWithResult($this->getDummyResult(), $expectedRequestBody);
+        $ay = $this->getAYWithResult($this->getDummyResult(), $expectedRequestBody);
 
         // search products by filter
-        $criteria = $shopApi->getProductSearchCriteria('12345');
+        $criteria = $ay->getProductSearchCriteria('12345');
         $criteria->filterByCategoryIds(array(
             123
         ));
-        $products = $shopApi->fetchProductSearch($criteria);
+        $products = $ay->fetchProductSearch($criteria);
         $this->checkProductSearchResult($products);
     }
 
     public function testProductSearchPagination()
     {
-        $shopApi = $this->getShopApiWithResultFileAndFacets(
+        $ay = $this->getAYWithResultFileAndFacets(
             'product_search.json',
             'facet-result.json'
         );
@@ -79,16 +81,16 @@ class ProductSearchTest extends AbstractShopApiTest
             'limit' => 20,
             'offset' => 21,
         );
-        $criteria = $shopApi->getProductSearchCriteria('12345')
+        $criteria = $ay->getProductSearchCriteria('12345')
             ->setLimit($pagination['limit'], $pagination['offset'])
         ;
-        $products = $shopApi->fetchProductSearch($criteria);
+        $products = $ay->fetchProductSearch($criteria);
         $this->checkProductSearchResult($products);
     }
 
     public function testProductGetEmptyCategoryTree()
     {
-        $shopApi = $this->getShopApiWithResultFileAndFacets(
+        $ay = $this->getAYWithResultFileAndFacets(
             'product_search.json',
             'facet-result.json'
         );
@@ -97,31 +99,29 @@ class ProductSearchTest extends AbstractShopApiTest
             'limit' => 20,
             'offset' => 21,
         );
-        $criteria = $shopApi->getProductSearchCriteria('12345')
+        $criteria = $ay->getProductSearchCriteria('12345')
             ->setLimit($pagination['limit'], $pagination['offset'])
         ;
-        $products = $shopApi->fetchProductSearch($criteria);
+        $products = $ay->fetchProductSearch($criteria);
         
         $this->assertInternalType('array', $products->getCategoryTree());
     }
     
     public function testProductGetCategoryGetParent()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
-            'product-search-result-with-product-categories.json',
-            'category-all.json'
-        ));
+        $ay = $this->getAYWithResultFile(
+            'product-search-result-with-product-categories.json'
+        );
 
         // get all available products
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $productSearchResult = $ay->fetchProductSearch($ay->getProductSearchCriteria('12345'));
         $products = $productSearchResult->getProducts();
 
         $product = $products[0];
         $category = $product->getCategory();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category);
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category->getParent());
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Category', $category->getParent()->getParent());
-        $this->assertNull($category->getParent()->getParent()->getParent());
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category->getParent());
+        $this->assertNull($category->getParent()->getParent());
     }
 
     /***************************************************/

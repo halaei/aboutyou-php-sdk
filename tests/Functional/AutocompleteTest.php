@@ -1,40 +1,40 @@
 <?php
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use \AY;
 
-class AutocompleteTest extends AbstractShopApiTest
+class AutocompleteTest extends AbstractAYTest
 {
     /**
      *
      */
     public function testAutocomplete()
     {
-        $shopApi = $this->getShopApiWithResultFile(
+        $ay = $this->getAYWithResultFile(
             'result/autocompletion-shop.json'
         );
 
-        $autocomplete = $shopApi->fetchAutocomplete('Shop', 10);
-        $this->assertInstanceOf('Collins\ShopApi\Model\Autocomplete', $autocomplete);
+        $autocomplete = $ay->fetchAutocomplete('Shop', 10);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Autocomplete', $autocomplete);
 
         foreach ($autocomplete->getProducts() as $product) {
-            $this->assertInstanceOf('Collins\ShopApi\Model\Product', $product);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $product);
         }
 
         foreach ($autocomplete->getCategories() as $category) {
-            $this->assertInstanceOf('Collins\ShopApi\Model\Category', $category);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
         }
     }
-    
+
     /**
      * @expectedException \InvalidArgumentException
      */
     public function testAutocompleteWithWrongSearchword()
     {
-        $shopApi = $this->getShopApiWithResultFile(
+        $ay = $this->getAYWithResultFile(
             'result/autocompletion-shop.json'
         );
         
-        $shopApi->fetchAutocomplete(false);
+        $ay->fetchAutocomplete(false);
     }
 }

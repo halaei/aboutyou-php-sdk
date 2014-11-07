@@ -1,64 +1,43 @@
 <?php
 /**
- * @author nils.droege@project-collins.com
- * (c) Collins GmbH & Co KG
+ * @author nils.droege@aboutyou.de
+ * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
 
-use Collins\ShopApi;
+use \AY;
 
-class FactoryTestAbstract extends AbstractShopApiTest
+class FactoryTest extends AbstractAYTest
 {
     public function testGetFactory()
     {
-        $shopApi = new ShopApi('id', 'dummy');
+        $ay = new AY('id', 'dummy');
 
-        $factory = $shopApi->getResultFactory();
-        $this->assertInstanceOf('Collins\\ShopApi\\Factory\\ModelFactoryInterface', $factory);
-        $this->assertInstanceOf('Collins\\ShopApi\\Factory\\ResultFactoryInterface', $factory);
+        $factory = $ay->getResultFactory();
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Factory\\ModelFactoryInterface', $factory);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Factory\\ResultFactoryInterface', $factory);
 
         $variant = $factory->createVariant(json_decode('{}'), $this->getProduct());
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Variant', $variant);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Variant', $variant);
 
         $json = $this->getJsonObjectFromFile('facet.json');
         $facet = $factory->createFacet($json);
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Facet', $facet);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $facet);
 
         $json = $this->getJsonObjectFromFile('product/product-full.json');
         $product = $factory->createProduct($json);
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Product', $product);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $product);
     }
 
-    public function testGetRawJsonFactory()
-    {
-        $shopApi = new ShopApi('id', 'dummy');
-        $shopApi->setResultFactory(new ShopApi\Factory\RawJsonFactory($shopApi));
-
-        $factory = $shopApi->getResultFactory();
-        $this->assertInstanceOf('Collins\\ShopApi\\Factory\\ResultFactoryInterface', $factory);
-        $this->assertNotInstanceOf('Collins\\ShopApi\\Factory\\ModelFactoryInterface', $factory);
-
-        $tree = $factory->createCategoryTree(json_decode('[]'));
-        $this->assertInternalType('array', $tree);
-
-        $json = $this->getJsonObjectFromFile('fetch-facet.json');
-        $facets = $factory->createFacetList($json);
-        $this->assertInternalType('array', $facets);
-
-        $json = $this->getJsonObjectFromFile('result/products-full.json');
-        $result = $factory->createProductsResult($json[0]->products);
-        $this->assertInstanceOf('\stdClass', $result);
-    }
-    
     private function getProduct() 
     {
         $productIds = array(123, 456);
 
-        $shopApi = $this->getShopApiWithResultFile('result/products.json');
+        $ay = $this->getAYWithResultFile('result/products.json');
 
-        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $productResult = $ay->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
 
         

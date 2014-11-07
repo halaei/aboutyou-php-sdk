@@ -1,0 +1,84 @@
+{
+    "parent_child": {
+        "0": [
+            "74415",
+            "74416",
+            "74423"
+        ],
+        "74415": [
+            "74417",
+            "74419",
+            "74421"
+        ],
+        "74416": [
+            "74418",
+            "74420",
+            "74422"
+        ]
+    },
+    "ids": {
+        "74415": {
+            "active": true,
+            "position": 1,
+            "name": "Frauen",
+            "parent": 0,
+            "id": 74415
+        },
+        "74416": {
+            "active": true,
+            "position": 2,
+            "name": "Männer",
+            "parent": 0,
+            "id": 74416
+        },
+        "74417": {
+            "active": true,
+            "position": 1,
+            "name": "Shirts",
+            "parent": 74415,
+            "id": 74417
+        },
+        "74418": {
+            "active": true,
+            "position": 1,
+            "name": "Shirts",
+            "parent": 74416,
+            "id": 74418
+        },
+        "74419": {
+            "active": true,
+            "position": 2,
+            "name": "Jeans",
+            "parent": 74415,
+            "id": 74419
+        },
+        "74420": {
+            "active": true,
+            "position": 2,
+            "name": "Jeans",
+            "parent": 74416,
+            "id": 74420
+        },
+        "74421": {
+            "active": true,
+            "position": 3,
+            "name": "Schuhe",
+            "parent": 74415,
+            "id": 74421
+        },
+        "74422": {
+            "active": true,
+            "position": 3,
+            "name": "Schuhe",
+            "parent": 74416,
+            "id": 74422
+        },
+        "74423": {
+            "active": false,
+            "position": 3,
+            "name": "Landing Page",
+            "parent": 0,
+            "id": 74423
+        }
+    }
+}

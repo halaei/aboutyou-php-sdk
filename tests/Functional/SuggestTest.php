@@ -1,15 +1,15 @@
 <?php
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use \AY;
 
-class SuggestTestAbstract extends AbstractShopApiTest
+class SuggestTest extends AbstractAYTest
 {
     public function testSuggest()
     {
-        $shopApi = $this->getShopApiWithResultFile('suggest.json');
+        $ay = $this->getAYWithResultFile('suggest.json');
 
-        $suggestions = $shopApi->fetchSuggest('hose');
+        $suggestions = $ay->fetchSuggest('hose');
         $this->assertInternalType('array', $suggestions);
         $this->assertCount(10, $suggestions);
         $this->assertEquals('fit', $suggestions[3]);

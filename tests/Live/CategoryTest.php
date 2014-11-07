@@ -1,13 +1,11 @@
 <?php
 
-namespace Collins\ShopApi\Test\Live;
-
-use Collins\ShopApi;
+namespace AboutYou\SDK\Test\Live;
 
 /**
  * @group live
  */
-class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
+class CategoryTest extends AbstractAYLiveTest
 {
 
     /**
@@ -15,40 +13,13 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
      */
     public function testFetchCategoriesByIdWithStrings()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         $api->fetchCategoriesByIds(';!');
     }
     
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testFetchCategoryTreeWithDepth()
-    {
-        $api = $this->getShopApi();
-        $tree = $api->fetchCategoryTree(1000);
-    }
-    
-    /**
-     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
-     */
-    public function testFetchCategoryTreeWithTrueDepth()
-    {
-        $api = $this->getShopApi();
-        $tree = $api->fetchCategoryTree(true);
-    }    
-
-    /**
-     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
-     */
-    public function testFetchCategoryTreeWithFalseDepth()
-    {
-        $api = $this->getShopApi();
-        $tree = $api->fetchCategoryTree(false);
-    }    
-    
     public function testFetchCategoriesOverTree()
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         $tree = $api->fetchCategoryTree();
         $categories = $tree->getCategories(false);
         $ids = array();
@@ -56,7 +27,7 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
         $this->assertGreaterThan(0, count($categories), 'please configure at least one category for the app (id: '.$api->getAppId().')');
        
         foreach ($categories as $category) {
-            $this->assertInstanceOf('Collins\ShopApi\Model\Category', $category);            
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
             
             if (count($ids) < 5) {
                 $ids[] = $category->getId();
@@ -71,7 +42,7 @@ class CategoryTest extends ShopApi\Test\Live\AbstractShopApiLiveTest
      */
     public function testFetchCategoriesByIds($ids)
     {
-        $api = $this->getShopApi();
+        $api = $this->getAY();
         $categories = $api->fetchCategoriesByIds($ids);
                
         $this->assertCount($categories->count(), $ids);

@@ -19,7 +19,7 @@
 
     <groups>
         <exclude>
-            <group>benchmark</group>
+            <group>live</group>
         </exclude>
     </groups>
 
@@ -30,4 +30,8 @@
             <file>src/CollinsApi.php</file>
         </blacklist>
     </filter>
+
+    <php>
+        <ini name="memory_limit" value="512M" />
+    </php>
 </phpunit>

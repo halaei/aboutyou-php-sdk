@@ -8,75 +8,63 @@ See [ABOUT YOU Developer Center](https://developer.aboutyou.de/) for more Inform
 
 The recommended way to install the ShopAPI is through [Composer](http://getcomposer.org).
 
-```bash
-# Install Composer
-curl -sS https://getcomposer.org/installer | php
-```
+First install composer
 
-# Add the App SDK as a dependency.
+    curl -sS https://getcomposer.org/installer | php
+
+then add the App SDK as a dependency. 
 The SDK is available via [Packagist](https://packagist.org/) under the [aboutyou/app-sdk](https://packagist.org/packages/aboutyou/app-sdk) package.
 
-```json
-    {
-        "require": {
-            "aboutyou/app-sdk": "~0.10"
-        }
-    }
-```
-After installing, you need to require Composer's autoloader:
+    php composer.phar require aboutyou/app-sdk
 
-```php
-require 'vendor/autoload.php';
-```
+at least, after the installing was successful, you need to require the Composer's autoloader:
+
+    require 'vendor/autoload.php';
 
 ## Usage
 
-Example how to use the App SDK with the mono logger, the log detail depends on yii debug configuration.
+For more detailed information see [ABOUT YOU Developer Center Documentation](https://developer.aboutyou.de/doc).
 
-```php
-use Collins\ShopApi;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-
-    $logger = new Logger('name');
-    $logger->pushHandler(new StreamHandler(Yii::app()->getRuntimePath(). '/mono.log', Logger::DEBUG));
-
-    $api = new ShopApi($appId, $appPassword, $apiHost, $logger);
-    if (YII_DEBUG) {
-        $api->setLogTemplate(\Guzzle\Log\MessageFormatter::DEBUG_FORMAT);
-    } else {
-        $api->setLogTemplate(\Guzzle\Log\MessageFormatter::SHORT_FORMAT);
-    }
-```
+### Caching
 
 Example how to use the App SDK with the apc cache.
 
-```php
     $cache = new \Aboutyou\Common\Cache\ApcCache();
-    $api = new \Collins\ShopApi($appId, $appPassword, $apiHost, null, null, $cache);
-```
+    $ay    = new \AY($appId, $appPassword, $apiHost, null, null, $cache);
 
-To precache facets per cron (hourly pre caching is preferred), you can write a new php file to do that
+This is an example, how to pre cache facets and categories per cron (hourly pre caching is preferred). 
+We use APC for simplicity, but you can also use memcached, redis or other supported cache systems. 
+First you need a php script which initialize the app sdk, fetch and cache the data to your preferred cache.
 
-```php
-#/usr/bin/env php
-<?php
-// filename precache-cron.php
-require 'myconfig.php';
-require 'vendor/autoload.php';
+    #!/usr/bin/env php
+    <?php
+    // filename precache-cron.php
+    require 'myconfig.php';
+    require 'vendor/autoload.php';
+    
+    $cache = new \Aboutyou\Common\Cache\ApcCache();
+    $ay = new \AY($appId, $appPassword, $aboutYouHost, null, null, $cache);
+    
+    $ay->preCache();
 
-$cache = new \Aboutyou\Common\Cache\ApcCache();
-$shopApi = new \Collins\ShopApi($appId, $appPassword, $shopApiHost, null, null, $cache);
-/** @var DefaultFacetManager $facetManager */
-$facetManager = $shopApi->getResultFactory()->getFacetManager();
-/** @var AboutyouCacheStrategy $cacheStrategy */
-$cacheStrategy = $facetManager->getFetchStrategy();
 
-$cacheStrategy->cacheAllFacets($shopApi);
-```
+Then add the script to your crontab, 
+to edit the cron jobs call `crontab -e` on your shell
+
+    # Edit this file to introduce tasks to be run by cron.
+    # [snip]
+    # For more information see the manual pages of crontab(5) and cron(8)
+    # 
+    # m h  dom mon dow   command
+    0 * * * * * <path to your project>/precache-cron.php
 
 ## Testing
 
-```bash
-vendor/bin/phpunit
-```
+To test the SDK, just copy the dist file:
+
+    cp phpunit.dist.xml phpunit.xml
+
+and run the test:
+
+    vendor/bin/phpunit
+

@@ -1,22 +1,22 @@
 <?php
 /**
- * @author nils.droege@project-collins.com
- * (c) Collins GmbH & Co KG
+ * @author nils.droege@aboutyou.de
+ * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use AboutYou\SDK\Model;
 
-class ProductsByIdsTest extends AbstractShopApiTest
+class ProductsByIdsTest extends AbstractAYTest
 {
     public function testFetchProducts()
     {
         $productIds = array(123, 456);
 
-        $shopApi = $this->getShopApiWithResultFile('result/products.json');
+        $ay = $this->getAYWithResultFile('result/products.json');
 
-        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $productResult = $ay->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
         $this->assertCount(2, $products);
         $p123 = $products[123];
@@ -65,9 +65,9 @@ class ProductsByIdsTest extends AbstractShopApiTest
     {
         $productIds = array(123, 456);
 
-        $shopApi = $this->getShopApiWithResultFile('result/products-full.json');
+        $ay = $this->getAYWithResultFile('result/products-full.json');
 
-        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $productResult = $ay->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
         $this->assertCount(2, $products);
 
@@ -92,18 +92,18 @@ class ProductsByIdsTest extends AbstractShopApiTest
 
         $p456 = $products[456];
         $this->checkProduct($p456);
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Image', $p456->getDefaultImage());
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Image', $p456->getDefaultImage());
         $this->assertTrue($p456->isActive());
         $this->assertTrue($p456->isSale());
         $this->assertEquals(3980, $p456->getMinPrice());
         $this->assertEquals(3990, $p456->getMaxPrice());
 
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Variant', $p456->getDefaultVariant());
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Variant', $p456->getDefaultVariant());
 
         $variants = $p456->getVariants();
         $this->assertCount(5, $variants);
         $variant = reset($variants);
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Variant', $variant);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Variant', $variant);
         $this->assertEquals(5145543, $variant->getId());
 
         return $p456;
@@ -113,9 +113,9 @@ class ProductsByIdsTest extends AbstractShopApiTest
     {
         $productIds = array(123, 456);
 
-        $shopApi = $this->getShopApiWithResultFile('p.json');
+        $ay = $this->getAYWithResultFile('p.json');
 
-        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $productResult = $ay->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
 
         $product = reset($products);
@@ -127,9 +127,9 @@ class ProductsByIdsTest extends AbstractShopApiTest
     {
         $productIds = array(220430);
 
-        $shopApi = $this->getShopApiWithResultFile('result/products-with-styles.json');
+        $ay = $this->getAYWithResultFile('result/products-with-styles.json');
 
-        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $productResult = $ay->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
         $this->assertCount(1, $products);
 
@@ -157,15 +157,15 @@ class ProductsByIdsTest extends AbstractShopApiTest
     }
 ]
 EOS;
-        $shopApi = $this->getShopApiWithResult($result);
+        $ay = $this->getAYWithResult($result);
 
         $logger = $this->getMockForAbstractClass('Psr\Log\LoggerInterface');
         $logger->expects($this->once())
             ->method('warning')
         ;
-        $shopApi->setLogger($logger);
+        $ay->setLogger($logger);
 
-        $productResult = $shopApi->fetchProductsByIds(array(1, 123));
+        $productResult = $ay->fetchProductsByIds(array(1, 123));
         $products = $productResult->getProducts();
         $this->assertCount(1, $products);
         $product = reset($products);
@@ -185,39 +185,28 @@ EOS;
      */
     public function testVariantImages()
     {
-        $this->markTestIncomplete('The Method is not implemented yet');
+        $productIds = array(456);
 
-        $productIds = array(123);
+        $ay = $this->getAYWithResultFile('result/products-full.json');
 
-        $shopApi = $this->getShopApiWithResultFile('result/products-full.json');
-
-        $productResult = $shopApi->fetchProductsByIds($productIds);
+        $productResult = $ay->fetchProductsByIds($productIds);
         $products = $productResult->getProducts();
-        $product = $products[123];
+        $product = $products[456];
         $variant = $product->getDefaultVariant();
 
-        // select specific image
         $defaultImage = $variant->getImage();
-        $imageHash = '2b0ee425a369b8feab3d1515a7bffaec';
-        $variant->selectImage($imageHash);
-        $selectedImage = $variant->getImage();
-        $this->assertNotEquals($defaultImage, $selectedImage);
-        $this->assertEquals($selectedImage, $variant->getImageByHash($imageHash));
-
-        // select default image
-        $variant->selectImage(null);
-        $selectedImage = $variant->getImage();
-        $this->assertEquals($defaultImage, $selectedImage);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Image', $defaultImage);
+        $this->assertEquals('882ff9a8365b6e1b46773992b189e4dc', $defaultImage->getHash());
     }
 
     private function checkProduct($product)
     {
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Product', $product);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $product);
         $this->assertObjectHasAttribute('id', $product);
         $this->assertObjectHasAttribute('name', $product);
     }
 
-    private function checkProductFull(ShopApi\Model\Product $product)
+    private function checkProductFull(Model\Product $product)
     {
         $this->checkProduct($product);
         $variants = $product->getVariants();
@@ -230,7 +219,7 @@ EOS;
         }
     }
 
-    private function checkVariant(ShopApi\Model\Variant $variant)
+    private function checkVariant(Model\Variant $variant)
     {
         $this->assertInternalType('int', $variant->getId());
         $this->assertGreaterThan(0, count($variant->getFacetIds()));

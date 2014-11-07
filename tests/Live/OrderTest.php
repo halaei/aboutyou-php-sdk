@@ -1,36 +1,36 @@
 <?php
 
-namespace Collins\ShopApi\Test\Live;
+namespace AboutYou\SDK\Test\Live;
 
 /**
  * @group live
  */
-class OrderTest extends \Collins\ShopApi\Test\Live\AbstractShopApiLiveTest
+class OrderTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
 {
     /**
-     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
+     * @expectedException \AboutYou\SDK\Exception\ResultErrorException
      * @expectedExceptionMessage order_id: False is not of type 'integer'
      */
     public function testFetchOrderWithWrongId()
     {
-        $shopApi = $this->getShopApi();        
-        $shopApi->fetchOrder(false);
+        $ay = $this->getAY();
+        $ay->fetchOrder(false);
     }
     
     /**
-     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
+     * @expectedException \AboutYou\SDK\Exception\ResultErrorException
      * @expectedExceptionMessage Basket is empty: 123456xyz
      */
     public function testInitiateOrderWithEmptyBasket()
     {
-        $shopApi = $this->getShopApi();
+        $ay = $this->getAY();
         
-        $basket = $shopApi->fetchBasket($this->getSessionId());
+        $basket = $ay->fetchBasket($this->getSessionId());
         
         if ($basket->getTotalAmount() !== 0) {
             $this->fail('The basket is not empty!');
         }
 
-        $shopApi->initiateOrder($this->getSessionId(), 'http://google.de');
+        $ay->initiateOrder($this->getSessionId(), 'http://google.de');
     }
 }

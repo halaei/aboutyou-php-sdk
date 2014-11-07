@@ -1,202 +1,97 @@
 <?php
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
-use Collins\ShopApi\Model\Basket;
-use Collins\ShopApi\Model\ProductSearchResult;
-use Collins\ShopApi\Model\FacetManager;
-use Aboutyou\Common\Cache\ArrayCache;
+use \AY;
+use AboutYou\SDK\Model\Basket;
+use AboutYou\SDK\Model\ProductSearchResult;
+use AboutYou\SDK\Model\FacetManager;
 
 /**
  * @group facet-manager
  */
-class FacetManagerTest extends AbstractShopApiTest
+class FacetManagerTest extends AbstractAYTest
 {
-    protected function getShopApiWithGroupFacetStrategy($filename)
-    {
-        $shopApi = $this->getShopApiWithResultFiles(array(
-            $filename,
-            'facets-for-product-variant-facets.json',
-        ));
-
-        return $shopApi;
-    }
-
-    protected function getShopApiWithSingleFacetStrategy($filename)
-    {
-        $shopApi = $this->getShopApiWithResultFiles(array(
-            $filename,
-            'facet-for-product-variant-facets.json',
-        ));
-        $facetManager =  new FacetManager\DefaultFacetManager(new FacetManager\FetchSingleFacetStrategy($shopApi));
-        $shopApi->getResultFactory()->setFacetManager($facetManager);
-
-        return $shopApi;
-    }
+    protected $facetsResultPath = 'facets-for-product-variant-facets.json';
 
     public function testProductSearch()
     {
-        $shopApi = $this->getShopApiWithSingleFacetStrategy(
+        $ay = $this->getAYWithResultFile(
             'product_search-result.json'
         );
 
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $productSearchResult = $ay->fetchProductSearch($ay->getProductSearchCriteria('12345'));
         $products = $productSearchResult->getProducts();
 
         $brand = $products[0]->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
-
-        $shopApi = $this->getShopApiWithGroupFacetStrategy(
-            'product_search-result.json'
-        );
-
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
-        $products = $productSearchResult->getProducts();
-
-        $brand = $products[0]->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $brand);
     }
 
     public function testProductByEans()
     {
-        $shopApi = $this->getShopApiWithSingleFacetStrategy(
+        $ay = $this->getAYWithResultFile(
             'products_eans-result.json'
         );
 
-        $productEansResult = $shopApi->fetchProductsByEans(array('dummy'));
+        $productEansResult = $ay->fetchProductsByEans(array('dummy'));
         $products = $productEansResult->getProducts();
 
         $brand = $products[0]->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
-
-        $shopApi = $this->getShopApiWithGroupFacetStrategy(
-            'products_eans-result.json'
-        );
-
-        $productEansResult = $shopApi->fetchProductsByEans(array('dummy'));
-        $products = $productEansResult->getProducts();
-
-        $brand = $products[0]->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $brand);
     }
 
     public function testProductByIds()
     {
-        $shopApi = $this->getShopApiWithSingleFacetStrategy(
+        $ay = $this->getAYWithResultFile(
             'products-result.json'
         );
 
-        $productResult = $shopApi->fetchProductsByIds(array('dummy'));
+        $productResult = $ay->fetchProductsByIds(array('dummy'));
         $products      = $productResult->getProducts();
 
         $brand = $products[301673]->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
-
-        $shopApi = $this->getShopApiWithGroupFacetStrategy(
-            'products-result.json'
-        );
-
-        $productResult = $shopApi->fetchProductsByIds(array('dummy'));
-        $products      = $productResult->getProducts();
-
-        $brand = $products[301673]->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $brand);
     }
 
     public function testAutocomplete()
     {
-        $shopApi = $this->getShopApiWithSingleFacetStrategy(
+        $ay = $this->getAYWithResultFile(
             'autocompletion-result.json'
         );
 
-        $autocompletionResult = $shopApi->fetchAutocomplete('dummy');
+        $autocompletionResult = $ay->fetchAutocomplete('dummy');
         $products = $autocompletionResult->getProducts();
 
         $brand = $products[0]->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
-
-        $shopApi = $this->getShopApiWithGroupFacetStrategy(
-            'autocompletion-result.json'
-        );
-
-        $autocompletionResult = $shopApi->fetchAutocomplete('dummy');
-        $products = $autocompletionResult->getProducts();
-
-        $brand = $products[0]->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $brand);
     }
 
     public function testBasket()
     {
-        $shopApi = $this->getShopApiWithSingleFacetStrategy(
+        $ay = $this->getAYWithResultFile(
             'basket-result.json'
         );
 
-        $basket = $shopApi->fetchBasket('dummy');
+        $basket = $ay->fetchBasket('dummy');
         $products = $basket->getProducts();
         $product = reset($products);
 
         $brand = $product->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
-
-        $shopApi = $this->getShopApiWithGroupFacetStrategy(
-            'basket-result.json'
-        );
-
-        $basket = $shopApi->fetchBasket('dummy');
-        $products = $basket->getProducts();
-        $product = reset($products);
-
-        $brand = $product->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $brand);
     }
 
     public function testGetOrder()
     {
-        $shopApi = $this->getShopApiWithSingleFacetStrategy(
+        $ay = $this->getAYWithResultFile(
             'get_order-result.json'
         );
 
-        $order = $shopApi->fetchOrder('dummy');
+        $order = $ay->fetchOrder('dummy');
         $products = $order->getBasket()->getProducts();
         $product = reset($products);
 
         $brand = $product->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
-
-        $shopApi = $this->getShopApiWithGroupFacetStrategy(
-            'get_order-result.json'
-        );
-
-        $order = $shopApi->fetchOrder('dummy');
-        $products = $order->getBasket()->getProducts();
-        $product = reset($products);
-
-        $brand = $product->getBrand();
-        $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Facet', $brand);
-    }
-
-    /**
-     * ensure, that the FacetManager isn't called or does not throw a different error
-     * @expectedException \Collins\ShopApi\Exception\ResultErrorException
-     */
-    public function testGetOrderFailed()
-    {
-        $shopApi = $this->getShopApiWithSingleFacetStrategy(
-            'get_order-failed.json'
-        );
-
-        $order = $shopApi->fetchOrder('dummy');
-    }
-
-    public function testCacheStrategy()
-    {
-        $cache   = new ArrayCache();
-        $shopApi = new ShopApi('id', 'pw', ShopApi\Constants::API_ENVIRONMENT_STAGE, null, null, $cache);
-        /** @var ShopApi\Model\FacetManager\DefaultFacetManager $facetManager */
-        $facetManager = $shopApi->getResultFactory()->getFacetManager();
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\FacetManager\\AboutyouCacheStrategy', $facetManager->getFetchStrategy());
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $brand);
     }
 
     protected function getJsonStringFromFile($filepath)
