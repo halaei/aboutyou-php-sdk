@@ -1,28 +1,28 @@
 <?php
 /**
- * @author nils.droege@project-collins.com
- * (c) Collins GmbH & Co KG
+ * @author nils.droege@aboutyou.de
+ * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
-use Collins\ShopApi\Criteria\ProductFields;
+use \AY;
+use AboutYou\SDK\Criteria\ProductFields;
 
-class ProductsByEansTest extends AbstractShopApiTest
+class ProductsByEansTest extends AbstractAYTest
 {
     public function testFetchProductsByEans()
     {
-        $shopApi = $this->getShopApiWithResultFile('result/products_eans.json');
+        $ay = $this->getAYWithResultFile('result/products_eans.json');
 
-        $productResult = $shopApi->fetchProductsByEans(array('4250671871492', '4250802292554'), array(ProductFields::VARIANTS));
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\ProductsEansResult', $productResult);
+        $productResult = $ay->fetchProductsByEans(array('4250671871492', '4250802292554'), array(ProductFields::VARIANTS));
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\ProductsEansResult', $productResult);
         $products = $productResult->getProducts();
 
         $this->assertCount(1, $products);
 
         foreach ($productResult as $product) {
-            $this->assertInstanceOf('Collins\\ShopApi\\Model\\Product', $product);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $product);
         }
 
         $variants = $products[0]->getVariantsByEan('unknown');
@@ -31,7 +31,7 @@ class ProductsByEansTest extends AbstractShopApiTest
 
         $variants = $products[0]->getVariantsByEan('4250802292554');
         $this->assertCount(1, $variants);
-        $this->assertInstanceOf('Collins\\ShopApi\\Model\\Variant', $variants[0]);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Variant', $variants[0]);
 
         $errors = $productResult->getErrors();
         $this->assertCount(1, $errors);

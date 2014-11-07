@@ -1,22 +1,23 @@
 <?php
 
-namespace Collins\ShopApi\Test\Functional\ProductSearch;
+namespace AboutYou\SDK\Test\Functional\ProductSearch;
 
-use Collins\ShopApi\Model\ProductSearchResult;
-use Collins\ShopApi\Test\Functional\AbstractShopApiTest;
+use AboutYou\SDK\Model\ProductSearchResult;
+use AboutYou\SDK\Test\Functional\AbstractAYTest;
 
-class ProductSearchWithPriceRangesTest extends AbstractShopApiTest
+class ProductSearchWithPriceRangesTest extends AbstractAYTest
 {
+    protected $facetsResultPath = null;
+
     public function testProductSearchWithSteadyPriceRangeResult()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
+        $ay = $this->getAYWithResultFiles(array(
             'result-product-search-with-facets.json',
-            'category-all.json',
             'facet-result.json'
         ));
 
         // get all available products
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $productSearchResult = $ay->fetchProductSearch($ay->getProductSearchCriteria('12345'));
         $priceRanges = $productSearchResult->getPriceRanges();
         $this->assertInternalType('array', $priceRanges);
         $this->assertCount(6, $priceRanges);
@@ -52,13 +53,12 @@ class ProductSearchWithPriceRangesTest extends AbstractShopApiTest
 
     public function testProductSearchWithDiscontinuesPriceRangeResult()
     {
-        $shopApi = $this->getShopApiWithResultFiles(array(
+        $ay = $this->getAYWithResultFiles(array(
             'result-product-search-with-discontinues-price-ranges.json',
-            'category-all.json',
             'facet-result.json'
         ));
 
-        $productSearchResult = $shopApi->fetchProductSearch($shopApi->getProductSearchCriteria('12345'));
+        $productSearchResult = $ay->fetchProductSearch($ay->getProductSearchCriteria('12345'));
         $priceRanges = $productSearchResult->getPriceRanges();
         $this->assertInternalType('array', $priceRanges);
         $this->assertCount(7, $priceRanges);

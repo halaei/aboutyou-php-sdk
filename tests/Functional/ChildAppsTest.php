@@ -1,22 +1,22 @@
 <?php
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use \AY;
 
-class ChildAppsTest extends AbstractShopApiTest
+class ChildAppsTest extends AbstractAYTest
 {
     /**
      *
      */
     public function testChildApps()
     {
-        $shopApi = $this->getShopApiWithResultFile('child-apps.json');
+        $ay = $this->getAYWithResultFile('child-apps.json');
 
-        $apps = $shopApi->fetchChildApps();
+        $apps = $ay->fetchChildApps();
         $this->assertInternalType('array', $apps);
 
         foreach ($apps as $app) {
-            $this->assertInstanceOf('Collins\\ShopApi\\Model\\App', $app);
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\App', $app);
             $this->assertInternalType('int', $app->getId());
             $this->assertInternalType('string', $app->getLogoUrl());
             $this->assertInternalType('string', $app->getName());

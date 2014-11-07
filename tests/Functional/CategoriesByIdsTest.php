@@ -1,21 +1,18 @@
 <?php
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use \AY;
 
-/**
- *
- */
-class CategoriesByIdsTest extends AbstractShopApiTest
+class CategoriesByIdsTest extends AbstractAYTest
 {
     /**
      * @expectedException \InvalidArgumentException
      */
     public function testFetchCategoriesWithWrongIds()
     {
-        $shopApi = $this->getShopApiWithResultFile('category.json');
+        $ay = $this->getAYWithResultFile('category-tree-v2.json');
 
-        $categoriesResult = $shopApi->fetchCategoriesByIds(array('kfd', false,  null, 212312, ));        
+        $categoriesResult = $ay->fetchCategoriesByIds(array('kfd', false,  null, 212312, ));
     }
     
     /**
@@ -23,9 +20,9 @@ class CategoriesByIdsTest extends AbstractShopApiTest
      */
     public function testFetchCategoriesWithStringIdsAndFalse()
     {
-        $shopApi = $this->getShopApiWithResultFile('category.json');
+        $ay = $this->getAYWithResultFile('category-tree-v2.json');
 
-        $categoriesResult = $shopApi->fetchCategoriesByIds(array('1', '2', false));        
+        $categoriesResult = $ay->fetchCategoriesByIds(array('1', '2', false));
     }   
     
     /**
@@ -33,17 +30,17 @@ class CategoriesByIdsTest extends AbstractShopApiTest
      */
     public function testFetchCategoriesWithNegativeIds()
     {
-        $shopApi = $this->getShopApiWithResultFile('category.json');
+        $ay = $this->getAYWithResultFile('category-tree-v2.json');
 
-        $categoriesResult = $shopApi->fetchCategoriesByIds(array(-1, -2, -4));        
+        $categoriesResult = $ay->fetchCategoriesByIds(array(-1, -2, -4));
     }     
     
     public function testFetchCategoriesWithStringIds()
     {
-        $categoryIds = array('16080', '16138', '123');
-        $shopApi = $this->getShopApiWithResultFile('category.json');
+        $categoryIds = array(74415, 74420, 123);
+        $ay = $this->getAYWithResultFile('category-tree-v2.json');
 
-        $categoriesResult = $shopApi->fetchCategoriesByIds($categoryIds);
+        $categoriesResult = $ay->fetchCategoriesByIds($categoryIds);
 
         $categories = $categoriesResult->getCategories();
         
@@ -52,24 +49,24 @@ class CategoriesByIdsTest extends AbstractShopApiTest
     
     public function testFetchCategories()
     {
-        $categoryIds = array(16080, 16138, 123);
+        $categoryIds = array(74415, 74420, 123);
 
-        $shopApi = $this->getShopApiWithResultFile('category.json');
+        $ay = $this->getAYWithResultFile('category.json');
 
-        $categoriesResult = $shopApi->fetchCategoriesByIds($categoryIds);
+        $categoriesResult = $ay->fetchCategoriesByIds($categoryIds);
         $categories = $categoriesResult->getCategories();
         $this->assertCount(2, $categories);
 
-        $category = $categories[16080];
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $category);
-        $this->assertEquals(16080, $category->getId());
-        $this->assertEquals('Blusen & Tuniken', $category->getName());
+        $category = $categories[74415];
+        $this->assertInstanceOf('\AboutYou\SDK\Model\Category', $category);
+        $this->assertEquals(74415, $category->getId());
+        $this->assertEquals('Frauen', $category->getName());
         $this->assertTrue($category->isActive());
 
-        $category = $categories[16138];
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $category);
-        $this->assertEquals(16138, $category->getId());
-        $this->assertEquals('Minikleider', $category->getName());
+        $category = $categories[74420];
+        $this->assertInstanceOf('\AboutYou\SDK\Model\Category', $category);
+        $this->assertEquals(74420, $category->getId());
+        $this->assertEquals('Jeans', $category->getName());
         $this->assertTrue($category->isActive());
 
         $notFound = $categoriesResult->getCategoriesNotFound();
@@ -84,7 +81,7 @@ class CategoriesByIdsTest extends AbstractShopApiTest
     public function testProductResultIteratorInterface($categoriesResult)
     {
         foreach ($categoriesResult as $category) {
-            $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $category);
+            $this->assertInstanceOf('\AboutYou\SDK\Model\Category', $category);
         }
     }
 
@@ -93,8 +90,8 @@ class CategoriesByIdsTest extends AbstractShopApiTest
      */
     public function testProductResultArrayAccessInterface($categoriesResult)
     {
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $categoriesResult[16080]);
-        $this->assertInstanceOf('\Collins\ShopApi\Model\Category', $categoriesResult[16138]);
+        $this->assertInstanceOf('\AboutYou\SDK\Model\Category', $categoriesResult[74415]);
+        $this->assertInstanceOf('\AboutYou\SDK\Model\Category', $categoriesResult[74420]);
     }
 
     /**

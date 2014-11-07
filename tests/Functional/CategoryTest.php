@@ -1,61 +1,36 @@
 <?php
 /**
- * @author nils.droege@project-collins.com
- * (c) Collins GmbH & Co KG
+ * @author nils.droege@aboutyou.de
+ * (c) ABOUT YOU GmbH
  */
 
-namespace Collins\ShopApi\Test\Functional;
+namespace AboutYou\SDK\Test\Functional;
 
-use Collins\ShopApi;
+use \AY;
 
-class CategoryTest extends AbstractShopApiTest
+class CategoryTest extends AbstractAYTest
 {
-    /**
-     * @var $category \Collins\ShopApi\Model\Category
-     */
-    protected $category;
-
-    public function setUp()
-    {
-        $shopApi = $this->getShopApiWithResult(''); // Init DefaultModelFactory
-        $json = json_decode(file_get_contents(__DIR__ . '/testData/category-tree.json'));
-        $this->category = \Collins\ShopApi\Model\Category::createFromJson($json[0]->category_tree[1], $shopApi->getResultFactory());
-    }
-    
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testFetchCategoryTreeWithDepthGreaterThan10()
-    {
-        $shopApi = $this->getShopApiWithResult('category-tree.json');
-        
-        $shopApi->fetchCategoryTree(1000);
-    }
-    
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testFetchCategoryTreeWithDepthLessThanMiuns1()
-    {
-        $shopApi = $this->getShopApiWithResult('category-tree.json');
-        
-        $shopApi->fetchCategoryTree(-1000);
-    }         
-
     /**
      *
      */
     public function testBreadcrumb()
     {
-        $breadcrumb = $this->category->getBreadcrumb();
-//        echo '<pre>', __LINE__, ') ', __METHOD__, ': <b>$breadcrumb</b>=', var_export($breadcrumb), '</pre>', PHP_EOL;
-        $this->assertCount(1, $breadcrumb);
-        $this->assertEquals(200, $breadcrumb[0]->getId());
+        $ay = $this->getAYWithResult(''); // Init DefaultModelFactory
+        $categoryManager = $ay->getResultFactory()->getCategoryManager();
+        $json = $this->getJsonObjectFromFile('category-tree-v2.json');
+        $categoryManager->parseJson($json[0]->category_tree, $ay->getResultFactory());
+        $category = \AboutYou\SDK\Model\Category::createFromJson(reset($json[0]->category_tree->ids), $categoryManager);
 
-        $subcategories = $this->category->getSubCategories();
-        $breadcrumb = $subcategories[0]->getBreadcrumb();
+        $breadcrumb = $category->getBreadcrumb();
+        $this->assertCount(1, $breadcrumb);
+        $this->assertEquals(74415, reset($breadcrumb)->getId());
+
+        $subcategories = $category->getSubCategories();
+        $breadcrumb = reset($subcategories)->getBreadcrumb();
         $this->assertCount(2, $breadcrumb);
-        $this->assertEquals(200, $breadcrumb[0]->getId());
-        $this->assertEquals(210, $breadcrumb[1]->getId());
+        $category = array_shift($breadcrumb);
+        $this->assertEquals(74415, $category->getId());
+        $category = array_shift($breadcrumb);
+        $this->assertEquals(74417, $category->getId());
     }
 }
