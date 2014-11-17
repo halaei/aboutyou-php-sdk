@@ -481,13 +481,14 @@ class AY
      */
     public function fetchProductsByIds(
         array $ids,
-        array $fields = array()
+        array $fields = array(),
+        $loadStyles = true
     ) {
         // we allow to pass a single ID instead of an array
         settype($ids, 'array');
 
         $query = $this->getQuery()
-            ->fetchProductsByIds($ids, $fields)
+            ->fetchProductsByIds($ids, $fields, $loadStyles)
         ;
 
         $result = $query->executeSingle();

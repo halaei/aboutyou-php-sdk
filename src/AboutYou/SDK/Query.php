@@ -85,7 +85,7 @@ class Query extends QueryBuilder
         array $fields = array(),
         $loadStyles = true
     ) {
-        parent::fetchProductsByIds($ids, $fields);
+        parent::fetchProductsByIds($ids, $fields, $loadStyles);
 
         if (ProductFields::requiresCategories($fields)) {
             $this->requireCategoryTree();
