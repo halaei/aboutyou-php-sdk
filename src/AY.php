@@ -294,7 +294,8 @@ class AY
         $limit = 50,
         $types = array(
             Constants::TYPE_PRODUCTS,
-            Constants::TYPE_CATEGORIES
+            Constants::TYPE_CATEGORIES,
+            Constants::TYPE_BRANDS
         )
     ) {
         $query = $this->getQuery()
