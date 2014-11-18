@@ -59,7 +59,7 @@ class VariantTest extends AbstractModelTest
     {
         $facetGroupSet = $variant->getFacetGroupSet();
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\FacetGroupSet', $facetGroupSet);
-        $this->assertCount(7, $facetGroupSet->getLazyGroups());
+        $this->assertCount(8, $facetGroupSet->getLazyGroups());
     }
 
     public function testFromJsonAdditionalInfo()
@@ -120,6 +120,26 @@ class VariantTest extends AbstractModelTest
         $this->assertEquals('hw14', $facet->getValue());
         $this->assertEquals('HW 14', $facet->getName());
         $this->assertEquals('season', $facet->getGroupName());
+    }
+    
+    /**
+     * @depends testFromJson
+     */
+    public function testGetGender(Variant $variant)
+    {
+        $facetManager = $this->getFacetManager('facets-all.json');
+        FacetGroupSet::setFacetManager($facetManager);
+
+        $facetGroup = $variant->getGender();
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\FacetGroup', $facetGroup);
+        $this->assertEquals('genderage', $facetGroup->getName());
+        $this->assertEquals('Unisex', $facetGroup->getFacetNames());
+
+        $facet = $facetManager->getFacet(3, 64);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $facet);
+        $this->assertEquals('unisex', $facet->getValue());
+        $this->assertEquals('Unisex', $facet->getName());
+        $this->assertEquals('genderage', $facet->getGroupName());
     }
 
     protected function getFacetManager($filename)
