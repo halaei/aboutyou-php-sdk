@@ -53,6 +53,9 @@ class Query extends QueryBuilder
     ) {
         parent::fetchAutocomplete($searchword, $limit, $types);
 
+        $this->requireCategoryTree();
+        $this->requireFacets();
+
         return $this;
     }
 
