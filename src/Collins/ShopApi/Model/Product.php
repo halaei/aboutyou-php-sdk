@@ -468,6 +468,7 @@ class Product extends AbstractModel
 
         foreach ($this->categoryIdPaths as $categoryIdPath) {
             $rootId = $categoryIdPath[0];
+            if (!isset($flattenCategories[$rootId])) continue;
             $rootCategory = $flattenCategories[$rootId];
             $this->rootCategories[$rootId] = $rootCategory;
             if ($rootCategory->isActive()) {

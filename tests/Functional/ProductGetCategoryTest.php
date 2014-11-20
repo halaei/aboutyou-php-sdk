@@ -122,4 +122,16 @@ class ProductGetCategoryTestAbstract extends AbstractShopApiTest
         $category = $product->getCategory();
         $this->assertNull($category);
     }
+    
+    public function testGetNullCategory()
+    {
+        $product = $this->getProduct('product-with-categories_and_empty_category.json');
+        $categoryIdPaths = $product->getCategoryIdHierachies();
+        $categories= $product->getCategories();
+        foreach ($categories as $category) {
+            $this->assertInstanceOf('\\Collins\\ShopApi\\Model\\Category', $category);
+        }
+        $this->assertCount(1, $categories);
+        $this->assertCount(5, $categoryIdPaths); 
+   }
 }
