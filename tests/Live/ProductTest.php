@@ -76,5 +76,5 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         }
 
         return $product;
-    }
+    }    
 }
