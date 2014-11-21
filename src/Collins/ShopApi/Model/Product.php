@@ -466,7 +466,15 @@ class Product extends AbstractModel
             }
         }
 
-        foreach ($this->categoryIdPaths as $categoryIdPath) {
+        foreach ($this->categoryIdPaths as $path => $categoryIdPath) {
+            foreach ($categoryIdPath as $vCatId) {
+                if (!isset($flattenCategories[$vCatId])) {
+                    unset($this->categoryIdPaths[$path]);
+                }
+            }
+        }
+
+        foreach ($this->categoryIdPaths as $path => $categoryIdPath) {
             $rootId = $categoryIdPath[0];
             if (!isset($flattenCategories[$rootId])) continue;
             $rootCategory = $flattenCategories[$rootId];
@@ -476,6 +484,7 @@ class Product extends AbstractModel
             }
 
             $leafId = end($categoryIdPath);
+            if (!isset($flattenCategories[$leafId])) continue;
             $leafCategory = $flattenCategories[$leafId];
             $this->leafCategories[$leafId] = $leafCategory;
             if ($leafCategory->isActive()) {
