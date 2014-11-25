@@ -186,7 +186,7 @@ class Query extends QueryBuilder
         $this->allQuery = $this->ghostQuery + $this->query;
 
         $queryString = $this->getQueryString();
-
+        
         $response = $this->client->request($queryString);
 
         $jsonResponse = json_decode($response->getBody(true));

@@ -17,5 +17,6 @@ class AutocompleteTest extends AbstractModelTest
         $autocomplete = Autocomplete::createFromJson($jsonObject, $factory);
         $this->assertEquals(Autocomplete::NOT_REQUESTED, $autocomplete->getCategories());
         $this->assertEquals(Autocomplete::NOT_REQUESTED, $autocomplete->getProducts());
+        $this->assertEquals(Autocomplete::NOT_REQUESTED, $autocomplete->getBrands());
     }
 }

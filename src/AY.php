@@ -7,6 +7,7 @@ use AboutYou\SDK\Constants;
 use AboutYou\SDK\Criteria\ProductSearchCriteria;
 use AboutYou\SDK\Factory\DefaultModelFactory;
 use AboutYou\SDK\Factory\ModelFactoryInterface;
+use AboutYou\SDK\Model\Autocomplete;
 use AboutYou\SDK\Model\Basket;
 use AboutYou\SDK\Model\CategoriesResult;
 use AboutYou\SDK\Model\CategoryManager\CategoryManagerInterface;
@@ -293,8 +294,8 @@ class AY
         $searchword,
         $limit = 50,
         $types = array(
-            Constants::TYPE_PRODUCTS,
-            Constants::TYPE_CATEGORIES
+            Autocomplete::TYPE_PRODUCTS,
+            Autocomplete::TYPE_CATEGORIES
         )
     ) {
         $query = $this->getQuery()
