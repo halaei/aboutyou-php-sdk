@@ -422,4 +422,14 @@ class Variant
     {
         return $this->getFacetGroup(Constants::FACET_SEASON_CODE);
     }
+    
+    /**
+     * get the gender age e.g. "Unisex/unisex"
+     *
+     * @return FacetGroup|null
+     */
+    public function getGender()
+    {
+        return $this->getFacetGroup(Constants::FACET_GENDERAGE);
+    }
 }
