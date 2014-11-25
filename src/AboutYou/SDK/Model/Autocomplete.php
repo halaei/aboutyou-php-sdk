@@ -10,6 +10,10 @@ class Autocomplete
 {
     const NOT_REQUESTED = null;
 
+    const TYPE_PRODUCTS   = 'products';
+    const TYPE_CATEGORIES = 'categories';
+    const TYPE_BRANDS     = 'brands';
+
     /**
      * @var Product[]
      */

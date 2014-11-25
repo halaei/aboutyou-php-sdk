@@ -43,7 +43,6 @@ abstract class Constants
 
     const TYPE_PRODUCTS = 'products';
     const TYPE_CATEGORIES = 'categories';
-    const TYPE_BRANDS = 'brands';
 
     const API_ENVIRONMENT_STAGE   = 'stage';
     const API_ENVIRONMENT_SANDBOX = 'sandbox';
