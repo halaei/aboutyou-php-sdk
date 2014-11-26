@@ -6,69 +6,91 @@
 
 namespace AboutYou\SDK\Factory;
 
-use AboutYou\SDK\Model\Product;
+use AboutYou\SDK\Model;
 
 interface ModelFactoryInterface extends ResultFactoryInterface
 {
     /**
-     * @param \stdClass $json
-     * @param array $products
+     * @param \stdClass $jsonObject
+     * @param Model\Product[] $products
      *
      * @return \AboutYou\SDK\Model\Basket\BasketItem
      */
-    public function createBasketItem(\stdClass $json, array $products);
+    public function createBasketItem(\stdClass $jsonObject, array $products);
 
     /**
-     * @param \stdClass $json
-     * @param array $products
+     * @param \stdClass $jsonObject
+     * @param Model\Product[] $products
      *
      * @return \AboutYou\SDK\Model\Basket\BasketSet
      */
-    public function createBasketSet(\stdClass $json, array $products);
+    public function createBasketSet(\stdClass $jsonObject, array $products);
 
     /**
-     * @param \stdClass $json
-     * @param array $products
+     * @param \stdClass $jsonObject
+     * @param Model\Product[] $products
      *
      * @return \AboutYou\SDK\Model\Basket\BasketSetItem
      */
-    public function createBasketSetItem(\stdClass $json, array $products);
+    public function createBasketSetItem(\stdClass $jsonObject, array $products);
 
     /**
-     * @param \stdClass $json
+     * @param \stdClass $jsonObject
      *
-     * @return \AboutYou\SDK\Model\Category
+     * @return Model\Category
      */
-    public function createCategory(\stdClass $json);
+    public function createCategory(\stdClass $jsonObject);
+
 
     /**
-     * @param \stdClass $json
+     * @param \stdClass $jsonObject
      *
-     * @return \AboutYou\SDK\Model\Facet
+     * @return Model\Composition
      */
-    public function createFacet(\stdClass $json);
+    public function createCompositionList(\stdClass $jsonObject);
 
     /**
-     * @param \stdClass $json
+     * @param \stdClass $jsonObject
      *
-     * @return \AboutYou\SDK\Model\Image
+     * @return Model\Facet
      */
-    public function createImage(\stdClass $json);
+    public function createFacet(\stdClass $jsonObject);
 
     /**
-     * @param \stdClass $json
+     * @param \stdClass $jsonObject
      *
-     * @return \AboutYou\SDK\Model\Product
+     * @return Model\Image
      */
-    public function createProduct(\stdClass $json);
+    public function createImage(\stdClass $jsonObject);
 
     /**
-     * @param \stdClass $json
-     * @param \AboutYou\SDK\Model\Product $product
+     * @param \stdClass $jsonObject
+     *
+     * @return Model\Material
+     */
+    public function createMaterial(\stdClass $jsonObject);
+
+    /**
+     * @param \stdClass[] $jsonArray
+     *
+     * @return Model\Material[]
+     */
+    public function createMaterialList(array $jsonArray);
+
+    /**
+     * @param \stdClass $jsonObject
+     *
+     * @return Model\Product
+     */
+    public function createProduct(\stdClass $jsonObject);
+
+    /**
+     * @param \stdClass $jsonObject
+     * @param Model\Product $product
      *
      * @return \AboutYou\SDK\Model\Variant
      */
-    public function createVariant(\stdClass $json, Product $product);
+    public function createVariant(\stdClass $jsonObject, Model\Product $product);
 
     /***************************************+
      * ProductSearchResult Facets
@@ -77,28 +99,28 @@ interface ModelFactoryInterface extends ResultFactoryInterface
     /**
      * @param \stdClass $jsonObject
      *
-     * @return \AboutYou\SDK\Model\ProductSearchResult\PriceRange[]
+     * @return Model\ProductSearchResult\PriceRange[]
      */
     public function createPriceRanges(\stdClass $jsonObject);
 
     /**
      * @param \stdClass $jsonObject
      *
-     * @return \AboutYou\SDK\Model\ProductSearchResult\FacetCounts[]
+     * @return Model\ProductSearchResult\FacetCounts[]
      */
     public function createFacetsCounts(\stdClass $jsonObject);
 
     /**
      * @param \stdClass $jsonObject
      *
-     * @return \AboutYou\SDK\Model\ProductSearchResult\SaleCounts
+     * @return Model\ProductSearchResult\SaleCounts
      */
     public function createSaleFacet(\stdClass $jsonObject);
 
     /**
-     * @param \stdClass[] $jsonObject
+     * @param \stdClass[] $jsonArray
      *
-     * @return \AboutYou\SDK\Model\ProductSearchResult\
+     * @return Model\Category
      */
-    public function createCategoriesFacets(array $jsonObject);
+    public function createCategoriesFacets(array $jsonArray);
 }
