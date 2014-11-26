@@ -443,4 +443,14 @@ class Variant
 
         return $this->materials;
     }
+
+    /**
+     * get the gender age e.g. "Unisex/unisex"
+     *
+     * @return FacetGroup|null
+     */
+    public function getGender()
+    {
+        return $this->getFacetGroup(Constants::FACET_GENDERAGE);
+    }
 }

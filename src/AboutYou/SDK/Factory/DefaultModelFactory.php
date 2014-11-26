@@ -183,6 +183,16 @@ class DefaultModelFactory implements ModelFactoryInterface
         $facets = $this->createFacetsList($jsonObject);
         $this->getFacetManager()->setFacets($facets);
     }
+    
+    /**
+     * {@inheritdoc}
+     *
+     * @return Model\Brand
+     */
+    public function createBrand(\stdClass $jsonObject)
+    {
+        return Model\Brand::createFromJson($jsonObject);
+    }
 
     /**
      * {@inheritdoc}

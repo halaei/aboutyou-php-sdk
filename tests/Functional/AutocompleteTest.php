@@ -24,6 +24,10 @@ class AutocompleteTest extends AbstractAYTest
         foreach ($autocomplete->getCategories() as $category) {
             $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Category', $category);
         }
+
+        foreach ($autocomplete->getBrands() as $brand) {
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Brand', $brand);
+        }
     }
 
     /**
