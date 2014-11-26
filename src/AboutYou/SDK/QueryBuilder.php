@@ -53,7 +53,37 @@ class QueryBuilder
 
         return $this;
     }
+    
+    /**
+     * @param string $searchWord The prefix search word to search for.
+     * @param array  $categoryFilter Array of Category Ids for filtering
+     *
+     * @return $this
+     *
+     * @throws \InvalidArgumentException
+     */
 
+    public function fetchSpellCorrection($searchword, array $categoryFilter = null)
+    {
+        if (!is_string($searchword)) {
+            throw new \InvalidArgumentException('searchword must be a string');
+        }
+        
+        if (isset($categoryFilter)) {
+            $options = 
+                    ['searchword' => $searchword,
+                        'filter' => ['categories' => $categoryFilter]
+            ];
+            
+        } else {
+            $options = ['searchword' => $searchword];
+        }
+        
+        $this->query[] = ['did_you_mean' => $options];
+        
+        return $this;
+    }
+    
     /**
      * @param string $basketId Free to choose ID of the current website visitor.
      *

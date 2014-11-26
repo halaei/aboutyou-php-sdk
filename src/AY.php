@@ -306,6 +306,26 @@ class AY
     }
 
     /**
+     * Returns the result of an spell correction API request.
+     * Spell correction searches for products by
+     * a given prefix ($searchword) and filter by categories ($categoryFilter).
+     *
+     * @param string $searchword The search word to search for.
+     * @param array  $categoryFilter Array of Category Ids for filtering
+     *
+     * @return array
+     */
+
+    public function fetchSpellCorrection($searchword, $categoryFilter = null)
+    {
+        $query = $this->getQuery()
+            ->fetchSpellCorrection($searchword, $categoryFilter = null)
+        ;
+        
+        return  $query->executeSingle();
+    }
+
+    /**
      * Fetch the basket of the given sessionId.
      *
      * @param string $sessionId Free to choose ID of the current website visitor.

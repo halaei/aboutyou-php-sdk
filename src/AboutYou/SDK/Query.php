@@ -221,7 +221,8 @@ class Query extends QueryBuilder
         'get_order'      => 'createOrder',
         'initiate_order' => 'initiateOrder',
         'child_apps'     => 'createChildApps',
-        'live_variant'   => 'createVariantsResult'
+        'live_variant'   => 'createVariantsResult',
+        'did_you_mean'   => 'createSpellCorrection'
     );
 
     protected function checkResponse($jsonResponse)
