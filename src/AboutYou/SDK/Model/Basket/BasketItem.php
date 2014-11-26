@@ -73,7 +73,9 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
             if (isset($products[$jsonObject->product_id])) {
                 $item->setProduct($products[$jsonObject->product_id]);
             } else {
-                throw new \AboutYou\SDK\Exception\UnexpectedResultException('Product with ID '.$jsonObject->product_id.' expected but wasnt received with the basket');
+                if(!(isset($jsonObject->error_code) && $jsonObject->error_code === 410)) {
+                    throw new \AboutYou\SDK\Exception\UnexpectedResultException('Product with ID ' . $jsonObject->product_id . ' expected but wasnt received with the basket');
+                }
             }
         } 
         unset($jsonObject->id, $jsonObject->variant_id, $jsonObject->additional_data, $jsonObject->product_id);
