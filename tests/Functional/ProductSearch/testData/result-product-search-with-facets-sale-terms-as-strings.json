@@ -1,0 +1,139 @@
+[
+    {
+        "product_search": {
+            "product_count": 25303,
+            "pageHash": "0c5ff6b6-0be7-4b96-8de2-1637b979187b",
+            "facets": {
+                "0": {
+                    "_type": "terms",
+                    "total": 25303,
+                    "terms": [
+                        {
+                            "count": 2535,
+                            "term": 1122
+                        },
+                        {
+                            "count": 1165,
+                            "term": 121
+                        },
+                        {
+                            "count": 870,
+                            "term": 266
+                        }
+                    ],
+                    "other": 20733,
+                    "missing": 0
+                },
+                "prices": {
+                    "ranges": [
+                        {
+                            "count": 25138,
+                            "from": 0,
+                            "min": 399,
+                            "max": 19999,
+                            "to": 20000,
+                            "total_count": 25138,
+                            "total": 133930606,
+                            "mean": 5327.8147028403
+                        },
+                        {
+                            "count": 163,
+                            "from": 20000,
+                            "min": 20000,
+                            "max": 39995,
+                            "to": 50000,
+                            "total_count": 163,
+                            "total": 4107552,
+                            "mean": 25199.4055214724
+                        },
+                        {
+                            "count": 1,
+                            "from": 50000,
+                            "min": 59900,
+                            "max": 59900,
+                            "to": 70000,
+                            "total_count": 1,
+                            "total": 59900,
+                            "mean": 59900
+                        },
+                        {
+                            "count": 0,
+                            "from": 100000,
+                            "total_count": 0,
+                            "to": 200000,
+                            "total": 0,
+                            "mean": 0
+                        },
+                        {
+                            "count": 0,
+                            "from": 200000,
+                            "total_count": 0,
+                            "to": 500000,
+                            "total": 0,
+                            "mean": 0
+                        },
+                        {
+                            "count": 0,
+                            "total_count": 0,
+                            "total": 0,
+                            "from": 500000,
+                            "mean": 0
+                        }
+                    ],
+                    "_type": "range"
+                },
+                "sale": {
+                    "_type": "terms",
+                    "total": 25303,
+                    "terms": [
+                        {
+                            "count": 20042,
+                            "term": "0"
+                        },
+                        {
+                            "count": 5261,
+                            "term": "1"
+                        }
+                    ],
+                    "other": 0,
+                    "missing": 0
+                },
+                "categories": [
+                    {
+                        "count": 18549,
+                        "term": 74415
+                    },
+                    {
+                        "count": 11092,
+                        "term": 74416
+                    },
+                    {
+                        "count": 6359,
+                        "term": 74417
+                    },
+                    {
+                        "count": 5595,
+                        "term": 74418
+                    },
+                    {
+                        "count": 5495,
+                        "term": 74419
+                    },
+                    {
+                        "count": 5006,
+                        "term": 74420
+                    },
+                    {
+                        "count": 3873,
+                        "term": 74421
+                    },
+                    {
+                        "count": 3873,
+                        "term": 74422
+                    }
+                ]
+            },
+            "products": []
+        }
+    }
+]

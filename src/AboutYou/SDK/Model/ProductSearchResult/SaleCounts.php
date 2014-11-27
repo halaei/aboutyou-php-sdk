@@ -50,7 +50,7 @@ class SaleCounts extends TermsCounts
     protected function parseTerms($jsonTerms)
     {
         foreach ($jsonTerms as $term) {
-            if ($term->term === 0) {
+            if ($term->term == 0) {
                 $this->productCountNotInSale = $term->count;
             } else {
                 $this->productCountInSale = $term->count;
