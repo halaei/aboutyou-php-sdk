@@ -55,32 +55,28 @@ class QueryBuilder
     }
     
     /**
-     * @param string $searchWord The prefix search word to search for.
-     * @param array  $categoryFilter Array of Category Ids for filtering
-     *
+     * @param string $searchWord The prefix search word to search for
+     * @param integer[] $categoryIds Array of category Ids for filtering
      * @return $this
      *
      * @throws \InvalidArgumentException
      */
 
-    public function fetchSpellCorrection($searchword, array $categoryFilter = null)
+    public function fetchSpellCorrection($searchword, $categoryFilter = null)
     {
         if (!is_string($searchword)) {
             throw new \InvalidArgumentException('searchword must be a string');
         }
-        
-        if (isset($categoryFilter)) {
-            $options = 
-                    ['searchword' => $searchword,
-                        'filter' => ['categories' => $categoryFilter]
-            ];
-            
-        } else {
-            $options = ['searchword' => $searchword];
+     
+        $options = array(
+            'searchword' => $searchword
+        );
+        if (!empty($categoryFilter)) {
+            $options['filter'] = (object)['categories'=>$categoryFilter];
         }
-        
+
         $this->query[] = ['did_you_mean' => $options];
-        
+
         return $this;
     }
     

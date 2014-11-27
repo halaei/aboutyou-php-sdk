@@ -33,6 +33,17 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $query->getQueryString());
     }
 
+    public function testFetchSpellCorrection()
+    {
+        $this->queryBuilder = new QueryBuilder();
+        $query = $this->queryBuilder
+            ->fetchSpellCorrection('gelx')
+        ;
+        $expected = '[{"did_you_mean":{"searchword":"gelx"}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+    }        
+
+    
     public function testFetchCategoriesByIds()
     {
         $query = $this->queryBuilder

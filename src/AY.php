@@ -318,8 +318,22 @@ class AY
 
     public function fetchSpellCorrection($searchword, $categoryFilter = null)
     {
+        // we allow to pass a single ID instead of an array
+        if ($categoryFilter !== null && !is_array($categoryFilter)) {
+            $categoryFilter = array($categoryFilter);
+        }
+        if($categoryFilter !== null) {
+            foreach ($categoryFilter as $categoryFilterId) {
+                if (!is_long($categoryFilterId) && !ctype_digit($categoryFilterId)) {
+                    throw new \InvalidArgumentException('A single category ID must be an integer or a numeric string');
+                } else if ($categoryFilterId < 1) {
+                    throw new \InvalidArgumentException('A single category ID must be greater than 0');
+                }
+            }
+        }        
+        
         $query = $this->getQuery()
-            ->fetchSpellCorrection($searchword, $categoryFilter = null)
+            ->fetchSpellCorrection($searchword, $categoryFilter)
         ;
         
         return  $query->executeSingle();
