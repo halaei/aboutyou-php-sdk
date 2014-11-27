@@ -311,31 +311,29 @@ class AY
      * a given prefix ($searchword) and filter by categories ($categoryFilter).
      *
      * @param string $searchword The search word to search for.
-     * @param array  $categoryFilter Array of Category Ids for filtering
+     * @param integer[] $categoryIds Array of category Ids for filtering
      *
      * @return array
      */
 
-    public function fetchSpellCorrection($searchword, $categoryFilter = null)
+    public function fetchSpellCorrection($searchword, $categoryIds = null)
     {
-        // we allow to pass a single ID instead of an array
-        if ($categoryFilter !== null && !is_array($categoryFilter)) {
-            $categoryFilter = array($categoryFilter);
-        }
-        if($categoryFilter !== null) {
-            foreach ($categoryFilter as $categoryFilterId) {
-                if (!is_long($categoryFilterId) && !ctype_digit($categoryFilterId)) {
+        if($categoryIds !== null) {
+            // we allow to pass a single ID instead of an array
+            settype($categoryIds, 'array');
+
+            foreach ($categoryIds as $categoryId) {
+                if (!is_long($categoryId) && !ctype_digit($categoryId)) {
                     throw new \InvalidArgumentException('A single category ID must be an integer or a numeric string');
-                } else if ($categoryFilterId < 1) {
+                } else if ($categoryId < 1) {
                     throw new \InvalidArgumentException('A single category ID must be greater than 0');
                 }
             }
-        }        
-        
+        }
+
         $query = $this->getQuery()
-            ->fetchSpellCorrection($searchword, $categoryFilter)
-        ;
-        
+            ->fetchSpellCorrection($searchword, $categoryIds);
+
         return  $query->executeSingle();
     }
 
