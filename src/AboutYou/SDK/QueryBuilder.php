@@ -62,7 +62,7 @@ class QueryBuilder
      * @throws \InvalidArgumentException
      */
 
-    public function fetchSpellCorrection($searchword, $categoryFilter = null)
+    public function fetchSpellCorrection($searchword, $categoryIds = null)
     {
         if (!is_string($searchword)) {
             throw new \InvalidArgumentException('searchword must be a string');
@@ -71,11 +71,15 @@ class QueryBuilder
         $options = array(
             'searchword' => $searchword
         );
-        if (!empty($categoryFilter)) {
-            $options['filter'] = (object)['categories'=>$categoryFilter];
+        if (!empty($categoryIds)) {
+            $options['filter'] = (object) array(
+                'categories' => $categoryIds
+            );
         }
 
-        $this->query[] = ['did_you_mean' => $options];
+        $this->query[] = array(
+            'did_you_mean' => $options
+        );
 
         return $this;
     }
