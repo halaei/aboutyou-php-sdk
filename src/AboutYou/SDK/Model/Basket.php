@@ -29,6 +29,9 @@ class Basket
 
     /** @var integer */
     protected $totalVat;
+    
+    /** @var boolean */
+    protected $clear = false;
 
     /**
      * Constructor.
@@ -187,7 +190,7 @@ class Basket
     public function getOrderLinesArray()
     {
         $orderLines = array();
-
+            
         foreach (array_unique($this->deletedItems) as $itemId) {
             $orderLines[] = array('delete' => $itemId);
         }
@@ -269,21 +272,19 @@ class Basket
     /**
      * @return $this
      */
-    public function deleteAllItems()
+    public function deleteAllItems($delete = true)
     {
-        $items = $this->getItems();
-      
-        if (!empty($items)) {
-            $ids = array();
-
-            foreach ($items as $item) {                
-                $ids[] = $item->getId();
-            }  
-            
-            $this->deleteItems($ids);
-        }
+        $this->clear = $delete !== false || $delete !== 0;
 
         return $this;
+    }
+    
+    /**
+     * @return boolean
+     */
+    public function isBasketClearedOnUpdate()
+    {
+        return $this->clear;
     }
 
     /**
@@ -293,18 +294,26 @@ class Basket
      */
     public function updateItem(BasketItem $basketItem)
     {
+        $itemId = $basketItem->getId();
         $item = array(
-            'id' => $basketItem->getId(),
             'variant_id' => $basketItem->getVariantId(),
             'app_id' => $basketItem->getAppId()
         );
+        if ($itemId) {
+            $item['id'] = $itemId;
+        }
+        
         $additionalData = $basketItem->getAdditionalData();
         if (!empty($additionalData)) {
             $this->checkAdditionData($additionalData);
             $item['additional_data'] = (array)$additionalData;
         }
 
-        $this->updatedItems[$basketItem->getId()] = $item;
+        if ($itemId) {
+            $this->updatedItems[$basketItem->getId()] = $item;
+        } else {
+            $this->updatedItems[] = $item;
+        }
 
         return $this;
     }

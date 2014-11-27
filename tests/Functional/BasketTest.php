@@ -191,34 +191,23 @@ class BasketTest extends AbstractAYTest
 
     public function testAddToBasket()
     {
-        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item1","variant_id":123,"app_id":null}]}}]';
-        $ay = $this->getMockedAYWithResultFile(array('generateBasketItemId'), 'result/basket1.json', $exceptedRequestBody);
-        $ay->expects($this->once())
-            ->method('generateBasketItemId')
-            ->withAnyParameters()
-            ->will($this->returnValue('item1'))
-        ;
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":null,"variant_id":123,"app_id":null}]}}]';
+        $ay = $this->getAYWithResultFile('result/basket1.json', $exceptedRequestBody);
+        
         // add one item to basket
         $basket = $ay->addItemToBasket($this->sessionId, 123);
         $this->checkBasket($basket);
 
-        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item1","variant_id":123,"app_id":null}]}}]';
-        $ay = $this->getMockedAYWithResultFile(array('generateBasketItemId'), 'result/basket1.json', $exceptedRequestBody);
-        $ay->expects($this->once())
-            ->method('generateBasketItemId')
-            ->withAnyParameters()
-            ->will($this->returnValue('item1'))
-        ;
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":null,"variant_id":123,"app_id":null}]}}]';
+        $ay = $this->getAYWithResultFile('result/basket1.json', $exceptedRequestBody);
+
         // add one item to basket
         $basket = $ay->addItemToBasket($this->sessionId, '123');
         $this->checkBasket($basket);
 
-        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item2","variant_id":123,"app_id":null}]}}]';
-        $ay = $this->getMockedAYWithResultFile(array('generateBasketItemId'), 'result/basket1.json', $exceptedRequestBody);
-        $ay->expects($this->once())
-            ->method('generateBasketItemId')
-            ->will($this->returnValue('item2'))
-        ;
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":null,"variant_id":123,"app_id":null}]}}]';
+        $ay = $this->getAYWithResultFile('result/basket1.json', $exceptedRequestBody);
+
         // add more of one item to basket
         $basket = $ay->addItemToBasket($this->sessionId, 123);
         $this->checkBasket($basket);
@@ -307,7 +296,16 @@ class BasketTest extends AbstractAYTest
         $ay = $this->getAYWithResultFile('result/basket1.json', $exceptedRequestBody);
         // remove all of one item from basket
         $basket = $ay->removeItemsFromBasket($this->sessionId, array('item3', 'item4'));
-        $this->checkBasket($basket);
+        $this->checkBasket($basket);        
+
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"clear":true}]}}]';
+        $ay = $this->getAYWithResultFile('result/basket1.json', $exceptedRequestBody);
+        // clear basket
+        $jsonObject = (object)["total_price"=>0,"total_net"=>0,"total_vat"=>0,"products"=>new \stdClass(),"order_lines"=>[]];
+        $basket = Basket::createFromJson($jsonObject, new \AboutYou\SDK\Factory\DefaultModelFactory(null, new \AboutYou\SDK\Model\FacetManager\DefaultFacetManager(), new \AboutYou\SDK\Model\CategoryManager\DefaultCategoryManager()));
+        $basket = $basket->deleteAllItems();
+        $this->checkBasket($basket);        
+
     }
      
     public function testAddAdditionalDataToBasketItemWithDescription()

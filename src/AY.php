@@ -350,18 +350,11 @@ class AY
         $basket = new Basket();
 
         for ($i=0; $i < $amount; $i++) {
-            $item = new Basket\BasketItem($this->generateBasketItemId(), $variantId);
+            $item = new Basket\BasketItem(null, $variantId);
             $basket->updateItem($item);
         }
 
         return $this->updateBasket($sessionId, $basket);
-    }
-
-    public function generateBasketItemId()
-    {
-        $id = 'i_' . Uuid::uuid4();
-
-        return $id;
     }
 
     /**

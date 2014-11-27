@@ -118,11 +118,15 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         );
         
         $basket = new Basket();
+        
+        $basket->deleteAllItems();
+        $basket = $api->updateBasket($this->getSessionId(), $basket);
+
         $basket->updateItem($item);
         
         $basket = $api->updateBasket($this->getSessionId(), $basket);
         $item   = $basket->getItem('1234');
-
+        
         $this->assertEquals(1, $basket->getTotalAmount());
         $this->assertEquals(null, $item->getAppId());
         $this->assertInstanceOf('\AboutYou\SDK\Model\Basket\BasketItem', $item);
