@@ -31,7 +31,7 @@ class Basket
     protected $totalVat;
     
     /** @var boolean */
-    protected $clear = false;
+    protected $clearOnUpdate = false;
 
     /**
      * Constructor.
@@ -190,7 +190,7 @@ class Basket
     public function getOrderLinesArray()
     {
         $orderLines = array();
-            
+
         foreach (array_unique($this->deletedItems) as $itemId) {
             $orderLines[] = array('delete' => $itemId);
         }
@@ -274,7 +274,7 @@ class Basket
      */
     public function deleteAllItems($delete = true)
     {
-        $this->clear = $delete !== false || $delete !== 0;
+        $this->clearOnUpdate = $delete !== false || $delete !== 0;
 
         return $this;
     }
@@ -282,9 +282,9 @@ class Basket
     /**
      * @return boolean
      */
-    public function isBasketClearedOnUpdate()
+    public function isClearedOnUpdate()
     {
-        return $this->clear;
+        return $this->clearOnUpdate;
     }
 
     /**
@@ -331,7 +331,7 @@ class Basket
             throw new \InvalidArgumentException('BasketSet needs at least one item');            
         }
 
-        $itemSet = array();
+        $setItems = array();
         foreach ($items as $subItem) {
             $item = array(
                 'variant_id' => $subItem->getVariantId(),
@@ -342,14 +342,20 @@ class Basket
                 $this->checkAdditionData($additionalData);
                 $item['additional_data'] = (array)$additionalData;
             }
-            $itemSet[] = $item;
+            $setItems[] = $item;
         }
 
-        $this->updatedItems[$basketSet->getId()] = array(
-            'id' => $basketSet->getId(),
+        $set = array(
             'additional_data' => (array)$basketSet->getAdditionalData(),
-            'set_items' => $itemSet,
+            'set_items' => $setItems,
         );
+        $setId = $basketSet->getId();
+        if ($setId) {
+            $set['id'] = $setId;
+            $this->updatedItems[$setId] = $set;
+        } else {
+            $this->updatedItems[] = $set;
+        }
 
         return $this;
 

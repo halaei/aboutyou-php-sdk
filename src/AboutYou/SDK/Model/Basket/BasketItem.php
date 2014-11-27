@@ -95,6 +95,6 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
     {
         if ($id !== null && (!is_string($id) || strlen($id) < 2)) {
             throw new \InvalidArgumentException('ID of the BasketSetItem must be a String that must contain minimum two characters');            
-        } 
+        }
     }    
 }
