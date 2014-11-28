@@ -17,7 +17,7 @@ class SpellCorrectionTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
 
         $spellCorrection = $ay->fetchSpellCorrection('gex');
         $this->assertCount(1, $spellCorrection);
-        $this->assertEquals('gel', $spellCorrection[0]);
+        $this->assertEquals('geox', $spellCorrection[0]);
 
         $spellCorrection = $ay->fetchSpellCorrection('gex', 1);
         $this->assertCount(0, $spellCorrection);
