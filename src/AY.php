@@ -318,7 +318,7 @@ class AY
 
     public function fetchSpellCorrection($searchword, $categoryIds = null)
     {
-        if($categoryIds !== null) {
+        if ($categoryIds !== null) {
             // we allow to pass a single ID instead of an array
             settype($categoryIds, 'array');
 
@@ -332,7 +332,8 @@ class AY
         }
 
         $query = $this->getQuery()
-            ->fetchSpellCorrection($searchword, $categoryIds);
+            ->fetchSpellCorrection($searchword, $categoryIds)
+        ;
 
         return  $query->executeSingle();
     }

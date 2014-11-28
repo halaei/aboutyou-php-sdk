@@ -72,7 +72,7 @@ class QueryBuilder
             'searchword' => $searchword
         );
         if (!empty($categoryIds)) {
-            $options['filter'] = (object) array(
+            $options['filter'] = array(
                 'categories' => $categoryIds
             );
         }
