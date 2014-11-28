@@ -306,6 +306,39 @@ class AY
     }
 
     /**
+     * Returns the result of an spell correction API request.
+     * Spell correction searches for products by
+     * a given prefix ($searchword) and filter by categories ($categoryFilter).
+     *
+     * @param string $searchword The search word to search for.
+     * @param integer[] $categoryIds Array of category Ids for filtering
+     *
+     * @return array
+     */
+
+    public function fetchSpellCorrection($searchword, $categoryIds = null)
+    {
+        if ($categoryIds !== null) {
+            // we allow to pass a single ID instead of an array
+            settype($categoryIds, 'array');
+
+            foreach ($categoryIds as $categoryId) {
+                if (!is_long($categoryId) && !ctype_digit($categoryId)) {
+                    throw new \InvalidArgumentException('A single category ID must be an integer or a numeric string');
+                } else if ($categoryId < 1) {
+                    throw new \InvalidArgumentException('A single category ID must be greater than 0');
+                }
+            }
+        }
+
+        $query = $this->getQuery()
+            ->fetchSpellCorrection($searchword, $categoryIds)
+        ;
+
+        return  $query->executeSingle();
+    }
+
+    /**
      * Fetch the basket of the given sessionId.
      *
      * @param string $sessionId Free to choose ID of the current website visitor.

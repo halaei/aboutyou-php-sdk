@@ -87,6 +87,16 @@ class DefaultModelFactory implements ModelFactoryInterface
     {
         return Model\Autocomplete::createFromJson($jsonObject, $this);
     }
+    
+    /**
+     * {@inheritdoc}
+     *
+     * @return array
+     */
+    public function createSpellCorrection(array $jsonArray)
+    {
+        return $jsonArray;
+    }
 
     /**
      * {@inheritdoc}
