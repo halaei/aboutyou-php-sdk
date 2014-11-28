@@ -249,6 +249,10 @@ class QueryBuilder
 
         $basketQuery = array('session_id'  => $basketId);
 
+        if ($basket->isClearedOnUpdate()) {
+            $basketQuery['clear'] = true;
+        }
+
         $orderLines = $basket->getOrderLinesArray();
         if (!empty($orderLines)) {
             $basketQuery['order_lines'] = $orderLines;
@@ -257,7 +261,7 @@ class QueryBuilder
         $this->query[] = array(
             'basket' => $basketQuery
         );
-
+        
         return $this;
     }
 
