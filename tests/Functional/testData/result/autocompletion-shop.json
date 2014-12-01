@@ -1014,6 +1014,16 @@
                     "parent": 16353,
                     "id": 16354
                 }
+            ],
+            "brands": [
+                {
+                    "name": "Pepe Jeans",
+                    "id": 305
+                },
+                {
+                    "name": "PETITE FLEUR",
+                    "id": 522
+                }
             ]
         }
     }

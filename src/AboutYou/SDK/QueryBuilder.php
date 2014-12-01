@@ -53,7 +53,37 @@ class QueryBuilder
 
         return $this;
     }
+    
+    /**
+     * @param string $searchWord The prefix search word to search for
+     * @param integer[] $categoryIds Array of category Ids for filtering
+     * @return $this
+     *
+     * @throws \InvalidArgumentException
+     */
 
+    public function fetchSpellCorrection($searchword, $categoryIds = null)
+    {
+        if (!is_string($searchword)) {
+            throw new \InvalidArgumentException('searchword must be a string');
+        }
+     
+        $options = array(
+            'searchword' => $searchword
+        );
+        if (!empty($categoryIds)) {
+            $options['filter'] = array(
+                'categories' => $categoryIds
+            );
+        }
+
+        $this->query[] = array(
+            'did_you_mean' => $options
+        );
+
+        return $this;
+    }
+    
     /**
      * @param string $basketId Free to choose ID of the current website visitor.
      *
@@ -219,6 +249,10 @@ class QueryBuilder
 
         $basketQuery = array('session_id'  => $basketId);
 
+        if ($basket->isClearedOnUpdate()) {
+            $basketQuery['clear'] = true;
+        }
+
         $orderLines = $basket->getOrderLinesArray();
         if (!empty($orderLines)) {
             $basketQuery['order_lines'] = $orderLines;
@@ -227,7 +261,7 @@ class QueryBuilder
         $this->query[] = array(
             'basket' => $basketQuery
         );
-
+        
         return $this;
     }
 

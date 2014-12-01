@@ -27,6 +27,31 @@
             "size": 1909980
         }
     ],
+    "materials": [
+        {
+            "type": "shell",
+            "name": "Obermaterial",
+            "composition": {
+                "baumwolle": 3500,
+                "polyester": 6500
+            }
+        },
+        {
+            "type": "lining",
+            "name": "Futter 1",
+            "composition": {
+                "polyester": 10000
+            }
+        },
+        {
+            "name": "Füllung",
+            "composition": {
+                "polyester": 10000
+            }
+        }
+    ],
+
+
     "attributes": {
         "attributes_172": [
             1967
@@ -48,9 +73,6 @@
         ],
         "attributes_289": [
             4084
-        ],
-        "attributes_3": [
-            64
         ]
     },
     "retail_price": 3995,

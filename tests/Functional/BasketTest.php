@@ -71,9 +71,9 @@ class BasketTest extends AbstractAYTest
      */
     public function testAddEmptyItemSetToBasket()
     {
-        $basket = new Basket();        
+        $basket = new Basket();
         $set = new Basket\BasketSet('123', array('description' => 'test', 'image_url' => 'http://img-url'));
-        $basket->updateItemSet($set);        
+        $basket->updateItemSet($set);
     }
     
     public function testAddItemToBasketWithProductID()
@@ -118,6 +118,20 @@ class BasketTest extends AbstractAYTest
         $this->assertTrue($result->hasErrors());
     }
 
+    public function testAddItemSetToBasketWithNoBasketSetID()
+    {
+        $ay = $this->getAYWithResultFile('basket-set-with-failed-item.json');
+        $basket = new Basket();
+        
+        $set = new Basket\BasketSet(null, array('description' => 'test', 'image_url' => 'http://img-url'));
+        $item = new Basket\BasketSetItem(226651);
+        $set->addItem($item);
+        
+        $basket->updateItemSet($set);
+        
+        $ay->updateBasket('123456xyz', $basket);
+    }
+
     /**
      * @expectedException \AboutYou\SDK\Exception\ResultErrorException
      */
@@ -125,13 +139,13 @@ class BasketTest extends AbstractAYTest
     {
         $ay = $this->getAYWithResultFile('basket-set-with-int-id.json');
         $basket = new Basket();
-        
+
         $set = new Basket\BasketSet('WRONG_ID', array('description' => 'test', 'image_url' => 'http://img-url'));
         $item = new Basket\BasketSetItem(226651);
         $set->addItem($item);
-        
+
         $basket->updateItemSet($set);
-        
+
         $ay->updateBasket('123456xyz', $basket);
     }
 
@@ -148,7 +162,7 @@ class BasketTest extends AbstractAYTest
     {
         $ay = $this->getAYWithResultFile('basket-set-without-product.json');
         $basket = new Basket();
-        
+
         $set = new Basket\BasketSet('123', array('description' => 'test', 'image_url' => 'http://img-url'));
         $item = new Basket\BasketSetItem(12312121);
         $set->addItem($item);
@@ -191,34 +205,23 @@ class BasketTest extends AbstractAYTest
 
     public function testAddToBasket()
     {
-        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item1","variant_id":123,"app_id":null}]}}]';
-        $ay = $this->getMockedAYWithResultFile(array('generateBasketItemId'), 'result/basket1.json', $exceptedRequestBody);
-        $ay->expects($this->once())
-            ->method('generateBasketItemId')
-            ->withAnyParameters()
-            ->will($this->returnValue('item1'))
-        ;
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"variant_id":123,"app_id":null}]}}]';
+        $ay = $this->getAYWithResultFile('result/basket1.json', $exceptedRequestBody);
+        
         // add one item to basket
         $basket = $ay->addItemToBasket($this->sessionId, 123);
         $this->checkBasket($basket);
 
-        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item1","variant_id":123,"app_id":null}]}}]';
-        $ay = $this->getMockedAYWithResultFile(array('generateBasketItemId'), 'result/basket1.json', $exceptedRequestBody);
-        $ay->expects($this->once())
-            ->method('generateBasketItemId')
-            ->withAnyParameters()
-            ->will($this->returnValue('item1'))
-        ;
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"variant_id":123,"app_id":null}]}}]';
+        $ay = $this->getAYWithResultFile('result/basket1.json', $exceptedRequestBody);
+
         // add one item to basket
         $basket = $ay->addItemToBasket($this->sessionId, '123');
         $this->checkBasket($basket);
 
-        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item2","variant_id":123,"app_id":null}]}}]';
-        $ay = $this->getMockedAYWithResultFile(array('generateBasketItemId'), 'result/basket1.json', $exceptedRequestBody);
-        $ay->expects($this->once())
-            ->method('generateBasketItemId')
-            ->will($this->returnValue('item2'))
-        ;
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"variant_id":123,"app_id":null}]}}]';
+        $ay = $this->getAYWithResultFile('result/basket1.json', $exceptedRequestBody);
+
         // add more of one item to basket
         $basket = $ay->addItemToBasket($this->sessionId, 123);
         $this->checkBasket($basket);
@@ -270,7 +273,7 @@ class BasketTest extends AbstractAYTest
     
     public function testAddItemToBasket()
     {
-        $item = new Basket\BasketItem("123", 1234, [], 200);
+        $item = new Basket\BasketItem('123', 1234, [], 200);
         
         $this->assertEquals(200, $item->getAppId());
     }
@@ -308,6 +311,15 @@ class BasketTest extends AbstractAYTest
         // remove all of one item from basket
         $basket = $ay->removeItemsFromBasket($this->sessionId, array('item3', 'item4'));
         $this->checkBasket($basket);
+
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"clear":true}]}}]';
+        $ay = $this->getAYWithResultFile('result/basket1.json', $exceptedRequestBody);
+        // clear basket
+        $jsonObject = (object)["total_price"=>0,"total_net"=>0,"total_vat"=>0,"products"=>new \stdClass(),"order_lines"=>[]];
+        $basket = Basket::createFromJson($jsonObject, new \AboutYou\SDK\Factory\DefaultModelFactory(null, new \AboutYou\SDK\Model\FacetManager\DefaultFacetManager(), new \AboutYou\SDK\Model\CategoryManager\DefaultCategoryManager()));
+        $basket = $basket->deleteAllItems();
+        $this->checkBasket($basket);
+
     }
      
     public function testAddAdditionalDataToBasketItemWithDescription()
@@ -332,7 +344,7 @@ class BasketTest extends AbstractAYTest
      */    
     public function testAddEmptyAdditionalDataToBasketSet()
     {   
-        $basketItemSet = new Basket\BasketSet('123', array());        
+        $basketItemSet = new Basket\BasketSet('123', array());
     }  
     
     /**
@@ -340,7 +352,7 @@ class BasketTest extends AbstractAYTest
      */      
     public function testAddOnlyImageAdditionalDataToBasketSet()
     {  
-        $basketItemSet = new Basket\BasketSet('123', array('image_url' => 'www'));        
+        $basketItemSet = new Basket\BasketSet('123', array('image_url' => 'www'));
     }  
     
     /**
@@ -348,7 +360,7 @@ class BasketTest extends AbstractAYTest
      */      
     public function testAddOnlyDescAdditionalDataToBasketSet()
     {    
-        $basketItemSet = new Basket\BasketSet('123', array('description' => 'www'));  
+        $basketItemSet = new Basket\BasketSet('123', array('description' => 'www'));
         
     }   
     
@@ -387,19 +399,25 @@ class BasketTest extends AbstractAYTest
 
         $basket = Basket::createFromJson(json_decode('{"products":[], "order_line":[], "total_price":123, "total_net":12,"total_vat":34}'), $ay->getResultFactory());
         $basket->updateItem(new Basket\BasketItem('item1', 123));
-        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item1","variant_id":123,"app_id":null}]}}]';
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"variant_id":123,"app_id":null,"id":"item1"}]}}]';
+        $ay = $this->getAYWithResultFile('result/basket1.json', $exceptedRequestBody);
+        $ay->updateBasket($this->sessionId, $basket);
+
+        $basket = new Basket();
+        $basket->updateItem(new Basket\BasketItem(null, 123));
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"variant_id":123,"app_id":null}]}}]';
         $ay = $this->getAYWithResultFile('result/basket1.json', $exceptedRequestBody);
         $ay->updateBasket($this->sessionId, $basket);
 
         $basket = new Basket();
         $basket->updateItem(new Basket\BasketItem('item2', 123));
-        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item2","variant_id":123,"app_id":null}]}}]';
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"variant_id":123,"app_id":null,"id":"item2"}]}}]';
         $ay = $this->getAYWithResultFile('result/basket1.json', $exceptedRequestBody);
         $ay->updateBasket($this->sessionId, $basket);
 
         $basket = new Basket();
         $basket->updateItem(new Basket\BasketItem('item3', 123, array('description'=>'Wudnerschön')));
-        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item3","variant_id":123,"app_id":null,"additional_data":{"description":"Wudnersch\u00f6n"}}]}}]';
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"variant_id":123,"app_id":null,"id":"item3","additional_data":{"description":"Wudnersch\u00f6n"}}]}}]';
         $ay = $this->getAYWithResultFile('result/basket1.json', $exceptedRequestBody);
         $ay->updateBasket($this->sessionId, $basket);
 
@@ -407,13 +425,12 @@ class BasketTest extends AbstractAYTest
         $item = new Basket\BasketItem('item3', 123);
         $item->setAdditionData(array('description'=>'Wudnerschön'));
         $basket->updateItem($item);
-        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"id":"item3","variant_id":123,"app_id":null,"additional_data":{"description":"Wudnersch\u00f6n"}}]}}]';
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","order_lines":[{"variant_id":123,"app_id":null,"id":"item3","additional_data":{"description":"Wudnersch\u00f6n"}}]}}]';
         $ay = $this->getAYWithResultFile('result/basket1.json', $exceptedRequestBody);
         $ay->updateBasket($this->sessionId, $basket);
 
         $updatedItem4 = <<<EOS
         {
-            "id": "identifier4",
             "additional_data": {"description": "Wudnersch\u00f6n und so", "image_url": "http://google.de"},
             "set_items": [
                 {
@@ -428,7 +445,8 @@ class BasketTest extends AbstractAYTest
                         "internal_infos":["stuff"]
                     }
                 }
-            ]
+            ],
+            "id": "identifier4"
         }
 EOS;
         $updatedItem4 = json_encode(json_decode($updatedItem4)); // reformat
@@ -501,6 +519,6 @@ EOS;
         $products = $productResult->getProducts();
 
         
-        return $products[123];        
+        return $products[123];
     }
 }

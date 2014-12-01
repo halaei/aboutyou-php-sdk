@@ -87,6 +87,16 @@ class DefaultModelFactory implements ModelFactoryInterface
     {
         return Model\Autocomplete::createFromJson($jsonObject, $this);
     }
+    
+    /**
+     * {@inheritdoc}
+     *
+     * @return array
+     */
+    public function createSpellCorrection(array $jsonArray)
+    {
+        return $jsonArray;
+    }
 
     /**
      * {@inheritdoc}
@@ -183,6 +193,16 @@ class DefaultModelFactory implements ModelFactoryInterface
         $facets = $this->createFacetsList($jsonObject);
         $this->getFacetManager()->setFacets($facets);
     }
+    
+    /**
+     * {@inheritdoc}
+     *
+     * @return Model\Brand
+     */
+    public function createBrand(\stdClass $jsonObject)
+    {
+        return Model\Brand::createFromJson($jsonObject);
+    }
 
     /**
      * {@inheritdoc}
@@ -239,6 +259,54 @@ class DefaultModelFactory implements ModelFactoryInterface
     public function createImage(\stdClass $jsonObject)
     {
         return Model\Image::createFromJson($jsonObject);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return Model\Product
+     */
+    public function createCompositionList(\stdClass $jsonObject)
+    {
+        $compositions = array();
+
+        foreach ($jsonObject as $name => $percentage) {
+            $compositions[] = new Model\Composition($name, floatval($percentage)/100);
+        }
+
+        return $compositions;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return Model\Product
+     */
+    public function createMaterialList(array $jsonArray)
+    {
+        $materials = array();
+
+        foreach ($jsonArray as $jsonMaterial) {
+            $materials[] = $this->createMaterial($jsonMaterial);
+        }
+
+        return $materials;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return Model\Product
+     */
+    public function createMaterial(\stdClass $jsonObject)
+    {
+        $compositions = $this->createCompositionList($jsonObject->composition);
+
+        return new Model\Material(
+            $jsonObject->name,
+            $compositions,
+            isset($jsonObject->type) ? $jsonObject->type : null
+        );
     }
 
     /**

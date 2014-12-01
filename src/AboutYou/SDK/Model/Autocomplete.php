@@ -10,6 +10,10 @@ class Autocomplete
 {
     const NOT_REQUESTED = null;
 
+    const TYPE_PRODUCTS   = 'products';
+    const TYPE_CATEGORIES = 'categories';
+    const TYPE_BRANDS     = 'brands';
+
     /**
      * @var Product[]
      */
@@ -19,11 +23,17 @@ class Autocomplete
      * @var Category[]
      */
     private $categories = null;
+    
+    /**
+     * @var Brand[]
+     */
+    private $brands = null;
 
-    public function __construct(array $categories = null, array $products = null)
+    public function __construct(array $categories = null, array $products = null, array $brands = null)
     {
         $this->categories = $categories;
         $this->products   = $products;
+        $this->brands     = $brands;
     }
 
     /**
@@ -36,7 +46,8 @@ class Autocomplete
     {
         $autocomplete = new static(
             static::parseCategories($jsonObject, $factory),
-            static::parseProducts($jsonObject, $factory)
+            static::parseProducts($jsonObject, $factory),
+            static::parseBrands($jsonObject, $factory)
         );
 
         return $autocomplete;
@@ -60,6 +71,16 @@ class Autocomplete
     public function getProducts()
     {
         return $this->products;
+    }
+    
+    /**
+     * Get autocompleted brands.
+     *
+     * @return Brand[]
+     */
+    public function getBrands()
+    {
+        return $this->brands;
     }
 
     /**
@@ -113,5 +134,31 @@ class Autocomplete
         }
 
         return $products;
+    }
+    
+    /**
+     * parse autocompleted brands.
+     *
+     * @param \stdClass $jsonObject
+     * @param ModelFactoryInterface $factory
+     *
+     * @return Brand[]
+     */
+    protected static function parseBrands(\stdClass $jsonObject, ModelFactoryInterface $factory)
+    {
+        if (!property_exists($jsonObject, 'brands')) {
+            return self::NOT_REQUESTED;
+        }
+
+        if ($jsonObject->brands === null) {
+            return array();
+        }
+
+        $brands = array();
+        foreach ($jsonObject->brands as $brand) {
+            $brands[] = $factory->createBrand($brand);
+        }
+
+        return $brands;
     }
 }

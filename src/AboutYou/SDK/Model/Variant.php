@@ -25,7 +25,10 @@ class Variant
     
     /** @var Product */
     protected $product;
-    
+
+    /** @var Materials[]|null */
+    protected $materials;
+
     /**
      * @var Image
      */
@@ -51,7 +54,7 @@ class Variant
         $variant->product    = $product;
 
         return $variant;
-    }        
+    }
 
     /**
      * @return integer
@@ -413,7 +416,7 @@ class Variant
         return $facet->getValue();
     }
 
-   /**
+    /**
      * get the season code e.g. "HW 14 / hw14"
      *
      * @return FacetGroup|null
@@ -421,5 +424,33 @@ class Variant
     public function getSeasonCode()
     {
         return $this->getFacetGroup(Constants::FACET_SEASON_CODE);
+    }
+
+    /**
+     * returns an array of materials, each material has a name and optional a type and compositions
+     * The name is e.g. "Obermaterial", "Futter 1" or "Füllung"
+     * The type could be "shell" or "lining"
+     *
+     * The Materials are lazy parsed
+     *
+     * @return Material[]|null
+     */
+    public function getMaterials()
+    {
+        if ($this->materials === null && isset($this->jsonObject->materials)) {
+            $this->materials = $this->factory->createMaterialList($this->jsonObject->materials);
+        }
+
+        return $this->materials;
+    }
+
+    /**
+     * get the gender age e.g. "Unisex/unisex"
+     *
+     * @return FacetGroup|null
+     */
+    public function getGender()
+    {
+        return $this->getFacetGroup(Constants::FACET_GENDERAGE);
     }
 }

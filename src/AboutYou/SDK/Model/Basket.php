@@ -29,6 +29,9 @@ class Basket
 
     /** @var integer */
     protected $totalVat;
+    
+    /** @var boolean */
+    protected $clearOnUpdate = false;
 
     /**
      * Constructor.
@@ -269,21 +272,19 @@ class Basket
     /**
      * @return $this
      */
-    public function deleteAllItems()
+    public function deleteAllItems($delete = true)
     {
-        $items = $this->getItems();
-      
-        if (!empty($items)) {
-            $ids = array();
-
-            foreach ($items as $item) {                
-                $ids[] = $item->getId();
-            }  
-            
-            $this->deleteItems($ids);
-        }
+        $this->clearOnUpdate = $delete !== false || $delete !== 0;
 
         return $this;
+    }
+    
+    /**
+     * @return boolean
+     */
+    public function isClearedOnUpdate()
+    {
+        return $this->clearOnUpdate;
     }
 
     /**
@@ -293,18 +294,26 @@ class Basket
      */
     public function updateItem(BasketItem $basketItem)
     {
+        $itemId = $basketItem->getId();
         $item = array(
-            'id' => $basketItem->getId(),
             'variant_id' => $basketItem->getVariantId(),
             'app_id' => $basketItem->getAppId()
         );
+        if ($itemId) {
+            $item['id'] = $itemId;
+        }
+        
         $additionalData = $basketItem->getAdditionalData();
         if (!empty($additionalData)) {
             $this->checkAdditionData($additionalData);
             $item['additional_data'] = (array)$additionalData;
         }
 
-        $this->updatedItems[$basketItem->getId()] = $item;
+        if ($itemId) {
+            $this->updatedItems[$basketItem->getId()] = $item;
+        } else {
+            $this->updatedItems[] = $item;
+        }
 
         return $this;
     }
@@ -322,7 +331,7 @@ class Basket
             throw new \InvalidArgumentException('BasketSet needs at least one item');            
         }
 
-        $itemSet = array();
+        $setItems = array();
         foreach ($items as $subItem) {
             $item = array(
                 'variant_id' => $subItem->getVariantId(),
@@ -333,14 +342,20 @@ class Basket
                 $this->checkAdditionData($additionalData);
                 $item['additional_data'] = (array)$additionalData;
             }
-            $itemSet[] = $item;
+            $setItems[] = $item;
         }
 
-        $this->updatedItems[$basketSet->getId()] = array(
-            'id' => $basketSet->getId(),
+        $set = array(
             'additional_data' => (array)$basketSet->getAdditionalData(),
-            'set_items' => $itemSet,
+            'set_items' => $setItems,
         );
+        $setId = $basketSet->getId();
+        if ($setId) {
+            $set['id'] = $setId;
+            $this->updatedItems[$setId] = $set;
+        } else {
+            $this->updatedItems[] = $set;
+        }
 
         return $this;
 

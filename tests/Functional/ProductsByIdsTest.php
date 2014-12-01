@@ -6,6 +6,7 @@
 
 namespace AboutYou\SDK\Test\Functional;
 
+use AboutYou\SDK\Criteria\ProductFields;
 use AboutYou\SDK\Model;
 
 class ProductsByIdsTest extends AbstractAYTest
@@ -197,6 +198,15 @@ EOS;
         $defaultImage = $variant->getImage();
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Image', $defaultImage);
         $this->assertEquals('882ff9a8365b6e1b46773992b189e4dc', $defaultImage->getHash());
+    }
+
+    public function testQueryBuilder()
+    {
+        $productIds = array(456);
+
+        $ay = $this->getAYWithResultFile('result/products.json', '[{"products":{"ids":[456],"fields":["default_image"],"get_styles":false}}]');
+
+        $ay->fetchProductsByIds($productIds, array(ProductFields::DEFAULT_IMAGE), false);
     }
 
     private function checkProduct($product)
