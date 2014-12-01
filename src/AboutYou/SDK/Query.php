@@ -85,7 +85,7 @@ class Query extends QueryBuilder
         array $fields = array(),
         $loadStyles = true
     ) {
-        parent::fetchProductsByIds($ids, $fields);
+        parent::fetchProductsByIds($ids, $fields, $loadStyles);
 
         if (ProductFields::requiresCategories($fields)) {
             $this->requireCategoryTree();
@@ -186,7 +186,7 @@ class Query extends QueryBuilder
         $this->allQuery = $this->ghostQuery + $this->query;
 
         $queryString = $this->getQueryString();
-
+        
         $response = $this->client->request($queryString);
 
         $jsonResponse = json_decode($response->getBody(true));
@@ -221,7 +221,8 @@ class Query extends QueryBuilder
         'get_order'      => 'createOrder',
         'initiate_order' => 'initiateOrder',
         'child_apps'     => 'createChildApps',
-        'live_variant'   => 'createVariantsResult'
+        'live_variant'   => 'createVariantsResult',
+        'did_you_mean'   => 'createSpellCorrection'
     );
 
     protected function checkResponse($jsonResponse)

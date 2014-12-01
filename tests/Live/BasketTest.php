@@ -104,39 +104,92 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $this->assertCount(0, $basket->getProducts());
     }
 
-    public function testAddOneItemToBasket()
+    public function testAddItemToBasket()
     {
         $api = $this->getAY();
         
-        $item = new Basket\BasketItem('1234', 
-            $this->getVariantId(1), 
+        $item = new Basket\BasketItem(null,
+            $this->getVariantId(1)
+        );
+        
+        $basket = new Basket();
+        
+        $basket->deleteAllItems();
+        $basket->updateItem($item);
+        
+        $basket = $api->updateBasket($this->getSessionId(), $basket);
+        $items = $basket->getItems();
+        $item   = reset($items);
+
+        $this->assertInternalType('string', $item->getId());
+        $this->assertGreaterThan(10, strlen($item->getId()), 'The item id ' . $item->getId() . ' is to short');
+        $this->assertEquals(1, $basket->getTotalAmount());
+        $this->assertEquals(null, $item->getAppId());
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Basket\\BasketItem', $item);
+    }
+    
+    public function testAddItemSetToBasket()
+    {
+        $api = $this->getAY();
+
+        $set = new Basket\BasketSet(null, array(
+            'description' => 'test',
+            'image_url' => 'http://www.google.de'
+        ));
+        $set->addItem(new Basket\BasketSetItem($this->getVariantId(1)));
+
+        $basket = new Basket();
+
+        $basket->deleteAllItems();
+        $basket->updateItemSet($set);
+
+        $basket = $api->updateBasket($this->getSessionId(), $basket);
+        $items = $basket->getItems();
+        $item   = reset($items);
+
+        $this->assertInternalType('string', $item->getId());
+        $this->assertGreaterThan(10, strlen($item->getId()), 'The item id ' . $item->getId() . ' is to short');
+        $this->assertEquals(1, $basket->getTotalAmount());
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Basket\\BasketSet', $item);
+    }
+
+    public function testAddOneItemToBasket()
+    {
+        $api = $this->getAY();
+
+        $item = new Basket\BasketItem('1234',
+            $this->getVariantId(1),
             array(
                 'description' => 'test',
                 'image_url' => 'http://www.google.de',
                 'foo' => 'bar'
             )
         );
-        
+
         $basket = new Basket();
+
+        $basket->deleteAllItems();
+        $basket = $api->updateBasket($this->getSessionId(), $basket);
+
         $basket->updateItem($item);
-        
+
         $basket = $api->updateBasket($this->getSessionId(), $basket);
         $item   = $basket->getItem('1234');
 
         $this->assertEquals(1, $basket->getTotalAmount());
         $this->assertEquals(null, $item->getAppId());
-        $this->assertInstanceOf('\AboutYou\SDK\Model\Basket\BasketItem', $item);
-        
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Basket\\BasketItem', $item);
+
         $data = $item->getAdditionalData();
-        
+
         $this->assertEquals('test', $data['description']);
         $this->assertEquals('http://www.google.de', $data['image_url']);
-        $this->assertEquals('bar', $data['foo']);  
-        
+        $this->assertEquals('bar', $data['foo']);
+
         $basket->deleteAllItems();
         $api->updateBasket($this->getSessionId(), $basket);
     }
-    
+
     public function testAddOneItemToBasketWithAppId()
     {
         $api = $this->getAY();
@@ -159,7 +212,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
                 
         $this->assertEquals(1, $basket->getTotalAmount());
         $this->assertEquals(200, $item->getAppId());
-        $this->assertInstanceOf('\AboutYou\SDK\Model\Basket\BasketItem', $item);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Basket\\BasketItem', $item);
         
         $data = $item->getAdditionalData();
         
@@ -190,7 +243,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $set = $basket->getItem('1234');
                
         $this->assertEquals(1, $basket->getTotalAmount());
-        $this->assertInstanceOf('\AboutYou\SDK\Model\Basket\BasketSet', $set);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Basket\\BasketSet', $set);
         
         $items = $set->getItems();
         $this->assertCount(1, $items);
@@ -231,7 +284,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $set = $basket->getItem('set1');
 
         $this->assertEquals(1, $basket->getTotalAmount());
-        $this->assertInstanceOf('\AboutYou\SDK\Model\Basket\BasketSet', $set);
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Basket\\BasketSet', $set);
 
         $items = $set->getItems();
         $this->assertCount(2, $items);

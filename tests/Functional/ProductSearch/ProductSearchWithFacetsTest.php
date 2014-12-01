@@ -24,6 +24,21 @@ class ProductSearchWithFacetsTest extends AbstractAYTest
         $this->assertEquals(20042, $saleFacet->getProductCountNotInSale());
     }
 
+    public function testProductSearchWithSaleResultStrings()
+    {
+        $ay = $this->getAYWithResultFile(
+            'result-product-search-with-facets-sale-terms-as-strings.json'
+        );
+
+        $productSearchResult = $ay->fetchProductSearch($ay->getProductSearchCriteria('12345'));
+
+        $saleFacet = $productSearchResult->getSaleCounts();
+        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\ProductSearchResult\\SaleCounts', $saleFacet);
+        $this->assertEquals(25303, $saleFacet->getProductCountTotal());
+        $this->assertEquals(5261, $saleFacet->getProductCountInSale());
+        $this->assertEquals(20042, $saleFacet->getProductCountNotInSale());
+    }
+
     public function testProductSearchWithPriceRangeResult()
     {
         $ay = $this->getAYWithResultFile(

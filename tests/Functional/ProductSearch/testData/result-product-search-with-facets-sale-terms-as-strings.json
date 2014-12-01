@@ -88,11 +88,11 @@
                     "terms": [
                         {
                             "count": 20042,
-                            "term": 0
+                            "term": "0"
                         },
                         {
                             "count": 5261,
-                            "term": 1
+                            "term": "1"
                         }
                     ],
                     "other": 0,

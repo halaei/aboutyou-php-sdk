@@ -8,6 +8,7 @@ namespace AboutYou\SDK\Test\Unit;
 
 use AboutYou\SDK\Constants;
 use AboutYou\SDK\Criteria\ProductFields;
+use AboutYou\SDK\Model\Autocomplete;
 use AboutYou\SDK\QueryBuilder;
 
 class QueryBuilderTest extends \PHPUnit_Framework_TestCase
@@ -32,6 +33,17 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $query->getQueryString());
     }
 
+    public function testFetchSpellCorrection()
+    {
+        $this->queryBuilder = new QueryBuilder();
+        $query = $this->queryBuilder
+            ->fetchSpellCorrection('gelx')
+        ;
+        $expected = '[{"did_you_mean":{"searchword":"gelx"}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+    }        
+
+    
     public function testFetchCategoriesByIds()
     {
         $query = $this->queryBuilder
@@ -137,12 +149,24 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $expected = '[{"autocompletion":{"searchword":"term","limit":10}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
-        $query = $queryFactory()->fetchAutocomplete('term', null, array(Constants::TYPE_CATEGORIES));
+        $query = $queryFactory()->fetchAutocomplete('term', null, array(Autocomplete::TYPE_CATEGORIES));
         $expected = '[{"autocompletion":{"searchword":"term","types":["categories"]}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
-        $query = $queryFactory()->fetchAutocomplete('term', 15, array(Constants::TYPE_CATEGORIES, Constants::TYPE_PRODUCTS));
+        $query = $queryFactory()->fetchAutocomplete('term', null, array(Autocomplete::TYPE_PRODUCTS));
+        $expected = '[{"autocompletion":{"searchword":"term","types":["products"]}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+
+        $query = $queryFactory()->fetchAutocomplete('term', null, array(Autocomplete::TYPE_BRANDS));
+        $expected = '[{"autocompletion":{"searchword":"term","types":["brands"]}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+
+        $query = $queryFactory()->fetchAutocomplete('term', 15, array(Autocomplete::TYPE_CATEGORIES, Autocomplete::TYPE_PRODUCTS));
         $expected = '[{"autocompletion":{"searchword":"term","limit":15,"types":["categories","products"]}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+
+        $query = $queryFactory()->fetchAutocomplete('term', 15, array(Autocomplete::TYPE_CATEGORIES, Autocomplete::TYPE_PRODUCTS, Autocomplete::TYPE_BRANDS));
+        $expected = '[{"autocompletion":{"searchword":"term","limit":15,"types":["categories","products","brands"]}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
         $query = $queryFactory()->fetchAutocomplete('term', "12", array());

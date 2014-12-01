@@ -7,6 +7,7 @@ use AboutYou\SDK\Constants;
 use AboutYou\SDK\Criteria\ProductSearchCriteria;
 use AboutYou\SDK\Factory\DefaultModelFactory;
 use AboutYou\SDK\Factory\ModelFactoryInterface;
+use AboutYou\SDK\Model\Autocomplete;
 use AboutYou\SDK\Model\Basket;
 use AboutYou\SDK\Model\CategoriesResult;
 use AboutYou\SDK\Model\CategoryManager\CategoryManagerInterface;
@@ -293,8 +294,8 @@ class AY
         $searchword,
         $limit = 50,
         $types = array(
-            Constants::TYPE_PRODUCTS,
-            Constants::TYPE_CATEGORIES
+            Autocomplete::TYPE_PRODUCTS,
+            Autocomplete::TYPE_CATEGORIES
         )
     ) {
         $query = $this->getQuery()
@@ -302,6 +303,39 @@ class AY
         ;
 
         return $query->executeSingle();
+    }
+
+    /**
+     * Returns the result of an spell correction API request.
+     * Spell correction searches for products by
+     * a given prefix ($searchword) and filter by categories ($categoryFilter).
+     *
+     * @param string $searchword The search word to search for.
+     * @param integer[] $categoryIds Array of category Ids for filtering
+     *
+     * @return array
+     */
+
+    public function fetchSpellCorrection($searchword, $categoryIds = null)
+    {
+        if ($categoryIds !== null) {
+            // we allow to pass a single ID instead of an array
+            settype($categoryIds, 'array');
+
+            foreach ($categoryIds as $categoryId) {
+                if (!is_long($categoryId) && !ctype_digit($categoryId)) {
+                    throw new \InvalidArgumentException('A single category ID must be an integer or a numeric string');
+                } else if ($categoryId < 1) {
+                    throw new \InvalidArgumentException('A single category ID must be greater than 0');
+                }
+            }
+        }
+
+        $query = $this->getQuery()
+            ->fetchSpellCorrection($searchword, $categoryIds)
+        ;
+
+        return  $query->executeSingle();
     }
 
     /**
@@ -349,18 +383,11 @@ class AY
         $basket = new Basket();
 
         for ($i=0; $i < $amount; $i++) {
-            $item = new Basket\BasketItem($this->generateBasketItemId(), $variantId);
+            $item = new Basket\BasketItem(null, $variantId);
             $basket->updateItem($item);
         }
 
         return $this->updateBasket($sessionId, $basket);
-    }
-
-    public function generateBasketItemId()
-    {
-        $id = 'i_' . Uuid::uuid4();
-
-        return $id;
     }
 
     /**
@@ -481,13 +508,14 @@ class AY
      */
     public function fetchProductsByIds(
         array $ids,
-        array $fields = array()
+        array $fields = array(),
+        $loadStyles = true
     ) {
         // we allow to pass a single ID instead of an array
         settype($ids, 'array');
 
         $query = $this->getQuery()
-            ->fetchProductsByIds($ids, $fields)
+            ->fetchProductsByIds($ids, $fields, $loadStyles)
         ;
 
         $result = $query->executeSingle();
