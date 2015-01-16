@@ -28,6 +28,14 @@
                     "description_long": "description long 1",
                     "active": false,
                     "description_short": "description short 1",
+                    "bullet_points": [
+                        "Taillengürtel",
+                        "Aus Metall",
+                        "Abschlüsse in Lederoptik",
+                        "Für sieben Weiten gelocht",
+                        "Abgerundetes Gürtelende",
+                        "Dornschließe"
+                    ],
                     "id": 123
                 },
                 "456": {

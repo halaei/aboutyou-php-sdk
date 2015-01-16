@@ -14,6 +14,7 @@ class ProductFields
      */
     const IS_ACTIVE              = 'active';
     const BRAND                  = 'brand_id';
+    const BULLET_POINTS          = 'bullet_points';
     const DESCRIPTION_LONG       = 'description_long';
     const DESCRIPTION_SHORT      = 'description_short';
     const DEFAULT_VARIANT        = 'default_variant';

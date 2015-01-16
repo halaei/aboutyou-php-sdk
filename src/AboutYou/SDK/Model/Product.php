@@ -89,6 +89,9 @@ class Product
     /** @var FacetGroupSet */
     protected $facetGroups;
 
+    /** @var string[] */
+    protected $bulletPoints;
+
     /** @var  ModelFactoryInterface */
     private $factory;
 
@@ -124,6 +127,7 @@ class Product
         $product->isActive         = isset($jsonObject->active) ? $jsonObject->active : true;
         $product->brandId          = isset($jsonObject->brand_id) ? $jsonObject->brand_id : null;
         $product->merchantId       = isset($jsonObject->merchant_id) ? $jsonObject->merchant_id : null;
+        $product->bulletPoints     = isset($jsonObject->bullet_points) ? $jsonObject->bullet_points : null;
 
         $product->minPrice         = isset($jsonObject->min_price) ? $jsonObject->min_price : null;
         $product->maxPrice         = isset($jsonObject->max_price) ? $jsonObject->max_price : null;
@@ -604,6 +608,14 @@ class Product
     public function getBrand()
     {
         return $this->getFacetGroupSet()->getFacet(Constants::FACET_BRAND, $this->brandId);
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getBulletPoints()
+    {
+        return $this->bulletPoints;
     }
 
     /**

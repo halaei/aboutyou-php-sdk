@@ -91,6 +91,13 @@ class ProductsByIdsTest extends AbstractAYTest
         $variants = $p123->getVariants();
         $this->assertCount(0, $variants);
 
+        $bulletPoints = $p123->getBulletPoints();
+        $this->assertInternalType('array', $bulletPoints);
+        $this->assertCount(6, $bulletPoints);
+        foreach ($bulletPoints as $bulletPoint) {
+            $this->assertInternalType('string', $bulletPoint);
+        }
+
         $p456 = $products[456];
         $this->checkProduct($p456);
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Image', $p456->getDefaultImage());

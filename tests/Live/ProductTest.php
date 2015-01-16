@@ -46,6 +46,7 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $product = $this->getProduct(1, array(
             ProductFields::ATTRIBUTES_MERGED,
             ProductFields::BRAND,
+            ProductFields::BULLET_POINTS,
             ProductFields::CATEGORIES,
             ProductFields::DEFAULT_IMAGE,
             ProductFields::DEFAULT_VARIANT,
@@ -66,6 +67,11 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $this->assertInternalType('int', $product->getMaxSavingsPrice());
         $this->assertInternalType('float', $product->getMaxSavingsPercentage());
         $this->assertInternalType('int', $product->getMerchantId());
+        $bulletPoints = $product->getBulletPoints();
+        $this->assertInternalType('array', $bulletPoints);
+        foreach ($bulletPoints as $bulletPoint) {
+            $this->assertInternalType('string', $bulletPoint);
+        }
 
         $variants = $product->getInactiveVariants();
         if ($variants !== null) {
