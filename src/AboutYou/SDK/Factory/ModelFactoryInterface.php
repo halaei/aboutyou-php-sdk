@@ -113,6 +113,13 @@ interface ModelFactoryInterface extends ResultFactoryInterface
     /**
      * @param \stdClass $jsonObject
      *
+     * @return Model\ProductSearchResult\FacetCounts[]
+     */
+    public function createProductFacets(\stdClass $jsonObject);
+
+    /**
+     * @param \stdClass $jsonObject
+     *
      * @return Model\ProductSearchResult\SaleCounts
      */
     public function createSaleFacet(\stdClass $jsonObject);

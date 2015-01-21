@@ -13,11 +13,13 @@ use AboutYou\SDK\Model\Product;
 
 class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterface
 {
-    const SORT_TYPE_RELEVANCE   = 'relevance';
-    const SORT_TYPE_UPDATED     = 'updated_date';
+    const SORT_TYPE_COUNT       = 'count';
     const SORT_TYPE_CREATED     = 'created_date';
+    const SORT_TYPE_DEFAULT     = null;
     const SORT_TYPE_MOST_VIEWED = 'most_viewed';
     const SORT_TYPE_PRICE       = 'price';
+    const SORT_TYPE_RELEVANCE   = 'relevance';
+    const SORT_TYPE_UPDATED     = 'updated_date';
 
     const SORT_ASC  = 'asc';
     const SORT_DESC = 'desc';
@@ -25,11 +27,14 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     const FACETS_ALL = '_all';
     const FACETS_UNLIMITED = -1;
 
-    const FILTER_SALE          = 'sale';
-    const FILTER_CATEGORY_IDS  = 'categories';
-    const FILTER_PRICE         = 'prices';
-    const FILTER_SEARCHWORD    = 'searchword';
-    const FILTER_ATTRIBUTES    = 'facets';
+    const FILTER_CATEGORY_IDS       = 'categories';
+    const FILTER_PRICE              = 'prices';
+    const FILTER_PRODUCT_ATTRIBUTES = 'product_facets';
+    const FILTER_SALE               = 'sale';
+    const FILTER_SEARCHWORD         = 'searchword';
+    const FILTER_VARIANT_ATTRIBUTES = 'facets';
+    /** @deprecated */
+    const FILTER_ATTRIBUTES         = 'facets';
 
     /** @var array */
     protected $filter = array();
@@ -166,8 +171,8 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      */
     public function filterByFacetIds(array $attributes, $append = false)
     {
-        if ($append && isset($this->filter[self::FILTER_ATTRIBUTES])) {
-            $merged = $this->filter[self::FILTER_ATTRIBUTES];
+        if ($append && isset($this->filter[self::FILTER_VARIANT_ATTRIBUTES])) {
+            $merged = $this->filter[self::FILTER_VARIANT_ATTRIBUTES];
             foreach ($attributes as $groupId => $facetIds) {
                 if (isset($merged[$groupId])) {
                     $merged[$groupId] = array_unique(array_merge($merged[$groupId], $facetIds));
@@ -178,7 +183,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
             $attributes = $merged;
         }
 
-        return $this->filterBy(self::FILTER_ATTRIBUTES, $attributes);
+        return $this->filterBy(self::FILTER_VARIANT_ATTRIBUTES, $attributes);
     }
 
     /**
@@ -187,7 +192,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      */
     public function getFacetFilter()
     {
-        return $this->getFilter(self::FILTER_ATTRIBUTES);
+        return $this->getFilter(self::FILTER_VARIANT_ATTRIBUTES);
     }
 
     /**
@@ -210,6 +215,39 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     public function filterByFacetGroupSet(FacetGroupSet $facetGroupSet, $append = false)
     {
         return $this->filterByFacetIds($facetGroupSet->getIds(), $append);
+    }
+
+    /**
+     * @param array $attributes  array of array with group id and attribute ids
+     *   for example [0 => [264]]: search for products with the brand "TOM TAILER"
+     * @param boolean $append, if true the category ids will added to current filter
+     *
+     * @return ProductSearchFilter
+     */
+    public function filterByProductFacetIds(array $attributes, $append = false)
+    {
+        if ($append && isset($this->filter[self::FILTER_PRODUCT_ATTRIBUTES])) {
+            $merged = $this->filter[self::FILTER_PRODUCT_ATTRIBUTES];
+            foreach ($attributes as $groupId => $facetIds) {
+                if (isset($merged[$groupId])) {
+                    $merged[$groupId] = array_unique(array_merge($merged[$groupId], $facetIds));
+                } else {
+                    $merged[$groupId] = $facetIds;
+                }
+            }
+            $attributes = $merged;
+        }
+
+        return $this->filterBy(self::FILTER_PRODUCT_ATTRIBUTES, $attributes);
+    }
+
+    /**
+     * @return array|null
+     * @see filterByFacetIds()
+     */
+    public function getProductFacetFilter()
+    {
+        return $this->getFilter(self::FILTER_PRODUCT_ATTRIBUTES);
     }
 
     /**
@@ -360,6 +398,41 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         return $this;
     }
 
+    /**
+     * @param integer|string $groupId
+     * @param integer $limit           between 0 and 10000, 0 is to get all
+     * @param null $sortBy             only SORT_TYPE_COUNT and SORT_TYPE_DEFAULT is currently supported
+     * @param string $sortDirection    SORT_ASC or SORT_DESC, SORT_ASC is default
+     *
+     * @return $this
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function selectProductFacetsByGroupId($groupId, $limit = 0, $sortBy = self::SORT_TYPE_DEFAULT, $sortDirection = self::SORT_ASC)
+    {
+        $this->checkFacetLimit($limit);
+        if (!is_long($groupId) && !ctype_digit($groupId)) {
+            throw new \InvalidArgumentException();
+        }
+
+        if (!isset($this->result['product_facets'])) {
+            $this->result['product_facets'] = new \StdClass;
+        }
+
+        if (!isset($this->result['product_facets']->{$groupId})) {
+            $attributes = array('size' => (int)$limit, 'sort' => new \stdClass);
+            if ($sortBy !== self::SORT_TYPE_DEFAULT) {
+                $attributes['sort']->{'by'} = $sortBy;
+            }
+            if ($sortDirection !== self::SORT_ASC) {
+                $attributes['sort']->{'direction'} = $sortDirection;
+            }
+            $this->result['product_facets']->{$groupId} = $attributes;
+        }
+
+        return $this;
+    }
+
     protected function checkFacetLimit($limit)
     {
         if (!is_long($limit)) {
@@ -483,8 +556,11 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         }
         if ($this->filter) {
             $filter = $this->filter;
-            if (isset($filter[self::FILTER_ATTRIBUTES])) {
-                $filter[self::FILTER_ATTRIBUTES] = (object)$filter[self::FILTER_ATTRIBUTES];
+            if (isset($filter[self::FILTER_VARIANT_ATTRIBUTES])) {
+                $filter[self::FILTER_VARIANT_ATTRIBUTES] = (object)$filter[self::FILTER_VARIANT_ATTRIBUTES];
+            }
+            if (isset($filter[self::FILTER_PRODUCT_ATTRIBUTES])) {
+                $filter[self::FILTER_PRODUCT_ATTRIBUTES] = (object)$filter[self::FILTER_PRODUCT_ATTRIBUTES];
             }
             $params['filter'] = $filter;
         }

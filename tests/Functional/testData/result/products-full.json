@@ -24,6 +24,18 @@
                     "attributes_merged": {
                         "attributes_0": 269
                     },
+                    "product_attributes": {
+                        "443": [
+                            {
+                                "name": "Trendsetter",
+                                "value": "true",
+                                "group_name": "trendsetter",
+                                "position": 0,
+                                "group_id": 443,
+                                "id": 18405
+                            }
+                        ]
+                    },
                     "brand_id": 269,
                     "description_long": "description long 1",
                     "active": false,

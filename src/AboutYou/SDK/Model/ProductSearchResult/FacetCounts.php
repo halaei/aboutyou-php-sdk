@@ -23,7 +23,11 @@ class FacetCounts extends TermsCounts
      */
     public static function createFromJson($groupId, \stdClass $jsonObject, $facetCounts)
     {
-        $self = new static($jsonObject->total, $jsonObject->other, $jsonObject->missing);
+        $self = new static(
+            isset($jsonObject->total) ? $jsonObject->total : 0,
+            isset($jsonObject->other) ? $jsonObject->other : 0,
+            isset($jsonObject->missing) ? $jsonObject->missing : 0
+        );
         $self->groupId = $groupId;
 
         $self->facetCounts = $facetCounts;

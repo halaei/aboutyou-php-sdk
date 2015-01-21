@@ -6,6 +6,7 @@
 
 namespace AboutYou\SDK\Test\Unit\AboutYou\Criteria;
 
+use AboutYou\SDK\Constants;
 use AboutYou\SDK\Criteria\ProductFields;
 use AboutYou\SDK\Criteria\ProductSearchCriteria;
 use AboutYou\SDK\Model\FacetGroup;
@@ -69,6 +70,19 @@ class ProductSearchCriteriaTest extends \AboutYou\SDK\Test\AYTest
             ->selectFacetsByFacetGroup(new FacetGroup('0', 'brand'), 4)
             ->selectFacetsByGroupId(206, 5);
         $this->assertEquals('{"session_id":"my","result":{"facets":{"0":{"limit":4},"206":{"limit":5}}}}', json_encode($criteria->toArray()));
+
+        $criteria = $this->getCriteria()
+            ->selectProductFacetsByGroupId(443);
+        $this->assertEquals('{"session_id":"my","result":{"product_facets":{"443":{"size":0,"sort":{}}}}}', json_encode($criteria->toArray()));
+        $criteria = $this->getCriteria()
+            ->selectProductFacetsByGroupId(443, 10);
+        $this->assertEquals('{"session_id":"my","result":{"product_facets":{"443":{"size":10,"sort":{}}}}}', json_encode($criteria->toArray()));
+        $criteria = $this->getCriteria()
+            ->selectProductFacetsByGroupId(443, 10, ProductSearchCriteria::SORT_TYPE_COUNT);
+        $this->assertEquals('{"session_id":"my","result":{"product_facets":{"443":{"size":10,"sort":{"by":"count"}}}}}', json_encode($criteria->toArray()));
+        $criteria = $this->getCriteria()
+            ->selectProductFacetsByGroupId(443, 10, ProductSearchCriteria::SORT_TYPE_DEFAULT, ProductSearchCriteria::SORT_DESC);
+        $this->assertEquals('{"session_id":"my","result":{"product_facets":{"443":{"size":10,"sort":{"direction":"desc"}}}}}', json_encode($criteria->toArray()));
 
         $criteria = $this->getCriteria()
             ->selectProductFields(array(ProductFields::IS_ACTIVE));
@@ -146,7 +160,7 @@ class ProductSearchCriteriaTest extends \AboutYou\SDK\Test\AYTest
         $this->assertEquals(array('session_id' => '12345', 'filter' => array('searchword' => 'word', 'sale' => null)), $criteria->toArray());
     }
 
-    public function testAddAttributes()
+    public function testFilterByVarientFacets()
     {
         $criteria = ProductSearchCriteria::create('12345')
             ->filterByFacetIds(array(0 => array(264)));
@@ -179,5 +193,21 @@ class ProductSearchCriteriaTest extends \AboutYou\SDK\Test\AYTest
 
         $criteria->filterByFacetIds(array(2 => array(456)), true);
         $this->assertEquals('{"session_id":"12345","filter":{"facets":{"0":[264,123],"2":[456]}}}', json_encode($criteria->toArray()));
+    }
+
+    public function testFilterByProductFacets()
+    {
+        $criteria = ProductSearchCriteria::create('12345')
+            ->filterByProductFacetIds(array(0 => array(264)));
+        $this->assertEquals('{"session_id":"12345","filter":{"product_facets":{"0":[264]}}}', json_encode($criteria->toArray()));
+        $criteria->filterByProductFacetIds(array(443 => array(18405)));
+        $this->assertEquals('{"session_id":"12345","filter":{"product_facets":{"443":[18405]}}}', json_encode($criteria->toArray()));
+        $criteria->filterByProductFacetIds(array(443 => array(18406)), true);
+        $this->assertEquals('{"session_id":"12345","filter":{"product_facets":{"443":[18405,18406]}}}', json_encode($criteria->toArray()));
+        $criteria->filterByProductFacetIds(array(0 => array(264)), true);
+        $this->assertEquals('{"session_id":"12345","filter":{"product_facets":{"443":[18405,18406],"0":[264]}}}', json_encode($criteria->toArray()));
+        $criteria->filterByProductFacetIds(array(0 => array(789,123)), true);
+        $criteria->filterByProductFacetIds(array(0 => array(789)), true);
+        $this->assertEquals('{"session_id":"12345","filter":{"product_facets":{"443":[18405,18406],"0":[264,789,123]}}}', json_encode($criteria->toArray()));
     }
 }
