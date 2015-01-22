@@ -32,6 +32,9 @@ class ProductSearchResult
     /** @var FacetCounts[] */
     protected $facets;
 
+    /** @var FacetCounts[] */
+    protected $productFacets;
+
     /** @var Category[] */
     protected $categories = array();
 
@@ -99,6 +102,10 @@ class ProductSearchResult
             $this->saleCounts = $factory->createSaleFacet($jsonObject->sale);
             unset($jsonObject->sale);
         }
+        if (isset($jsonObject->product_facets)) {
+            $this->productFacets = $factory->createProductFacets($jsonObject->product_facets);
+            unset($jsonObject->product_facets);
+        }
 
         $this->facets = $factory->createFacetsCounts($jsonObject);
         unset($jsonObject->facets);
@@ -127,6 +134,14 @@ class ProductSearchResult
     public function getFacets()
     {
         return $this->facets;
+    }
+
+    /**
+     * @experimantal the returned DataStructure could be changed in the future
+     */
+    public function getProductFacets()
+    {
+        return $this->productFacets;
     }
 
     /**

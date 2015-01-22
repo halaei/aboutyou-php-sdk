@@ -87,9 +87,24 @@ class ProductsByIdsTest extends AbstractAYTest
         $this->assertEquals(19084, $c123Ids[2][0]);
 
         $this->assertNull($p123->getDefaultVariant());
+        $attributes = $p123->getAttributes();
+        $this->assertInternalType('array', $attributes);
+        $this->arrayHasKey('443', $attributes);
+        $this->assertInternalType('array', $attributes['443']);
+        $this->assertCount(1, $attributes['443']);
+        foreach ($attributes['443'] as $attribute) {
+            $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $attribute);
+        }
 
         $variants = $p123->getVariants();
         $this->assertCount(0, $variants);
+
+        $bulletPoints = $p123->getBulletPoints();
+        $this->assertInternalType('array', $bulletPoints);
+        $this->assertCount(6, $bulletPoints);
+        foreach ($bulletPoints as $bulletPoint) {
+            $this->assertInternalType('string', $bulletPoint);
+        }
 
         $p456 = $products[456];
         $this->checkProduct($p456);
@@ -98,6 +113,7 @@ class ProductsByIdsTest extends AbstractAYTest
         $this->assertTrue($p456->isSale());
         $this->assertEquals(3980, $p456->getMinPrice());
         $this->assertEquals(3990, $p456->getMaxPrice());
+        $this->assertNull($p456->getAttributes());
 
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Variant', $p456->getDefaultVariant());
 

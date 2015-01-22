@@ -89,6 +89,12 @@ class Product
     /** @var FacetGroupSet */
     protected $facetGroups;
 
+    /** @var string[] */
+    protected $bulletPoints;
+
+    /** @var Factes[][] */
+    protected $productAttributes;
+
     /** @var  ModelFactoryInterface */
     private $factory;
 
@@ -124,6 +130,7 @@ class Product
         $product->isActive         = isset($jsonObject->active) ? $jsonObject->active : true;
         $product->brandId          = isset($jsonObject->brand_id) ? $jsonObject->brand_id : null;
         $product->merchantId       = isset($jsonObject->merchant_id) ? $jsonObject->merchant_id : null;
+        $product->bulletPoints     = isset($jsonObject->bullet_points) ? $jsonObject->bullet_points : null;
 
         $product->minPrice         = isset($jsonObject->min_price) ? $jsonObject->min_price : null;
         $product->maxPrice         = isset($jsonObject->max_price) ? $jsonObject->max_price : null;
@@ -140,7 +147,19 @@ class Product
         $product->categoryIdPaths  = isset($jsonObject->$key) ? $jsonObject->$key : array();
 
         $product->facetIds     = self::parseFacetIds($jsonObject);
-        
+        if (isset($jsonObject->product_attributes)) {
+            $product->productAttributes = array();
+            foreach ($jsonObject->product_attributes as $groupId => $jsonAttributes) {
+                $attributes = array();
+                $items = isset($jsonAttributes->items) ? $jsonAttributes->items : $jsonAttributes;
+                foreach ($items as $jsonAttribute) {
+                    $attribute = $factory->createInlineFacet($jsonAttribute);
+                    $attributes[$attribute->getId()] = $attribute;
+                }
+                $product->productAttributes[$groupId] = $attributes;
+            }
+        }
+
         return $product;
     }
 
@@ -353,6 +372,14 @@ class Product
     public function getFacetIds()
     {
         return $this->facetIds;
+    }
+
+    /**
+     * @return Factes[][]
+     */
+    public function getAttributes()
+    {
+        return $this->productAttributes;
     }
 
     /**
@@ -604,6 +631,14 @@ class Product
     public function getBrand()
     {
         return $this->getFacetGroupSet()->getFacet(Constants::FACET_BRAND, $this->brandId);
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getBulletPoints()
+    {
+        return $this->bulletPoints;
     }
 
     /**

@@ -82,6 +82,20 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $expected = '[{"products":{"ids":[789,456],"fields":["description_short"]}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
+        $this->queryBuilder = new QueryBuilder();
+        $query = $this->queryBuilder
+            ->fetchProductsByIds(array(4 => 789, 2 => 456), array(ProductFields::BULLET_POINTS))
+        ;
+        $expected = '[{"products":{"ids":[789,456],"fields":["bullet_points"]}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+
+        $this->queryBuilder = new QueryBuilder();
+        $query = $this->queryBuilder
+            ->fetchProductsByIds(array(4 => 789, 2 => 456), array(ProductFields::PRODUCT_ATTRIBUTES))
+        ;
+        $expected = '[{"products":{"ids":[789,456],"fields":["product_attributes"]}}]';
+        $this->assertEquals($expected, $query->getQueryString());
+
         // Test that attributes_merged were added, if facets are required
         $this->queryBuilder = new QueryBuilder();
         $query = $this->queryBuilder

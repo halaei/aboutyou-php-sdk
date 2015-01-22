@@ -48,6 +48,18 @@ class Facet implements FacetUniqueKeyInterface, FacetGetGroupInterface
         );
     }
 
+    public static function createFromFacetsJson(\stdClass $jsonObject)
+    {
+        return new static(
+            $jsonObject->id,
+            $jsonObject->name,
+            isset($jsonObject->value)      ? $jsonObject->value : null,
+            isset($jsonObject->group_id)   ? $jsonObject->group_id : null,
+            isset($jsonObject->group_name) ? $jsonObject->group_name : null,
+            isset($jsonObject->options)    ? $jsonObject->options : null
+        );
+    }
+
     /**
      * @param integer $id
      * @param string  $name
