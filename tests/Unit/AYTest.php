@@ -65,7 +65,7 @@ class AYTest extends \PHPUnit_Framework_TestCase
          * urls as constant, point to refactor but actually needs a test
          */
         $this->assertEquals($ay::IMAGE_URL_STAGE, $ay->getBaseImageUrl());
-        $this->assertEquals('//devcenter-staging-www1.pub.collins.kg:81/appjs/123.js', $ay->getJavaScriptURL());
+        $this->assertEquals('//devcenter-staging-www1.pub.collins.kg/appjs/123.js', $ay->getJavaScriptURL());
         
         $ayLive = new \AY(
             $appId,

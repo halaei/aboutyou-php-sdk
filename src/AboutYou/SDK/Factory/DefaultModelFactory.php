@@ -217,6 +217,16 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      *
+     * @return Model\Facet
+     */
+    public function createInlineFacet(\stdClass $jsonObject)
+    {
+        return Model\Facet::createFromFacetsJson($jsonObject);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @return Model\Facet[]
      */
     public function createFacetList(array $jsonArray)
@@ -500,6 +510,29 @@ class DefaultModelFactory implements ModelFactoryInterface
         return $facetsCounts;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function createProductFacets(\stdClass $jsonObject)
+    {
+        $facetsCounts = array();
+
+        foreach ($jsonObject as $groupId => $jsonResultFacet) {
+            if (!ctype_digit($groupId)) {
+                continue;
+            }
+            $facetCounts = $this->getCountedFacets($jsonResultFacet->items);
+
+            $facetsCounts[$groupId] = Model\ProductSearchResult\FacetCounts::createFromJson(
+                $groupId,
+                $jsonResultFacet,
+                $facetCounts
+            );
+        }
+
+        return $facetsCounts;
+    }
+
     protected function getTermFacets($groupId, array $jsonTerms)
     {
         $facetManager = $this->facetManager;
@@ -512,6 +545,19 @@ class DefaultModelFactory implements ModelFactoryInterface
                 continue;
             } // TODO: Handle error, write test
             $count = $jsonTerm->count;
+            $facetCounts[] = new Model\ProductSearchResult\FacetCount($facet, $count);
+        }
+
+        return $facetCounts;
+    }
+
+    protected function getCountedFacets(array $jsonCountedFacets)
+    {
+        $facetCounts = array();
+        foreach ($jsonCountedFacets as $jsonCountedFacet) {
+            $facet = $this->createInlineFacet($jsonCountedFacet);
+
+            $count = isset($jsonCountedFacets->count) ? $jsonCountedFacets->count : 0;
             $facetCounts[] = new Model\ProductSearchResult\FacetCount($facet, $count);
         }
 

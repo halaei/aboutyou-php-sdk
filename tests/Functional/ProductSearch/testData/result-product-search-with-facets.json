@@ -24,6 +24,26 @@
                     "other": 20733,
                     "missing": 0
                 },
+                "product_facets": {
+                    "443": {
+                        "items": [
+                            {
+                                "count": 123,
+                                "position": 0,
+                                "name": "Kein Trendsetter",
+                                "value": "false",
+                                "id": 18406
+                            },
+                            {
+                                "position": 0,
+                                "name": "Trendsetter",
+                                "value": "true",
+                                "id": 18405
+                            }
+                        ],
+                        "name": "trendsetter"
+                    }
+                },
                 "prices": {
                     "ranges": [
                         {

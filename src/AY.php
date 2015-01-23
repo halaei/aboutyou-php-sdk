@@ -803,7 +803,7 @@ class AY
     public function getJavaScriptURL()
     {
         if ($this->environment === Constants::API_ENVIRONMENT_STAGE) {
-            $url = '//devcenter-staging-www1.pub.collins.kg:81/appjs/'.$this->appId.'.js';
+            $url = '//devcenter-staging-www1.pub.collins.kg/appjs/'.$this->appId.'.js';
         } else {
             $url = '//developer.aboutyou.de/appjs/'.$this->appId.'.js';
         }

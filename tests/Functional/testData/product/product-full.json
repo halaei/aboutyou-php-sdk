@@ -33,6 +33,18 @@
                         ]
                     },
                     "brand_id": 264,
+                    "product_attributes": {
+                        "443": [
+                            {
+                                "name": "Trendsetter",
+                                "value": "true",
+                                "group_name": "trendsetter",
+                                "position": 0,
+                                "group_id": 443,
+                                "id": 18405
+                            }
+                        ]
+                    },
                     "default_variant": {
                         "ean": "4054618356895",
                         "default": false,
