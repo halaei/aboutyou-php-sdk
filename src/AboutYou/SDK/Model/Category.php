@@ -1,6 +1,7 @@
 <?php
 /**
  * @author nils.droege@aboutyou.de
+ * @author christian.kilb@project-collins.com
  * (c) ABOUT YOU GmbH
  */
 
@@ -28,15 +29,15 @@ class Category
     /** @var Category */
     protected $parentId;
 
-    /** @var CategoryManagerInterface */
-    protected $categoryManager;
 
     /** @var integer */
     protected $productCount;
 
-    protected function __construct()
-    {
-    }
+    /** @var CategoryManagerInterface[] */
+    protected static $categoryManagers;
+
+    /** @var  string */
+    protected $categoryManagerClass;
 
     /**
      * @param object        $jsonObject  json as object tree
@@ -48,12 +49,16 @@ class Category
     {
         $category = new static();
 
-        $category->categoryManager   = $categoryManager;
         $category->parentId = $jsonObject->parent;
         $category->id       = $jsonObject->id;
         $category->name     = $jsonObject->name;
         $category->isActive = $jsonObject->active;
         $category->position = $jsonObject->position;
+
+        // Don't store categoryManager as attribute of the instance
+        // because it would bloat the cache when the categories
+        // get saved serialized
+        $category->categoryManagerClass = get_class($categoryManager);
 
         return $category;
     }
@@ -133,7 +138,7 @@ class Category
             return null;
         }
 
-        return $this->categoryManager->getCategory($this->getParentId());
+        return $this->getCategoryManager()->getCategory($this->getParentId());
     }
 
     /**
@@ -143,7 +148,7 @@ class Category
      */
     public function getSubCategories($activeOnly = self::ACTIVE_ONLY)
     {
-        $subCategories = $this->categoryManager->getSubCategories($this->id);
+        $subCategories = $this->getCategoryManager()->getSubCategories($this->id);
 
         if ($activeOnly === self::ALL) {
             return $subCategories;
@@ -163,5 +168,20 @@ class Category
         $breadcrumb[] = $this;
 
         return $breadcrumb;
+    }
+
+    /**
+     * @return CategoryManagerInterface
+     */
+    public function getCategoryManager()
+    {
+        $class = $this->categoryManagerClass;
+        $categoryManager = self::$categoryManagers[$class];
+
+        if (!$categoryManager) {
+            self::$categoryManagers[$this->categoryManagerClass] = new $class;
+        }
+
+        return  self::$categoryManagers[$class];
     }
 }
