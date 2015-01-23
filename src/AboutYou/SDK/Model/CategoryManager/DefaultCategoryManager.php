@@ -40,14 +40,21 @@ class DefaultCategoryManager implements CategoryManagerInterface
     public function loadCachedCategories()
     {
         if ($this->cache) {
-            $this->categories = $this->cache->fetch($this->cacheKey) ?: null;
+            $result = $this->cache->fetch($this->cacheKey);
+            if (isset($result['categories']) && isset($result['parentChildIds'])) {
+                $this->categories = $result['categories'];
+                $this->parentChildIds = $result['parentChildIds'];
+            }
         }
     }
 
     public function cacheCategories()
     {
         if ($this->cache) {
-            $this->cache->save($this->cacheKey, $this->categories, self::DEFAULT_CACHE_DURATION);
+            $this->cache->save($this->cacheKey, [
+                'categories' => $this->categories,
+                'parentChildIds' => $this->parentChildIds
+            ], self::DEFAULT_CACHE_DURATION);
         }
     }
 
