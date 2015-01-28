@@ -155,15 +155,18 @@ class VariantTest extends AbstractModelTest
         $variant = Variant::createFromJson($jsonObject, $this->getModelFactory(), $this->getProduct());
         $materials = $variant->getMaterials();
         $this->assertInternalType('array', $materials);
-        $this->assertCount(3, $materials);
-        foreach ($materials as $material) {
+        $this->assertCount(4, $materials);
+
+        foreach ($materials as $index => $material) {
             $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Material', $material);
-            $this->assertInternalType('string', $material->getName());
+            if ($index === 3) {
+                $this->assertNull($material->getName());
+            } else {
+                $this->assertInternalType('string', $material->getName());
+            }
             $compositions = $material->getCompositions();
             $this->assertInternalType('array', $compositions);
-            foreach ($compositions as $composition) {
-                $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Composition', $composition);
-            }
+            $this->assertContainsOnlyInstancesOf('\\AboutYou\\SDK\\Model\\Composition', $compositions);
         }
 
         $this->assertEquals('Obermaterial', $materials[0]->getName());
