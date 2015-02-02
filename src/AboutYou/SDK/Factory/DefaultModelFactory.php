@@ -313,7 +313,7 @@ class DefaultModelFactory implements ModelFactoryInterface
         $compositions = $this->createCompositionList($jsonObject->composition);
 
         return new Model\Material(
-            $jsonObject->name,
+            isset($jsonObject->name) ? $jsonObject->name : null,
             $compositions,
             isset($jsonObject->type) ? $jsonObject->type : null
         );

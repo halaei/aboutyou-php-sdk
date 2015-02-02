@@ -26,12 +26,12 @@ class DefaultCategoryManager implements CategoryManagerInterface
     private $cacheKey;
 
     /**
-     * @param string $appId  This must set, when you use more then one instances with different apps
+     * @param string $appId This must set, when you use more then one instances with different apps
      * @param CacheProvider $cache
      */
     public function __construct(CacheProvider $cache = null, $appId = '')
     {
-        $this->cache    = $cache;
+        $this->cache = $cache;
         $this->cacheKey = 'AY:SDK:' . $appId . ':categories';
 
         $this->loadCachedCategories();
@@ -74,11 +74,15 @@ class DefaultCategoryManager implements CategoryManagerInterface
     public function parseJson($jsonObject, ModelFactoryInterface $factory)
     {
         $this->categories = array();
-        // this hack converts the array keys to integers, otherwise $this->parentChildIds[$id] fails
-        $this->parentChildIds = json_decode(json_encode($jsonObject->parent_child), true);
+        $this->parentChildIds = array();
 
-        foreach ($jsonObject->ids as $id => $jsonCategory) {
-            $this->categories[$id] = $factory->createCategory($jsonCategory, $this);
+        if(isset($jsonObject->parent_child)) {
+            // this hack converts the array keys to integers, otherwise $this->parentChildIds[$id] fails
+            $this->parentChildIds = json_decode(json_encode($jsonObject->parent_child), true);
+
+            foreach ($jsonObject->ids as $id => $jsonCategory) {
+                $this->categories[$id] = $factory->createCategory($jsonCategory, $this);
+            }
         }
 
         $this->cacheCategories();
