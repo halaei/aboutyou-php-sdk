@@ -436,7 +436,7 @@ class DefaultModelFactory implements ModelFactoryInterface
                     $category->setParent($parent);
                 }
             } else {
-                unset($flattenCategories[$id]);
+                //unset($flattenCategories[$id]);
             }
         }
 
