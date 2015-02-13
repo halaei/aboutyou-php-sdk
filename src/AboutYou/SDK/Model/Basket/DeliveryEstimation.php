@@ -54,7 +54,7 @@ class DeliveryEstimation
      */
     public function getMaxDays()
     {
-        return $this->minDays;
+        return $this->maxDays;
     }
 
     /**
