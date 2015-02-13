@@ -42,11 +42,18 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
      * @param array $additionalData
      * @param integer $appId
      */
-    public function __construct($id, $variantId, array $additionalData = null, $appId = null)
+    public function __construct(
+        $id,
+        $variantId,
+        array $additionalData = null,
+        $appId = null,
+        $deliveryCarrier = null,
+        $deliveryEstimation = null,
+        $packageId = null)
     {
         $this->checkId($id);
         $this->id = $id;
-        parent::__construct($variantId, $additionalData, $appId);
+        parent::__construct($variantId, $additionalData, $appId, $deliveryCarrier, $deliveryEstimation, $packageId);
     }
 
     /**
@@ -59,17 +66,23 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
      */
     public static function createFromJson($jsonObject, array $products)
     {
+
         $item = new static(
-            $jsonObject->id, 
-            $jsonObject->variant_id, 
+            $jsonObject->id,
+            $jsonObject->variant_id,
             isset($jsonObject->additional_data) ? (array)$jsonObject->additional_data : null,
-            isset($jsonObject->app_id) ? $jsonObject->app_id : null
+            isset($jsonObject->app_id) ? $jsonObject->app_id : null,
+            isset($jsonObject->delivery_carrier) ? $jsonObject->delivery_carrier : null,
+            isset($jsonObject->delivery_estimation)
+                ? DeliveryEstimation::createFromJSON($jsonObject->delivery_estimation)
+                : null,
+            isset($jsonObject->packageId) ? intval($jsonObject->packageId) : null
         );
-        
+
         $item->parseErrorResult($jsonObject);
 
         $item->jsonObject = $jsonObject;
-                
+
         if (!empty($jsonObject->product_id)) {
             if (isset($products[$jsonObject->product_id])) {
                 $item->setProduct($products[$jsonObject->product_id]);
@@ -78,7 +91,7 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
                     'Product with ID ' . $jsonObject->product_id . ' expected but was not received with the basket'
                 );
             }
-        } 
+        }
         unset($jsonObject->id, $jsonObject->variant_id, $jsonObject->additional_data, $jsonObject->product_id);
 
         return $item;
@@ -88,15 +101,15 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
     {
         return $this->id;
     }
-    
+
     /**
      * @param mixed $id
      * @throws \InvalidArgumentException
      */
-    protected function checkId($id) 
+    protected function checkId($id)
     {
         if ($id !== null && (!is_string($id) || strlen($id) < 2)) {
-            throw new \InvalidArgumentException('ID of the BasketSetItem must be a String that must contain minimum two characters');            
+            throw new \InvalidArgumentException('ID of the BasketSetItem must be a String that must contain minimum two characters');
         }
-    }    
+    }
 }

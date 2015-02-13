@@ -15,15 +15,15 @@ class DefaultCategoryManager implements CategoryManagerInterface
     const DEFAULT_CACHE_DURATION = 7200;
 
     /** @var Category[] */
-    private $categories;
+    protected $categories;
 
     /** @var integer[] */
-    private $parentChildIds;
+    protected $parentChildIds;
 
     /** @var Cache */
-    private $cache;
+    protected $cache;
 
-    private $cacheKey;
+    protected $cacheKey;
 
     /**
      * @param string $appId This must set, when you use more then one instances with different apps

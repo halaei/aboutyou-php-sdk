@@ -14,36 +14,55 @@ abstract class BasketVariantItem extends AbstractBasketItem
     /**
      * @var Product
      */
-    private $product = null;
+    protected $product = null;
 
     /**
      * @var Variant
      */
-    private $variant = null;
+    protected $variant = null;
 
     /** @var integer */
-    private $variantId;
-    
+    protected $variantId;
+
+    /** @var string */
+    protected $deliveryCarrier;
+
+    /** DeliveryEstimation */
+    protected $deliveryEstimation;
+
     /** @var int */
-    private $appId = null;
+    protected $packageId;
+
+    /** @var int */
+    protected $appId = null;
 
     /**
      * Constructor.
      *
      * @param integer $variantId
      * @param array $additionalData
+     * @param string $deliveryCarrier
+     * @param DeliveryEstimation $deliveryEstimation
      */
-    public function __construct($variantId, $additionalData = null, $appId = null)
+    public function __construct(
+        $variantId,
+        $additionalData = null,
+        $appId = null,
+        $deliveryCarrier = null,
+        DeliveryEstimation $deliveryEstimation
+    )
     {
         $this->checkVariantId($variantId);
-        $this->checkAdditionData($additionalData);        
+        $this->checkAdditionData($additionalData);
         $this->variantId = $variantId;
         $this->additionalData = $additionalData;
-        
+        $this->deliveryCarrier = $deliveryCarrier;
+        $this->deliveryEstimation = $deliveryEstimation;
+
         if (isset($appId)) {
             $this->checkAppId($appId);
-            $this->appId = $appId;            
-        }        
+            $this->appId = $appId;
+        }
     }
 
     /**
@@ -73,10 +92,10 @@ abstract class BasketVariantItem extends AbstractBasketItem
     {
         return $this->jsonObject->tax;
     }
-    
+
     /**
      * Get the AppId
-     * 
+     *
      * @return int
      */
     public function getAppId()
@@ -131,6 +150,7 @@ abstract class BasketVariantItem extends AbstractBasketItem
         $this->product = $product;
     }
 
+
     /**
      * Get the product variant.
      *
@@ -159,6 +179,30 @@ abstract class BasketVariantItem extends AbstractBasketItem
     /**
      * @return string
      */
+    public function getDeliveryCarrier()
+    {
+        return $this->deliveryCarrier;
+    }
+
+    /**
+     * @return DeliveryEstimation
+     */
+    public function getDeliveryEstimation()
+    {
+        return $this->deliveryEstimation;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPackageId()
+    {
+        return $this->packageId;
+    }
+
+    /**
+     * @return string
+     */
     public function getUniqueKey()
     {
         $key = $this->getVariantId();
@@ -177,11 +221,11 @@ abstract class BasketVariantItem extends AbstractBasketItem
             throw new \InvalidArgumentException('the variant id must be an integer');
         }
     }
-    
+
     protected function checkAppId($appId)
     {
         if (!is_long($appId)) {
             throw new \InvalidArgumentException('the app id must be an integer');
         }
-    }    
+    }
 }
