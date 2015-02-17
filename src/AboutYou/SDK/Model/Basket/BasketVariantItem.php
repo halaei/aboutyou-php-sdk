@@ -49,7 +49,7 @@ abstract class BasketVariantItem extends AbstractBasketItem
         $additionalData = null,
         $appId = null,
         $deliveryCarrier = null,
-        DeliveryEstimation $deliveryEstimation
+        DeliveryEstimation $deliveryEstimation = null
     )
     {
         $this->checkVariantId($variantId);
