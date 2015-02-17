@@ -13,13 +13,14 @@ use AboutYou\SDK\Model\Product;
 
 class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterface
 {
-    const SORT_TYPE_COUNT       = 'count';
-    const SORT_TYPE_CREATED     = 'created_date';
-    const SORT_TYPE_DEFAULT     = null;
-    const SORT_TYPE_MOST_VIEWED = 'most_viewed';
-    const SORT_TYPE_PRICE       = 'price';
-    const SORT_TYPE_RELEVANCE   = 'relevance';
-    const SORT_TYPE_UPDATED     = 'updated_date';
+    const SORT_TYPE_COUNT           = 'count';
+    const SORT_TYPE_CREATED         = 'created_date';
+    const SORT_TYPE_DEFAULT         = null;
+    const SORT_TYPE_MOST_VIEWED     = 'most_viewed';
+    const SORT_TYPE_PRICE           = 'price';
+    const SORT_TYPE_RELEVANCE       = 'relevance';
+    const SORT_TYPE_UPDATED         = 'updated_date';
+    const SORT_TYPE_NEW_IN_SHOP     = 'new_in_since_date';
 
     const SORT_ASC  = 'asc';
     const SORT_DESC = 'desc';
