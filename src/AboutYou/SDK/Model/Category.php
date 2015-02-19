@@ -33,11 +33,8 @@ class Category
     /** @var integer */
     protected $productCount;
 
-    /** @var CategoryManagerInterface[] */
-    protected static $categoryManagers;
 
-    /** @var  string */
-    protected $categoryManagerClass;
+    protected static $categoryManager;
 
     /**
      * @param object        $jsonObject  json as object tree
@@ -58,7 +55,7 @@ class Category
         // Don't store categoryManager as attribute of the instance
         // because it would bloat the cache when the categories
         // get saved serialized
-        $category->categoryManagerClass = get_class($categoryManager);
+        self::$categoryManager = $categoryManager;
 
         return $category;
     }
@@ -175,13 +172,6 @@ class Category
      */
     public function getCategoryManager()
     {
-        $class = $this->categoryManagerClass;
-        $categoryManager = self::$categoryManagers[$class];
-
-        if (!$categoryManager) {
-            self::$categoryManagers[$this->categoryManagerClass] = new $class;
-        }
-
-        return  self::$categoryManagers[$class];
+        return  self::$categoryManager;
     }
 }
