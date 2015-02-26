@@ -93,7 +93,7 @@ class ProductSearchWithPriceRangesTest extends AbstractAYTest
 
     /***************************************************/
 
-    protected function getJsonStringFromFile($filepath)
+    protected function getJsonStringFromFile($filepath, $baseDir = __DIR__)
     {
         if (strpos($filepath, '/') !== 0) {
             $filepath = __DIR__.'/testData/' . $filepath;

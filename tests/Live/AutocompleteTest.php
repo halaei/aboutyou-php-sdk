@@ -34,12 +34,12 @@ class AutocompleteTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $this->assertCount(0, $autocomplete->getProducts());
         $this->assertCount(0, $autocomplete->getCategories());
 
-        $autocomplete = $ay->fetchAutocomplete('damen', 2, array(Autocomplete::TYPE_PRODUCTS));
+        $autocomplete = $ay->fetchAutocomplete('schuhe', 2, array(Autocomplete::TYPE_PRODUCTS));
         $this->assertEquals(Autocomplete::NOT_REQUESTED, $autocomplete->getCategories());
         $this->assertEquals(Autocomplete::NOT_REQUESTED, $autocomplete->getBrands());
         $this->assertCount(2, $autocomplete->getProducts());
 
-        $autocomplete = $ay->fetchAutocomplete('damen', 1, array(Autocomplete::TYPE_CATEGORIES));
+        $autocomplete = $ay->fetchAutocomplete('Frauen', 1, array(Autocomplete::TYPE_CATEGORIES));
         $this->assertEquals(Autocomplete::NOT_REQUESTED, $autocomplete->getProducts());
         $this->assertEquals(Autocomplete::NOT_REQUESTED, $autocomplete->getBrands());
         $this->assertCount(1, $autocomplete->getCategories());
@@ -48,10 +48,6 @@ class AutocompleteTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $this->assertEquals(Autocomplete::NOT_REQUESTED, $autocomplete->getProducts());
         $this->assertEquals(Autocomplete::NOT_REQUESTED, $autocomplete->getCategories());
         $this->assertCount(1, $autocomplete->getBrands());
-
-        $autocomplete = $ay->fetchAutocomplete('Damen', 1);
-        $this->assertCount(1, $autocomplete->getProducts());
-        $this->assertCount(1, $autocomplete->getCategories());
     }
 
     /**

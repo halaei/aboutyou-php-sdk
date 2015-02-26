@@ -49,7 +49,8 @@ abstract class BasketVariantItem extends AbstractBasketItem
         $additionalData = null,
         $appId = null,
         $deliveryCarrier = null,
-        DeliveryEstimation $deliveryEstimation = null
+        DeliveryEstimation $deliveryEstimation = null,
+        $packageId = null
     )
     {
         $this->checkVariantId($variantId);
@@ -58,6 +59,7 @@ abstract class BasketVariantItem extends AbstractBasketItem
         $this->additionalData = $additionalData;
         $this->deliveryCarrier = $deliveryCarrier;
         $this->deliveryEstimation = $deliveryEstimation;
+        $this->packageId = $packageId;
 
         if (isset($appId)) {
             $this->checkAppId($appId);

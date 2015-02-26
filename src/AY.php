@@ -384,6 +384,7 @@ class AY
 
         for ($i=0; $i < $amount; $i++) {
             $item = new Basket\BasketItem(null, $variantId);
+
             $basket->updateItem($item);
         }
 

@@ -94,7 +94,7 @@ class FacetManagerTest extends AbstractAYTest
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Facet', $brand);
     }
 
-    protected function getJsonStringFromFile($filepath)
+    protected function getJsonStringFromFile($filepath, $baseDir = __DIR__)
     {
         return parent::getJsonStringFromFile($filepath, __DIR__);
     }

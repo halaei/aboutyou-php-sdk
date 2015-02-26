@@ -66,7 +66,6 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
      */
     public static function createFromJson($jsonObject, array $products)
     {
-
         $item = new static(
             $jsonObject->id,
             $jsonObject->variant_id,
@@ -76,7 +75,7 @@ class BasketItem extends BasketVariantItem implements BasketItemInterface
             isset($jsonObject->delivery_estimation)
                 ? DeliveryEstimation::createFromJSON($jsonObject->delivery_estimation)
                 : null,
-            isset($jsonObject->packageId) ? intval($jsonObject->packageId) : null
+            isset($jsonObject->package_id) ? intval($jsonObject->package_id) : null
         );
 
         $item->parseErrorResult($jsonObject);

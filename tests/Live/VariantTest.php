@@ -38,19 +38,19 @@ class VariantTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
     {
         $ay = $this->getAY();
 
-        $result = $ay->fetchVariantsByIds(array('4683343', '4683349'));
+        $result = $ay->fetchVariantsByIds(array('7364846'));
 
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\VariantsResult', $result);
         $this->assertFalse($result->hasVariantsNotFound());
 
-        $this->assertCount(2, $result->getVariantsFound());
+        $this->assertCount(1, $result->getVariantsFound());
 
         foreach ($result->getVariantsFound() as $variant) {
             $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Variant', $variant);
             $product = $variant->getProduct();
             $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Product', $product);
 
-            $this->assertEquals(215114, $product->getId());
+            $this->assertEquals(581146, $product->getId());
         }
     }
 

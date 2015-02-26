@@ -48,15 +48,18 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
     {        
         $api = $this->getAY();
    
-        $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(1));             
-        $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(3));                  
+        $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(1));
+
+        $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(3));
+
         $basket = $api->addItemToBasket($this->getSessionId(), $this->getVariantId(6), 3);
-     
+
         $set = new Basket\BasketSet("123456", array('image_url' => "http://", 'description' => 'Hallo'));
-        $item = new Basket\BasketSetItem($this->getVariantId(7), array());       
-        $item2 = new Basket\BasketSetItem($this->getVariantId(8), array()); 
-        
+        $item = new Basket\BasketSetItem($this->getVariantId(7), array());
+        $item2 = new Basket\BasketSetItem($this->getVariantId(8), array());
+
         $set->addItem($item);
+
         $set->addItem($item2);
         $basket->updateItemSet($set);
                
@@ -71,12 +74,12 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $this->assertEquals(null, $item2->getAppId()); 
         
         $errorCount = count($basket->getErrors());
-  
+
         $this->assertEquals(6, $basket->getTotalAmount() + $errorCount);
 
         return $basket;
     }
-    
+
     /**
      * @depends testAddProductToBasket
      */
@@ -362,5 +365,27 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
 
         $basket->deleteAllItems();
         $basket = $api->updateBasket($this->getSessionId(), $basket);
-    }    
+
+
+        $this->assertEquals(count($basket->getItems()), 0);
+    }
+
+
+    public function testPackageId()
+    {
+        $api = $this->getAY();
+
+        $sessionId = uniqid();
+
+        $basket = $api->addItemToBasket($sessionId, 7361626);
+
+        $items = $basket->getItems();
+
+        $this->assertEquals(count($items), 1);
+
+        $item = array_shift($items);
+
+        $this->assertEquals($item->getPackageId(), 1);
+    }
+
 }

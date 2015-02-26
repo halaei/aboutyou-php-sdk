@@ -295,6 +295,7 @@ class Basket
     public function updateItem(BasketItem $basketItem)
     {
         $itemId = $basketItem->getId();
+
         $item = array(
             'variant_id' => $basketItem->getVariantId(),
             'app_id' => $basketItem->getAppId()

@@ -43,7 +43,7 @@ class ProductSearchCriteriaTest extends AbstractAYTest
         $this->assertEquals($expected, json_encode($criteria->toArray()));
     }
 
-    protected function getJsonStringFromFile($filepath)
+    protected function getJsonStringFromFile($filepath, $baseDir = __DIR__)
     {
         if (strpos($filepath, '/') !== 0) {
             $filepath = __DIR__.'/testData/' . $filepath;

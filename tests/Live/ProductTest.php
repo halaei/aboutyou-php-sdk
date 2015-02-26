@@ -82,5 +82,16 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         }
 
         return $product;
-    }    
+    }
+
+    public function testSingleProduct()
+    {
+        $ay = new \AY(303, 'dd898b91611b11f31e8d60c1bffab138');
+
+        $result = $ay->fetchProductsByIds([1964583], [ProductFields::CATEGORIES, ProductFields::VARIANTS]);
+
+        $products = $result->getProducts();
+        $product = array_shift($products);
+        $this->assertEquals(1964583, $product->getId());
+    }
 }
