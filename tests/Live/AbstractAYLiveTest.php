@@ -51,7 +51,7 @@ abstract class AbstractAYLiveTest extends \AboutYou\SDK\Test\AYTest
     protected function getSessionId()
     {
         $config = $this->getConfig();
-        
+
         return $config['session_id'];
     }
     

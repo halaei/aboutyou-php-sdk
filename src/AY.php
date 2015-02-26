@@ -9,6 +9,7 @@ use AboutYou\SDK\Factory\DefaultModelFactory;
 use AboutYou\SDK\Factory\ModelFactoryInterface;
 use AboutYou\SDK\Model\Autocomplete;
 use AboutYou\SDK\Model\Basket;
+use AboutYou\SDK\Model\WishList;
 use AboutYou\SDK\Model\CategoriesResult;
 use AboutYou\SDK\Model\CategoryManager\CategoryManagerInterface;
 use AboutYou\SDK\Model\CategoryManager\DefaultCategoryManager;
@@ -356,6 +357,23 @@ class AY
     }
 
     /**
+     * Fetch the basket of the given sessionId.
+     *
+     * @param string $sessionId Free to choose ID of the current website visitor.
+     *
+     * @return \AboutYou\SDK\Model\WishList
+     *
+     * @throws \AboutYou\SDK\Exception\MalformedJsonException
+     * @throws \AboutYou\SDK\Exception\UnexpectedResultException
+     */
+    public function fetchWishList($sessionId)
+    {
+        $query = $this->getQuery()->fetchWishList($sessionId);
+
+        return $query->executeSingle();
+    }
+
+    /**
      * Adds a single item into the basket.
      * You can specify an amount. Please mind, that an amount > 1 will result in #amount basket positions.
      * So if you read out the basket again later, it's your job to merge the positions again.
@@ -392,6 +410,42 @@ class AY
     }
 
     /**
+     * Adds a single item into the wishlist.
+     * You can specify an amount. Please mind, that an amount > 1 will result in #amount basket positions.
+     * So if you read out the basket again later, it's your job to merge the positions again.
+     *
+     * It is highly recommend to use the basket update method, to manage your items.
+     *
+     * @param string $sessionId
+     * @param integer $variantId
+     * @param integer $amount
+     *
+     * @return Basket
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function addItemToWishList($sessionId, $variantId, $amount = 1)
+    {
+        if (!is_long($variantId)) {
+            if (is_string($variantId) && ctype_digit($variantId)) {
+                $variantId = intval($variantId);
+            } else {
+                throw new \InvalidArgumentException('the variant id must be an integer or string with digits');
+            }
+        }
+
+        $wishList = new WishList();
+
+        for ($i=0; $i < $amount; $i++) {
+            $item = new WishList\WishListItem(null, $variantId);
+
+            $wishList->updateItem($item);
+        }
+
+        return $this->updateWishList($sessionId, $wishList);
+    }
+
+    /**
      * Remove basket item.
      *
      * @param string $sessionId     Free to choose ID of the current website visitor.
@@ -417,6 +471,21 @@ class AY
     {
         $query = $this->getQuery()
             ->updateBasket($sessionId, $basket)
+        ;
+
+        return $query->executeSingle();
+    }
+
+    /**
+     * @param string $sessionId
+     * @param WishList $wishList
+     *
+     * @return \AboutYou\SDK\Model\WishList
+     */
+    public function updateWishList($sessionId, WishList $wishList)
+    {
+        $query = $this->getQuery()
+            ->updateWishList($sessionId, $wishList)
         ;
 
         return $query->executeSingle();

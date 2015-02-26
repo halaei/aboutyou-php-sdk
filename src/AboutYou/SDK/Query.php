@@ -74,6 +74,21 @@ class Query extends QueryBuilder
         return $this;
     }
 
+    /**
+     * @param string $sessionId Free to choose ID of the current website visitor.
+     *
+     * @return $this
+     */
+    public function fetchWishList($sessionId)
+    {
+        parent::fetchWishList($sessionId);
+
+        $this->requireCategoryTree();
+        $this->requireFacets();
+
+        return $this;
+    }
+
         /**
      * @param string[]|int[] $ids
      * @param array $fields
@@ -209,6 +224,7 @@ class Query extends QueryBuilder
     protected $mapping = array(
         'autocompletion' => 'createAutocomplete',
         'basket'         => 'createBasket',
+        'wishlist'       => 'createWishList',
         'category'       => 'createCategoriesResult',
         'category_tree'  => 'createCategoryTree',
         'facets'         => 'createFacetsList',

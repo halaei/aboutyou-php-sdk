@@ -10,6 +10,7 @@ use AboutYou\SDK\Criteria\ProductFields;
 use AboutYou\SDK\Exception\ResultErrorException;
 use AboutYou\SDK\Model;
 use AboutYou\SDK\Model\Basket;
+use AboutYou\SDK\Model\WishList;
 use AboutYou\SDK\Model\ProductSearchResult;
 use AboutYou\SDK\Model\CategoryManager\CategoryManagerInterface;
 use AboutYou\SDK\Model\FacetManager\FacetManagerInterface;
@@ -136,6 +137,46 @@ class DefaultModelFactory implements ModelFactoryInterface
     public function createBasketSetItem(\stdClass $jsonObject, array $products)
     {
         return Basket\BasketSetItem::createFromJson($jsonObject, $products);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return WishList
+     */
+    public function createWishList(\stdClass $jsonObject)
+    {
+        return WishList::createFromJson($jsonObject, $this);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return WishList\WishListItem
+     */
+    public function createWishListItem(\stdClass $jsonObject, array $products)
+    {
+        return WishList\WishListItem::createFromJson($jsonObject, $products);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return Basket\BasketSet
+     */
+    public function createWishListSet(\stdClass $jsonObject, array $products)
+    {
+        return WishList\WishListSet::createFromJson($jsonObject, $this, $products);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return Basket\BasketSetItem
+     */
+    public function createWishListSetItem(\stdClass $jsonObject, array $products)
+    {
+        return WishList\WishListSetItem::createFromJson($jsonObject, $products);
     }
 
     /**

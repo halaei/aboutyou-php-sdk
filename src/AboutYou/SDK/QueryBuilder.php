@@ -9,6 +9,7 @@ namespace AboutYou\SDK;
 use AboutYou\SDK\Criteria\ProductFields;
 use AboutYou\SDK\Criteria\ProductSearchCriteria;
 use AboutYou\SDK\Model\Basket;
+use AboutYou\SDK\Model\WishList;
 
 class QueryBuilder
 {
@@ -96,6 +97,24 @@ class QueryBuilder
         $this->query[] = array(
             'basket' => array(
                 'session_id' => $basketId
+            )
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param string $wishListId Free to choose ID of the current website visitor.
+     *
+     * @return $this
+     */
+    public function fetchWishList($wishListId)
+    {
+        $this->checkWishListId($wishListId);
+
+        $this->query[] = array(
+            'wishlist' => array(
+                'session_id' => $wishListId
             )
         );
 
@@ -262,6 +281,34 @@ class QueryBuilder
             'basket' => $basketQuery
         );
         
+        return $this;
+    }
+
+    /**
+     * @param string $wishListId
+     * @param WishList $wishList
+     *
+     * @return $this
+     */
+    public function updateWishList($wishListId, WishList $wishList)
+    {
+        $this->checkWishListId($wishListId);
+
+        $wishListQuery = array('session_id'  => $wishListId);
+
+        if ($wishList->isClearedOnUpdate()) {
+            $wishListQuery['clear'] = true;
+        }
+
+        $orderLines = $wishList->getOrderLinesArray();
+        if (!empty($orderLines)) {
+            $wishListQuery['order_lines'] = $orderLines;
+        }
+
+        $this->query[] = array(
+            'wishlist' => $wishListQuery
+        );
+
         return $this;
     }
 
@@ -548,8 +595,23 @@ class QueryBuilder
         if (!is_string($basketId)) {
             throw new \InvalidArgumentException('The basket id must be a string');
         }
-        if (!isset($basketId[4])) {
+        if (!isset($basketId{4})) {
             throw new \InvalidArgumentException('The basket id must have at least 5 characters');
+        }
+    }
+
+    /**
+     * @param $wishListId
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function checkWishListId($wishListId)
+    {
+        if (!is_string($wishListId)) {
+            throw new \InvalidArgumentException('The wishList id must be a string');
+        }
+        if (!isset($wishListId{4})) {
+            throw new \InvalidArgumentException('The wishList id must have at least 5 characters');
         }
     }
 }
