@@ -378,7 +378,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $sessionId = uniqid();
 
         $basket = $api->addItemToBasket($sessionId, 7361626);
-echo $sessionId;
+
         $items = $basket->getItems();
 
         $this->assertEquals(1, count($items));

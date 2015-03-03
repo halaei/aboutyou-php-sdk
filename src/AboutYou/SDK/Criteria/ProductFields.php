@@ -20,6 +20,7 @@ class ProductFields
     const DEFAULT_VARIANT        = 'default_variant';
     const DESCRIPTION_LONG       = 'description_long';
     const DESCRIPTION_SHORT      = 'description_short';
+    const FIRST_PUBLICATION_DATE = 'new_in_since_date';
     const INACTIVE_VARIANTS      = 'inactive_variants';
     const IS_ACTIVE              = 'active';
     const IS_SALE                = 'sale';
@@ -50,6 +51,10 @@ class ProductFields
             self::requiresFacets($fields)
         ) {
             $fields[] = ProductFields::ATTRIBUTES_MERGED;
+        }
+
+        if (!in_array(self::FIRST_PUBLICATION_DATE, $fields)) {
+            $fields[] = self::FIRST_PUBLICATION_DATE;
         }
 
         return $fields;

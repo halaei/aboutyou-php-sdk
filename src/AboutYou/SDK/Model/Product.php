@@ -49,6 +49,9 @@ class Product
     /** @var integer */
     protected $merchantId;
 
+    /** @var DateTime */
+    protected $firstPublicationDate;
+
 
     /** @var array */
     protected $categoryIdPaths;
@@ -92,7 +95,7 @@ class Product
     /** @var string[] */
     protected $bulletPoints;
 
-    /** @var Factes[][] */
+    /** @var Facet[][] */
     protected $productAttributes;
 
     /** @var  ModelFactoryInterface */
@@ -136,6 +139,10 @@ class Product
         $product->maxPrice         = isset($jsonObject->max_price) ? $jsonObject->max_price : null;
         $product->maxSavingsPrice  = isset($jsonObject->max_savings) ? $jsonObject->max_savings : null;
         $product->maxSavingsPercentage = isset($jsonObject->max_savings_percentage) ? $jsonObject->max_savings_percentage : null;
+
+        $product->firstPublicationDate = isset($jsonObject->new_in_since_date)
+            ? new \DateTime($jsonObject->new_in_since_date)
+            : null;
 
         $product->defaultImage     = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
         $product->defaultVariant   = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant, $product) : null;
@@ -781,5 +788,16 @@ class Product
     private function getCategoryManager()
     {
         return $this->factory->getCategoryManager();
+    }
+
+    /**
+     * Returns a DateTime object with the value of new_in_since_date from the API.
+     * This date specifies when the product was available for the app the first time.
+     *
+     * @return DateTime|null
+     */
+    public function getFirstPublicationDate()
+    {
+        return $this->firstPublicationDate;
     }
 }

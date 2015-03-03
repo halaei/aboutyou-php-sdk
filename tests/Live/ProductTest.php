@@ -117,4 +117,19 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
             }, $category->getBreadcrumb()));
         }
     }
+
+    public function testFirstPublicationDate()
+    {
+        $api = $this->getAY();
+        $result = $api->fetchProductsByIds([1902889]);
+
+        $products = $result->getProducts();
+
+        $this->assertCount(1, $products);
+
+        $product = array_shift($products);
+
+        $this->assertInstanceOf('\DateTime', $product->getFirstPublicationDate());
+        $this->assertEquals('25.02.2015', $product->getFirstPublicationDate()->format('d.m.Y'));
+    }
 }
