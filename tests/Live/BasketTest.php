@@ -367,7 +367,7 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $basket = $api->updateBasket($this->getSessionId(), $basket);
 
 
-        $this->assertEquals(count($basket->getItems()), 0);
+        $this->assertEquals(0, count($basket->getItems()));
     }
 
 
@@ -378,14 +378,14 @@ class BasketTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $sessionId = uniqid();
 
         $basket = $api->addItemToBasket($sessionId, 7361626);
-
+echo $sessionId;
         $items = $basket->getItems();
 
-        $this->assertEquals(count($items), 1);
+        $this->assertEquals(1, count($items));
 
         $item = array_shift($items);
 
-        $this->assertEquals($item->getPackageId(), 1);
+        $this->assertEquals(1, $item->getPackageId());
     }
 
 }

@@ -34,7 +34,12 @@ class Category
     protected $productCount;
 
 
-    protected static $categoryManager;
+    protected $categoryManager;
+
+    protected function __construct()
+    {
+        // Creating of instances only possible via createFromJson
+    }
 
     /**
      * @param object        $jsonObject  json as object tree
@@ -55,7 +60,7 @@ class Category
         // Don't store categoryManager as attribute of the instance
         // because it would bloat the cache when the categories
         // get saved serialized
-        self::$categoryManager = $categoryManager;
+        $category->categoryManager = $categoryManager;
 
         return $category;
     }
@@ -172,6 +177,6 @@ class Category
      */
     public function getCategoryManager()
     {
-        return  self::$categoryManager;
+        return $this->categoryManager;
     }
 }

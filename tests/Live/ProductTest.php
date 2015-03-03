@@ -94,4 +94,27 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $product = array_shift($products);
         $this->assertEquals(1964583, $product->getId());
     }
+
+    public function testSingleProductFromEdited()
+    {
+        $ay = new \AY(53, 'h]vWu6PAuz7sfdYNZ5VqkfM^93W0k{3m');
+
+        $result = $ay->fetchProductsByIds([1966800], [
+            ProductFields::CATEGORIES,
+            ProductFields::VARIANTS
+        ]);
+
+        $products = $result->getProducts();
+
+        $this->assertEquals(1, count($products));
+
+        $product = array_shift($products);
+        $categories = $product->getLeafCategories();
+
+        foreach ($categories as $category) {
+            $breadCrumb = json_encode(array_map(function($category) {
+                return $category->getName();
+            }, $category->getBreadcrumb()));
+        }
+    }
 }
