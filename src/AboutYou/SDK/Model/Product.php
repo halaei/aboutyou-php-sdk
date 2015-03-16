@@ -800,4 +800,21 @@ class Product
     {
         return $this->firstPublicationDate;
     }
+
+    /**
+     * @return Facet|null
+     */
+    public function getSizeAdvice()
+    {
+        $attributes = $this->getAttributes();
+
+        $sizeAdvice = null;
+
+        if (is_array($attributes) && isset($attributes[368]) && is_array($attributes[368])) {
+
+            $sizeAdvice = array_shift($attributes[368]);
+        }
+
+        return $sizeAdvice;
+    }
 }

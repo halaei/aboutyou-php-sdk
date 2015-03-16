@@ -2,6 +2,7 @@
 
 namespace AboutYou\SDK\Test\Live;
 
+use AboutYou\SDK\Constants;
 use AboutYou\SDK\Criteria\ProductFields;
 use AboutYou\SDK\Model\Product;
 
@@ -121,7 +122,7 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
     public function testFirstPublicationDate()
     {
         $api = $this->getAY();
-        $result = $api->fetchProductsByIds([1902889]);
+        $result = $api->fetchProductsByIds([556226]);
 
         $products = $result->getProducts();
 
@@ -130,6 +131,24 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $product = array_shift($products);
 
         $this->assertInstanceOf('\DateTime', $product->getFirstPublicationDate());
-        $this->assertEquals('25.02.2015', $product->getFirstPublicationDate()->format('d.m.Y'));
+        $this->assertEquals('26.08.2014', $product->getFirstPublicationDate()->format('d.m.Y'));
+    }
+
+
+    public function testSizeAdvice()
+    {
+        $api = $this->getAY();
+        $result = $api->fetchProductsByIds([556226], [ProductFields::ATTRIBUTES_MERGED, ProductFields::PRODUCT_ATTRIBUTES]);
+
+        $products = $result->getProducts();
+
+        $this->assertCount(1, $products);
+
+        $product = array_shift($products);
+
+        $sizeAdvice = $product->getSizeAdvice();
+
+        $this->assertEquals('one_unit_smaller', $sizeAdvice->getValue());
+
     }
 }

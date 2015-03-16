@@ -28,7 +28,7 @@ abstract class AbstractAYLiveTest extends \AboutYou\SDK\Test\AYTest
     }
     
     /**
-     * @return \\AY
+     * @return \AY
      */
     protected function getAY(
         ResultFactoryInterface $resultFactory = null,
