@@ -151,4 +151,24 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $this->assertEquals('one_unit_smaller', $sizeAdvice->getValue());
 
     }
+
+
+    public function testProductFetch()
+    {
+        $start = microtime(true);
+
+        $api = $this->getAY();
+        $result = $api->fetchProductsByIds([1578627]);
+        $products = $result->getProducts();
+
+        foreach ($products as $product) {
+            echo $product->getId().PHP_EOL;
+        }
+
+        $end = microtime(true);
+
+        $diff = $end-$start;
+
+        echo $diff;
+    }
 }
