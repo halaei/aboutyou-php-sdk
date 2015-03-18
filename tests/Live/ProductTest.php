@@ -11,7 +11,7 @@ use AboutYou\SDK\Model\Product;
  */
 class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
 {
-    public function testGetProduct()
+    public function xtestGetProduct()
     {
         $product = $this->getProduct(1, array(
             ProductFields::MIN_PRICE,
@@ -26,7 +26,7 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
     /**
      * @depends testGetProduct
      */
-    public function testGetCategories(Product $product)
+    public function xtestGetCategories(Product $product)
     {
         $this->assertInternalType('array', $product->getRootCategories());
     }
@@ -34,7 +34,7 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
     /**
      * @depends testGetProduct
      */
-    public function testGetMxxPrice(Product $product)
+    public function xtestGetMxxPrice(Product $product)
     {
         $this->assertNotNull($product->getMinPrice());
         $this->assertInternalType('int', $product->getMinPrice());
@@ -42,7 +42,7 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $this->assertInternalType('int', $product->getMaxPrice());
     }
 
-    public function testGetProductFull()
+    public function xtestGetProductFull()
     {
         $product = $this->getProduct(1, array(
             ProductFields::ATTRIBUTES_MERGED,
@@ -85,7 +85,7 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         return $product;
     }
 
-    public function testSingleProduct()
+    public function xtestSingleProduct()
     {
         $ay = new \AY(303, 'dd898b91611b11f31e8d60c1bffab138');
 
@@ -96,7 +96,7 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         $this->assertEquals(1964583, $product->getId());
     }
 
-    public function testSingleProductFromEdited()
+    public function xtestSingleProductFromEdited()
     {
         $ay = new \AY(53, 'h]vWu6PAuz7sfdYNZ5VqkfM^93W0k{3m');
 
@@ -119,7 +119,7 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
         }
     }
 
-    public function testFirstPublicationDate()
+    public function xtestFirstPublicationDate()
     {
         $api = $this->getAY();
         $result = $api->fetchProductsByIds([556226]);
@@ -135,7 +135,7 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
     }
 
 
-    public function testSizeAdvice()
+    public function xtestSizeAdvice()
     {
         $api = $this->getAY();
         $result = $api->fetchProductsByIds([556226], [ProductFields::ATTRIBUTES_MERGED, ProductFields::PRODUCT_ATTRIBUTES]);
@@ -152,23 +152,37 @@ class ProductTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
 
     }
 
-
     public function testProductFetch()
     {
-        $start = microtime(true);
+        foreach ([1578627, 1902746] as $productId) {
+            for ($i=0; $i<20; $i++) {
+                $start = microtime(true);
 
-        $api = $this->getAY();
-        $result = $api->fetchProductsByIds([1578627]);
-        $products = $result->getProducts();
+                $api = $this->getAY();
+                $result = $api->fetchProductsByIds([$productId], [
+                    "id",
+                    "name",
+                    "active",
+                    "brand_id",
+                    "description_long",
+                    "description_short",
+                    "default_variant",
+                    "variants",
+                    "min_price",
+                    "max_price",
+                    "sale",
+                    "default_image",
+                    "attributes_merged",
+                    "categories"
+                ], false);
+                $products = $result->getProducts();
+                $product = array_shift($products);
+                $end = microtime(true);
 
-        foreach ($products as $product) {
-            echo $product->getId().PHP_EOL;
+                $diff = $end-$start;
+
+                echo sprintf($product->getName().' - %.16f', $diff).'ms'.PHP_EOL;
+            }
         }
-
-        $end = microtime(true);
-
-        $diff = $end-$start;
-
-        echo $diff;
     }
 }
