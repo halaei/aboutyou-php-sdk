@@ -86,7 +86,7 @@ class FacetGroupSet implements FacetUniqueKeyInterface
         if (!empty($this->facets)) return;
 
         //pre-heat cache
-        self::$facetManager->getFacetGroups(array_keys($this->ids));
+        self::$facetManager->getFacetsByGroups(array_keys($this->ids));
 
         foreach ($this->ids as $groupId => $facetIds) {
             foreach ($facetIds as $facetId) {

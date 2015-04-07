@@ -80,7 +80,7 @@ class DefaultFacetManager implements FacetManagerInterface
      * @param int[] $groups
      * @return array
      */
-    public function getFacetGroups($groups)
+    public function getFacetsByGroups($groups)
     {
         return [];
     }
