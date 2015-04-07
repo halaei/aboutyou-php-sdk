@@ -48,4 +48,13 @@ class StaticFacetManager implements FacetManagerInterface
             null
         ;
     }
-} 
+
+    /**
+     * @param int[] $groups
+     * @return array
+     */
+    public function getFacetGroups($groups)
+    {
+        return [];
+    }
+}
