@@ -167,4 +167,20 @@ class Facet implements FacetUniqueKeyInterface, FacetGetGroupInterface
 
         return null;
     }
+
+    /**
+     *
+     */
+    public function serialize()
+    {
+        $object = new \stdClass();
+        $object->id        = $this->id;
+        $object->name      = $this->name;
+        $object->value     = $this->value;
+        $object->group_id   = $this->groupId;
+        $object->group_name = $this->groupName;
+        $object->options   = $this->options;
+
+        return $object;
+    }
 }

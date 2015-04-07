@@ -838,8 +838,9 @@ class AY
      * This can be used in an hourly cron job
      *
      * @param int $preCacheOption PRE_CACHE_ALL, PRE_CACHE_FACETS or PRE_CACHE_CATEGORY
+     * @param bool $force
      */
-    public function preCache($preCacheOption = self::PRE_CACHE_ALL)
+    public function preCache($preCacheOption = self::PRE_CACHE_ALL, $force = false)
     {
         if ($preCacheOption & self::PRE_CACHE_ALL === 0) {
             throw new \RuntimeException('You must select at least one pre cache option');
@@ -852,11 +853,11 @@ class AY
         $query = $this->getQuery();
 
         if ($preCacheOption & self::PRE_CACHE_FACETS) {
-            $query->requireFacets();
+            $query->requireFacets($force);
         }
 
         if ($preCacheOption & self::PRE_CACHE_CATEGORY) {
-            $query->requireCategoryTree();
+            $query->requireCategoryTree($force);
         }
 
         $query->execute();
