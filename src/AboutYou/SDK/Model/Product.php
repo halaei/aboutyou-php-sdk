@@ -140,7 +140,7 @@ class Product
         $product->maxSavingsPrice  = isset($jsonObject->max_savings) ? $jsonObject->max_savings : null;
         $product->maxSavingsPercentage = isset($jsonObject->max_savings_percentage) ? $jsonObject->max_savings_percentage : null;
 
-        $product->firstPublicationDate = isset($jsonObject->new_in_since_date)
+        $product->firstPublicationDate = isset($jsonObject->new_in_since_date) && is_string($jsonObject->new_in_since_date)
             ? new \DateTime($jsonObject->new_in_since_date)
             : null;
 
