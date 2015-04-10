@@ -182,7 +182,9 @@ class Product
         $variants = array();
         if (!empty($jsonObject->$attributeName)) {
             foreach ($jsonObject->$attributeName as $jsonVariant) {
-                $variants[$jsonVariant->id] = $factory->createVariant($jsonVariant, $product);
+                if (isset($jsonVariant->id)) {
+                    $variants[$jsonVariant->id] = $factory->createVariant($jsonVariant, $product);
+                }
             }
         }
 
@@ -257,7 +259,9 @@ class Product
         if (isset($jsonObject->variants)) {
             $ids = array();
             foreach ($jsonObject->variants as $variant) {
-                $ids[] = self::parseAttributesJson($variant->attributes);
+                if (isset($variant->attributes)) {
+                    $ids[] = self::parseAttributesJson($variant->attributes);
+                }
             }
             $ids = FacetGroupSet::mergeFacetIds($ids);
 
