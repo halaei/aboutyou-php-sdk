@@ -13,6 +13,11 @@ use AboutYou\SDK\Factory\ModelFactoryInterface;
 
 class Product
 {
+    /**
+     * @var \stdClass
+     */
+    public $rawJson;
+
     /** @var integer */
     protected $id;
 
@@ -121,6 +126,8 @@ class Product
         if (!isset($jsonObject->id) || !isset($jsonObject->name)) {
             throw new MalformedJsonException();
         }
+
+        $product->rawJson = $jsonObject;
 
         $product->factory = $factory;
 
