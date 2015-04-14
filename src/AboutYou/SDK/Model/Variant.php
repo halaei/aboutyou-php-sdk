@@ -65,6 +65,7 @@ class Variant
 
     /**
      * @return Image[]
+     * @deprecated
      */
     public function getImages()
     {
@@ -108,6 +109,7 @@ class Variant
      * @param string $hash The image hash.
      *
      * @return Image
+     * @deprecated
      */
     public function getImageByHash($hash)
     {
@@ -142,6 +144,7 @@ class Variant
      * Get selected or default image.
      *
      * @return Image
+     * @deprecated
      */
     public function getImage()
     {
