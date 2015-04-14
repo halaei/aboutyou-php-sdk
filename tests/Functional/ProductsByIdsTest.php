@@ -220,7 +220,7 @@ EOS;
     {
         $productIds = array(456);
 
-        $ay = $this->getAYWithResultFile('result/products.json', '[{"products":{"ids":[456],"fields":["default_image"],"get_styles":false}}]');
+        $ay = $this->getAYWithResultFile('result/products.json', '[{"products":{"ids":[456],"fields":["default_image","new_in_since_date"],"get_styles":false}}]');
 
         $ay->fetchProductsByIds($productIds, array(ProductFields::DEFAULT_IMAGE), false);
     }
