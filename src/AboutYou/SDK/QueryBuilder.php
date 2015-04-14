@@ -54,7 +54,7 @@ class QueryBuilder
 
         return $this;
     }
-    
+
     /**
      * @param string $searchWord The prefix search word to search for
      * @param integer[] $categoryIds Array of category Ids for filtering
@@ -68,7 +68,7 @@ class QueryBuilder
         if (!is_string($searchword)) {
             throw new \InvalidArgumentException('searchword must be a string');
         }
-     
+
         $options = array(
             'searchword' => $searchword
         );
@@ -84,7 +84,7 @@ class QueryBuilder
 
         return $this;
     }
-    
+
     /**
      * @param string $basketId Free to choose ID of the current website visitor.
      *
@@ -280,7 +280,7 @@ class QueryBuilder
         $this->query[] = array(
             'basket' => $basketQuery
         );
-        
+
         return $this;
     }
 
@@ -406,7 +406,41 @@ class QueryBuilder
 
         return $this;
     }
-    
+
+    /**
+     * @param string[] $keys
+     * @param array    $fields
+     * @param boolean  $loadStyles styles loaded by default, but it could be
+     *
+     * @return $this
+     */
+    public function fetchProductsByStyleKeys(
+        array $keys,
+        array $fields = array(),
+        $loadStyles = true
+    ) {
+        // we allow to pass a single ID instead of an array
+        settype($keys, 'array');
+
+        $keys = array_map('strval', $keys);
+
+        // make sure the keys are correct to avoid creating an json object instead of array
+        $keys = array_values($keys);
+        $args = array(
+            'styles'    => $keys,
+            'fields' => ProductFields::filterFields($fields)
+        );
+        if ($loadStyles === false) {
+            $args['get_styles'] = false;
+        }
+
+        $this->query[] = array(
+            'styles' => $args
+        );
+
+        return $this;
+    }
+
     /**
      * @param string[]|int[] $ids
      *
@@ -426,7 +460,7 @@ class QueryBuilder
         );
 
         return $this;
-    }    
+    }
 
     /**
      * @param string[] $eans

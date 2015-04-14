@@ -113,6 +113,30 @@ class Query extends QueryBuilder
     }
 
     /**
+     * @param string[] $keys
+     * @param array         $fields
+     * @param bool          $loadStyles
+     *
+     * @return $this
+     */
+    public function fetchProductsByStyleKeys(
+        array $keys,
+        array $fields = [],
+        $loadStyles = true
+    ) {
+        parent::fetchProductsByStyleKeys($keys, $fields, $loadStyles);
+
+        if (ProductFields::requiresCategories($fields)) {
+            $this->requireCategoryTree();
+        }
+        if (ProductFields::requiresFacets($fields)) {
+            $this->requireFacets();
+        }
+
+        return $this;
+    }
+
+    /**
      * @param string[] $eans
      * @param array $fields
      *
@@ -201,7 +225,7 @@ class Query extends QueryBuilder
         $this->allQuery = $this->ghostQuery + $this->query;
 
         $queryString = $this->getQueryString();
-        
+
         $response = $this->client->request($queryString);
 
         $jsonResponse = json_decode($response->getBody(true));

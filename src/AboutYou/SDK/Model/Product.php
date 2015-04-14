@@ -97,6 +97,11 @@ class Product
     /** @var Variant[] */
     protected $inactiveVariants;
 
+    /**
+     * @var string
+     */
+    protected $styleKey;
+
     /** @var Product[] */
     protected $styles;
 
@@ -176,6 +181,8 @@ class Product
         }
 
         $product->inactiveVariants = self::parseVariants($jsonObject, $factory, $product, 'inactive_variants');
+
+        $product->styleKey = isset($jsonObject->style_key) ? $jsonObject->style_key : null;
         $product->styles           = self::parseStyles($jsonObject, $factory);
 
         $key = 'categories.' . $appId;
