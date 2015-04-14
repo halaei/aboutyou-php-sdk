@@ -81,6 +81,14 @@ class ProductSearchResult
     }
 
     /**
+     * @param Product[] $products
+     */
+    public function setProducts($products)
+    {
+        $this->products = $products;
+    }
+
+    /**
      * @return Product[]
      */
     public function getProducts()
