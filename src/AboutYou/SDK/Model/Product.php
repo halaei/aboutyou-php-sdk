@@ -79,16 +79,6 @@ class Product
     /** @var Image */
     protected $defaultImage;
 
-    /**
-     * @var Image
-     */
-    protected $selectedImage;
-
-    /**
-     * @var Image[]
-     */
-    protected $images = [];
-
     /** @var Variant */
     protected $defaultVariant;
 
@@ -166,43 +156,22 @@ class Product
             ? new \DateTime($jsonObject->new_in_since_date)
             : null;
 
-        $product->images = self::parseImages($jsonObject, $factory);
-        if (isset($jsonObject->default_image)) {
-            if (!isset($product->images[$jsonObject->default_image->hash])) {
-                $defaultImage = $factory->createImage($jsonObject->default_image);
-                $product->images = array_merge(
-                    [$defaultImage->getHash() => $defaultImage],
-                    $product->images
-                );
-            }
-            $product->defaultImage = $product->getImageByHash($jsonObject->default_image->hash);
-        }
-
-        $product->variants = self::parseVariants($jsonObject, $factory, $product);
-        if (isset($jsonObject->default_variant)) {
-            if (!isset($product->variants[$jsonObject->default_variant->id])) {
-                $defaultVariant = $factory->createVariant($jsonObject->default_variant, $product);
-                $product->variants = array_merge(
-                    [$defaultVariant->getId() => $defaultVariant],
-                    $product->variants
-                );
-            }
-            $product->defaultVariant = $product->getVariantById($jsonObject->default_variant->id);
-        }
-
+        $product->defaultImage     = isset($jsonObject->default_image) ? $factory->createImage($jsonObject->default_image) : null;
+        $product->defaultVariant   = isset($jsonObject->default_variant) ? $factory->createVariant($jsonObject->default_variant, $product) : null;
+        $product->variants         = self::parseVariants($jsonObject, $factory, $product);
         $product->inactiveVariants = self::parseVariants($jsonObject, $factory, $product, 'inactive_variants');
 
         $product->styleKey = isset($jsonObject->style_key) ? $jsonObject->style_key : null;
         $product->styles           = self::parseStyles($jsonObject, $factory);
 
         $key = 'categories.' . $appId;
-        $product->categoryIdPaths  = isset($jsonObject->$key) ? $jsonObject->$key : [];
+        $product->categoryIdPaths  = isset($jsonObject->$key) ? $jsonObject->$key : array();
 
         $product->facetIds     = self::parseFacetIds($jsonObject);
         if (isset($jsonObject->product_attributes)) {
-            $product->productAttributes = [];
+            $product->productAttributes = array();
             foreach ($jsonObject->product_attributes as $groupId => $jsonAttributes) {
-                $attributes = [];
+                $attributes = array();
                 $items = isset($jsonAttributes->items) ? $jsonAttributes->items : $jsonAttributes;
                 foreach ($items as $jsonAttribute) {
                     $attribute = $factory->createInlineFacet($jsonAttribute);
@@ -215,27 +184,9 @@ class Product
         return $product;
     }
 
-    /**
-     * @param \stdClass             $jsonObject
-     * @param ModelFactoryInterface $factory
-     *
-     * @return Image[]
-     */
-    protected static function parseImages($jsonObject, ModelFactoryInterface $factory)
-    {
-        $images = [];
-        if (isset($jsonObject->images)) {
-            foreach ($jsonObject->images as $image) {
-                $images[$image->hash] = $factory->createImage($image);
-            }
-        }
-
-        return $images;
-    }
-
     protected static function parseVariants($jsonObject, ModelFactoryInterface $factory, Product $product, $attributeName = 'variants')
     {
-        $variants = [];
+        $variants = array();
         if (!empty($jsonObject->$attributeName)) {
             foreach ($jsonObject->$attributeName as $jsonVariant) {
                 if (isset($jsonVariant->id)) {
@@ -249,7 +200,7 @@ class Product
 
     protected static function parseStyles($jsonObject, ModelFactoryInterface $factory)
     {
-        $styles = [];
+        $styles = array();
         if (!empty($jsonObject->styles)) {
             foreach ($jsonObject->styles as $style) {
                 $styles[] = $factory->createProduct($style);
@@ -261,7 +212,7 @@ class Product
 
     protected static function parseCategoryIdPaths($jsonObject)
     {
-        $paths = [];
+        $paths = array();
 
         foreach (get_object_vars($jsonObject) as $name => $categoryPaths) {
             if (strpos($name, 'categories') === 0) {
@@ -283,7 +234,7 @@ class Product
             $ids = self::parseFacetIdsInBrand($jsonObject);
         }
 
-        return ($ids !== null) ? $ids : [];
+        return ($ids !== null) ? $ids : array();
     }
 
     public static function parseFacetIdsInAttributesMerged($jsonObject)
@@ -297,7 +248,7 @@ class Product
 
     public static function parseAttributesJson($AttributesJsonObject)
     {
-        $ids = [];
+        $ids = array();
 
         foreach ($AttributesJsonObject as $group => $facetIds) {
             $gid = substr($group, 11); // rm prefix "attributes"
@@ -313,7 +264,7 @@ class Product
     public static function parseFacetIdsInVariants($jsonObject)
     {
         if (isset($jsonObject->variants)) {
-            $ids = [];
+            $ids = array();
             foreach ($jsonObject->variants as $variant) {
                 if (isset($variant->attributes)) {
                     $ids[] = self::parseAttributesJson($variant->attributes);
@@ -337,7 +288,7 @@ class Product
             return null;
         }
 
-        return ['0' => [$jsonObject->brand_id]];
+        return array('0' => array($jsonObject->brand_id));
     }
 
     /**
@@ -572,7 +523,7 @@ class Product
         if ($group) {
             return $group->getFacets();
         }
-        return [];
+        return array();
     }
 
     /**
@@ -584,7 +535,7 @@ class Product
      */
     public function getFacetGroups($groupId)
     {
-        $allGroups = [];
+        $allGroups = array();
         foreach ($this->getVariants() as $variant) {
             $groups = $variant->getFacetGroupSet()->getGroups();
             foreach ($groups as $group) {
@@ -611,7 +562,7 @@ class Product
     public function getSelectableFacetGroups(FacetGroupSet $selectedFacetGroupSet)
     {
         /** @var FacetGroup[] $allGroups */
-        $allGroups = [];
+        $allGroups = array();
         $selectedGroupIds = $selectedFacetGroupSet->getGroupIds();
 
         foreach ($this->getVariants() as $variant) {
@@ -659,7 +610,7 @@ class Product
     public function getExcludedFacetGroups(FacetGroupSet $selectedFacetGroupSet)
     {
         /** @var FacetGroup[] $allGroups */
-        $allGroups = [];
+        $allGroups = array();
         $selectedGroupIds = $selectedFacetGroupSet->getGroupIds();
 
         foreach ($this->getVariants() as $variant) {
@@ -697,45 +648,6 @@ class Product
     public function getDefaultImage()
     {
         return $this->defaultImage;
-    }
-
-    public function selectImage($hash)
-    {
-        if ($hash) {
-            $this->selectedImage = $this->getImageByHash($hash);
-        } else {
-            $this->selectedImage = null;
-        }
-    }
-
-    /**
-     * @return Image[]
-     */
-    public function getImages()
-    {
-        return $this->images;
-    }
-
-    /**
-     * @return Image|null
-     */
-    public function getImage()
-    {
-        return $this->selectedImage ?: $this->defaultImage ?: null;
-    }
-
-    /**
-     * @param string $hash
-     *
-     * @return Image|null
-     */
-    public function getImageByHash($hash)
-    {
-        if (isset($this->images[$hash])) {
-            return $this->images[$hash];
-        }
-
-        return null;
     }
 
     /**
@@ -838,7 +750,7 @@ class Product
      */
     public function getVariantsByEan($ean)
     {
-        $variants = [];
+        $variants = array();
         foreach ($this->variants as $variant) {
             if ($variant->getEan() === $ean) {
                 $variants[] = $variant;
@@ -877,7 +789,7 @@ class Product
      */
     public function getVariantsByFacetId($facetId, $groupId)
     {
-        $variants = [];
+        $variants = array();
         $facet = new Facet($facetId, '', '', $groupId, '');
         foreach ($this->variants as $variant) {
             if ($variant->getFacetGroupSet()->contains($facet)) {
