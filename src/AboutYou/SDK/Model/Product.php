@@ -10,7 +10,6 @@ use AboutYou\SDK\Constants;
 use AboutYou\SDK\Exception\MalformedJsonException;
 use AboutYou\SDK\Exception\RuntimeException;
 use AboutYou\SDK\Factory\ModelFactoryInterface;
-use DateTime;
 
 class Product
 {
@@ -58,6 +57,7 @@ class Product
     /** @var DateTime */
     protected $firstPublicationDate;
 
+
     /** @var array */
     protected $categoryIdPaths;
 
@@ -76,23 +76,27 @@ class Product
     /** @var integer[] */
     protected $facetIds;
 
-    /** @var string */
-    protected $defaultImageHash;
-
     /** @var Image */
+    protected $defaultImage;
+
+    /**
+     * @var Image
+     */
     protected $selectedImage;
 
-    /** @var Image[] */
+    /**
+     * @var Image[]
+     */
     protected $images = [];
 
-    /** @var int */
-    protected $defaultVariantId;
+    /** @var Variant */
+    protected $defaultVariant;
 
     /** @var Variant */
     protected $selectedVariant;
 
     /** @var Variant[] */
-    protected $variants = [];
+    protected $variants;
 
     /** @var Variant[] */
     protected $inactiveVariants;
@@ -166,18 +170,24 @@ class Product
         if (isset($jsonObject->default_image)) {
             if (!isset($product->images[$jsonObject->default_image->hash])) {
                 $defaultImage = $factory->createImage($jsonObject->default_image);
-                $product->images = array_merge([$defaultImage->getHash() => $defaultImage], $product->images);
+                $product->images = array_merge(
+                    [$defaultImage->getHash() => $defaultImage],
+                    $product->images
+                );
             }
-            $product->defaultImageHash = $jsonObject->default_image->hash;
+            $product->defaultImage = $product->getImageByHash($jsonObject->default_image->hash);
         }
 
         $product->variants = self::parseVariants($jsonObject, $factory, $product);
         if (isset($jsonObject->default_variant)) {
             if (!isset($product->variants[$jsonObject->default_variant->id])) {
                 $defaultVariant = $factory->createVariant($jsonObject->default_variant, $product);
-                $product->variants = array_merge([$defaultVariant->getId() => $defaultVariant], $product->variants);
+                $product->variants = array_merge(
+                    [$defaultVariant->getId() => $defaultVariant],
+                    $product->variants
+                );
             }
-            $product->defaultVariantId = $jsonObject->default_variant->id;
+            $product->defaultVariant = $product->getVariantById($jsonObject->default_variant->id);
         }
 
         $product->inactiveVariants = self::parseVariants($jsonObject, $factory, $product, 'inactive_variants');
@@ -686,7 +696,16 @@ class Product
      */
     public function getDefaultImage()
     {
-        return $this->getImageByHash($this->defaultImageHash);
+        return $this->defaultImage;
+    }
+
+    public function selectImage($hash)
+    {
+        if ($hash) {
+            $this->selectedImage = $this->getImageByHash($hash);
+        } else {
+            $this->selectedImage = null;
+        }
     }
 
     /**
@@ -702,7 +721,7 @@ class Product
      */
     public function getImage()
     {
-        return $this->selectedImage ?: $this->getDefaultImage() ?: null;
+        return $this->selectedImage ?: $this->defaultImage ?: null;
     }
 
     /**
@@ -717,18 +736,6 @@ class Product
         }
 
         return null;
-    }
-
-    /**
-     * @param string $hash
-     */
-    public function selectImage($hash)
-    {
-        if ($hash) {
-            $this->selectedImage = $this->getImageByHash($hash);
-        } else {
-            $this->selectedImage = null;
-        }
     }
 
     /**
@@ -752,7 +759,7 @@ class Product
      */
     public function getDefaultVariant()
     {
-        return $this->getVariantById($this->defaultVariantId);
+        return $this->defaultVariant;
     }
 
     /**
