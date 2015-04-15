@@ -142,10 +142,9 @@ class Query extends QueryBuilder
      */
     public function fetchProductsByStyleKeys(
         array $keys,
-        array $fields = [],
-        $loadStyles = true
+        array $fields = []
     ) {
-        parent::fetchProductsByStyleKeys($keys, $fields, $loadStyles);
+        parent::fetchProductsByStyleKeys($keys, $fields);
 
         if (ProductFields::requiresCategories($fields)) {
             $this->requireCategoryTree();
