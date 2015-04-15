@@ -36,7 +36,7 @@ class Query extends QueryBuilder
         'facet'          => 'createFacetList',
         'facet_types'    => 'createFacetTypes',
         'products'       => 'createProductsResult',
-        'stylea'         => 'createProductsResult',
+        'styles'         => 'createProductsResult',
         'products_eans'  => 'createProductsEansResult',
         'product_search' => 'createProductSearchResult',
         'suggest'        => 'createSuggest',
