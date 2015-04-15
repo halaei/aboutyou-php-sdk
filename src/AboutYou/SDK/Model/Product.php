@@ -916,4 +916,12 @@ class Product
 
         return $sizeAdvice;
     }
+
+    /**
+     * @return string
+     */
+    public function getStyleKey()
+    {
+        return $this->styleKey;
+    }
 }
