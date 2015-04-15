@@ -434,6 +434,16 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\ProductsResult
      */
+    public function createProductsResult(\stdClass $jsonObject)
+    {
+        return Model\ProductsResult::createFromJson($jsonObject, $this);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return Model\StylesResult
+     */
     public function createStylesResult(\stdClass $jsonObject)
     {
         return Model\StylesResult::createFromJson($jsonObject, $this);
