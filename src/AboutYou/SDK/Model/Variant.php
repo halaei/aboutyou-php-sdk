@@ -8,6 +8,7 @@ namespace AboutYou\SDK\Model;
 
 use AboutYou\SDK\Constants;
 use AboutYou\SDK\Factory\ModelFactoryInterface;
+use AboutYou\SDK\Model\Product;
 
 class Variant
 {
@@ -21,11 +22,11 @@ class Variant
 
     /** @var ModelFactoryInterface */
     private $factory;
-
+    
     /** @var Product */
     protected $product;
 
-    /** @var Material[]|null */
+    /** @var Materials[]|null */
     protected $materials;
 
     /**
@@ -38,9 +39,9 @@ class Variant
     }
 
     /**
-     * @param \stdClass             $jsonObject
+     * @param \stdClass $jsonObject
      * @param ModelFactoryInterface $factory
-     * @param Product               $product
+     * @param Product $product
      *
      * @return static
      */
@@ -48,9 +49,9 @@ class Variant
     {
         $variant = new static();
 
-        $variant->factory = $factory;
+        $variant->factory    = $factory;
         $variant->jsonObject = $jsonObject;
-        $variant->product = $product;
+        $variant->product    = $product;
 
         return $variant;
     }
@@ -70,7 +71,7 @@ class Variant
     {
         // parse lazy
         if ($this->images === null) {
-            $this->images = [];
+            $this->images = array();
             if (!empty($this->jsonObject->images)) {
                 $factory = $this->factory;
 
@@ -83,15 +84,16 @@ class Variant
 
         return $this->images;
     }
-
-    /**
+    
+    /**    
      * @return string
      */
     public function getAboutNumber()
     {
         return isset($this->jsonObject->about_number) ?
             $this->jsonObject->about_number :
-            null;
+            null
+        ;
     }
 
     /**
@@ -153,7 +155,6 @@ class Variant
                 return $images[0];
             }
         }
-
         return null;
     }
 
@@ -208,8 +209,9 @@ class Variant
     {
         return
             isset($this->jsonObject->additional_info) ?
-                $this->jsonObject->additional_info :
-                null;
+            $this->jsonObject->additional_info :
+            null
+        ;
     }
 
     /**
@@ -224,12 +226,13 @@ class Variant
     {
         return isset($this->jsonObject->quantity) ?
             $this->jsonObject->quantity :
-            0;
+            0
+        ;
     }
 
     protected static function parseFacetIds($jsonObject)
     {
-        $ids = [];
+        $ids = array();
         if (!empty($jsonObject->attributes)) {
             foreach ($jsonObject->attributes as $group => $aIds) {
                 $gid = substr($group, 11); // rm prefix "attributs_"
@@ -285,7 +288,8 @@ class Variant
     {
         return isset($this->jsonObject->first_active_date) ?
             new \DateTime($this->jsonObject->first_active_date) :
-            null;
+            null
+        ;
     }
 
     /**
@@ -295,7 +299,8 @@ class Variant
     {
         return isset($this->jsonObject->first_sale_date) ?
             new \DateTime($this->jsonObject->first_sale_date) :
-            null;
+            null
+        ;
     }
 
     /**
@@ -305,7 +310,8 @@ class Variant
     {
         return isset($this->jsonObject->created_date) ?
             new \DateTime($this->jsonObject->created_date) :
-            null;
+            null
+        ;
     }
 
     /**
@@ -315,7 +321,8 @@ class Variant
     {
         return isset($this->jsonObject->updated_date) ?
             new \DateTime($this->jsonObject->updated_date) :
-            null;
+            null
+        ;
     }
 
     /**
@@ -354,7 +361,7 @@ class Variant
      */
     private function getSizeGroupId()
     {
-        $keys = [];
+        $keys = array();
 
         $groups = $this->getFacetGroupSet()->getGroups();
 
