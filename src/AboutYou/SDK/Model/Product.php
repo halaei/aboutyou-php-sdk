@@ -220,7 +220,7 @@ class Product
             }
         }
 
-        return $images;
+        return array_reverse($images, true);
     }
 
     protected static function parseVariants($jsonObject, ModelFactoryInterface $factory, Product $product, $attributeName = 'variants')
@@ -702,7 +702,13 @@ class Product
      */
     public function getImage()
     {
-        return $this->selectedImage ?: $this->getDefaultImage() ?: null;
+        $image = $this->selectedImage ?: $this->getDefaultImage() ?: null;
+
+        if (!$image) {
+            list($image) = array_values($this->getImages()) + [null];
+        }
+
+        return $image;
     }
 
     /**
