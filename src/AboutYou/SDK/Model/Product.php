@@ -220,7 +220,7 @@ class Product
             }
         }
 
-        return array_reverse($images, true);
+        return array_reverse($images, true); // TODO: KIM remove reverse after SAPI fixes it
     }
 
     protected static function parseVariants($jsonObject, ModelFactoryInterface $factory, Product $product, $attributeName = 'variants')
