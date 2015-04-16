@@ -294,10 +294,10 @@ class AY
     public function fetchAutocomplete(
         $searchword,
         $limit = 50,
-        $types = array(
+        $types = [
             Autocomplete::TYPE_PRODUCTS,
             Autocomplete::TYPE_CATEGORIES
-        )
+        ]
     ) {
         $query = $this->getQuery()
             ->fetchAutocomplete($searchword, $limit, $types)
@@ -508,7 +508,7 @@ class AY
     {
         // we allow to pass a single ID instead of an array
         if ($ids !== null && !is_array($ids)) {
-            $ids = array($ids);
+            $ids = [$ids];
         }
 
         foreach ($ids as $id) {
@@ -578,7 +578,7 @@ class AY
      */
     public function fetchProductsByIds(
         array $ids,
-        array $fields = array(),
+        array $fields = [],
         $loadStyles = true
     ) {
         // we allow to pass a single ID instead of an array
@@ -586,6 +586,35 @@ class AY
 
         $query = $this->getQuery()
             ->fetchProductsByIds($ids, $fields, $loadStyles)
+        ;
+
+        $result = $query->executeSingle();
+
+        $productsNotFound = $result->getProductsNotFound();
+        if (!empty($productsNotFound) && $this->logger) {
+            $this->logger->warning('products not found: appid=' . $this->appId . ' product ids=[' . join(',', $productsNotFound) . ']');
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string[] $keys
+     * @param string[] $fields
+     * @param bool     $loadStyles
+     *
+     * @return ProductsResult
+     */
+    public function fetchProductsByStyleKeys(
+        array $keys,
+        array $fields = [],
+        $loadStyles = true
+    ) {
+        // we allow to pass a single ID instead of an array
+        settype($keys, 'array');
+
+        $query = $this->getQuery()
+            ->fetchProductsByStyleKeys($keys, $fields, $loadStyles)
         ;
 
         $result = $query->executeSingle();
@@ -637,7 +666,7 @@ class AY
      */
     public function fetchProductsByEans(
         array $eans,
-        array $fields = array()
+        array $fields = []
     ) {
         // we allow to pass a single ID instead of an array
         settype($eans, 'array');
@@ -901,7 +930,7 @@ class AY
      */
     public function getFacetGroups()
     {
-        return array(
+        return [
             0   => 'brand',
             1   => 'color',
             5   => 'length',
@@ -923,7 +952,7 @@ class AY
             190 => 'clothing_mens_belts_cm',
             176 => 'clothing_womens_it',
             192 => 'clothing_mens_acc'
-        );
+        ];
     }
 
     /**
@@ -966,13 +995,13 @@ class AY
         $callbackUrl,
         $usePopupLayout = true
     ) {
-        $this->authSdk = new AuthSDK(array(
+        $this->authSdk = new AuthSDK([
             'clientId'     => $this->getAppId(),
             'clientToken'  => $this->appPassword,
             'clientSecret' => $appSecret,
             'redirectUri'  => $callbackUrl,
             'popup'        => $usePopupLayout
-        ), new SessionStorage());
+        ], new SessionStorage());
 
         return $this->handleOAuth2Request();
     }

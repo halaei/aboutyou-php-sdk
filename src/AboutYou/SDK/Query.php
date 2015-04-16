@@ -26,6 +26,27 @@ class Query extends QueryBuilder
 
     private $allQuery = array();
 
+    protected $mapping = array(
+        'autocompletion' => 'createAutocomplete',
+        'basket'         => 'createBasket',
+        'wishlist'       => 'createWishList',
+        'category'       => 'createCategoriesResult',
+        'category_tree'  => 'createCategoryTree',
+        'facets'         => 'createFacetsList',
+        'facet'          => 'createFacetList',
+        'facet_types'    => 'createFacetTypes',
+        'products'       => 'createProductsResult',
+        'styles'         => 'createStylesResult',
+        'products_eans'  => 'createProductsEansResult',
+        'product_search' => 'createProductSearchResult',
+        'suggest'        => 'createSuggest',
+        'get_order'      => 'createOrder',
+        'initiate_order' => 'initiateOrder',
+        'child_apps'     => 'createChildApps',
+        'live_variant'   => 'createVariantsResult',
+        'did_you_mean'   => 'createSpellCorrection'
+    );
+
     /**
      * @param Client       $client
      * @param ModelFactoryInterface $factory
@@ -101,6 +122,29 @@ class Query extends QueryBuilder
         $loadStyles = true
     ) {
         parent::fetchProductsByIds($ids, $fields, $loadStyles);
+
+        if (ProductFields::requiresCategories($fields)) {
+            $this->requireCategoryTree();
+        }
+        if (ProductFields::requiresFacets($fields)) {
+            $this->requireFacets();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string[] $keys
+     * @param array         $fields
+     * @param bool          $loadStyles
+     *
+     * @return $this
+     */
+    public function fetchProductsByStyleKeys(
+        array $keys,
+        array $fields = []
+    ) {
+        parent::fetchProductsByStyleKeys($keys, $fields);
 
         if (ProductFields::requiresCategories($fields)) {
             $this->requireCategoryTree();
@@ -201,7 +245,7 @@ class Query extends QueryBuilder
         $this->allQuery = $this->ghostQuery + $this->query;
 
         $queryString = $this->getQueryString();
-        
+
         $response = $this->client->request($queryString);
 
         $jsonResponse = json_decode($response->getBody(true));
@@ -220,26 +264,6 @@ class Query extends QueryBuilder
 
         return reset($result);
     }
-
-    protected $mapping = array(
-        'autocompletion' => 'createAutocomplete',
-        'basket'         => 'createBasket',
-        'wishlist'       => 'createWishList',
-        'category'       => 'createCategoriesResult',
-        'category_tree'  => 'createCategoryTree',
-        'facets'         => 'createFacetsList',
-        'facet'          => 'createFacetList',
-        'facet_types'    => 'createFacetTypes',
-        'products'       => 'createProductsResult',
-        'products_eans'  => 'createProductsEansResult',
-        'product_search' => 'createProductSearchResult',
-        'suggest'        => 'createSuggest',
-        'get_order'      => 'createOrder',
-        'initiate_order' => 'initiateOrder',
-        'child_apps'     => 'createChildApps',
-        'live_variant'   => 'createVariantsResult',
-        'did_you_mean'   => 'createSpellCorrection'
-    );
 
     protected function checkResponse($jsonResponse)
     {

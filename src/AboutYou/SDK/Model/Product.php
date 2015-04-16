@@ -14,6 +14,11 @@ use DateTime;
 
 class Product
 {
+    /**
+     * @var \stdClass
+     */
+    public $rawJson;
+
     /** @var integer */
     protected $id;
 
@@ -92,6 +97,11 @@ class Product
     /** @var Variant[] */
     protected $inactiveVariants;
 
+    /**
+     * @var string
+     */
+    protected $styleKey;
+
     /** @var Product[] */
     protected $styles;
 
@@ -128,6 +138,8 @@ class Product
             throw new MalformedJsonException();
         }
 
+        $product->rawJson = $jsonObject;
+
         $product->factory = $factory;
 
         $product->id   = $jsonObject->id;
@@ -146,7 +158,7 @@ class Product
         $product->maxSavingsPrice  = isset($jsonObject->max_savings) ? $jsonObject->max_savings : null;
         $product->maxSavingsPercentage = isset($jsonObject->max_savings_percentage) ? $jsonObject->max_savings_percentage : null;
 
-        $product->firstPublicationDate = isset($jsonObject->new_in_since_date)
+        $product->firstPublicationDate = isset($jsonObject->new_in_since_date) && is_string($jsonObject->new_in_since_date)
             ? new \DateTime($jsonObject->new_in_since_date)
             : null;
 
@@ -169,6 +181,8 @@ class Product
         }
 
         $product->inactiveVariants = self::parseVariants($jsonObject, $factory, $product, 'inactive_variants');
+
+        $product->styleKey = isset($jsonObject->style_key) ? $jsonObject->style_key : null;
         $product->styles           = self::parseStyles($jsonObject, $factory);
 
         $key = 'categories.' . $appId;
@@ -214,7 +228,9 @@ class Product
         $variants = [];
         if (!empty($jsonObject->$attributeName)) {
             foreach ($jsonObject->$attributeName as $jsonVariant) {
-                $variants[$jsonVariant->id] = $factory->createVariant($jsonVariant, $product);
+                if (isset($jsonVariant->id)) {
+                    $variants[$jsonVariant->id] = $factory->createVariant($jsonVariant, $product);
+                }
             }
         }
 
@@ -289,7 +305,9 @@ class Product
         if (isset($jsonObject->variants)) {
             $ids = [];
             foreach ($jsonObject->variants as $variant) {
-                $ids[] = self::parseAttributesJson($variant->attributes);
+                if (isset($variant->attributes)) {
+                    $ids[] = self::parseAttributesJson($variant->attributes);
+                }
             }
             $ids = FacetGroupSet::mergeFacetIds($ids);
 
@@ -897,5 +915,13 @@ class Product
         }
 
         return $sizeAdvice;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStyleKey()
+    {
+        return $this->styleKey;
     }
 }
