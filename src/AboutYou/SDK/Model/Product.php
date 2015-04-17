@@ -164,20 +164,20 @@ class Product
 
         $product->images = self::parseImages($jsonObject, $factory);
         if (isset($jsonObject->default_image)) {
-            if (!isset($product->images[$jsonObject->default_image->hash])) {
-                $defaultImage = $factory->createImage($jsonObject->default_image);
-                $product->images = array_merge([$defaultImage->getHash() => $defaultImage], $product->images);
-            }
+            unset($product->images[$jsonObject->default_image->hash]);
+
+            $defaultImage = $factory->createImage($jsonObject->default_image);
             $product->defaultImageHash = $jsonObject->default_image->hash;
+            $product->images = array_merge([$jsonObject->default_image->hash => $defaultImage], $product->images);
         }
 
         $product->variants = self::parseVariants($jsonObject, $factory, $product);
         if (isset($jsonObject->default_variant)) {
-            if (!isset($product->variants[$jsonObject->default_variant->id])) {
-                $defaultVariant = $factory->createVariant($jsonObject->default_variant, $product);
-                $product->variants = array_merge([$defaultVariant->getId() => $defaultVariant], $product->variants);
-            }
+            unset($product->variants[$jsonObject->default_variant->id]);
+
+            $defaultVariant = $factory->createVariant($jsonObject->default_variant, $product);
             $product->defaultVariantId = $jsonObject->default_variant->id;
+            $product->variants = array_merge([$jsonObject->default_variant->id => $defaultVariant], $product->variants);
         }
 
         $product->inactiveVariants = self::parseVariants($jsonObject, $factory, $product, 'inactive_variants');
