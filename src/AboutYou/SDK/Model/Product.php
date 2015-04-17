@@ -168,7 +168,7 @@ class Product
 
             $defaultImage = $factory->createImage($jsonObject->default_image);
             $product->defaultImageHash = $jsonObject->default_image->hash;
-            $product->images = array_merge([$jsonObject->default_image->hash => $defaultImage], $product->images);
+            $product->images = [$jsonObject->default_image->hash => $defaultImage] + $product->images;
         }
 
         $product->variants = self::parseVariants($jsonObject, $factory, $product);
@@ -177,7 +177,7 @@ class Product
 
             $defaultVariant = $factory->createVariant($jsonObject->default_variant, $product);
             $product->defaultVariantId = $jsonObject->default_variant->id;
-            $product->variants = array_merge([$jsonObject->default_variant->id => $defaultVariant], $product->variants);
+            $product->variants = [$jsonObject->default_variant->id => $defaultVariant] + $product->variants;
         }
 
         $product->inactiveVariants = self::parseVariants($jsonObject, $factory, $product, 'inactive_variants');
