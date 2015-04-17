@@ -164,20 +164,28 @@ class Product
 
         $product->images = self::parseImages($jsonObject, $factory);
         if (isset($jsonObject->default_image)) {
-            unset($product->images[$jsonObject->default_image->hash]);
-
-            $defaultImage = $factory->createImage($jsonObject->default_image);
-            $product->defaultImageHash = $jsonObject->default_image->hash;
+            if (isset($product->images[$jsonObject->default_image->hash])) {
+                $defaultImage = $product->images[$jsonObject->default_image->hash];
+                unset($product->images[$jsonObject->default_image->hash]);
+            } else {
+                $defaultImage = $factory->createImage($jsonObject->default_image);
+            }
+            // Make sure the default image is the first one
             $product->images = [$jsonObject->default_image->hash => $defaultImage] + $product->images;
+            $product->defaultImageHash = $jsonObject->default_image->hash;
         }
 
         $product->variants = self::parseVariants($jsonObject, $factory, $product);
         if (isset($jsonObject->default_variant)) {
-            unset($product->variants[$jsonObject->default_variant->id]);
-
-            $defaultVariant = $factory->createVariant($jsonObject->default_variant, $product);
-            $product->defaultVariantId = $jsonObject->default_variant->id;
+            if (isset($product->variants[$jsonObject->default_variant->id])) {
+                $defaultVariant = $product->variants[$jsonObject->default_variant->id];
+                unset($product->variants[$jsonObject->default_variant->id]);
+            } else {
+                $defaultVariant = $factory->createVariant($jsonObject->default_variant, $product);
+            }
+            // make sure the default variant is the first
             $product->variants = [$jsonObject->default_variant->id => $defaultVariant] + $product->variants;
+            $product->defaultVariantId = $jsonObject->default_variant->id;
         }
 
         $product->inactiveVariants = self::parseVariants($jsonObject, $factory, $product, 'inactive_variants');
