@@ -32,12 +32,6 @@ class VariantTest extends AbstractModelTest
         $this->assertEquals(new \DateTime('2014-01-11 10:11:00'), $variant->getCreatedDate());
         $this->assertEquals(new \DateTime('2014-01-12 10:12:00'), $variant->getUpdatedDate());
 
-        $images = $variant->getImages();
-        $this->assertCount(2, $images);
-        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Image', $images[0]);
-        $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Image', $images[1]);
-        $this->assertArrayNotHasKey(2, $images);
-
         return $variant;
     }
 
@@ -80,18 +74,6 @@ class VariantTest extends AbstractModelTest
     /**
      * @depends testFromJson
      */
-    public function testGetImageByHash(Variant $variant)
-    {
-        $images = $variant->getImages();
-        $this->assertEquals($images[0], $variant->getImageByHash($images[0]->getHash()));
-        $this->assertEquals($images[1], $variant->getImageByHash($images[1]->getHash()));
-        $this->assertNotEquals($images[0], $variant->getImageByHash($images[1]->getHash()));
-        $this->assertNull($variant->getImageByHash('unknown'));
-    }
-
-    /**
-     * @depends testFromJson
-     */
     public function testGetSize(Variant $variant)
     {
         $facetManager = $this->getFacetManager('facets-all.json');
@@ -121,7 +103,7 @@ class VariantTest extends AbstractModelTest
         $this->assertEquals('HW 14', $facet->getName());
         $this->assertEquals('season', $facet->getGroupName());
     }
-    
+
     /**
      * @depends testFromJson
      */
@@ -203,10 +185,10 @@ class VariantTest extends AbstractModelTest
 
         return $facetManager;
     }
-    
-    private function getProduct() 
+
+    private function getProduct()
     {
         $json = json_decode('{"id":1,"name":"Product"}');
         return Product::createFromJson($json, $this->getModelFactory(), 1);
-    }    
+    }
 }
