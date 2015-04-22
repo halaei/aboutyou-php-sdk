@@ -132,7 +132,7 @@ class Variant
      *
      * @return void
      *
-     * @depracted
+     * @deprecated
      */
     public function selectImage($hash)
     {
