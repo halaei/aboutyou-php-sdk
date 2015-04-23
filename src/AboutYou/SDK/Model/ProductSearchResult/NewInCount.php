@@ -26,20 +26,19 @@ class NewInCount
      */
     protected $date;
 
+    public function __construct($productCount, $timestamp, DateTime $date)
+    {
+        $this->productCount = (int)$productCount;
+        $this->timestamp = (int)$timestamp;
+        $this->date = $date;
+    }
+
     /**
      * @return int
      */
     public function getProductCount()
     {
         return $this->productCount;
-    }
-
-    /**
-     * @param int $productCount
-     */
-    public function setProductCount($productCount)
-    {
-        $this->productCount = (int)$productCount;
     }
 
     /**
@@ -51,26 +50,10 @@ class NewInCount
     }
 
     /**
-     * @param int $timestamp
-     */
-    public function setTimestamp($timestamp)
-    {
-        $this->timestamp = (int)$timestamp;
-    }
-
-    /**
      * @return DateTime|null
      */
     public function getDate()
     {
         return $this->date;
-    }
-
-    /**
-     * @param DateTime $date
-     */
-    public function setDate(DateTime $date)
-    {
-        $this->date = $date;
     }
 }

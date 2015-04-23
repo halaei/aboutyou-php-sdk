@@ -647,10 +647,11 @@ class DefaultModelFactory implements ModelFactoryInterface
     {
         $newInFacets = [];
         foreach ($jsonObjects as $jsonObject) {
-            $newInFacet = new ProductSearchResult\NewInCount();
-            $newInFacet->setProductCount($jsonObject->count);
-            $newInFacet->setTimestamp($jsonObject->timestamp);
-            $newInFacet->setDate(new DateTime($jsonObject->date));
+            $newInFacet = new ProductSearchResult\NewInCount(
+                $jsonObject->count,
+                $jsonObject->timestamp,
+                new DateTime($jsonObject->date)
+            );
 
             $newInFacets[] = $newInFacet;
         }
