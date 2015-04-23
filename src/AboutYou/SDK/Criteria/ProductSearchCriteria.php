@@ -373,6 +373,22 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return $this
      */
+    public function selectNewIn($enable = true)
+    {
+        if ($enable) {
+            $this->result['new_in_since_date'] = true;
+        } else {
+            unset($this->result['new_in_since_date']);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param bool $enable
+     *
+     * @return $this
+     */
     public function selectPriceRanges($enable = true)
     {
         if ($enable) {
