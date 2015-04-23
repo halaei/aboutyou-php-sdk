@@ -14,6 +14,8 @@ use AboutYou\SDK\Model\WishList;
 use AboutYou\SDK\Model\ProductSearchResult;
 use AboutYou\SDK\Model\CategoryManager\CategoryManagerInterface;
 use AboutYou\SDK\Model\FacetManager\FacetManagerInterface;
+use DateTime;
+use stdClass;
 
 class DefaultModelFactory implements ModelFactoryInterface
 {
@@ -84,7 +86,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\Autocomplete
      */
-    public function createAutocomplete(\stdClass $jsonObject)
+    public function createAutocomplete(stdClass $jsonObject)
     {
         return Model\Autocomplete::createFromJson($jsonObject, $this);
     }
@@ -104,7 +106,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Basket
      */
-    public function createBasket(\stdClass $jsonObject)
+    public function createBasket(stdClass $jsonObject)
     {
         return Basket::createFromJson($jsonObject, $this);
     }
@@ -114,7 +116,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Basket\BasketItem
      */
-    public function createBasketItem(\stdClass $jsonObject, array $products)
+    public function createBasketItem(stdClass $jsonObject, array $products)
     {
         return Basket\BasketItem::createFromJson($jsonObject, $products);
     }
@@ -124,7 +126,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Basket\BasketSet
      */
-    public function createBasketSet(\stdClass $jsonObject, array $products)
+    public function createBasketSet(stdClass $jsonObject, array $products)
     {
         return Basket\BasketSet::createFromJson($jsonObject, $this, $products);
     }
@@ -134,7 +136,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Basket\BasketSetItem
      */
-    public function createBasketSetItem(\stdClass $jsonObject, array $products)
+    public function createBasketSetItem(stdClass $jsonObject, array $products)
     {
         return Basket\BasketSetItem::createFromJson($jsonObject, $products);
     }
@@ -144,7 +146,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return WishList
      */
-    public function createWishList(\stdClass $jsonObject)
+    public function createWishList(stdClass $jsonObject)
     {
         return WishList::createFromJson($jsonObject, $this);
     }
@@ -154,7 +156,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return WishList\WishListItem
      */
-    public function createWishListItem(\stdClass $jsonObject, array $products)
+    public function createWishListItem(stdClass $jsonObject, array $products)
     {
         return WishList\WishListItem::createFromJson($jsonObject, $products);
     }
@@ -164,7 +166,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Basket\BasketSet
      */
-    public function createWishListSet(\stdClass $jsonObject, array $products)
+    public function createWishListSet(stdClass $jsonObject, array $products)
     {
         return WishList\WishListSet::createFromJson($jsonObject, $this, $products);
     }
@@ -174,7 +176,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Basket\BasketSetItem
      */
-    public function createWishListSetItem(\stdClass $jsonObject, array $products)
+    public function createWishListSetItem(stdClass $jsonObject, array $products)
     {
         return WishList\WishListSetItem::createFromJson($jsonObject, $products);
     }
@@ -184,7 +186,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\CategoriesResult
      */
-    public function createCategoriesResult(\stdClass $jsonObject, $queryParams)
+    public function createCategoriesResult(stdClass $jsonObject, $queryParams)
     {
         return Model\CategoriesResult::createFromJson($jsonObject, $queryParams['ids'], $this);
     }
@@ -194,7 +196,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\Category
      */
-    public function createCategory(\stdClass $jsonObject)
+    public function createCategory(stdClass $jsonObject)
     {
         return Model\Category::createFromJson($jsonObject, $this->getCategoryManager());
     }
@@ -240,7 +242,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\Brand
      */
-    public function createBrand(\stdClass $jsonObject)
+    public function createBrand(stdClass $jsonObject)
     {
         return Model\Brand::createFromJson($jsonObject);
     }
@@ -250,7 +252,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\Facet
      */
-    public function createFacet(\stdClass $jsonObject)
+    public function createFacet(stdClass $jsonObject)
     {
         return Model\Facet::createFromJson($jsonObject);
     }
@@ -260,7 +262,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\Facet
      */
-    public function createInlineFacet(\stdClass $jsonObject)
+    public function createInlineFacet(stdClass $jsonObject)
     {
         return Model\Facet::createFromFacetsJson($jsonObject);
     }
@@ -272,7 +274,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createFacetList(array $jsonArray)
     {
-        $facets = array();
+        $facets = [];
         foreach ($jsonArray as $jsonFacet) {
             $facet = $this->createFacet($jsonFacet);
             $key = $facet->getUniqueKey();
@@ -287,7 +289,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\Facet[]
      */
-    public function createFacetsList(\stdClass $jsonObject)
+    public function createFacetsList(stdClass $jsonObject)
     {
         return $this->createFacetList($jsonObject->facet);
     }
@@ -307,7 +309,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\Image
      */
-    public function createImage(\stdClass $jsonObject)
+    public function createImage(stdClass $jsonObject)
     {
         return Model\Image::createFromJson($jsonObject);
     }
@@ -317,9 +319,9 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\Product
      */
-    public function createCompositionList(\stdClass $jsonObject)
+    public function createCompositionList(stdClass $jsonObject)
     {
-        $compositions = array();
+        $compositions = [];
 
         foreach ($jsonObject as $name => $percentage) {
             $compositions[] = new Model\Composition($name, floatval($percentage)/100);
@@ -335,7 +337,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      */
     public function createMaterialList(array $jsonArray)
     {
-        $materials = array();
+        $materials = [];
 
         foreach ($jsonArray as $jsonMaterial) {
             $materials[] = $this->createMaterial($jsonMaterial);
@@ -349,7 +351,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\Product
      */
-    public function createMaterial(\stdClass $jsonObject)
+    public function createMaterial(stdClass $jsonObject)
     {
         $compositions = $this->createCompositionList($jsonObject->composition);
 
@@ -365,7 +367,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\Product
      */
-    public function createProduct(\stdClass $jsonObject)
+    public function createProduct(stdClass $jsonObject)
     {
         return Model\Product::createFromJson($jsonObject, $this, $this->ay->getAppId());
     }
@@ -375,11 +377,11 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\VariantsResult
      */
-    public function createVariantsResult(\stdClass $jsonObject)
+    public function createVariantsResult(stdClass $jsonObject)
     {
-        $variants = array();
-        $errors = array();
-        $productIds = array();
+        $variants = [];
+        $errors = [];
+        $productIds = [];
         $productSearchResult = false;
 
         foreach ($jsonObject as $id => $data) {
@@ -398,7 +400,7 @@ class DefaultModelFactory implements ModelFactoryInterface
             $productSearchResult = $this->ay
                 ->fetchProductsByIds(
                     $productIds,
-                    array(
+                    [
                         ProductFields::ATTRIBUTES_MERGED,
                         ProductFields::BRAND,
                         ProductFields::CATEGORIES,
@@ -411,7 +413,7 @@ class DefaultModelFactory implements ModelFactoryInterface
                         ProductFields::MAX_PRICE,
                         ProductFields::MIN_PRICE,
                         ProductFields::VARIANTS
-                    )
+                    ]
                 )
             ;
         }
@@ -424,7 +426,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\Product
      */
-    public function createSingleProduct(\stdClass $jsonObject)
+    public function createSingleProduct(stdClass $jsonObject)
     {
         return $this->createProduct($jsonObject);
     }
@@ -434,7 +436,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\ProductsResult
      */
-    public function createProductsResult(\stdClass $jsonObject)
+    public function createProductsResult(stdClass $jsonObject)
     {
         return Model\ProductsResult::createFromJson($jsonObject, $this);
     }
@@ -444,7 +446,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\StylesResult
      */
-    public function createStylesResult(\stdClass $jsonObject)
+    public function createStylesResult(stdClass $jsonObject)
     {
         return Model\StylesResult::createFromJson($jsonObject, $this);
     }
@@ -454,7 +456,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\ProductsEansResult
      */
-    public function createProductsEansResult(\stdClass $jsonObject)
+    public function createProductsEansResult(stdClass $jsonObject)
     {
         return Model\ProductsEansResult::createFromJson($jsonObject, $this);
     }
@@ -464,7 +466,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\ProductSearchResult
      */
-    public function createProductSearchResult(\stdClass $jsonObject)
+    public function createProductSearchResult(stdClass $jsonObject)
     {
         return Model\ProductSearchResult::createFromJson($jsonObject, $this);
     }
@@ -484,7 +486,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\Variant
      */
-    public function createVariant(\stdClass $jsonObject, Model\Product $product)
+    public function createVariant(stdClass $jsonObject, Model\Product $product)
     {
         return Model\Variant::createFromJson($jsonObject, $this, $product);
     }
@@ -494,7 +496,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\Order
      */
-    public function createOrder(\stdClass $jsonObject)
+    public function createOrder(stdClass $jsonObject)
     {
         $basket = $this->createBasket($jsonObject->basket);
 
@@ -506,7 +508,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\InitiateOrder
      */
-    public function initiateOrder(\stdClass $jsonObject)
+    public function initiateOrder(stdClass $jsonObject)
     {
         return Model\InitiateOrder::createFromJson($jsonObject);
     }
@@ -516,9 +518,9 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\App[]
      */
-    public function createChildApps(\stdClass $jsonObject)
+    public function createChildApps(stdClass $jsonObject)
     {
-        $apps = array();
+        $apps = [];
         foreach ($jsonObject->child_apps as $jsonApp) {
             $app = $this->createApp($jsonApp);
             $key = $app->getId();
@@ -533,7 +535,7 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\App
      */
-    public function createApp(\stdClass $jsonObject)
+    public function createApp(stdClass $jsonObject)
     {
         return Model\App::createFromJson($jsonObject);
     }
@@ -541,9 +543,9 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function createFacetsCounts(\stdClass $jsonObject)
+    public function createFacetsCounts(stdClass $jsonObject)
     {
-        $facetsCounts = array();
+        $facetsCounts = [];
 
         foreach ($jsonObject as $groupId => $jsonResultFacet) {
             if (!ctype_digit($groupId)) {
@@ -564,9 +566,9 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function createProductFacets(\stdClass $jsonObject)
+    public function createProductFacets(stdClass $jsonObject)
     {
-        $facetsCounts = array();
+        $facetsCounts = [];
 
         foreach ($jsonObject as $groupId => $jsonResultFacet) {
             if (!ctype_digit($groupId)) {
@@ -588,7 +590,7 @@ class DefaultModelFactory implements ModelFactoryInterface
     {
         $facetManager = $this->facetManager;
 
-        $facetCounts = array();
+        $facetCounts = [];
         foreach ($jsonTerms as $jsonTerm) {
             $id = (int)$jsonTerm->term;
             $facet = $facetManager->getFacet($groupId, $id);
@@ -604,7 +606,7 @@ class DefaultModelFactory implements ModelFactoryInterface
 
     protected function getCountedFacets(array $jsonCountedFacets)
     {
-        $facetCounts = array();
+        $facetCounts = [];
         foreach ($jsonCountedFacets as $jsonCountedFacet) {
             $facet = $this->createInlineFacet($jsonCountedFacet);
 
@@ -620,9 +622,9 @@ class DefaultModelFactory implements ModelFactoryInterface
      *
      * @return Model\ProductSearchResult\PriceRange[]
      */
-    public function createPriceRanges(\stdClass $jsonObject)
+    public function createPriceRanges(stdClass $jsonObject)
     {
-        $priceRanges = array();
+        $priceRanges = [];
         foreach ($jsonObject->ranges as $range) {
             $priceRanges[] = Model\ProductSearchResult\PriceRange::createFromJson($range);
         }
@@ -632,12 +634,23 @@ class DefaultModelFactory implements ModelFactoryInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return Model\ProductSearchResult\SaleCounts
      */
-    public function createSaleFacet(\stdClass $jsonObject)
+    public function createSaleFacet(stdClass $jsonObject)
     {
         return Model\ProductSearchResult\SaleCounts::createFromJson($jsonObject);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createNewInFacet(stdClass $jsonObject)
+    {
+        $newInFacet = new ProductSearchResult\NewInCount();
+        $newInFacet->setProductCount($jsonObject->count);
+        $newInFacet->setTimestamp($jsonObject->timestamp);
+        $newInFacet->setDate(new DateTime($jsonObject->date));
+
+        return $newInFacet;
     }
 
     /**
@@ -647,7 +660,7 @@ class DefaultModelFactory implements ModelFactoryInterface
     {
         $categoryManager = $this->getCategoryManager();
 
-        $flattenCategories = array();
+        $flattenCategories = [];
         foreach ($jsonArray as $item) {
             $id = $item->term;
             $category = $categoryManager->getCategory($id);

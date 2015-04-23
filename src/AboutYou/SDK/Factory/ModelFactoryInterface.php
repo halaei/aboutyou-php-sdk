@@ -125,6 +125,13 @@ interface ModelFactoryInterface extends ResultFactoryInterface
     public function createSaleFacet(\stdClass $jsonObject);
 
     /**
+     * @param \stdClass $jsonObject
+     *
+     * @return Model\ProductSearchResult\NewInCount
+     */
+    public function createNewInFacet(\stdClass $jsonObject);
+
+    /**
      * @param \stdClass[] $jsonArray
      *
      * @return Model\Category
