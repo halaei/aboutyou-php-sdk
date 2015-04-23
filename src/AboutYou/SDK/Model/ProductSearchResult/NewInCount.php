@@ -2,7 +2,6 @@
 namespace AboutYou\SDK\Model\ProductSearchResult;
 
 use DateTime;
-use stdClass;
 
 /**
  * NewInCount
