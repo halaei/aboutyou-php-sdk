@@ -643,14 +643,20 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function createNewInFacet(stdClass $jsonObject)
+    public function createNewInFacets(array $jsonObjects)
     {
-        $newInFacet = new ProductSearchResult\NewInCount();
-        $newInFacet->setProductCount($jsonObject->count);
-        $newInFacet->setTimestamp($jsonObject->timestamp);
-        $newInFacet->setDate(new DateTime($jsonObject->date));
+        $newInFacets = [];
+        foreach ($jsonObjects as $jsonObject) {
+            $newInFacet = new ProductSearchResult\NewInCount();
+            $newInFacet->setProductCount($jsonObject->count);
+            $newInFacet->setTimestamp($jsonObject->timestamp);
+            $newInFacet->setDate(new DateTime($jsonObject->date));
 
-        return $newInFacet;
+            $newInFacets[] = $newInFacet;
+        }
+
+
+        return $newInFacets;
     }
 
     /**

@@ -59,6 +59,12 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     /** @var string */
     protected $sessionId;
 
+    protected $newInSinceDateTypes = [
+        self::NEW_IN_SINCE_DATE_TYPE_DAY,
+        self::NEW_IN_SINCE_DATE_TYPE_WEEK,
+        self::NEW_IN_SINCE_DATE_TYPE_MONTH
+    ];
+
     /**
      * @param string $sessionId
      */
@@ -102,9 +108,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     {
         return
             isset($this->filter[$key]) ?
-            $this->filter[$key] :
-            null
-        ;
+                $this->filter[$key] :
+                null
+            ;
     }
 
     /**
@@ -287,22 +293,19 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     /**
      * Filter by new_in_since_date.
      *
-     * types: day, week and month
-     * span: min 1, max 14
-     *
-     * @param string $type
-     * @param int    $span
+     * @param int $from
+     * @param int $to
      *
      * @return ProductSearchCriteria
      */
-    public function filterByNewInSinceDate($type, $span)
+    public function filterByNewInSinceDate($from, $to)
     {
-        settype($type, 'string');
+        settype($type, 'int');
         settype($span, 'int');
 
         $params = [
-            'type' => $type,
-            'span' => $span,
+            'from' => $from,
+            'to'   => $to,
         ];
 
         return $this->filterBy(self::FILTER_NEW_IN_SINCE_DATE, $params);
@@ -369,14 +372,18 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     }
 
     /**
-     * @param bool $enable
+     * @param string $type
+     * @param int    $span
      *
      * @return $this
      */
-    public function selectNewIn($enable = true)
+    public function selectNewIn($type = 'week', $span = 4)
     {
-        if ($enable) {
-            $this->result['new_in_since_date'] = true;
+        $type = in_array($type, $this->newInSinceDateTypes) ? $type : self::NEW_IN_SINCE_DATE_TYPE_WEEK;
+        $span = max(min($span, 14), 1);
+
+        if ($type && $span) {
+            $this->result['new_in_since_date'] = ['type' => $type, 'span' => $span];
         } else {
             unset($this->result['new_in_since_date']);
         }
@@ -539,7 +546,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      */
     public function selectProductFields(array $fields)
     {
-         $this->result['fields'] = ProductFields::filterFields($fields);
+        $this->result['fields'] = ProductFields::filterFields($fields);
 
         return $this;
     }

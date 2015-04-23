@@ -28,9 +28,9 @@ class ProductSearchResult
     protected $saleCounts;
 
     /**
-     * @var NewInCount|null
+     * @var NewInCount[]
      */
-    protected $newInCount;
+    protected $newInCounts = [];
 
     /** @var PriceRange[] */
     protected $priceRanges;
@@ -117,7 +117,7 @@ class ProductSearchResult
             unset($jsonObject->sale);
         }
         if (isset($jsonObject->new_in_since_date)) {
-            $this->newInCount = $factory->createNewInFacet($jsonObject->new_in_since_date);
+            $this->newInCounts = $factory->createNewInFacets($jsonObject->new_in_since_date);
             unset($jsonObject->new_in_since_date);
         }
         if (isset($jsonObject->product_facets)) {
