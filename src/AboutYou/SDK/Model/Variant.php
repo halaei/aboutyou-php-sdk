@@ -13,19 +13,29 @@ class Variant
 {
     protected $jsonObject;
 
-    /** @var Image[]|null */
+    /**
+     * @var Image[]|null
+     */
     protected $images = null;
 
-    /** @var FacetGroupSet */
+    /**
+     * @var FacetGroupSet
+     */
     protected $facetGroups;
 
-    /** @var ModelFactoryInterface */
+    /**
+     * @var ModelFactoryInterface
+     */
     private $factory;
 
-    /** @var Product */
+    /**
+     * @var Product
+     */
     protected $product;
 
-    /** @var Material[]|null */
+    /**
+     * @var Material[]|null
+     */
     protected $materials;
 
     /**
@@ -64,28 +74,6 @@ class Variant
     }
 
     /**
-     * @return Image[]
-     * @deprecated
-     */
-    public function getImages()
-    {
-        // parse lazy
-        if ($this->images === null) {
-            $this->images = [];
-            if (!empty($this->jsonObject->images)) {
-                $factory = $this->factory;
-
-                foreach ($this->jsonObject->images as $image) {
-                    $this->images[] = $factory->createImage($image);
-                }
-            }
-            unset($this->jsonObject->images); // free memory
-        }
-
-        return $this->images;
-    }
-
-    /**
      * @return string
      */
     public function getAboutNumber()
@@ -104,22 +92,37 @@ class Variant
     }
 
     /**
+     * @return Image[]
+     *
+     * @deprecated
+     */
+    public function getImages()
+    {
+        throw new \Exception(
+            sprintf(
+                '%s is deprecated; use Product::getImages() instead',
+                __METHOD__
+            )
+        );
+    }
+
+    /**
      * Get image by given hash.
      *
      * @param string $hash The image hash.
      *
      * @return Image
+     *
      * @deprecated
      */
     public function getImageByHash($hash)
     {
-        foreach ($this->getImages() as $image) {
-            if ($image->getHash() === $hash) {
-                return $image;
-            }
-        }
-
-        return null;
+        throw new \Exception(
+            sprintf(
+                '%s is deprecated; use Product::getImageByHash() instead',
+                __METHOD__
+            )
+        );
     }
 
     /**
@@ -129,35 +132,33 @@ class Variant
      *
      * @return void
      *
-     * @depracted
+     * @deprecated
      */
     public function selectImage($hash)
     {
-        if ($hash) {
-            $this->selectedImage = $this->getImageByHash($hash);
-        } else {
-            $this->selectedImage = null;
-        }
+        throw new \Exception(
+            sprintf(
+                '%s is deprecated; use Product::selectImage() instead',
+                __METHOD__
+            )
+        );
     }
 
     /**
      * Get selected or default image.
      *
      * @return Image
+     *
      * @deprecated
      */
     public function getImage()
     {
-        if ($this->selectedImage) {
-            return $this->selectedImage;
-        } else {
-            $images = $this->getImages();
-            if (isset($images[0])) {
-                return $images[0];
-            }
-        }
-
-        return null;
+        throw new \Exception(
+            sprintf(
+                '%s is deprecated; use Product::getImage() instead',
+                __METHOD__
+            )
+        );
     }
 
     /**
