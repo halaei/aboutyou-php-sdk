@@ -3,6 +3,7 @@
 .project
 .settings
 .DS_STORE
+.DS_Store
 coverage
 test
 runtime

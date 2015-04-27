@@ -179,4 +179,21 @@ class Category
     {
         return $this->categoryManager;
     }
+
+    /**
+     * returns an array representation for the category.
+     *
+     * @return array
+     */
+    public function serialize()
+    {
+        $obj = new \stdClass();
+        $obj->id = $this->id;
+        $obj->parent = $this->parentId;
+        $obj->name = $this->name;
+        $obj->active = $this->isActive;
+        $obj->position = $this->position;
+
+        return $obj;
+    }
 }

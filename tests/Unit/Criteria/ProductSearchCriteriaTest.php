@@ -86,22 +86,22 @@ class ProductSearchCriteriaTest extends \AboutYou\SDK\Test\AYTest
 
         $criteria = $this->getCriteria()
             ->selectProductFields(array(ProductFields::IS_ACTIVE));
-        $this->assertEquals('{"session_id":"my","result":{"fields":["active"]}}', json_encode($criteria->toArray()));
+        $this->assertEquals('{"session_id":"my","result":{"fields":["active","new_in_since_date"]}}', json_encode($criteria->toArray()));
         $criteria = $this->getCriteria()
             ->selectProductFields(array(ProductFields::BRAND, ProductFields::IS_ACTIVE));
-        $this->assertEquals('{"session_id":"my","result":{"fields":["brand_id","active","attributes_merged"]}}', json_encode($criteria->toArray()));
+        $this->assertEquals('{"session_id":"my","result":{"fields":["brand_id","active","attributes_merged","new_in_since_date"]}}', json_encode($criteria->toArray()));
         $criteria = $this->getCriteria()
             ->selectProductFields(array(ProductFields::VARIANTS));
-        $this->assertEquals('{"session_id":"my","result":{"fields":["variants","attributes_merged"]}}', json_encode($criteria->toArray()));
+        $this->assertEquals('{"session_id":"my","result":{"fields":["variants","attributes_merged","new_in_since_date"]}}', json_encode($criteria->toArray()));
         $criteria = $this->getCriteria()
             ->selectProductFields(array(ProductFields::DEFAULT_VARIANT));
-        $this->assertEquals('{"session_id":"my","result":{"fields":["default_variant","attributes_merged"]}}', json_encode($criteria->toArray()));
+        $this->assertEquals('{"session_id":"my","result":{"fields":["default_variant","attributes_merged","new_in_since_date"]}}', json_encode($criteria->toArray()));
         $criteria = $this->getCriteria()
             ->selectProductFields(array(ProductFields::BRAND, ProductFields::IS_ACTIVE, ProductFields::BRAND));
-        $this->assertEquals('{"session_id":"my","result":{"fields":["brand_id","active","attributes_merged"]}}', json_encode($criteria->toArray()));
+        $this->assertEquals('{"session_id":"my","result":{"fields":["brand_id","active","attributes_merged","new_in_since_date"]}}', json_encode($criteria->toArray()));
         $criteria = $this->getCriteria()
             ->selectProductFields(array(ProductFields::BRAND, ProductFields::ATTRIBUTES_MERGED, ProductFields::IS_ACTIVE));
-        $this->assertEquals('{"session_id":"my","result":{"fields":["brand_id","attributes_merged","active"]}}', json_encode($criteria->toArray()));
+        $this->assertEquals('{"session_id":"my","result":{"fields":["brand_id","attributes_merged","active","new_in_since_date"]}}', json_encode($criteria->toArray()));
 
         $criteria = new ProductSearchCriteria('12345');
         $this->assertEquals(array('session_id' => '12345'), $criteria->toArray());
