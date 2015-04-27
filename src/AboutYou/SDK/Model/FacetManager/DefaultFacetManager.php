@@ -75,4 +75,13 @@ class DefaultFacetManager implements FacetManagerInterface
 
         return isset($this->facets[$lookupKey]) ? $this->facets[$lookupKey] : null;
     }
+
+    /**
+     * @param int[] $groups
+     * @return array
+     */
+    public function getFacetsByGroups($groups)
+    {
+        return [];
+    }
 }

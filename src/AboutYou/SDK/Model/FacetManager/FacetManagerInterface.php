@@ -25,4 +25,10 @@ interface FacetManagerInterface
      * @return \AboutYou\SDK\Model\Facet
      */
     public function getFacet($groupId, $id);
-} 
+
+    /**
+     * @param int[] $groups
+     * @return array
+     */
+    public function getFacetsByGroups($groups);
+}
