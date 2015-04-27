@@ -31,6 +31,8 @@ class OrderTest extends \AboutYou\SDK\Test\Live\AbstractAYLiveTest
             $this->fail('The basket is not empty!');
         }
 
-        $ay->initiateOrder($this->getSessionId(), 'http://google.de');
+        $result = $ay->initiateOrder($this->getSessionId(), 'http://google.de');
+        var_dump($result);
+        die;
     }
 }
