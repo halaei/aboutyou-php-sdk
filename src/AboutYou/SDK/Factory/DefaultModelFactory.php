@@ -88,7 +88,7 @@ class DefaultModelFactory implements ModelFactoryInterface
     {
         return Model\Autocomplete::createFromJson($jsonObject, $this);
     }
-    
+
     /**
      * {@inheritdoc}
      *
@@ -234,7 +234,7 @@ class DefaultModelFactory implements ModelFactoryInterface
         $facets = $this->createFacetsList($jsonObject);
         $this->getFacetManager()->setFacets($facets);
     }
-    
+
     /**
      * {@inheritdoc}
      *
@@ -437,6 +437,16 @@ class DefaultModelFactory implements ModelFactoryInterface
     public function createProductsResult(\stdClass $jsonObject)
     {
         return Model\ProductsResult::createFromJson($jsonObject, $this);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return Model\StylesResult
+     */
+    public function createStylesResult(\stdClass $jsonObject)
+    {
+        return Model\StylesResult::createFromJson($jsonObject, $this);
     }
 
     /**

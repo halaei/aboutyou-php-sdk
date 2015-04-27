@@ -97,6 +97,11 @@ class Product
     /** @var Variant[] */
     protected $inactiveVariants;
 
+    /**
+     * @var string
+     */
+    protected $styleKey;
+
     /** @var Product[] */
     protected $styles;
 
@@ -159,23 +164,33 @@ class Product
 
         $product->images = self::parseImages($jsonObject, $factory);
         if (isset($jsonObject->default_image)) {
-            if (!isset($product->images[$jsonObject->default_image->hash])) {
+            if (isset($product->images[$jsonObject->default_image->hash])) {
+                $defaultImage = $product->images[$jsonObject->default_image->hash];
+                unset($product->images[$jsonObject->default_image->hash]);
+            } else {
                 $defaultImage = $factory->createImage($jsonObject->default_image);
-                $product->images = array_merge([$defaultImage->getHash() => $defaultImage], $product->images);
             }
+            // Make sure the default image is the first one
+            $product->images = [$jsonObject->default_image->hash => $defaultImage] + $product->images;
             $product->defaultImageHash = $jsonObject->default_image->hash;
         }
 
         $product->variants = self::parseVariants($jsonObject, $factory, $product);
         if (isset($jsonObject->default_variant)) {
-            if (!isset($product->variants[$jsonObject->default_variant->id])) {
+            if (isset($product->variants[$jsonObject->default_variant->id])) {
+                $defaultVariant = $product->variants[$jsonObject->default_variant->id];
+                unset($product->variants[$jsonObject->default_variant->id]);
+            } else {
                 $defaultVariant = $factory->createVariant($jsonObject->default_variant, $product);
-                $product->variants = array_merge([$defaultVariant->getId() => $defaultVariant], $product->variants);
             }
+            // make sure the default variant is the first
+            $product->variants = [$jsonObject->default_variant->id => $defaultVariant] + $product->variants;
             $product->defaultVariantId = $jsonObject->default_variant->id;
         }
 
         $product->inactiveVariants = self::parseVariants($jsonObject, $factory, $product, 'inactive_variants');
+
+        $product->styleKey = isset($jsonObject->style_key) ? $jsonObject->style_key : null;
         $product->styles           = self::parseStyles($jsonObject, $factory);
 
         $key = 'categories.' . $appId;
@@ -213,7 +228,7 @@ class Product
             }
         }
 
-        return $images;
+        return array_reverse($images, true); // TODO: KIM remove reverse after SAPI fixes it
     }
 
     protected static function parseVariants($jsonObject, ModelFactoryInterface $factory, Product $product, $attributeName = 'variants')
@@ -695,7 +710,13 @@ class Product
      */
     public function getImage()
     {
-        return $this->selectedImage ?: $this->getDefaultImage() ?: null;
+        $image = $this->selectedImage ?: $this->getDefaultImage() ?: null;
+
+        if (!$image) {
+            list($image) = array_values($this->getImages()) + [null];
+        }
+
+        return $image;
     }
 
     /**
@@ -908,5 +929,13 @@ class Product
         }
 
         return $sizeAdvice;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStyleKey()
+    {
+        return $this->styleKey;
     }
 }

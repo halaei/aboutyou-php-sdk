@@ -41,9 +41,9 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         ;
         $expected = '[{"did_you_mean":{"searchword":"gelx"}}]';
         $this->assertEquals($expected, $query->getQueryString());
-    }        
+    }
 
-    
+
     public function testFetchCategoriesByIds()
     {
         $query = $this->queryBuilder
@@ -65,35 +65,35 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $query = $this->queryBuilder
             ->fetchProductsByIds(array(789,456))
         ;
-        $expected = '[{"products":{"ids":[789,456],"fields":[]}}]';
+        $expected = '[{"products":{"ids":[789,456],"fields":["new_in_since_date"]}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
         $this->queryBuilder = new QueryBuilder();
         $query = $this->queryBuilder
             ->fetchProductsByIds(array(4 => 789, 2 => 456))
         ;
-        $expected = '[{"products":{"ids":[789,456],"fields":[]}}]';
+        $expected = '[{"products":{"ids":[789,456],"fields":["new_in_since_date"]}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
         $this->queryBuilder = new QueryBuilder();
         $query = $this->queryBuilder
             ->fetchProductsByIds(array(4 => 789, 2 => 456), array(ProductFields::DESCRIPTION_SHORT))
         ;
-        $expected = '[{"products":{"ids":[789,456],"fields":["description_short"]}}]';
+        $expected = '[{"products":{"ids":[789,456],"fields":["description_short","new_in_since_date"]}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
         $this->queryBuilder = new QueryBuilder();
         $query = $this->queryBuilder
             ->fetchProductsByIds(array(4 => 789, 2 => 456), array(ProductFields::BULLET_POINTS))
         ;
-        $expected = '[{"products":{"ids":[789,456],"fields":["bullet_points"]}}]';
+        $expected = '[{"products":{"ids":[789,456],"fields":["bullet_points","new_in_since_date"]}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
         $this->queryBuilder = new QueryBuilder();
         $query = $this->queryBuilder
             ->fetchProductsByIds(array(4 => 789, 2 => 456), array(ProductFields::PRODUCT_ATTRIBUTES))
         ;
-        $expected = '[{"products":{"ids":[789,456],"fields":["product_attributes"]}}]';
+        $expected = '[{"products":{"ids":[789,456],"fields":["product_attributes","new_in_since_date"]}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
         // Test that attributes_merged were added, if facets are required
@@ -101,7 +101,7 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $query = $this->queryBuilder
             ->fetchProductsByIds(array(789, 456), array(ProductFields::BRAND))
         ;
-        $expected = '[{"products":{"ids":[789,456],"fields":["brand_id","attributes_merged"]}}]';
+        $expected = '[{"products":{"ids":[789,456],"fields":["brand_id","attributes_merged","new_in_since_date"]}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
         // Test that styles could be disabled
@@ -109,7 +109,7 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $query = $this->queryBuilder
             ->fetchProductsByIds(array(789, 456), array(), false)
         ;
-        $expected = '[{"products":{"ids":[789,456],"fields":[],"get_styles":false}}]';
+        $expected = '[{"products":{"ids":[789,456],"fields":["new_in_since_date"],"get_styles":false}}]';
         $this->assertEquals($expected, $query->getQueryString());
 
         // Test that styles fields won't send to the SAPI
@@ -117,13 +117,13 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $query = $this->queryBuilder
             ->fetchProductsByIds(array(789, 456), array(ProductFields::STYLES))
         ;
-        $expected = '[{"products":{"ids":[789,456],"fields":[]}}]';
+        $expected = '[{"products":{"ids":[789,456],"fields":["new_in_since_date"]}}]';
         $this->assertEquals($expected, $query->getQueryString());
         $this->queryBuilder = new QueryBuilder();
         $query = $this->queryBuilder
             ->fetchProductsByIds(array(789, 456), array(ProductFields::STYLES, ProductFields::CATEGORIES, ProductFields::MAX_PRICE))
         ;
-        $expected = '[{"products":{"ids":[789,456],"fields":["categories","max_price"]}}]';
+        $expected = '[{"products":{"ids":[789,456],"fields":["categories","max_price","new_in_since_date"]}}]';
         $this->assertEquals($expected, $query->getQueryString());
     }
 
@@ -224,4 +224,3 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $this->queryBuilder->fetchBasket('1234');
     }
 }
- 
