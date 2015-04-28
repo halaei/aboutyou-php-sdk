@@ -377,7 +377,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      *
      * @return $this
      */
-    public function selectNewIn($type = 'week', $span = 4)
+    public function selectNewInAggregation($type = 'week', $span = 4)
     {
         $type = in_array($type, $this->newInSinceDateTypes) ? $type : self::NEW_IN_SINCE_DATE_TYPE_WEEK;
         $span = max(min($span, 14), 1);

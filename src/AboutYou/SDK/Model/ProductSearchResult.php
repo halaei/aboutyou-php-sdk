@@ -171,6 +171,14 @@ class ProductSearchResult
     }
 
     /**
+     * @return ProductSearchResult\NewInCount[]
+     */
+    public function getNewInAggregation()
+    {
+        return $this->newInCounts;
+    }
+
+    /**
      * Returns the min price in euro cent or null, if the price range was not requested/selected
      *
      * @return integer|null
