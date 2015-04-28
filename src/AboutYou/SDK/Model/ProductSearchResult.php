@@ -6,6 +6,7 @@
 
 namespace AboutYou\SDK\Model;
 
+use AboutYou\SDK\Model\ProductSearchResult\NewInCount;
 use \AY;
 use AboutYou\SDK\Factory\ModelFactoryInterface;
 use AboutYou\SDK\Model\ProductSearchResult\FacetCounts;
@@ -26,6 +27,11 @@ class ProductSearchResult
     /** @var SaleCounts */
     protected $saleCounts;
 
+    /**
+     * @var NewInCount[]
+     */
+    protected $newInCounts = [];
+
     /** @var PriceRange[] */
     protected $priceRanges;
 
@@ -36,7 +42,7 @@ class ProductSearchResult
     protected $productFacets;
 
     /** @var Category[] */
-    protected $categories = array();
+    protected $categories = [];
 
     /**
      * @var array
@@ -46,7 +52,7 @@ class ProductSearchResult
 
     protected function __construct()
     {
-        $this->products = array();
+        $this->products = [];
     }
 
     /**
@@ -110,6 +116,10 @@ class ProductSearchResult
             $this->saleCounts = $factory->createSaleFacet($jsonObject->sale);
             unset($jsonObject->sale);
         }
+        if (isset($jsonObject->new_in_since_date)) {
+            $this->newInCounts = $factory->createNewInFacets($jsonObject->new_in_since_date);
+            unset($jsonObject->new_in_since_date);
+        }
         if (isset($jsonObject->product_facets)) {
             $this->productFacets = $factory->createProductFacets($jsonObject->product_facets);
             unset($jsonObject->product_facets);
@@ -158,6 +168,14 @@ class ProductSearchResult
     public function getPriceRanges()
     {
         return $this->priceRanges;
+    }
+
+    /**
+     * @return ProductSearchResult\NewInCount[]
+     */
+    public function getNewInAggregation()
+    {
+        return $this->newInCounts;
     }
 
     /**
@@ -222,7 +240,7 @@ class ProductSearchResult
      */
     public function getCategoryTree()
     {
-        $topLevelCategories = array();
+        $topLevelCategories = [];
         foreach ($this->categories as $category) {
             if ($category->getParent() === null) {
                 $topLevelCategories[] = $category;

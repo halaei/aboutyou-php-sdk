@@ -200,18 +200,15 @@ EOS;
     /**
      *
      */
-    public function testVariantImages()
+    public function testProductImages()
     {
-        $productIds = array(456);
-
         $ay = $this->getAYWithResultFile('result/products-full.json');
 
-        $productResult = $ay->fetchProductsByIds($productIds);
+        $productResult = $ay->fetchProductsByIds([456]);
         $products = $productResult->getProducts();
         $product = $products[456];
-        $variant = $product->getDefaultVariant();
 
-        $defaultImage = $variant->getImage();
+        $defaultImage = $product->getImage();
         $this->assertInstanceOf('\\AboutYou\\SDK\\Model\\Image', $defaultImage);
         $this->assertEquals('882ff9a8365b6e1b46773992b189e4dc', $defaultImage->getHash());
     }
