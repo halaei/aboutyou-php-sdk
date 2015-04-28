@@ -300,8 +300,8 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      */
     public function filterByNewInSinceDate($from, $to)
     {
-        settype($type, 'int');
-        settype($span, 'int');
+        settype($from, 'int');
+        settype($to, 'int');
 
         $params = [
             'from' => $from,
