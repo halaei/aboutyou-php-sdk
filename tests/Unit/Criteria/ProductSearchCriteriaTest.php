@@ -158,6 +158,10 @@ class ProductSearchCriteriaTest extends \AboutYou\SDK\Test\AYTest
             ->filterBySearchword('word')
             ->filterBySale(null);
         $this->assertEquals(array('session_id' => '12345', 'filter' => array('searchword' => 'word', 'sale' => null)), $criteria->toArray());
+
+        $criteria = ProductSearchCriteria::create('12345')
+            ->filterByNewInSinceDate(1234, 5678);
+        $this->assertEquals(['session_id' => '12345', 'filter' => ['new_in_since_date' => ['from' => 1234, 'to' => 5678]]], $criteria->toArray());
     }
 
     public function testFilterByVarientFacets()

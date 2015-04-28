@@ -22,6 +22,16 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     const SORT_TYPE_UPDATED           = 'updated_date';
     const SORT_TYPE_NEW_IN_SINCE_DATE = 'new_in_since_date';
 
+    const NEW_IN_SINCE_DATE_TYPE_DAY = 'day';
+
+    const NEW_IN_SINCE_DATE_TYPE_WEEK = 'week';
+
+    const NEW_IN_SINCE_DATE_TYPE_MONTH = 'month';
+
+    const NEW_IN_SINCE_DATE_SPAN_MIN = 1;
+
+    const NEW_IN_SINCE_DATE_SPAN_MAX = 14;
+
     const SORT_ASC  = 'asc';
     const SORT_DESC = 'desc';
 
@@ -34,11 +44,12 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     const FILTER_SALE               = 'sale';
     const FILTER_SEARCHWORD         = 'searchword';
     const FILTER_VARIANT_ATTRIBUTES = 'facets';
+    const FILTER_NEW_IN_SINCE_DATE = 'new_in_since_date';
     /** @deprecated */
     const FILTER_ATTRIBUTES         = 'facets';
 
     /** @var array */
-    protected $filter = array();
+    protected $filter = [];
 
 
     /** @var array */
@@ -48,13 +59,19 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     /** @var string */
     protected $sessionId;
 
+    protected $newInSinceDateTypes = [
+        self::NEW_IN_SINCE_DATE_TYPE_DAY,
+        self::NEW_IN_SINCE_DATE_TYPE_WEEK,
+        self::NEW_IN_SINCE_DATE_TYPE_MONTH
+    ];
+
     /**
      * @param string $sessionId
      */
     public function __construct($sessionId)
     {
         $this->sessionId = $sessionId;
-        $this->result    = array();
+        $this->result    = [];
     }
 
     /**
@@ -91,9 +108,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     {
         return
             isset($this->filter[$key]) ?
-            $this->filter[$key] :
-            null
-        ;
+                $this->filter[$key] :
+                null
+            ;
     }
 
     /**
@@ -262,7 +279,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         settype($from, 'int');
         settype($to, 'int');
 
-        $price = array();
+        $price = [];
         if ($from > 0) {
             $price['from'] = $from;
         }
@@ -271,6 +288,27 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         }
 
         return $this->filterBy(self::FILTER_PRICE, $price);
+    }
+
+    /**
+     * Filter by new_in_since_date.
+     *
+     * @param int $from
+     * @param int $to
+     *
+     * @return ProductSearchCriteria
+     */
+    public function filterByNewInSinceDate($from, $to)
+    {
+        settype($from, 'int');
+        settype($to, 'int');
+
+        $params = [
+            'from' => $from,
+            'to'   => $to,
+        ];
+
+        return $this->filterBy(self::FILTER_NEW_IN_SINCE_DATE, $params);
     }
 
     /**
@@ -292,10 +330,10 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      */
     public function sortBy($type, $direction = self::SORT_ASC)
     {
-        $this->result['sort'] = array(
+        $this->result['sort'] = [
             'by'        => $type,
             'direction' => $direction,
-        );
+        ];
 
         return $this;
     }
@@ -328,6 +366,26 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
             $this->result['sale'] = true;
         } else {
             unset($this->result['sale']);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $type
+     * @param int    $span
+     *
+     * @return $this
+     */
+    public function selectNewInAggregation($type = 'week', $span = 4)
+    {
+        $type = in_array($type, $this->newInSinceDateTypes) ? $type : self::NEW_IN_SINCE_DATE_TYPE_WEEK;
+        $span = max(min($span, 14), 1);
+
+        if ($type && $span) {
+            $this->result['new_in_since_date'] = ['type' => $type, 'span' => $span];
+        } else {
+            unset($this->result['new_in_since_date']);
         }
 
         return $this;
@@ -369,7 +427,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         }
 
         if (!isset($this->result['facets']->{$groupId})) {
-            $this->result['facets']->{$groupId} = array('limit' => $limit);
+            $this->result['facets']->{$groupId} = ['limit' => $limit];
         }
 
         return $this;
@@ -394,7 +452,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
     public function selectAllFacets($limit)
     {
         $this->checkFacetLimit($limit);
-        $this->result['facets'] = array(self::FACETS_ALL => array('limit' => $limit));
+        $this->result['facets'] = [self::FACETS_ALL => ['limit' => $limit]];
 
         return $this;
     }
@@ -421,7 +479,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
         }
 
         if (!isset($this->result['product_facets']->{$groupId})) {
-            $attributes = array('size' => (int)$limit, 'sort' => new \stdClass);
+            $attributes = ['size' => (int)$limit, 'sort' => new \stdClass];
             if ($sortBy !== self::SORT_TYPE_DEFAULT) {
                 $attributes['sort']->{'by'} = $sortBy;
             }
@@ -488,7 +546,7 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      */
     public function selectProductFields(array $fields)
     {
-         $this->result['fields'] = ProductFields::filterFields($fields);
+        $this->result['fields'] = ProductFields::filterFields($fields);
 
         return $this;
     }
@@ -548,9 +606,9 @@ class ProductSearchCriteria extends AbstractCriteria implements CriteriaInterfac
      */
     public function toArray()
     {
-        $params = array(
+        $params = [
             'session_id' => $this->sessionId
-        );
+        ];
 
         if (!empty($this->result)) {
             $params['result'] = $this->result;
