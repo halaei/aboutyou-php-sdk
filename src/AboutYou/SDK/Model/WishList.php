@@ -11,9 +11,9 @@ use AboutYou\SDK\Model\WishList\WishListItem;
 class WishList
 {
     /** @var AbstractWishListItem[] */
-    private $items = array();
+    private $items = [];
 
-    private $errors = array();
+    private $errors = [];
 
     /** @var integer */
     protected $uniqueVariantCount;
@@ -29,7 +29,7 @@ class WishList
 
     /** @var integer */
     protected $totalVat;
-    
+
     /** @var boolean */
     protected $clearOnUpdate = false;
 
@@ -157,26 +157,26 @@ class WishList
     {
         return $this->products;
     }
-    
+
     public function getCollectedItems()
     {
         $items = $this->getItems();
-        $itemsMerged = array();
+        $itemsMerged = [];
         foreach ($items as $item) {
             $key = $item->getUniqueKey();
             if (isset($itemsMerged[$key])) {
                 $amount = $itemsMerged[$key]['amount'] + 1;
-                $itemsMerged[$key] = array(
+                $itemsMerged[$key] = [
                     'item' => $item,
                     'price' => $item->getTotalPrice() * $amount,
                     'amount' => $amount
-                );
+                ];
             } else {
-                $itemsMerged[$key] = array(
+                $itemsMerged[$key] = [
                     'item' => $item,
                     'price' => $item->getTotalPrice(),
                     'amount' => 1
-                );
+                ];
             }
         }
 
@@ -189,22 +189,22 @@ class WishList
      */
     public function getOrderLinesArray()
     {
-        $orderLines = array();
+        $orderLines = [];
 
         foreach (array_unique($this->deletedItems) as $itemId) {
-            $orderLines[] = array('delete' => $itemId);
+            $orderLines[] = ['delete' => $itemId];
         }
 
         foreach ($this->updatedItems as $item) {
             $orderLines[] = $item;
         }
-        
+
         return $orderLines;
     }
 
     protected function parseItems($jsonObject, ModelFactoryInterface $factory)
     {
-        $products = array();
+        $products = [];
         if (!empty($jsonObject->products)) {
             foreach ($jsonObject->products as $productId => $jsonProduct) {
                 $products[$productId] = $factory->createProduct($jsonProduct);
@@ -212,7 +212,7 @@ class WishList
         }
         $this->products = $products;
 
-        $vids = array();
+        $vids = [];
         if (!empty($jsonObject->order_lines)) {
             foreach ($jsonObject->order_lines as $index => $jsonItem) {
                 if (isset($jsonItem->set_items)) {
@@ -241,9 +241,9 @@ class WishList
      */
 
     /** @var array */
-    protected $deletedItems = array();
+    protected $deletedItems = [];
     /** @var array */
-    protected $updatedItems = array();
+    protected $updatedItems = [];
 
     /**
      * @param string $itemId
@@ -268,7 +268,7 @@ class WishList
 
         return $this;
     }
-    
+
     /**
      * @return $this
      */
@@ -278,7 +278,7 @@ class WishList
 
         return $this;
     }
-    
+
     /**
      * @return boolean
      */
@@ -289,25 +289,30 @@ class WishList
 
     /**
      * @param WishListItem $WishListItem
+     * @param \DateTime $addedOn overwrites the added_on date; if given
      *
      * @return $this
      */
-    public function updateItem(WishListItem $WishListItem)
+    public function updateItem(WishListItem $WishListItem, \DateTime $addedOn = null)
     {
         $itemId = $WishListItem->getId();
 
-        $item = array(
+        $item = [
             'variant_id' => $WishListItem->getVariantId(),
             'app_id' => $WishListItem->getAppId()
-        );
+        ];
         if ($itemId) {
             $item['id'] = $itemId;
         }
-        
+
         $additionalData = $WishListItem->getAdditionalData();
         if (!empty($additionalData)) {
             $this->checkAdditionData($additionalData);
             $item['additional_data'] = (array)$additionalData;
+        }
+
+        if ($addedOn) {
+            $item['added_on'] = $addedOn->format('Y-m-d');
         }
 
         if ($itemId) {
@@ -327,17 +332,17 @@ class WishList
     public function updateItemSet(WishListSet $WishListSet)
     {
         $items = $WishListSet->getItems();
-        
+
         if (empty($items)) {
-            throw new \InvalidArgumentException('WishListSet needs at least one item');            
+            throw new \InvalidArgumentException('WishListSet needs at least one item');
         }
 
-        $setItems = array();
+        $setItems = [];
         foreach ($items as $subItem) {
-            $item = array(
+            $item = [
                 'variant_id' => $subItem->getVariantId(),
                 'app_id' => $subItem->getAppId()
-            );
+            ];
             $additionalData = $subItem->getAdditionalData();
             if (!empty($additionalData)) {
                 $this->checkAdditionData($additionalData);
@@ -346,10 +351,10 @@ class WishList
             $setItems[] = $item;
         }
 
-        $set = array(
+        $set = [
             'additional_data' => (array)$WishListSet->getAdditionalData(),
             'set_items' => $setItems,
-        );
+        ];
         $setId = $WishListSet->getId();
         if ($setId) {
             $set['id'] = $setId;
