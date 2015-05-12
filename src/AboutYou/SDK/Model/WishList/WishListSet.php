@@ -8,6 +8,8 @@
 namespace AboutYou\SDK\Model\WishList;
 
 use AboutYou\SDK\Factory\ModelFactoryInterface;
+use AboutYou\SDK\Model\Product;
+use AboutYou\SDK\Model\ResultError;
 
 /**
  * WishListSet is a class used for adding a set of variant items into the WishList
@@ -62,16 +64,16 @@ class WishListSet extends AbstractWishListItem implements WishListItemInterface
     /** @var ResultError[] */
     protected $errors;
 
-    /** @var interger */
+    /** @var int */
     protected $totalPrice;
 
-    /** @var interger */
+    /** @var int */
     protected $totalNet;
 
-    /** @var interger */
+    /** @var int */
     protected $totalVat;
-    
-    /** @var integer */
+
+    /** @var int */
     protected $setItemAppId = null;
 
     const IMAGE_URL_REQUIRED = true;
@@ -83,15 +85,17 @@ class WishListSet extends AbstractWishListItem implements WishListItemInterface
      * represents this item set,
      * you can add a key "image_url" to the $additionalData that contains the URL to the image.
      *
-     * @param string $id ID of the WishList item set.
-     * @param array $additionalData additional data for this item set
+     * @param string        $id             ID of the WishList item set.
+     * @param array         $additionalData additional data for this item set
+     * @param string|null   $addedOn
      */
-    public function __construct($id, $additionalData = null)
+    public function __construct($id, $additionalData = null, $addedOn = null)
     {
         $this->checkId($id);
         $this->checkAdditionData($additionalData, true);
         $this->id = $id;
         $this->additionalData = $additionalData;
+        $this->addedOn = $addedOn ? new \DateTime($addedOn) : null;
     }
 
     /**
@@ -103,7 +107,11 @@ class WishListSet extends AbstractWishListItem implements WishListItemInterface
      */
     public static function createFromJson(\stdClass $jsonObject, ModelFactoryInterface $factory, $products)
     {
-        $set = new static($jsonObject->id, isset($jsonObject->additional_data) ? (array)$jsonObject->additional_data : null);
+        $set = new static(
+            $jsonObject->id,
+            isset($jsonObject->additional_data) ? (array)$jsonObject->additional_data : null,
+            isset($jsonObject->added_on) ? $jsonObject->added_on : null
+        );
 
         $set->parseErrorResult($jsonObject);
 
@@ -160,7 +168,7 @@ class WishListSet extends AbstractWishListItem implements WishListItemInterface
         } elseif ($this->setItemAppId !== $item->getAppId()) {
             throw new \InvalidArgumentException('you can not set different app ids for items in an item-set.');
         }
-        
+
         $this->items[] = $item;
     }
 
@@ -227,7 +235,7 @@ class WishListSet extends AbstractWishListItem implements WishListItemInterface
             $key .= ':' . json_encode($additionalData);
         }
 
-        $items = array();
+        $items = [];
         foreach ($this->items as $item) {
             $items[] = $item->getUniqueKey();
         }
@@ -235,16 +243,16 @@ class WishListSet extends AbstractWishListItem implements WishListItemInterface
 
         return $key;
     }
-    
+
     /**
      * @param mixed $id
      * @throws \InvalidArgumentException
      */
-    protected function checkId($id) 
+    protected function checkId($id)
     {
         if ($id !== null && (!is_string($id) || strlen($id) < 2)) {
-            throw new \InvalidArgumentException('ID of the WishListSetItem must be a String that must contain minimum two characters');            
+            throw new \InvalidArgumentException('ID of the WishListSetItem must be a String that must contain minimum two characters');
         }
     }
-  
+
 }

@@ -39,24 +39,28 @@ abstract class WishListVariantItem extends AbstractWishListItem
     /**
      * Constructor.
      *
-     * @param integer $variantId
-     * @param array $additionalData
-     * @param string $deliveryCarrier
+     * @param integer            $variantId
+     * @param array              $additionalData
+     * @param null               $addedOn
+     * @param null               $appId
+     * @param string             $deliveryCarrier
      * @param DeliveryEstimation $deliveryEstimation
+     * @param null               $packageId
      */
     public function __construct(
         $variantId,
         $additionalData = null,
+        $addedOn = null,
         $appId = null,
         $deliveryCarrier = null,
         DeliveryEstimation $deliveryEstimation = null,
         $packageId = null
-    )
-    {
+    ) {
         $this->checkVariantId($variantId);
         $this->checkAdditionData($additionalData);
         $this->variantId = $variantId;
         $this->additionalData = $additionalData;
+        $this->addedOn = $addedOn ? new \DateTime($addedOn) : null;
         $this->deliveryCarrier = $deliveryCarrier;
         $this->deliveryEstimation = $deliveryEstimation;
         $this->packageId = $packageId;

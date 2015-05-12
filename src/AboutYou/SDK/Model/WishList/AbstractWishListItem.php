@@ -20,6 +20,11 @@ class AbstractWishListItem extends ResultError
      */
     protected $additionalData;
 
+    /**
+     * @var \DateTime
+     */
+    protected $addedOn;
+
     const IMAGE_URL_REQUIRED = false;
 
     /** @var boolean */
@@ -74,6 +79,14 @@ class AbstractWishListItem extends ResultError
         $this->isChanged = true;
 
         $this->additionalData = $additionalData;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getAddedOn()
+    {
+        return $this->addedOn;
     }
 
     protected function checkAdditionData(array $additionalData = null)
