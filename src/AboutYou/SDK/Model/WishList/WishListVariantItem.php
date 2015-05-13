@@ -166,7 +166,7 @@ abstract class WishListVariantItem extends AbstractWishListItem
     {
         if (!$this->variant) {
             $this->variant = $this->getProduct() ?
-                $this->getProduct()->getVariantById($this->variantId) :
+                $this->getProduct()->getVariantById($this->variantId, true) :
                 null
             ;
         }
