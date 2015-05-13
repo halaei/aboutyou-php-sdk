@@ -350,7 +350,7 @@ class AY
      * @throws \AboutYou\SDK\Exception\MalformedJsonException
      * @throws \AboutYou\SDK\Exception\UnexpectedResultException
      */
-    public function fetchBasket($sessionId, $productFields = null)
+    public function fetchBasket($sessionId, array $productFields = null)
     {
         $query = $this->getQuery()->fetchBasket($sessionId, $productFields);
 
@@ -368,7 +368,7 @@ class AY
      * @throws \AboutYou\SDK\Exception\MalformedJsonException
      * @throws \AboutYou\SDK\Exception\UnexpectedResultException
      */
-    public function fetchWishList($sessionId, $productFields = null)
+    public function fetchWishList($sessionId, array $productFields = null)
     {
         $query = $this->getQuery()->fetchWishList($sessionId, $productFields);
 

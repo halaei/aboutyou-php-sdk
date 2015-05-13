@@ -86,7 +86,7 @@ class Query extends QueryBuilder
      *
      * @return $this
      */
-    public function fetchBasket($sessionId, $productFields = null)
+    public function fetchBasket($sessionId, array $productFields = null)
     {
         parent::fetchBasket($sessionId, $productFields);
 
@@ -102,7 +102,7 @@ class Query extends QueryBuilder
      *
      * @return $this
      */
-    public function fetchWishList($sessionId, $productFields = null)
+    public function fetchWishList($sessionId, array $productFields = null)
     {
         parent::fetchWishList($sessionId, $productFields);
 

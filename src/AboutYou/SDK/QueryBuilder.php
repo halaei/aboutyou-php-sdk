@@ -91,7 +91,7 @@ class QueryBuilder
      *
      * @return $this
      */
-    public function fetchBasket($basketId, $productFields = null)
+    public function fetchBasket($basketId, array $productFields = null)
     {
         $this->checkBasketId($basketId);
 
@@ -116,7 +116,7 @@ class QueryBuilder
      *
      * @return $this
      */
-    public function fetchWishList($wishListId, $productFields = null)
+    public function fetchWishList($wishListId, array $productFields = null)
     {
         $this->checkWishListId($wishListId);
 
