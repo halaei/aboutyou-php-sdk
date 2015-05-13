@@ -86,36 +86,50 @@ class QueryBuilder
     }
 
     /**
-     * @param string $basketId Free to choose ID of the current website visitor.
+     * @param string     $basketId      Free to choose ID of the current website visitor.
+     * @param array|null $productFields Product fields to fetch or null for default fields.
      *
      * @return $this
      */
-    public function fetchBasket($basketId)
+    public function fetchBasket($basketId, $productFields = null)
     {
         $this->checkBasketId($basketId);
 
+        $basketQuery = array(
+            'session_id' => $basketId
+        );
+
+        if ($productFields !== null) {
+            $basketQuery['fields'] = $productFields;
+        }
+
         $this->query[] = array(
-            'basket' => array(
-                'session_id' => $basketId
-            )
+            'basket' => $basketQuery
         );
 
         return $this;
     }
 
     /**
-     * @param string $wishListId Free to choose ID of the current website visitor.
+     * @param string     $wishListId    Free to choose ID of the current website visitor.
+     * @param array|null $productFields Product fields to fetch or null for default fields.
      *
      * @return $this
      */
-    public function fetchWishList($wishListId)
+    public function fetchWishList($wishListId, $productFields = null)
     {
         $this->checkWishListId($wishListId);
 
+        $wishlistQuery = array(
+            'session_id' => $wishListId
+        );
+
+        if ($productFields !== null) {
+            $wishlistQuery['fields'] = $productFields;
+        }
+
         $this->query[] = array(
-            'wishlist' => array(
-                'session_id' => $wishListId
-            )
+            'wishlist' => $wishlistQuery
         );
 
         return $this;

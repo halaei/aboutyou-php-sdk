@@ -342,16 +342,17 @@ class AY
     /**
      * Fetch the basket of the given sessionId.
      *
-     * @param string $sessionId Free to choose ID of the current website visitor.
+     * @param string     $sessionId     Free to choose ID of the current website visitor.
+     * @param array|null $productFields Product fields to fetch or null for default fields.
      *
      * @return \AboutYou\SDK\Model\Basket
      *
      * @throws \AboutYou\SDK\Exception\MalformedJsonException
      * @throws \AboutYou\SDK\Exception\UnexpectedResultException
      */
-    public function fetchBasket($sessionId)
+    public function fetchBasket($sessionId, $productFields = null)
     {
-        $query = $this->getQuery()->fetchBasket($sessionId);
+        $query = $this->getQuery()->fetchBasket($sessionId, $productFields);
 
         return $query->executeSingle();
     }
@@ -359,16 +360,17 @@ class AY
     /**
      * Fetch the basket of the given sessionId.
      *
-     * @param string $sessionId Free to choose ID of the current website visitor.
+     * @param string     $sessionId     Free to choose ID of the current website visitor.
+     * @param array|null $productFields Product fields to fetch or null for default fields.
      *
      * @return \AboutYou\SDK\Model\WishList
      *
      * @throws \AboutYou\SDK\Exception\MalformedJsonException
      * @throws \AboutYou\SDK\Exception\UnexpectedResultException
      */
-    public function fetchWishList($sessionId)
+    public function fetchWishList($sessionId, $productFields = null)
     {
-        $query = $this->getQuery()->fetchWishList($sessionId);
+        $query = $this->getQuery()->fetchWishList($sessionId, $productFields);
 
         return $query->executeSingle();
     }
