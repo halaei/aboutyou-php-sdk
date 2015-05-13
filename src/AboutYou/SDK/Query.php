@@ -80,14 +80,15 @@ class Query extends QueryBuilder
         return $this;
     }
 
-        /**
-     * @param string $sessionId Free to choose ID of the current website visitor.
+    /**
+     * @param string     $sessionId     Free to choose ID of the current website visitor.
+     * @param array|null $productFields Product fields to fetch or null for default fields.
      *
      * @return $this
      */
-    public function fetchBasket($sessionId)
+    public function fetchBasket($sessionId, array $productFields = null)
     {
-        parent::fetchBasket($sessionId);
+        parent::fetchBasket($sessionId, $productFields);
 
         $this->requireCategoryTree();
         $this->requireFacets();
@@ -96,13 +97,14 @@ class Query extends QueryBuilder
     }
 
     /**
-     * @param string $sessionId Free to choose ID of the current website visitor.
+     * @param string     $sessionId     Free to choose ID of the current website visitor.
+     * @param array|null $productFields Product fields to fetch or null for default fields.
      *
      * @return $this
      */
-    public function fetchWishList($sessionId)
+    public function fetchWishList($sessionId, array $productFields = null)
     {
-        parent::fetchWishList($sessionId);
+        parent::fetchWishList($sessionId, $productFields);
 
         $this->requireCategoryTree();
         $this->requireFacets();

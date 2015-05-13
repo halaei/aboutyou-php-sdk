@@ -825,17 +825,28 @@ class Product
     /**
      * Get variant by id.
      *
-     * @param integer $variantId The variant id.
+     * @param integer $variantId    The variant id.
+     * @param bool    $withInactive Also search for inactive variant.
      *
      * @return Variant
      */
-    public function getVariantById($variantId)
+    public function getVariantById($variantId, $withInactive = false)
     {
         if (isset($this->variants[$variantId])) {
-            return $this->variants[$variantId];
+            $variant = $this->variants[$variantId];
+        } else {
+            $variant = null;
         }
 
-        return null;
+        if (!$variant && $withInactive) {
+            $inactiveVariants = $this->getInactiveVariants();
+
+            if (isset($inactiveVariants[$variantId])) {
+                $variant = $inactiveVariants[$variantId];
+            }
+        }
+
+        return $variant;
     }
 
     /**
