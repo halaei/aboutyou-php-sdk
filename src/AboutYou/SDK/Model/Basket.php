@@ -4,6 +4,7 @@ namespace AboutYou\SDK\Model;
 use AboutYou\SDK\Factory\ModelFactoryInterface;
 use AboutYou\SDK\Model\Basket\BasketSet;
 use AboutYou\SDK\Model\Basket\BasketItem;
+use DateTime;
 
 /**
  *
@@ -29,7 +30,17 @@ class Basket
 
     /** @var integer */
     protected $totalVat;
-    
+
+    /**
+     * @var DateTime
+     */
+    protected $createdAt;
+
+    /**
+     * @var DateTime
+     */
+    protected $updatedAt;
+
     /** @var boolean */
     protected $clearOnUpdate = false;
 
@@ -52,6 +63,8 @@ class Basket
         $basket->totalPrice = $jsonObject->total_price;
         $basket->totalNet   = $jsonObject->total_net;
         $basket->totalVat   = $jsonObject->total_vat;
+        $basket->createdAt  = isset($jsonObject->created_date) ? new DateTime($jsonObject->created_date) : null;
+        $basket->updatedAt  = isset($jsonObject->updated_date) ? new DateTime($jsonObject->updated_date) : null;
 
         $basket->parseItems($jsonObject, $factory);
 

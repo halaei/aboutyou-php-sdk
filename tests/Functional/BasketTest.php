@@ -24,7 +24,7 @@ class BasketTest extends AbstractAYTest
 
     public function testBasket()
     {
-        $exceptedRequestBody = '[{"basket":{"session_id":"testing"}}]';
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","clean_errors":true,"refresh":true}}]';
         $ay = $this->getAYWithResultFile('result/basket1.json', $exceptedRequestBody);
 
         $basket = $ay->fetchBasket($this->sessionId);
@@ -166,18 +166,18 @@ class BasketTest extends AbstractAYTest
         $set = new Basket\BasketSet('123', array('description' => 'test', 'image_url' => 'http://img-url'));
         $item = new Basket\BasketSetItem(12312121);
         $set->addItem($item);
-        
+
         $basket->updateItemSet($set);
         $result = $ay->updateBasket('123456xyz', $basket);
 
         $this->assertTrue($result->hasErrors());
     }
-    
-   
+
+
 
     public function testBasketGetCollectedItems()
     {
-        $exceptedRequestBody = '[{"basket":{"session_id":"testing"}}]';
+        $exceptedRequestBody = '[{"basket":{"session_id":"testing","clean_errors":true,"refresh":true}}]';
         $ay = $this->getAYWithResultFile('result/basket-similar-items.json', $exceptedRequestBody);
 
         $basket = $ay->fetchBasket($this->sessionId);
