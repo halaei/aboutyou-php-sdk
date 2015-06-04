@@ -51,7 +51,7 @@ class QueryBuilder
         }
 
         if ($categories) {
-            $options['categories'] = $categories;
+            $options['filters']['categories'] = $categories;
         }
 
         $this->query[] = ['autocompletion' => $options];
