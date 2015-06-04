@@ -20,24 +20,24 @@ class QueryBuilder
      * @param string $searchWord The prefix search word to search for.
      * @param int    $limit      Maximum number of results.
      * @param array  $types      Array of types to search for (Constants::TYPE_...).
+     * @param array  $categories List of category ids to be included
      *
      * @return $this
-     *
-     * @throws \InvalidArgumentException
      */
     public function fetchAutocomplete(
         $searchWord,
         $limit = null,
-        array $types = null
+        array $types = null,
+        array $categories = []
     ) {
         if (!is_string($searchWord)) {
             throw new \InvalidArgumentException('searchword must be a string');
         }
 
         // strtolower is a workaround of ticket SAPI-532
-        $options = array(
+        $options = [
             'searchword' => mb_strtolower($searchWord, 'UTF-8'),
-        );
+        ];
 
         if ($limit !== null) {
             if (!is_int($limit) && !ctype_digit($limit)) {
@@ -50,7 +50,11 @@ class QueryBuilder
             $options['types'] = $types;
         }
 
-        $this->query[] = array('autocompletion' => $options);
+        if ($categories) {
+            $options['filters']['categories'] = $categories;
+        }
+
+        $this->query[] = ['autocompletion' => $options];
 
         return $this;
     }
