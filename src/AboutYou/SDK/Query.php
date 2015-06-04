@@ -59,20 +59,20 @@ class Query extends QueryBuilder
 
 
     /**
-     * @param string $searchword The prefix search word to search for.
-     * @param int    $limit      Maximum number of results.
-     * @param array  $types      Array of types to search for (Constants::TYPE_...).
+     * @param string     $searchword The prefix search word to search for.
+     * @param int   $limit      Maximum number of results.
+     * @param array $types      Array of types to search for (Constants::TYPE_...).
+     * @param array $categories List of category ids to be included
      *
      * @return $this
-     *
-     * @throws \InvalidArgumentException
      */
     public function fetchAutocomplete(
         $searchword,
         $limit = null,
-        array $types = null
+        array $types = null,
+        array $categories = []
     ) {
-        parent::fetchAutocomplete($searchword, $limit, $types);
+        parent::fetchAutocomplete($searchword, $limit, $types, $categories);
 
         $this->requireCategoryTree();
         $this->requireFacets();
