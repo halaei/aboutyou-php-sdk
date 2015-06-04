@@ -288,8 +288,9 @@ class AY
      * @param string $searchword The prefix search word to search for.
      * @param int    $limit      Maximum number of results.
      * @param array  $types      Array of types to search for (Constants::TYPE_...).
+     * @param array  $cateogries List of category ids to be included
      *
-     * @return \AboutYou\SDK\Model\Autocomplete
+     * @return Autocomplete
      */
     public function fetchAutocomplete(
         $searchword,
@@ -297,10 +298,11 @@ class AY
         $types = [
             Autocomplete::TYPE_PRODUCTS,
             Autocomplete::TYPE_CATEGORIES
-        ]
+        ],
+        array $cateogries = []
     ) {
         $query = $this->getQuery()
-            ->fetchAutocomplete($searchword, $limit, $types)
+            ->fetchAutocomplete($searchword, $limit, $types, $cateogries)
         ;
 
         return $query->executeSingle();
