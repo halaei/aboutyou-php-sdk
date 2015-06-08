@@ -83,12 +83,14 @@ class Query extends QueryBuilder
     /**
      * @param string     $sessionId     Free to choose ID of the current website visitor.
      * @param array|null $productFields Product fields to fetch or null for default fields.
+     * @param bool       $cleanErrors   Return all errors and then removes them from any further responses
+     * @param bool       $refresh       Updates all products and variants
      *
      * @return $this
      */
-    public function fetchBasket($sessionId, array $productFields = null)
+    public function fetchBasket($sessionId, array $productFields = null, $cleanErrors = true, $refresh = true)
     {
-        parent::fetchBasket($sessionId, $productFields);
+        parent::fetchBasket($sessionId, $productFields, $cleanErrors, $refresh);
 
         $this->requireCategoryTree();
         $this->requireFacets();

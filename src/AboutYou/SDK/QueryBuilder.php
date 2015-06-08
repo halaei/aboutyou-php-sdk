@@ -92,15 +92,19 @@ class QueryBuilder
     /**
      * @param string     $basketId      Free to choose ID of the current website visitor.
      * @param array|null $productFields Product fields to fetch or null for default fields.
+     * @param bool       $cleanErrors   Return all errors and then removes them from any further responses
+     * @param bool       $refresh       Updates all products and variants
      *
      * @return $this
      */
-    public function fetchBasket($basketId, array $productFields = null)
+    public function fetchBasket($basketId, array $productFields = null, $cleanErrors = true, $refresh = true)
     {
         $this->checkBasketId($basketId);
 
         $basketQuery = array(
-            'session_id' => $basketId
+            'session_id'   => $basketId,
+            'clean_errors' => $cleanErrors,
+            'refresh'      => $refresh,
         );
 
         if ($productFields !== null) {
