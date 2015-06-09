@@ -632,6 +632,8 @@ class AY
 
     /**
      * @param integer[] $ids
+     * @param bool      $includeInactive
+     * @param bool      $searchInactive
      *
      * @return \AboutYou\SDK\Model\VariantsResult
      *
@@ -639,13 +641,15 @@ class AY
      * @throws \AboutYou\SDK\Exception\UnexpectedResultException
      */
     public function fetchVariantsByIds(
-            array $ids
+        array $ids,
+        $includeInactive = true,
+        $searchInactive = false
     ) {
         // we allow to pass a single ID instead of an array
         settype($ids, 'array');
 
         $query = $this->getQuery()
-            ->fetchLiveVariantByIds($ids)
+            ->fetchLiveVariantByIds($ids, $includeInactive, $searchInactive)
         ;
 
         $result = $query->executeSingle();
