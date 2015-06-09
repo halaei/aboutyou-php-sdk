@@ -10,16 +10,16 @@ class VariantsResult
     protected $errors = array();
 
     /**
-     * 
-     * @param \stdClass $jsonObject
-     * @param \AboutYou\SDK\Model\ModelFactoryInterface $factory
+     *
+     * @param array $variants
+     * @param array $errors
      * @param \AboutYou\SDK\Model\ProductSearchResult $productSearchResult
-     * 
+     *
      * @return static
      */
     public static function create($variants, $errors, $productSearchResult)
-    {        
-        $variantsResult = new static();                
+    {
+        $variantsResult = new static();
         $variantsResult->errors = $errors;
 
         if ($productSearchResult === false || count($variants) === 0) {
@@ -32,22 +32,22 @@ class VariantsResult
 
         foreach ($variants as $variantId => $productId) {
             if (isset($products[$productId]) === false) {
-                // product was not delivered                
+                // product was not delivered
                 $variantsResult->errors[] = $variantId;
                 continue;
             }
 
             $product = $products[$productId];
-            $variant = $product->getVariantById($variantId);
+            $variant = $product->getVariantById($variantId, true);
 
             if ($variant instanceof Variant) {
-                $variantsResult->variants[$variantId] = $variant;                
+                $variantsResult->variants[$variantId] = $variant;
             }
-        }            
+        }
 
         return $variantsResult;
     }
-    
+
     /**
      * @return bool
      */
@@ -63,7 +63,7 @@ class VariantsResult
     {
         return count($this->errors) > 0;
     }
-    
+
     /**
      * @return Variant[]
      */
@@ -71,23 +71,23 @@ class VariantsResult
     {
         return $this->variants;
     }
-    
+
     /**
      * @param int $id
-     * 
+     *
      * @return Variant|null
      */
     public function getVariantById($id)
     {
         $result = null;
-        
+
         if (isset($this->variants[$id])) {
             $result = $this->variants[$id];
         }
-        
+
         return $result;
     }
-         
+
     /**
      * @return int[]
      */

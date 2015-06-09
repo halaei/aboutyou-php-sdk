@@ -457,10 +457,12 @@ class QueryBuilder
 
     /**
      * @param string[]|int[] $ids
+     * @param bool           $includeInactive
+     * @param bool           $searchInactive
      *
      * @return $this
      */
-    public function fetchLiveVariantByIds(array $ids) {
+    public function fetchLiveVariantByIds(array $ids, $includeInactive = true, $searchInactive = false) {
         // we allow to pass a single ID instead of an array
         settype($ids, 'array');
 
@@ -468,8 +470,11 @@ class QueryBuilder
         $ids = array_values($ids);
 
         $this->query[] = array(
-            'live_variant' => array(
-                'ids'    => $ids
+            'products_variant_ids' => array(
+                'version' => '2',
+                'variant_ids' => $ids,
+                'include_inactive' => (bool)$includeInactive,
+                'search_inactive_variants' => (bool)$searchInactive,
             )
         );
 
