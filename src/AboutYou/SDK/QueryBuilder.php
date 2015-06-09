@@ -471,6 +471,7 @@ class QueryBuilder
 
         $this->query[] = array(
             'products_variant_ids' => array(
+                'version' => '2',
                 'variant_ids' => $ids,
                 'include_inactive' => (bool)$includeInactive,
                 'search_inactive_variants' => (bool)$searchInactive,

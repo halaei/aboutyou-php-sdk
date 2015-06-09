@@ -11,8 +11,8 @@ class VariantsResult
 
     /**
      *
-     * @param \stdClass $jsonObject
-     * @param \AboutYou\SDK\Model\ModelFactoryInterface $factory
+     * @param array $variants
+     * @param array $errors
      * @param \AboutYou\SDK\Model\ProductSearchResult $productSearchResult
      *
      * @return static

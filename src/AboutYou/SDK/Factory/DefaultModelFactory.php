@@ -381,23 +381,18 @@ class DefaultModelFactory implements ModelFactoryInterface
     {
         $variants = [];
         $errors = [];
-        $productIds = [];
         $productSearchResult = false;
 
-        foreach ($jsonObject->variant_ids as $id => $data) {
-            if (isset($data->error_code)) {
-                $errors = array_merge($errors, $data->variant_ids);
+        foreach ($jsonObject->variant_product as $variantId => $productId) {
+            if (!is_numeric($productId)) {
+                $errors[] = (int)$variantId;
             } else {
-                foreach ($data->variant_ids as $vid) {
-                    $variants[$vid] = $data->id;
-                }
-
-                $productIds[] = $data->id;
+                $variants[$variantId] = (int)$productId;
             }
         }
 
+        $productIds = array_unique($variants);
         if (count($productIds) > 0) {
-            $productIds = array_unique($productIds);
             // search products for valid variants
             $productSearchResult = $this->ay
                 ->fetchProductsByIds(
