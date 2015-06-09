@@ -13,7 +13,7 @@ use AboutYou\SDK\Factory\ModelFactoryInterface;
 
 class Query extends QueryBuilder
 {
-    const QUERY_TREE   = 'category tree';
+    const QUERY_TREE = 'category tree';
     const QUERY_FACETS = 'all facets';
 
     /** @var Client */
@@ -27,42 +27,42 @@ class Query extends QueryBuilder
     private $allQuery = array();
 
     protected $mapping = array(
-        'autocompletion' => 'createAutocomplete',
-        'basket'         => 'createBasket',
-        'wishlist'       => 'createWishList',
-        'category'       => 'createCategoriesResult',
-        'category_tree'  => 'createCategoryTree',
-        'facets'         => 'createFacetsList',
-        'facet'          => 'createFacetList',
-        'facet_types'    => 'createFacetTypes',
-        'products'       => 'createProductsResult',
-        'styles'         => 'createStylesResult',
-        'products_eans'  => 'createProductsEansResult',
-        'product_search' => 'createProductSearchResult',
-        'suggest'        => 'createSuggest',
-        'get_order'      => 'createOrder',
-        'initiate_order' => 'initiateOrder',
-        'child_apps'     => 'createChildApps',
-        'live_variant'   => 'createVariantsResult',
-        'did_you_mean'   => 'createSpellCorrection'
+        'autocompletion'       => 'createAutocomplete',
+        'basket'               => 'createBasket',
+        'wishlist'             => 'createWishList',
+        'category'             => 'createCategoriesResult',
+        'category_tree'        => 'createCategoryTree',
+        'facets'               => 'createFacetsList',
+        'facet'                => 'createFacetList',
+        'facet_types'          => 'createFacetTypes',
+        'products'             => 'createProductsResult',
+        'styles'               => 'createStylesResult',
+        'products_eans'        => 'createProductsEansResult',
+        'product_search'       => 'createProductSearchResult',
+        'suggest'              => 'createSuggest',
+        'get_order'            => 'createOrder',
+        'initiate_order'       => 'initiateOrder',
+        'child_apps'           => 'createChildApps',
+        'products_variant_ids' => 'createVariantsResult',
+        'did_you_mean'         => 'createSpellCorrection'
     );
 
     /**
-     * @param Client       $client
+     * @param Client                $client
      * @param ModelFactoryInterface $factory
      */
     public function __construct(Client $client, ModelFactoryInterface $factory)
     {
-        $this->client  = $client;
+        $this->client = $client;
         $this->factory = $factory;
     }
 
 
     /**
-     * @param string     $searchword The prefix search word to search for.
-     * @param int   $limit      Maximum number of results.
-     * @param array $types      Array of types to search for (Constants::TYPE_...).
-     * @param array $categories List of category ids to be included
+     * @param string $searchword The prefix search word to search for.
+     * @param int    $limit      Maximum number of results.
+     * @param array  $types      Array of types to search for (Constants::TYPE_...).
+     * @param array  $categories List of category ids to be included
      *
      * @return $this
      */
@@ -114,9 +114,9 @@ class Query extends QueryBuilder
         return $this;
     }
 
-        /**
+    /**
      * @param string[]|int[] $ids
-     * @param array $fields
+     * @param array          $fields
      *
      * @return $this
      */
@@ -139,8 +139,8 @@ class Query extends QueryBuilder
 
     /**
      * @param string[] $keys
-     * @param array         $fields
-     * @param bool          $loadStyles
+     * @param array    $fields
+     * @param bool     $loadStyles
      *
      * @return $this
      */
@@ -162,7 +162,7 @@ class Query extends QueryBuilder
 
     /**
      * @param string[] $eans
-     * @param array $fields
+     * @param array    $fields
      *
      * @return $this
      */
@@ -282,8 +282,8 @@ class Query extends QueryBuilder
 
         foreach ($jsonResponse as $index => $responseObject) {
             $currentQuery = $currentQueries[$index];
-            $responseKey  = key($responseObject);
-            $queryKey     = key($currentQuery);
+            $responseKey = key($responseObject);
+            $queryKey = key($currentQuery);
 
             if ($responseKey !== $queryKey) {
                 throw new UnexpectedResultException(
@@ -301,7 +301,7 @@ class Query extends QueryBuilder
      * returns an array of parsed results
      *
      * @param array $jsonResponse the response body as json array
-     * @param bool $isMultiRequest
+     * @param bool  $isMultiRequest
      *
      * @return array
      *
@@ -316,10 +316,10 @@ class Query extends QueryBuilder
         $queryIds = array_keys($this->allQuery);
 
         foreach ($jsonResponse as $index => $responseObject) {
-            $jsonObject     = current($responseObject);
-            $currentQuery   = $currentQueries[$index];
-            $responseKey    = key($responseObject);
-            $queryKey       = key($currentQuery);
+            $jsonObject = current($responseObject);
+            $currentQuery = $currentQueries[$index];
+            $responseKey = key($responseObject);
+            $queryKey = key($currentQuery);
 
             $factory = $this->factory;
 
@@ -331,16 +331,18 @@ class Query extends QueryBuilder
                 }
             }
 
-            $query   = $currentQuery[$queryKey];
+            $query = $currentQuery[$queryKey];
             $queryId = $queryIds[$index];
 
             if ($queryId === self::QUERY_FACETS) {
                 $factory->updateFacetManager($jsonObject);
-            } else if ($queryId === self::QUERY_TREE) {
-                $factory->initializeCategoryManager($jsonObject);
             } else {
-                $method  = $this->mapping[$responseKey];
-                $results[$responseKey] = $factory->$method($jsonObject, $query);
+                if ($queryId === self::QUERY_TREE) {
+                    $factory->initializeCategoryManager($jsonObject);
+                } else {
+                    $method = $this->mapping[$responseKey];
+                    $results[$responseKey] = $factory->$method($jsonObject, $query);
+                }
             }
         }
 

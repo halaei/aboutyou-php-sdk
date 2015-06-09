@@ -384,13 +384,15 @@ class DefaultModelFactory implements ModelFactoryInterface
         $productIds = [];
         $productSearchResult = false;
 
-        foreach ($jsonObject as $id => $data) {
+        foreach ($jsonObject->variant_ids as $id => $data) {
             if (isset($data->error_code)) {
-                $errors[] = $id;
+                $errors = array_merge($errors, $data->variant_ids);
             } else {
-                $variants[$data->id] = $data->product_id;
+                foreach ($data->variant_ids as $vid) {
+                    $variants[$vid] = $data->id;
+                }
 
-                $productIds[] = $data->product_id;
+                $productIds[] = $data->id;
             }
         }
 
@@ -412,7 +414,8 @@ class DefaultModelFactory implements ModelFactoryInterface
                         ProductFields::IS_SALE,
                         ProductFields::MAX_PRICE,
                         ProductFields::MIN_PRICE,
-                        ProductFields::VARIANTS
+                        ProductFields::VARIANTS,
+                        ProductFields::INACTIVE_VARIANTS
                     ]
                 )
             ;
