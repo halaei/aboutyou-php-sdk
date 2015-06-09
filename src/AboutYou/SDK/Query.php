@@ -282,7 +282,8 @@ class Query extends QueryBuilder
 
         foreach ($jsonResponse as $index => $responseObject) {
             $currentQuery = $currentQueries[$index];
-            $responseKey  = key($responseObject);
+            $responseArray = (array) $responseObject;
+            $responseKey  = key($responseArray);
             $queryKey     = key($currentQuery);
 
             if ($responseKey !== $queryKey) {
@@ -316,9 +317,10 @@ class Query extends QueryBuilder
         $queryIds = array_keys($this->allQuery);
 
         foreach ($jsonResponse as $index => $responseObject) {
-            $jsonObject     = current($responseObject);
+            $responseArray = (array) $responseObject;
+            $jsonObject     = current($responseArray);
             $currentQuery   = $currentQueries[$index];
-            $responseKey    = key($responseObject);
+            $responseKey    = key($responseArray);
             $queryKey       = key($currentQuery);
 
             $factory = $this->factory;
