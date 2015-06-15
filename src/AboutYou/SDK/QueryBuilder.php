@@ -281,14 +281,21 @@ class QueryBuilder
     /**
      * @param string $basketId
      * @param Basket $basket
+     * @param bool   $cleanErrors
+     * @param bool   $refresh
      *
      * @return $this
      */
-    public function updateBasket($basketId, Basket $basket)
+    public function updateBasket($basketId, Basket $basket, $cleanErrors = true, $refresh = true)
     {
         $this->checkBasketId($basketId);
 
-        $basketQuery = array('session_id'  => $basketId);
+        $basketQuery = array(
+            'session_id'   => $basketId,
+            'clean_errors' => $cleanErrors,
+            'refresh'      => $refresh,
+        );
+
 
         if ($basket->isClearedOnUpdate()) {
             $basketQuery['clear'] = true;

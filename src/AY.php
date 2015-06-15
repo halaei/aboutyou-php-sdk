@@ -383,15 +383,17 @@ class AY
      *
      * It is highly recommend to use the basket update method, to manage your items.
      *
-     * @param string $sessionId
+     * @param string  $sessionId
      * @param integer $variantId
      * @param integer $amount
+     * @param bool    $cleanErrors   Return all errors and then removes them from any further responses
+     * @param bool    $refresh       Updates all products and variants
      *
      * @return Basket
      *
      * @throws \InvalidArgumentException
      */
-    public function addItemToBasket($sessionId, $variantId, $amount = 1)
+    public function addItemToBasket($sessionId, $variantId, $amount = 1, $cleanErrors = true, $refresh = true)
     {
         if (!is_long($variantId)) {
             if (is_string($variantId) && ctype_digit($variantId)) {
@@ -409,7 +411,7 @@ class AY
             $basket->updateItem($item);
         }
 
-        return $this->updateBasket($sessionId, $basket);
+        return $this->updateBasket($sessionId, $basket, $cleanErrors, $refresh);
     }
 
     /**
@@ -453,27 +455,31 @@ class AY
      *
      * @param string $sessionId     Free to choose ID of the current website visitor.
      * @param string[] $itemIds     array of basket item ids to delete, this can be sets or single items
+     * @param bool   $cleanErrors
+     * @param bool   $refresh
      *
      * @return \AboutYou\SDK\Model\Basket
      */
-    public function removeItemsFromBasket($sessionId, $itemIds)
+    public function removeItemsFromBasket($sessionId, $itemIds, $cleanErrors = true, $refresh = true)
     {
         $basket = new Basket();
         $basket->deleteItems($itemIds);
 
-        return $this->updateBasket($sessionId, $basket);
+        return $this->updateBasket($sessionId, $basket, $cleanErrors, $refresh);
     }
 
     /**
      * @param string $sessionId
      * @param Basket $basket
+     * @param bool   $cleanErrors
+     * @param bool   $refresh
      *
      * @return \AboutYou\SDK\Model\Basket
      */
-    public function updateBasket($sessionId, Basket $basket)
+    public function updateBasket($sessionId, Basket $basket, $cleanErrors = true, $refresh = true)
     {
         $query = $this->getQuery()
-            ->updateBasket($sessionId, $basket)
+            ->updateBasket($sessionId, $basket, $cleanErrors, $refresh)
         ;
 
         return $query->executeSingle();
