@@ -455,15 +455,17 @@ class AY
      *
      * @param string $sessionId     Free to choose ID of the current website visitor.
      * @param string[] $itemIds     array of basket item ids to delete, this can be sets or single items
+     * @param bool   $cleanErrors
+     * @param bool   $refresh
      *
      * @return \AboutYou\SDK\Model\Basket
      */
-    public function removeItemsFromBasket($sessionId, $itemIds)
+    public function removeItemsFromBasket($sessionId, $itemIds, $cleanErrors = true, $refresh = true)
     {
         $basket = new Basket();
         $basket->deleteItems($itemIds);
 
-        return $this->updateBasket($sessionId, $basket);
+        return $this->updateBasket($sessionId, $basket, $cleanErrors, $refresh);
     }
 
     /**
