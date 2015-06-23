@@ -342,42 +342,6 @@ class QueryBuilder
     }
 
     /**
-     * @param int[]|string[] $ids either a single category ID as integer or an array of IDs
-     *
-     * @return $this
-     */
-    public function fetchCategoriesByIds($ids = null)
-    {
-        if ($ids === null) {
-            $this->query[] = array(
-                'category' => null
-            );
-        } else {
-            // we allow to pass a single ID instead of an array
-            settype($ids, 'array');
-
-            foreach ($ids as $id) {
-                if (!is_long($id) && !ctype_digit($id)) {
-                    throw new \InvalidArgumentException('A single category ID must be an integer or a numeric string');
-                } else if ($id < 1) {
-                    throw new \InvalidArgumentException('A single category ID must be greater than 0');
-                }
-            }
-
-            $ids = array_map('intval', $ids);
-            $ids = array_values($ids);
-
-            $this->query[] = array(
-                'category' => array(
-                    'ids' => $ids
-                )
-            );
-        }
-
-        return $this;
-    }
-
-    /**
      * @param int $maxDepth -1 <= $maxDepth <= 10,
      *
      * @return $this

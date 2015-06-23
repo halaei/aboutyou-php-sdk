@@ -30,7 +30,6 @@ class Query extends QueryBuilder
         'autocompletion'       => 'createAutocomplete',
         'basket'               => 'createBasket',
         'wishlist'             => 'createWishList',
-        'category'             => 'createCategoriesResult',
         'category_tree'        => 'createCategoryTree',
         'facets'               => 'createFacetsList',
         'facet'                => 'createFacetList',
@@ -313,15 +312,12 @@ class Query extends QueryBuilder
         $this->checkResponse($jsonResponse);
 
         $results = array();
-        $currentQueries = array_values($this->allQuery);
         $queryIds = array_keys($this->allQuery);
 
         foreach ($jsonResponse as $index => $responseObject) {
             $responseArray = (array) $responseObject;
             $jsonObject     = current($responseArray);
-            $currentQuery   = $currentQueries[$index];
             $responseKey    = key($responseArray);
-            $queryKey       = key($currentQuery);
 
             $factory = $this->factory;
 
@@ -333,7 +329,6 @@ class Query extends QueryBuilder
                 }
             }
 
-            $query = $currentQuery[$queryKey];
             $queryId = $queryIds[$index];
 
             if ($queryId === self::QUERY_FACETS) {
@@ -343,7 +338,7 @@ class Query extends QueryBuilder
                     $factory->initializeCategoryManager($jsonObject);
                 } else {
                     $method = $this->mapping[$responseKey];
-                    $results[$responseKey] = $factory->$method($jsonObject, $query);
+                    $results[$responseKey] = $factory->$method($jsonObject);
                 }
             }
         }
