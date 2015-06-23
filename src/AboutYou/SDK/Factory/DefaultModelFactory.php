@@ -184,16 +184,6 @@ class DefaultModelFactory implements ModelFactoryInterface
     /**
      * {@inheritdoc}
      *
-     * @return Model\CategoriesResult
-     */
-    public function createCategoriesResult(stdClass $jsonObject, $queryParams)
-    {
-        return Model\CategoriesResult::createFromJson($jsonObject, $queryParams['ids'], $this);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @return Model\Category
      */
     public function createCategory(stdClass $jsonObject)
