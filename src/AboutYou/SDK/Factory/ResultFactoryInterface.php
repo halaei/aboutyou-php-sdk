@@ -24,14 +24,6 @@ interface ResultFactoryInterface
     public function createBasket(\stdClass $jsonObject);
 
     /**
-     * @param \stdClass $jsonObject
-     * @param $queryParams
-     *
-     * @return mixed
-     */
-    public function createCategoriesResult(\stdClass $jsonObject, $queryParams);
-
-    /**
      * @param array $jsonArray
      *
      * @return mixed
