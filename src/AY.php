@@ -630,10 +630,10 @@ class AY
         /** @var StylesResult $result */
         $result = $query->executeSingle();
 
-        $productsNotFound = $result->getStylesNotFound();
-        if (!empty($productsNotFound) && $this->logger) {
+        $stylesNotFound = $result->getStylesNotFound();
+        if (!empty($stylesNotFound) && $this->logger) {
             $this->logger->warning(
-                'Styles not found: appid=' . $this->appId . ' product ids=[' . join(',', $productsNotFound) . ']'
+                'Styles not found: appid=' . $this->appId . ' style keys=[' . join(',', $stylesNotFound) . ']'
             );
         }
 
