@@ -1,4 +1,5 @@
 <?php
+use AboutYou\SDK\Model\StylesResult;
 use AuthSDK\AuthSDK;
 use AuthSDK\SessionStorage;
 use AboutYou\ApiErrorException;
@@ -626,11 +627,14 @@ class AY
             ->fetchProductsByStyleKeys($keys, $fields, $loadStyles)
         ;
 
+        /** @var StylesResult $result */
         $result = $query->executeSingle();
 
-        $productsNotFound = $result->getProductsNotFound();
-        if (!empty($productsNotFound) && $this->logger) {
-            $this->logger->warning('products not found: appid=' . $this->appId . ' product ids=[' . join(',', $productsNotFound) . ']');
+        $stylesNotFound = $result->getStylesNotFound();
+        if (!empty($stylesNotFound) && $this->logger) {
+            $this->logger->warning(
+                'Styles not found: appid=' . $this->appId . ' style keys=[' . join(',', $stylesNotFound) . ']'
+            );
         }
 
         return $result;

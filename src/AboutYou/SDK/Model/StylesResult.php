@@ -12,9 +12,9 @@ use stdClass;
 class StylesResult extends AbstractProductsResult
 {
     /**
-     * @var int[]
+     * @var string[]
      */
-    protected $idsNotFound = [];
+    protected $styleKeysNotFound = [];
 
     /**
      * @param stdClass              $jsonObject
@@ -29,10 +29,10 @@ class StylesResult extends AbstractProductsResult
         $productsResult->pageHash = isset($jsonObject->pageHash) ? $jsonObject->pageHash : null;
 
         if (isset($jsonObject->styles)) {
-            foreach ($jsonObject->styles as $style) {
-                foreach ($style as $jsonProduct) {
+            foreach ($jsonObject->styles as $styleKey => $jsonProducts) {
+                foreach ($jsonProducts as $jsonProduct) {
                     if (isset($jsonProduct->error_code)) {
-                        $productsResult->idsNotFound[] = $jsonProduct->id;
+                        $productsResult->styleKeysNotFound[] = $styleKey;
                         $productsResult->errors[] = $jsonProduct;
                         continue;
                     }
@@ -45,10 +45,10 @@ class StylesResult extends AbstractProductsResult
     }
 
     /**
-     * @return integer[] array of product ids
+     * @return string[] array of product ids
      */
-    public function getProductsNotFound()
+    public function getStylesNotFound()
     {
-        return $this->idsNotFound;
+        return $this->styleKeysNotFound;
     }
 }

@@ -32,6 +32,11 @@ class Facet implements FacetUniqueKeyInterface, FacetGetGroupInterface
     protected $options;
 
     /**
+     * @var string
+     */
+    private $uniqueKey;
+
+    /**
      * @param $jsonObject
      *
      * @return static
@@ -95,7 +100,11 @@ class Facet implements FacetUniqueKeyInterface, FacetGetGroupInterface
      */
     public function getUniqueKey()
     {
-        return $this->getGroupId() . ':' . $this->getId();
+        if (null === $this->uniqueKey) {
+            $this->uniqueKey = $this->getGroupId() . ':' . $this->getId();
+        }
+
+        return $this->uniqueKey;
     }
 
     /**
