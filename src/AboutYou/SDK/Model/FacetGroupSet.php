@@ -110,8 +110,8 @@ class FacetGroupSet implements FacetUniqueKeyInterface
                     }
                 }
 
-                if (false === empty($facets)) {
-                    $facetGroup = new FacetGroup($groupId, $facet->getName());
+                if (null !== $facet && false === empty($facets)) {
+                    $facetGroup = new FacetGroup($groupId, $facet->getGroupName());
                     $facetGroup->setFacets($facets);
                     $this->groups[$groupId] = $facetGroup;
                 }
