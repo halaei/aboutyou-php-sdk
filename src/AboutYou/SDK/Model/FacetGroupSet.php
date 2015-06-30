@@ -89,28 +89,22 @@ class FacetGroupSet implements FacetUniqueKeyInterface
 
             foreach ($this->ids as $groupId => $facetIds) {
                 $facets = [];
-                $facet = null;
                 foreach ($facetIds as $facetId) {
-                    if ($groups) {
-                        $uniqueKey = $groupId . ':' . $facetId;
-                        if (true === isset($groups[$uniqueKey])) {
-                            $facet = $groups[$uniqueKey];
-                            $this->facets[$uniqueKey] = $facet;
-                            $facets[$facetId] = $facet;
-                        }
+                    $uniqueKey = $groupId . ':' . $facetId;
+                    if (false === empty($groups)) {
+                        $facet = isset($groups[$uniqueKey]) ? $groups[$uniqueKey] : null;
                     } else {
                         $facet = self::$facetManager->getFacet($groupId, $facetId);
+                    }
 
-                        if (empty($facet)) {
-                            // TODO: error handling
-                            continue;
-                        }
+                    if ($facet) {
                         $facets[$facetId] = $facet;
-                        $this->facets[$groupId . ':' . $facetId] = $facet;
+                        $this->facets[$uniqueKey] = $facet;
                     }
                 }
 
-                if (null !== $facet && false === empty($facets)) {
+                if (false === empty($facets)) {
+                    $facet = reset($facets);
                     $facetGroup = new FacetGroup($groupId, $facet->getGroupName());
                     $facetGroup->setFacets($facets);
                     $this->groups[$groupId] = $facetGroup;
@@ -128,7 +122,7 @@ class FacetGroupSet implements FacetUniqueKeyInterface
             $this->fetch();
         }
 
-        return($this->groups);
+        return $this->groups;
     }
 
     /**
@@ -182,7 +176,7 @@ class FacetGroupSet implements FacetUniqueKeyInterface
         }
 
         if (isset($this->facets["$facetGroupId:$facetId"])) {
-            return($this->facets["$facetGroupId:$facetId"]);
+            return $this->facets["$facetGroupId:$facetId"];
         }
     }
 
