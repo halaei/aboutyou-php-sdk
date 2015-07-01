@@ -19,8 +19,8 @@ interface FacetManagerInterface
     public function setFacets($facets);
 
     /**
-     * @param $groupId group id of a facet
-     * @param $id id of the facet
+     * @param int $groupId group id of a facet
+     * @param int $id id of the facet
      *
      * @return \AboutYou\SDK\Model\Facet
      */
