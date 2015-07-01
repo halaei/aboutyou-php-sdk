@@ -83,29 +83,32 @@ class FacetGroupSet implements FacetUniqueKeyInterface
 
     protected function fetch()
     {
-        if (!empty($this->facets)) return;
+        if (true === empty($this->facets)) {
+            //pre-heat cache
+            $groups = self::$facetManager->getFacetsByGroups($this->getGroupIds());
 
-        //pre-heat cache
-        self::$facetManager->getFacetsByGroups($this->getGroupIds());
+            foreach ($this->ids as $groupId => $facetIds) {
+                $facets = [];
+                foreach ($facetIds as $facetId) {
+                    $uniqueKey = $groupId . ':' . $facetId;
+                    if (false === empty($groups)) {
+                        $facet = isset($groups[$uniqueKey]) ? $groups[$uniqueKey] : null;
+                    } else {
+                        $facet = self::$facetManager->getFacet($groupId, $facetId);
+                    }
 
-        foreach ($this->ids as $groupId => $facetIds) {
-            foreach ($facetIds as $facetId) {
-                $facet = self::$facetManager->getFacet($groupId, $facetId);
-
-                if (empty($facet)) {
-                    // TODO: error handling
-                    continue;
+                    if ($facet) {
+                        $facets[$facetId] = $facet;
+                        $this->facets[$uniqueKey] = $facet;
+                    }
                 }
 
-                if (isset($this->groups[$groupId])) {
-                    $group = $this->groups[$groupId];
-                } else {
-                    $group = new FacetGroup($groupId, $facet->getGroupName());
-                    $this->groups[$groupId] = $group;
+                if (false === empty($facets)) {
+                    $facet = reset($facets);
+                    $facetGroup = new FacetGroup($groupId, $facet->getGroupName());
+                    $facetGroup->setFacets($facets);
+                    $this->groups[$groupId] = $facetGroup;
                 }
-
-                $group->addFacet($facet);
-                $this->facets[$facet->getUniqueKey()] = $facet;
             }
         }
     }
@@ -119,7 +122,7 @@ class FacetGroupSet implements FacetUniqueKeyInterface
             $this->fetch();
         }
 
-        return($this->groups);
+        return $this->groups;
     }
 
     /**
@@ -173,7 +176,7 @@ class FacetGroupSet implements FacetUniqueKeyInterface
         }
 
         if (isset($this->facets["$facetGroupId:$facetId"])) {
-            return($this->facets["$facetGroupId:$facetId"]);
+            return $this->facets["$facetGroupId:$facetId"];
         }
     }
 

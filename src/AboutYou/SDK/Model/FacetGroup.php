@@ -38,13 +38,21 @@ class FacetGroup implements FacetUniqueKeyInterface, FacetGetGroupInterface
     }
 
     /**
-     * @param Facet[] $facet
+     * @param Facet[] $facets
      */
     public function addFacets(array $facets)
     {
         foreach ($facets as $facet) {
             $this->addFacet($facet);
         }
+    }
+
+    /**
+     * @param Facet[] $facets
+     */
+    public function setFacets(array $facets)
+    {
+        $this->facets = $facets;
     }
 
     /**
@@ -136,4 +144,4 @@ class FacetGroup implements FacetUniqueKeyInterface, FacetGetGroupInterface
     {
         return isset($this->facets[$facet->getId()]);
     }
-} 
+}
