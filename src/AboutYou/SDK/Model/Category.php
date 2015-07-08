@@ -44,9 +44,9 @@ class Category
 
     public function __sleep()
     {
-        return [
+        return array(
             'id', 'name', 'isActive', 'position', 'parentId', 'productCount'
-        ];
+        );
     }
 
     /**
@@ -174,7 +174,7 @@ class Category
      */
     public function getBreadcrumb()
     {
-        $breadcrumb = $this->getParent() ? $this->getParent()->getBreadcrumb() : [];
+        $breadcrumb = $this->getParent() ? $this->getParent()->getBreadcrumb() : array();
         $breadcrumb[] = $this;
 
         return $breadcrumb;
