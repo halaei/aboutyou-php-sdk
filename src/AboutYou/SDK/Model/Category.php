@@ -41,6 +41,14 @@ class Category
         // Creating of instances only possible via createFromJson
     }
 
+
+    public function __sleep()
+    {
+        return array(
+            'id', 'name', 'isActive', 'position', 'parentId', 'productCount'
+        );
+    }
+
     /**
      * @param object        $jsonObject  json as object tree
      * @param CategoryManagerInterface $categoryManager
@@ -178,6 +186,15 @@ class Category
     public function getCategoryManager()
     {
         return $this->categoryManager;
+    }
+
+    /**
+     * Sets the CategoryManager. Only to be used after unserializtion
+     * @param CategoryManagerInterface $categoryManager
+     */
+    public function setCategoryManager(CategoryManagerInterface $categoryManager)
+    {
+        $this->categoryManager = $categoryManager;
     }
 
     /**
