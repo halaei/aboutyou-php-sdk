@@ -43,6 +43,9 @@ class DefaultCategoryManager implements CategoryManagerInterface
             $result = $this->cache->fetch($this->cacheKey);
             if (isset($result['categories']) && isset($result['parentChildIds'])) {
                 $this->categories = $result['categories'];
+                foreach ($this->categories as $cat) {
+                    $cat->setCategoryManager($this);
+                }
                 $this->parentChildIds = $result['parentChildIds'];
             }
         }
