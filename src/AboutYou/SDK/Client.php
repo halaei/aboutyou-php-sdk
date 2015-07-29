@@ -15,7 +15,7 @@ use Psr\Log\NullLogger;
 
 class Client
 {
-    const API_END_POINT_STAGE   = 'http://shop-api.staging.aboutyou.de/api';
+    const API_END_POINT_STAGE   = 'http://sapi-staging.collins.kg/api';
     const API_END_POINT_SANDBOX = 'http://shop-api.sandbox.aboutyou.de/api';
     const API_END_POINT_LIVE    = 'https://shop-api.aboutyou.de/api';
 
