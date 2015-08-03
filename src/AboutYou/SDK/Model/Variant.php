@@ -84,6 +84,16 @@ class Variant
     }
 
     /**
+     *
+     */
+    public function getMerchantProductId()
+    {
+        return isset($this->jsonObject->merchant_product_id) ?
+            $this->jsonObject->merchant_product_id :
+            null;
+    }
+
+    /**
      * @return Product
      */
     public function getProduct()
