@@ -84,7 +84,7 @@ class Variant
     }
 
     /**
-     *
+     * @return string
      */
     public function getMerchantProductId()
     {
