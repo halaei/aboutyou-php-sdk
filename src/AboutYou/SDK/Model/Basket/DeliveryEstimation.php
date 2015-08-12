@@ -45,7 +45,7 @@ class DeliveryEstimation
             isset($jsonObject->max) ? intval($jsonObject->max) : null,
             isset($jsonObject->min_date) ? new \DateTime($jsonObject->min_date) : null,
             isset($jsonObject->max_date) ? new \DateTime($jsonObject->max_date) : null,
-            isset($jsonObject->crossdocked) ? boolval($jsonObject->crossdocked) : null,
+            isset($jsonObject->crossdocked) ? (bool) $jsonObject->crossdocked : null,
             isset($jsonObject->holiday) ? (bool) $jsonObject->holiday : null,
             isset($jsonObject->weekend) ? (bool) $jsonObject->weekend : null
 
