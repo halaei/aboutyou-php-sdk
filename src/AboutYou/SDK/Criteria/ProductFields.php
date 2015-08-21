@@ -21,6 +21,7 @@ class ProductFields
     const DESCRIPTION_LONG       = 'description_long';
     const DESCRIPTION_SHORT      = 'description_short';
     const FIRST_PUBLICATION_DATE = 'new_in_since_date';
+    const IMAGES                 = 'images';
     const INACTIVE_VARIANTS      = 'inactive_variants';
     const IS_ACTIVE              = 'active';
     const IS_SALE                = 'sale';
@@ -28,6 +29,7 @@ class ProductFields
     const MAX_PRICE              = 'max_price';
     const MAX_SAVINGS            = 'max_savings';
     const MAX_SAVINGS_PERCENTAGE = 'max_savings_percentage';
+    const STYLE_KEY              = 'style_key';
     const STYLES                 = 'styles';
     const PRODUCT_ATTRIBUTES     = 'product_attributes';
     const TAGS                   = 'tags';
