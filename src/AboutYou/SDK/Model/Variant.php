@@ -104,7 +104,7 @@ class Variant
     /**
      * @return Image[]
      *
-     * @deprecated
+     * @deprecated Please use Product::getImages(). Note that you have to include the field ProductFields::IMAGES on fetch.
      */
     public function getImages()
     {
