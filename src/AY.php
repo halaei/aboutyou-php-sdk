@@ -24,7 +24,7 @@ use AboutYou\SDK\Model\ProductsResult;
 use AboutYou\SDK\Query;
 use AboutYou\SDK\Client;
 use Psr\Log\LoggerInterface;
-use Rhumsaa\Uuid\Uuid;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Provides access to the ABOUT YOU Frontend Platform.
